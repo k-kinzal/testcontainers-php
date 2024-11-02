@@ -25,6 +25,18 @@ class GenericContainer implements Container
     private $image;
 
     /**
+     * The commands to be executed in the container.
+     * @var null|string[]
+     */
+    protected static $COMMANDS;
+
+    /**
+     * The commands to be executed in the container.
+     * @var string[]
+     */
+    private $commands = [];
+
+    /**
      * @param string|null $image The image to be used for the container.
      */
     public function __construct($image = null)
@@ -32,6 +44,9 @@ class GenericContainer implements Container
         assert($image || static::$IMAGE);
 
         $this->image = $image ?: static::$IMAGE;
+        if (static::$COMMANDS) {
+            $this->commands = static::$COMMANDS;
+        }
     }
 
     /**
@@ -103,7 +118,9 @@ class GenericContainer implements Container
      */
     public function withCommand($cmd)
     {
-        // TODO: Implement withCommand() method.
+        $this->commands = [$cmd];
+
+        return $this;
     }
 
     /**
@@ -111,7 +128,9 @@ class GenericContainer implements Container
      */
     public function withCommands($commandParts)
     {
-        // TODO: Implement withCommands() method.
+        $this->commands = $commandParts;
+
+        return $this;
     }
 
     /**
@@ -200,7 +219,14 @@ class GenericContainer implements Container
     public function start()
     {
         $client = DockerClientFactory::create();
-        $output = $client->run($this->image, null, null, [
+        $command = null;
+        $args = null;
+        if ($this->commands) {
+            $commands = $this->commands;
+            $command = array_shift($commands);
+            $args = $this->commands;
+        }
+        $output = $client->run($this->image, $command, $args, [
             'detach' => true,
         ]);
         if (!($output instanceof DockerRunWithDetachOutput)) {
