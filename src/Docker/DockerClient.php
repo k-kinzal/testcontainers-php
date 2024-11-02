@@ -348,6 +348,45 @@ class DockerClient
     }
 
     /**
+     * Retrieve the logs of a Docker container.
+     *
+     * This method wraps the `docker logs` command to fetch the logs of the specified container.
+     *
+     * @param string $containerId The ID of the container to fetch logs from.
+     * @param array $options Additional options for the Docker logs command.
+     * @return DockerLogsOutput The output containing the logs of the container.
+     */
+    public function logs($containerId, $options = [])
+    {
+        $commandline = array_filter(array_flatten([
+            $this->command,
+            $this->arrayToArgs($this->options),
+            'logs',
+            $this->arrayToArgs($options),
+            $containerId,
+        ]));
+        $process = new Process(
+            $commandline,
+            $this->cwd,
+            $this->env,
+            $this->input,
+            $this->timeout,
+            $this->proc_options
+        );
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            $stderr = $process->getErrorOutput();
+            if (NoSuchContainerException::match($stderr)) {
+                throw new NoSuchContainerException($process);
+            }
+            throw new DockerException($process);
+        }
+
+        return new DockerLogsOutput($process);
+    }
+
+    /**
      * Convert array to command line arguments
      *
      * @param array $options command line options (key-value pairs)
@@ -363,9 +402,18 @@ class DockerClient
             $key = preg_replace_callback('/([A-Z])/', function ($matches) {
                 return '-' . strtolower($matches[1]);
             }, $key);
-            $result[] = "--$key";
-            if (!is_bool($value)) {
-                $result[] = $value;
+            if (isset($value) && is_array($value)) {
+                foreach ($value as $v) {
+                    $result[] = "--$key";
+                    if (!is_bool($v)) {
+                        $result[] = $v;
+                    }
+                }
+            } else {
+                $result[] = "--$key";
+                if (!is_bool($value)) {
+                    $result[] = $value;
+                }
             }
         }
 

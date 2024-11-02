@@ -46,6 +46,26 @@ class GenericContainerInstance implements ContainerInstance
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getOutput()
+    {
+        $client = DockerClientFactory::create();
+        $output = $client->logs($this->containerId);
+        return $output->getOutput();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getErrorOutput()
+    {
+        $client = DockerClientFactory::create();
+        $output = $client->logs($this->containerId);
+        return $output->getErrorOutput();
+    }
+
+    /**
      * Checks if the container is currently running.
      *
      * @return bool
