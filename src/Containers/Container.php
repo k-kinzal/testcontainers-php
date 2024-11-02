@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers;
 
+use Testcontainers\Containers\PortStrategy\PortStrategy;
+
 /**
  * An interface representing the definition of a container.
  */

@@ -2,10 +2,14 @@
 
 namespace Testcontainers\Containers;
 
+use Exception;
 use LogicException;
-use RuntimeException;
+use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
+use Testcontainers\Containers\PortStrategy\PortStrategy;
+use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\DockerRunWithDetachOutput;
+use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
 /**
  * GenericContainer is a generic implementation of docker container.
@@ -37,6 +41,18 @@ class GenericContainer implements Container
     private $commands = [];
 
     /**
+     * Define the default ports to be exposed by the container.
+     * @var int[]|null
+     */
+    protected static $PORTS;
+
+    /**
+     * The ports to be exposed by the container.
+     * @var int[]
+     */
+    private $ports = [];
+
+    /**
      * Define the default environment variables to be used for the container.
      * @var array|null
      */
@@ -49,18 +65,52 @@ class GenericContainer implements Container
     private $env = [];
 
     /**
+     * Define the default port strategy to be used for the container.
+     * @var string|null
+     */
+    protected static $PORT_STRATEGY;
+
+    /**
+     * The port strategy to be used for the container.
+     * @var PortStrategy|null
+     */
+    private $portStrategy;
+
+    /**
+     * The port strategy provider.
+     * @var PortStrategyProvider
+     */
+    private $portStrategyProvider;
+
+    /**
      * @param string|null $image The image to be used for the container.
+     *
+     * @throws Exception If the port strategy is not found.
      */
     public function __construct($image = null)
     {
         assert($image || static::$IMAGE);
 
+        $this->portStrategyProvider = new PortStrategyProvider();
+        $this->portStrategyProvider->register(new LocalRandomPortStrategy());
+        $this->registerPortStrategy($this->portStrategyProvider);
+
         $this->image = $image ?: static::$IMAGE;
-        if (static::$COMMANDS) {
-            $this->commands = static::$COMMANDS;
+        if (static::$PORTS) {
+            $this->ports = static::$PORTS;
         }
         if (!empty(static::$ENVIRONMENTS)) {
             $this->env = static::$ENVIRONMENTS;
+        }
+        if (static::$COMMANDS) {
+            $this->commands = static::$COMMANDS;
+        }
+        if (static::$PORT_STRATEGY) {
+            $portStrategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
+            if ($portStrategy === null) {
+                throw new LogicException("Port strategy not found: " . static::$PORT_STRATEGY);
+            }
+            $this->portStrategy = $portStrategy;
         }
     }
 
@@ -85,7 +135,13 @@ class GenericContainer implements Container
      */
     public function withExposedPorts($ports)
     {
-        // TODO: Implement withExposedPorts() method.
+        if (is_array($ports)) {
+            $this->ports = $ports;
+        } else {
+            $this->ports = [$ports];
+        }
+
+        return $this;
     }
 
     /**
@@ -223,7 +279,9 @@ class GenericContainer implements Container
      */
     public function withPortStrategy($strategy)
     {
-        // TODO: Implement withPortStrategy() method.
+        $this->portStrategy = $strategy;
+
+        return $this;
     }
 
     /**
@@ -235,31 +293,69 @@ class GenericContainer implements Container
     }
 
     /**
+     * Register a port strategy.
+     *
+     * @param PortStrategyProvider $provider The port strategy provider.
+     */
+    protected function registerPortStrategy($provider)
+    {
+        // Override this method to register custom port strategies
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function start()
     {
         $client = DockerClientFactory::create();
+        $portStrategy = $this->portStrategy;
+
+        $containerDef = ['image' => $this->image];
+
         $command = null;
         $args = null;
         if ($this->commands) {
             $commands = $this->commands;
             $command = array_shift($commands);
             $args = $commands;
+
+            $containerDef['cmd'] = $command;
+            $containerDef['args'] = $args;
         }
         $options = ['detach' => true];
+        if (!empty($this->ports) && $portStrategy) {
+            $containerDef['mappingPort'] = [];
+            foreach ($this->ports as $port) {
+                $hostPort = $portStrategy->getPort();
+                $options['publish'][] = "$hostPort:$port";
+
+                $containerDef['mappingPort'][$port] = $hostPort;
+            }
+        }
         if (!empty($this->env)) {
             $options['env'] = $this->env;
+
+            $containerDef['env'] = $this->env;
         }
-        $output = $client->run($this->image, $command, $args, $options);
+
+        try {
+            $output = $client->run($this->image, $command, $args, $options);
+        } catch (PortAlreadyAllocatedException $e) {
+            $behavior = $portStrategy->conflictBehavior();
+            if ($behavior->isRetry()) {
+                return $this->start();
+            }
+            if ($behavior->isFail()) {
+                throw $e;
+            }
+            throw new LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
+        }
+
         if (!($output instanceof DockerRunWithDetachOutput)) {
             throw new LogicException('Expected DockerRunWithDetachOutput');
         }
-        if ($output->getExitCode() !== 0) {
-            throw new RuntimeException('Failed to start container');
-        }
         $containerId = $output->getContainerId();
 
-        return new GenericContainerInstance($containerId);
+        return new GenericContainerInstance($containerId, $containerDef);
     }
 }

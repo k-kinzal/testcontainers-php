@@ -15,12 +15,19 @@ interface ContainerInstance
     public function getContainerId();
 
     /**
+     * Get the host port mapped to the specified exposed port.
+     *
+     * @param int $exposedPort The port exposed by the container.
+     * @return int|null The host port mapped to the exposed port, or null if not mapped.
+     */
+    public function getMappingPort($exposedPort);
+
+    /**
      * Retrieve the standard output from the container.
      *
      * @return string The standard output of the container.
      */
     public function getOutput();
-
 
     /**
      * Retrieve the error output from the container.

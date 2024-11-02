@@ -6,6 +6,7 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 
+use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use function Testcontainers\array_flatten;
 
 /**
@@ -233,6 +234,10 @@ class DockerClient
         $process->run();
 
         if (!$process->isSuccessful()) {
+            $stderr = $process->getErrorOutput();
+            if (PortAlreadyAllocatedException::match($stderr)) {
+                throw new PortAlreadyAllocatedException($process);
+            }
             throw new DockerException($process);
         }
 

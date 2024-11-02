@@ -5,6 +5,7 @@ namespace Tests\Unit\Containers;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer;
+use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 
 class GenericContainerTest extends TestCase
 {
@@ -57,5 +58,34 @@ class GenericContainerTest extends TestCase
 
         $this->assertInstanceOf(ContainerInstance::class, $instance);
         $this->assertSame("VALUE2\n", $instance->getOutput());
+    }
+
+    public function testWithExposedPorts()
+    {
+        $container = (new GenericContainer('nginx:latest'))
+            ->withExposedPorts(80)
+            ->withPortStrategy(new LocalRandomPortStrategy());
+        $instance = $container->start();
+
+        $this->assertInstanceOf(ContainerInstance::class, $instance);
+        $this->assertTrue(is_int($instance->getMappingPort(80)));
+        $this->assertGreaterThanOrEqual(49152, $instance->getMappingPort(80));
+        $this->assertLessThanOrEqual(65535, $instance->getMappingPort(80));
+    }
+
+    public function testWithExposedPortsMultiple()
+    {
+        $container = (new GenericContainer('nginx:latest'))
+            ->withExposedPorts([80, 443])
+            ->withPortStrategy(new LocalRandomPortStrategy());
+        $instance = $container->start();
+
+        $this->assertInstanceOf(ContainerInstance::class, $instance);
+        $this->assertTrue(is_int($instance->getMappingPort(80)));
+        $this->assertGreaterThanOrEqual(49152, $instance->getMappingPort(80));
+        $this->assertLessThanOrEqual(65535, $instance->getMappingPort(80));
+        $this->assertTrue(is_int($instance->getMappingPort(443)));
+        $this->assertGreaterThanOrEqual(49152, $instance->getMappingPort(443));
+        $this->assertLessThanOrEqual(65535, $instance->getMappingPort(443));
     }
 }
