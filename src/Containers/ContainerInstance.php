@@ -15,6 +15,13 @@ interface ContainerInstance
     public function getContainerId();
 
     /**
+     * Get the host address of the container.
+     *
+     * @return string The host address of the container.
+     */
+    public function getHost();
+
+    /**
      * Get the host port mapped to the specified exposed port.
      *
      * @param int $exposedPort The port exposed by the container.
