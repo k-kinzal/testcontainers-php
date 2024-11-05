@@ -71,6 +71,20 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * {@inheritdoc}
      */
+    public function getExposedPorts()
+    {
+        if (!isset($this->containerDef['mappingPort'])) {
+            return [];
+        }
+        if (!is_array($this->containerDef['mappingPort'])) {
+            return [];
+        }
+        return array_keys($this->containerDef['mappingPort']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMappingPort($exposedPort)
     {
         if (!isset($this->containerDef['mappingPort'])) {

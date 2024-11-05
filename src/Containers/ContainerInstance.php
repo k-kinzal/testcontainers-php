@@ -22,6 +22,13 @@ interface ContainerInstance
     public function getHost();
 
     /**
+     * Get the exposed ports of the container.
+     *
+     * @return int[] The exposed ports of the container.
+     */
+    public function getExposedPorts();
+
+    /**
      * Get the host port mapped to the specified exposed port.
      *
      * @param int $exposedPort The port exposed by the container.

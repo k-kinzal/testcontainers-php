@@ -7,6 +7,10 @@ use LogicException;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
+use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
+use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
+use Testcontainers\Containers\WaitStrategy\WaitStrategy;
+use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
@@ -77,10 +81,28 @@ class GenericContainer implements Container
     private $portStrategy;
 
     /**
+     * Define the default wait strategy to be used for the container.
+     * @var string|null
+     */
+    protected static $WAIT_STRATEGY;
+
+    /**
+     * The wait strategy to be used for the container.
+     * @var WaitStrategy|null
+     */
+    private $waitStrategy;
+
+    /**
      * The port strategy provider.
      * @var PortStrategyProvider
      */
     private $portStrategyProvider;
+
+    /**
+     * The wait strategy provider.
+     * @var WaitStrategyProvider
+     */
+    private $waitStrategyProvider;
 
     /**
      * @param string|null $image The image to be used for the container.
@@ -94,6 +116,11 @@ class GenericContainer implements Container
         $this->portStrategyProvider = new PortStrategyProvider();
         $this->portStrategyProvider->register(new LocalRandomPortStrategy());
         $this->registerPortStrategy($this->portStrategyProvider);
+
+        $this->waitStrategyProvider = new WaitStrategyProvider();
+        $this->waitStrategyProvider->register(new HostPortWaitStrategy());
+        $this->waitStrategyProvider->register(new HttpWaitStrategy());
+        $this->registerWaitStrategy($this->waitStrategyProvider);
 
         $this->image = $image ?: static::$IMAGE;
         if (static::$PORTS) {
@@ -111,6 +138,13 @@ class GenericContainer implements Container
                 throw new LogicException("Port strategy not found: " . static::$PORT_STRATEGY);
             }
             $this->portStrategy = $portStrategy;
+        }
+        if (static::$WAIT_STRATEGY) {
+            $waitStrategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
+            if ($waitStrategy === null) {
+                throw new LogicException("Wait strategy not found: " . static::$WAIT_STRATEGY);
+            }
+            $this->waitStrategy = $waitStrategy;
         }
     }
 
@@ -289,7 +323,52 @@ class GenericContainer implements Container
      */
     public function withWaitStrategy($waitStrategy)
     {
-        // TODO: Implement withWaitStrategy() method.
+        $this->waitStrategy = $waitStrategy;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the port strategy for the container.
+     *
+     * This method returns the port strategy that should be used for the container.
+     * If a specific port strategy is set, it will return that. Otherwise, it will
+     * attempt to retrieve the default port strategy from the provider.
+     *
+     * @return PortStrategy|null The port strategy to be used, or null if none is set.
+     */
+    protected function portStrategy()
+    {
+        if ($this->portStrategy) {
+            return $this->portStrategy;
+        }
+        $strategy = $this->portStrategyProvider->get(self::$PORT_STRATEGY);
+        if ($strategy) {
+            return $strategy;
+        }
+        return null;
+    }
+
+    /**
+     * Retrieve the wait strategy for the container.
+     *
+     * This method returns the wait strategy that should be used for the container.
+     * If a specific wait strategy is set, it will return that. Otherwise, it will
+     * attempt to retrieve the default wait strategy from the provider.
+     *
+     * @param ContainerInstance $instance The container instance for which to get the wait strategy.
+     * @return WaitStrategy|null The wait strategy to be used, or null if none is set.
+     */
+    protected function waitStrategy($instance)
+    {
+        if ($this->waitStrategy) {
+            return $this->waitStrategy;
+        }
+        $strategy = $this->waitStrategyProvider->get(self::$WAIT_STRATEGY);
+        if ($strategy) {
+            return $strategy;
+        }
+        return null;
     }
 
     /**
@@ -303,12 +382,22 @@ class GenericContainer implements Container
     }
 
     /**
+     * Register a wait strategy.
+     *
+     * @param WaitStrategyProvider $provider The wait strategy provider.
+     */
+    protected function registerWaitStrategy($provider)
+    {
+        // Override this method to register custom wait strategies
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function start()
     {
         $client = DockerClientFactory::create();
-        $portStrategy = $this->portStrategy;
+        $portStrategy = $this->portStrategy();
 
         $containerDef = ['image' => $this->image];
 
@@ -356,6 +445,13 @@ class GenericContainer implements Container
         }
         $containerId = $output->getContainerId();
 
-        return new GenericContainerInstance($containerId, $containerDef);
+        $instance = new GenericContainerInstance($containerId, $containerDef);
+
+        $waitStrategy = $this->waitStrategy($instance);
+        if ($waitStrategy) {
+            $waitStrategy->waitUntilReady($instance);
+        }
+
+        return $instance;
     }
 }
