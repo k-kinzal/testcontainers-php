@@ -6,16 +6,60 @@ use RuntimeException;
 
 class HttpWaitStrategy implements WaitStrategy
 {
+/**
+     * The endpoint URL to be checked for readiness.
+     *
+     * This can be a full URL or null. If null, the endpoint will be constructed
+     * using the schema, host, port, and path properties.
+     *
+     * @var string|null
+     */
     private $endpoint;
 
+    /**
+     * The schema (protocol) to be used in the endpoint URL (e.g., 'http' or 'https').
+     *
+     * If not set, the default value 'http' will be used.
+     *
+     * @var string|null
+     */
     private $schema;
 
+    /**
+     * The host to be used in the endpoint URL.
+     *
+     * If not set, the default value 'localhost' will be used.
+     *
+     * @var string|null
+     */
     private $host;
 
+    /**
+     * The path to be used in the endpoint URL.
+     *
+     * If not set, the default value '/' will be used.
+     *
+     * @var string|null The path to be used in the endpoint URL, or null if not set.
+     */
     private $path;
 
+     /**
+     * The port to be used in the endpoint URL.
+     *
+     * If not set, the port will be determined dynamically based on the container's exposed ports.
+     *
+     * @var int|null The port number, or null if not set.
+     */
     private $port;
 
+    /**
+     * The timeout duration in seconds for waiting until the container instance is ready.
+     *
+     * This value determines how long the strategy will wait for the container to become ready
+     * before throwing a timeout exception. The default is 30 seconds.
+     *
+     * @var int The timeout duration in seconds.
+     */
     private $timeout = 30;
 
     /**

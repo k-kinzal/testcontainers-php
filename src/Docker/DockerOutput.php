@@ -17,7 +17,7 @@ class DockerOutput
      *
      * @var Process
      */
-    private $process;
+    protected $process;
 
     /**
      * @param Process $process
