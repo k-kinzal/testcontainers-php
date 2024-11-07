@@ -49,4 +49,21 @@ interface ContainerInstance
      * @return string
      */
     public function getErrorOutput();
+
+
+    /**
+     * Set data associated with the container.
+     *
+     * @param object $value The data to associate with the container.
+     */
+    public function setData($value);
+
+    /**
+     * Retrieve data associated with the container.
+     *
+     * @template T
+     * @param class-string<T> $class The class name of the data to retrieve.
+     * @return T The data associated with the specified class.
+     */
+    public function getData($class);
 }

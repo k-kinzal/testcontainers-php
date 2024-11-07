@@ -327,10 +327,10 @@ class GenericContainer implements Container
      */
     protected function portStrategy()
     {
-        if (self::$PORT_STRATEGY !== null) {
-            $strategy = $this->portStrategyProvider->get(self::$PORT_STRATEGY);
+        if (static::$PORT_STRATEGY !== null) {
+            $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
             if (!$strategy) {
-                throw new LogicException("Port strategy not found: " . self::$PORT_STRATEGY);
+                throw new LogicException("Port strategy not found: " . static::$PORT_STRATEGY);
             }
             return $strategy;
         }
@@ -352,10 +352,10 @@ class GenericContainer implements Container
      */
     protected function waitStrategy($instance)
     {
-        if (self::$WAIT_STRATEGY !== null) {
-            $strategy = $this->waitStrategyProvider->get(self::$WAIT_STRATEGY);
+        if (static::$WAIT_STRATEGY !== null) {
+            $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
             if (!$strategy) {
-                throw new LogicException("Wait strategy not found: " . self::$WAIT_STRATEGY);
+                throw new LogicException("Wait strategy not found: " . static::$WAIT_STRATEGY);
             }
             return $strategy;
         }
