@@ -21,7 +21,7 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('localhost', $instance->getHost());
     }
 
-    public function testGetMappingPort()
+    public function testGetMappedPort()
     {
         $instance = new GenericContainerInstance('8188d93d8a27', [
             'mappingPort' => [
@@ -29,7 +29,7 @@ class GenericContainerInstanceTest extends TestCase
             ],
         ]);
 
-        $this->assertSame(8080, $instance->getMappingPort(80));
+        $this->assertSame(8080, $instance->getMappedPort(80));
     }
 
     public function testIsRunning()

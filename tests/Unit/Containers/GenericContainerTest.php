@@ -68,9 +68,9 @@ class GenericContainerTest extends TestCase
         $instance = $container->start();
 
         $this->assertInstanceOf(ContainerInstance::class, $instance);
-        $this->assertTrue(is_int($instance->getMappingPort(80)));
-        $this->assertGreaterThanOrEqual(49152, $instance->getMappingPort(80));
-        $this->assertLessThanOrEqual(65535, $instance->getMappingPort(80));
+        $this->assertTrue(is_int($instance->getMappedPort(80)));
+        $this->assertGreaterThanOrEqual(49152, $instance->getMappedPort(80));
+        $this->assertLessThanOrEqual(65535, $instance->getMappedPort(80));
     }
 
     public function testWithExposedPortsMultiple()
@@ -81,11 +81,11 @@ class GenericContainerTest extends TestCase
         $instance = $container->start();
 
         $this->assertInstanceOf(ContainerInstance::class, $instance);
-        $this->assertTrue(is_int($instance->getMappingPort(80)));
-        $this->assertGreaterThanOrEqual(49152, $instance->getMappingPort(80));
-        $this->assertLessThanOrEqual(65535, $instance->getMappingPort(80));
-        $this->assertTrue(is_int($instance->getMappingPort(443)));
-        $this->assertGreaterThanOrEqual(49152, $instance->getMappingPort(443));
-        $this->assertLessThanOrEqual(65535, $instance->getMappingPort(443));
+        $this->assertTrue(is_int($instance->getMappedPort(80)));
+        $this->assertGreaterThanOrEqual(49152, $instance->getMappedPort(80));
+        $this->assertLessThanOrEqual(65535, $instance->getMappedPort(80));
+        $this->assertTrue(is_int($instance->getMappedPort(443)));
+        $this->assertGreaterThanOrEqual(49152, $instance->getMappedPort(443));
+        $this->assertLessThanOrEqual(65535, $instance->getMappedPort(443));
     }
 }

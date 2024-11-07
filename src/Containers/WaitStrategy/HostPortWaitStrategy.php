@@ -35,7 +35,7 @@ class HostPortWaitStrategy implements WaitStrategy
         $host = $instance->getHost();
         $mappedPorts = [];
         foreach ($instance->getExposedPorts() as $port) {
-            $mappedPorts[] = $instance->getMappingPort($port);
+            $mappedPorts[] = $instance->getMappedPort($port);
         }
 
         $ports = array_merge($this->ports, $mappedPorts);

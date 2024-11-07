@@ -34,7 +34,7 @@ interface ContainerInstance
      * @param int $exposedPort The port exposed by the container.
      * @return int|null The host port mapped to the exposed port, or null if not mapped.
      */
-    public function getMappingPort($exposedPort);
+    public function getMappedPort($exposedPort);
 
     /**
      * Retrieve the standard output from the container.
