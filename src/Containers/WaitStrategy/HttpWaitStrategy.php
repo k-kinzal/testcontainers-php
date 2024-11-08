@@ -6,14 +6,14 @@ use RuntimeException;
 
 class HttpWaitStrategy implements WaitStrategy
 {
-/**
-     * The endpoint URL to be checked for readiness.
-     *
-     * This can be a full URL or null. If null, the endpoint will be constructed
-     * using the schema, host, port, and path properties.
-     *
-     * @var string|null
-     */
+    /**
+         * The endpoint URL to be checked for readiness.
+         *
+         * This can be a full URL or null. If null, the endpoint will be constructed
+         * using the schema, host, port, and path properties.
+         *
+         * @var string|null
+         */
     private $endpoint;
 
     /**
@@ -43,13 +43,13 @@ class HttpWaitStrategy implements WaitStrategy
      */
     private $path;
 
-     /**
-     * The port to be used in the endpoint URL.
-     *
-     * If not set, the port will be determined dynamically based on the container's exposed ports.
-     *
-     * @var int|null The port number, or null if not set.
-     */
+    /**
+    * The port to be used in the endpoint URL.
+    *
+    * If not set, the port will be determined dynamically based on the container's exposed ports.
+    *
+    * @var int|null The port number, or null if not set.
+    */
     private $port;
 
     /**
