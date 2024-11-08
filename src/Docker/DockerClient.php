@@ -7,6 +7,7 @@ use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 
 use function Testcontainers\array_flatten;
+use function Testcontainers\kebab;
 
 /**
  * A client for interacting with Docker.
@@ -357,15 +358,31 @@ class DockerClient
     {
         $result = [];
         foreach ($options as $key => $value) {
+            $key = kebab($key);
+            if ($value === null) {
+                continue;
+            }
             if ($value === false) {
                 continue;
             }
-            $key = preg_replace_callback('/([A-Z])/', function ($matches) {
-                return '-' . strtolower($matches[1]);
-            }, $key);
-            $result[] = "--$key";
-            if (!is_bool($value)) {
+            if ($value === true) {
+                $result[] = "--$key";
+                continue;
+            }
+            if (is_scalar($value)) {
+                $result[] = "--$key";
                 $result[] = $value;
+                continue;
+            }
+            if (is_array($value)) {
+                foreach ($value as $k => $v) {
+                    $result[] = "--$key";
+                    if (is_string($k)) {
+                        $result[] = "$k=$v";
+                    } elseif (is_scalar($v) && !is_bool($v)) {
+                        $result[] = $v;
+                    }
+                }
             }
         }
 
