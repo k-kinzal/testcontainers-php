@@ -5,7 +5,6 @@ namespace Testcontainers;
 use LogicException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\GenericContainer;
 
 /**
  * Class Testcontainers
@@ -122,6 +121,9 @@ class Testcontainers
     {
         if (self::$setOnceShutdownHandler === false) {
             register_shutdown_function(function () {
+                self::stop();
+            });
+            set_exception_handler(function () {
                 self::stop();
             });
             self::$setOnceShutdownHandler = true;
