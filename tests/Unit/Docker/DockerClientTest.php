@@ -34,6 +34,57 @@ class DockerClientTest extends TestCase
         $this->assertNotEmpty($output->getContainerId());
     }
 
+    public function testRunWithTrueOptions()
+    {
+        $client = new DockerClient();
+        $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'quiet' => true,
+        ]);
+
+        $this->assertInstanceOf(DockerRunOutput::class, $output);
+        $this->assertSame(0, $output->getExitCode());
+        $this->assertSame("Hello, World!\n", $output->getOutput());
+    }
+
+    public function testRunWithFalseOptions()
+    {
+        $client = new DockerClient();
+        $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'detach' => false,
+        ]);
+
+        $this->assertInstanceOf(DockerRunOutput::class, $output);
+        $this->assertSame(0, $output->getExitCode());
+        $this->assertSame("Hello, World!\n", $output->getOutput());
+    }
+
+    public function testRunWithArrayOptions()
+    {
+        $client = new DockerClient();
+        $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'publish' => ['38621:80', '38622:443'],
+        ]);
+
+        $this->assertInstanceOf(DockerRunOutput::class, $output);
+        $this->assertSame(0, $output->getExitCode());
+        $this->assertSame("Hello, World!\n", $output->getOutput());
+    }
+
+    public function testRunWithObjectOptions()
+    {
+        $client = new DockerClient();
+        $output = $client->run('alpine:latest', 'printenv', ['BAR'], [
+            'env' => [
+                'FOO' => 'foo',
+                'BAR' => 'bar',
+            ],
+        ]);
+
+        $this->assertInstanceOf(DockerRunOutput::class, $output);
+        $this->assertSame(0, $output->getExitCode());
+        $this->assertSame("bar\n", $output->getOutput());
+    }
+
     public function testStop()
     {
         $client = new DockerClient();
