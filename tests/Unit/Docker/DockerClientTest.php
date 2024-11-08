@@ -9,6 +9,7 @@ use Testcontainers\Docker\DockerRunOutput;
 use Testcontainers\Docker\DockerRunWithDetachOutput;
 use Testcontainers\Docker\DockerStopOutput;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
+use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
 class DockerClientTest extends TestCase
 {
@@ -83,6 +84,25 @@ class DockerClientTest extends TestCase
         $this->assertInstanceOf(DockerRunOutput::class, $output);
         $this->assertSame(0, $output->getExitCode());
         $this->assertSame("bar\n", $output->getOutput());
+    }
+
+    public function testRunWithPortConflict()
+    {
+        $this->expectException(PortAlreadyAllocatedException::class);
+
+        $client = new DockerClient();
+        $output1 = $client->run('nginx:1.27.2', null, null, [
+            'detach' => true,
+            'publish' => ['38793:80'],
+        ]);
+        try {
+            $client->run('nginx:1.27.2', null, null, [
+                'detach' => true,
+                'publish' => ['38793:80'],
+            ]);
+        } finally {
+            $client->stop($output1->getContainerId());
+        }
     }
 
     public function testStop()

@@ -5,6 +5,7 @@ namespace Testcontainers\Docker;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
+use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
 use function Testcontainers\array_flatten;
 use function Testcontainers\kebab;
@@ -210,6 +211,7 @@ class DockerClient
      * @param array $options Additional options for the Docker command.
      * @return DockerRunOutput|DockerRunWithDetachOutput The output of the Docker run command. If the `detach` option is set to `true`, a `DockerRunWithDetachOutput` object is returned.
      *
+     * @throws PortAlreadyAllocatedException If the specified port is already allocated.
      * @throws DockerException If the Docker command fails.
      */
     public function run($image, $command = null, $args = null, $options = [])
@@ -234,6 +236,10 @@ class DockerClient
         $process->run();
 
         if (!$process->isSuccessful()) {
+            $stderr = $process->getErrorOutput();
+            if (PortAlreadyAllocatedException::match($stderr)) {
+                throw new PortAlreadyAllocatedException($process);
+            }
             throw new DockerException($process);
         }
 
