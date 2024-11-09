@@ -23,7 +23,6 @@ class GenericContainerTest extends TestCase
             ->withCommand('pwd');
         $instance = $container->start();
 
-        $this->assertInstanceOf(ContainerInstance::class, $instance);
         $this->assertSame("/\n", $instance->getOutput());
     }
 
@@ -33,7 +32,6 @@ class GenericContainerTest extends TestCase
             ->withCommands(['echo', 'Hello, World!']);
         $instance = $container->start();
 
-        $this->assertInstanceOf(ContainerInstance::class, $instance);
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
 }

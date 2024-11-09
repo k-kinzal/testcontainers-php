@@ -50,9 +50,6 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getOutput()
     {
-        if ($this->isRunning() === false) {
-            return false;
-        }
         $client = DockerClientFactory::create();
         $output = $client->logs($this->containerId);
         return $output->getOutput();
@@ -63,9 +60,6 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getErrorOutput()
     {
-        if ($this->isRunning() === false) {
-            return false;
-        }
         $client = DockerClientFactory::create();
         $output = $client->logs($this->containerId);
         return $output->getErrorOutput();
