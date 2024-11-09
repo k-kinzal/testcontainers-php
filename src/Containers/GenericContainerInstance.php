@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers;
 
+use LogicException;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 
@@ -36,6 +37,14 @@ class GenericContainerInstance implements ContainerInstance
      * @var bool True if the container is running, false otherwise.
      */
     private $running = true;
+
+    /**
+     * The data associated with the container.
+     *
+     * @template T
+     * @var array<class-string<T>, T> The data associated with the container.
+     */
+    private $data = [];
 
     /**
      * @param string $containerId The unique identifier for the container.
@@ -108,6 +117,26 @@ class GenericContainerInstance implements ContainerInstance
         $client = DockerClientFactory::create();
         $output = $client->logs($this->containerId);
         return $output->getErrorOutput();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData($value)
+    {
+        $this->data[get_class($value)] = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData($class)
+    {
+        $value = $this->data[$class];
+        if ($value === null) {
+            throw new LogicException("No data of type $class associated with the container");
+        }
+        return $value;
     }
 
     /**

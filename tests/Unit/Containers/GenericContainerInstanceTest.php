@@ -53,6 +53,16 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame("ls: /not-exist-dir: No such file or directory\n", $instance->getErrorOutput());
     }
 
+    public function testSetDataAndGetData()
+    {
+        $data = new CustomData();
+
+        $instance = new GenericContainerInstance('8188d93d8a27');
+        $instance->setData($data);
+
+        $this->assertSame($data, $instance->getData(CustomData::class));
+    }
+
     public function testIsRunning()
     {
         $instance = new GenericContainerInstance('8188d93d8a27');
@@ -67,4 +77,8 @@ class GenericContainerInstanceTest extends TestCase
 
         $this->assertFalse($instance->isRunning());
     }
+}
+
+class CustomData
+{
 }

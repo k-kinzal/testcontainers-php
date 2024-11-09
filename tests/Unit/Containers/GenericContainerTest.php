@@ -24,6 +24,10 @@ class GenericContainerTest extends TestCase
             ->withCommand('pwd');
         $instance = $container->start();
 
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
+
         $this->assertSame("/\n", $instance->getOutput());
     }
 
@@ -32,6 +36,10 @@ class GenericContainerTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['echo', 'Hello, World!']);
         $instance = $container->start();
+
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
@@ -43,6 +51,10 @@ class GenericContainerTest extends TestCase
             ->withCommands(['printenv', 'KEY']);
         $instance = $container->start();
 
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
+
         $this->assertSame("VALUE\n", $instance->getOutput());
     }
 
@@ -52,6 +64,10 @@ class GenericContainerTest extends TestCase
             ->withEnvs(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
             ->withCommands(['printenv', 'KEY2']);
         $instance = $container->start();
+
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
 
         $this->assertSame("VALUE2\n", $instance->getOutput());
     }
