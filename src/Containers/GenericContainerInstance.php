@@ -18,6 +18,19 @@ class GenericContainerInstance implements ContainerInstance
     private $containerId;
 
     /**
+     * The container definition.
+     *
+     * @var array{
+     *     image?: string,
+     *     command?: string,
+     *     args?: string[],
+     *     ports?: array<int, int>,
+     *     env?: array<string, string>,
+     * } The container definition.
+     */
+    private $containerDef;
+
+    /**
      * Indicates whether the container is running.
      *
      * @var bool True if the container is running, false otherwise.
@@ -27,9 +40,10 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * @param string $containerId The unique identifier for the container.
      */
-    public function __construct($containerId)
+    public function __construct($containerId, $containerDef = [])
     {
         $this->containerId = $containerId;
+        $this->containerDef = $containerDef;
     }
 
     public function __destruct()
@@ -43,6 +57,34 @@ class GenericContainerInstance implements ContainerInstance
     public function getContainerId()
     {
         return $this->containerId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExposedPorts()
+    {
+        if (!isset($this->containerDef['ports'])) {
+            return [];
+        }
+        if (!is_array($this->containerDef['ports'])) {
+            return [];
+        }
+        return array_keys($this->containerDef['ports']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappedPort($exposedPort)
+    {
+        if (!isset($this->containerDef['ports'])) {
+            return null;
+        }
+        if (!is_array($this->containerDef['ports'])) {
+            return null;
+        }
+        return $this->containerDef['ports'][$exposedPort];
     }
 
     /**

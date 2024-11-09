@@ -16,6 +16,17 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('8188d93d8a27', $instance->getContainerId());
     }
 
+    public function testGetMappedPort()
+    {
+        $instance = new GenericContainerInstance('8188d93d8a27', [
+            'ports' => [
+                80 => 8080,
+            ],
+        ]);
+
+        $this->assertSame(8080, $instance->getMappedPort(80));
+    }
+
     public function testGetOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
