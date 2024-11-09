@@ -84,6 +84,9 @@ class GenericContainerInstance implements ContainerInstance
         if (!is_array($this->containerDef['ports'])) {
             return null;
         }
+        if (!isset($this->containerDef['ports'][$exposedPort])) {
+            return null;
+        }
         return $this->containerDef['ports'][$exposedPort];
     }
 
