@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers;
 
 use Testcontainers\Containers\PortStrategy\PortStrategy;
+use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 
 /**
  * An interface representing the definition of a container.
