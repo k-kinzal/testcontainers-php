@@ -33,6 +33,10 @@ class GenericContainerInstanceTest extends TestCase
             ->withCommands(['echo', 'Hello, World!']);
         $instance = $container->start();
 
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
+
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
 
@@ -41,6 +45,10 @@ class GenericContainerInstanceTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['ls', '/not-exist-dir']);
         $instance = $container->start();
+
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
 
         $this->assertSame("ls: /not-exist-dir: No such file or directory\n", $instance->getErrorOutput());
     }
