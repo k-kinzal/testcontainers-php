@@ -11,6 +11,7 @@ use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
+use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 use Testcontainers\Docker\DockerClientFactory;
@@ -126,6 +127,7 @@ class GenericContainer implements Container
         $this->waitStrategyProvider = new WaitStrategyProvider();
         $this->waitStrategyProvider->register(new HostPortWaitStrategy());
         $this->waitStrategyProvider->register(new HttpWaitStrategy());
+        $this->waitStrategyProvider->register(new LogMessageWaitStrategy());
         $this->registerWaitStrategy($this->waitStrategyProvider);
     }
 

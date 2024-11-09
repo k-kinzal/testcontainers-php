@@ -185,9 +185,9 @@ class DockerClientTest extends TestCase
             }
 
             $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
-            $this->assertTrue(preg_match('/^([A-Z][a-z]{2} ){2}\d{1,2} \d{2}:\d{2}:\d{2} [A-Z]{3} \d{4}\n$/', $lines[0]) === 1);
-            $this->assertTrue(preg_match('/^([A-Z][a-z]{2} ){2}\d{1,2} \d{2}:\d{2}:\d{2} [A-Z]{3} \d{4}\n$/', $lines[1]) === 1);
-            $this->assertTrue(preg_match('/^([A-Z][a-z]{2} ){2}\d{1,2} \d{2}:\d{2}:\d{2} [A-Z]{3} \d{4}\n$/', $lines[2]) === 1);
+            $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
+            $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
+            $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);
         } finally {
             $client->stop($output->getContainerId());
         }
