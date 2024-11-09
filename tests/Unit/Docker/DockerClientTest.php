@@ -4,6 +4,7 @@ namespace Tests\Unit\Docker;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
+use Testcontainers\Docker\DockerLogsOutput;
 use Testcontainers\Docker\DockerProcessStatusOutput;
 use Testcontainers\Docker\DockerRunOutput;
 use Testcontainers\Docker\DockerRunWithDetachOutput;
@@ -143,5 +144,24 @@ class DockerClientTest extends TestCase
         $this->assertSame(substr($containerId, 0, 12), $status['ID']);
         $this->assertSame('alpine:latest', $status['Image']);
         $this->assertSame('running', $status['State']);
+    }
+
+    public function testLogs()
+    {
+        $client = new DockerClient();
+        $output = $client->run('jpetazzo/clock:latest', null, null, [
+            'detach' => true,
+        ]);
+
+        try {
+            $containerId = $output->getContainerId();
+            $logsOutput = $client->logs($containerId);
+
+            $this->assertInstanceOf(DockerLogsOutput::class, $logsOutput);
+            $this->assertSame(0, $logsOutput->getExitCode());
+            $this->assertNotEmpty($logsOutput->getOutput());
+        } finally {
+            $client->stop($output->getContainerId());
+        }
     }
 }
