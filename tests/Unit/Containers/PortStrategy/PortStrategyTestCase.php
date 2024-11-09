@@ -30,7 +30,7 @@ abstract class PortStrategyTestCase extends TestCase
 
         $this->assertTrue(is_string($name));
         $this->assertNotEmpty($name);
-        $this->assertRegExp('/^[a-z_][a-z0-9_]*$/', $name);
+        $this->assertTrue(preg_match('/^[a-z_][a-z0-9_]*$/', $name) === 1);
     }
 
     public function testInterfaceGetNameConsistency()
