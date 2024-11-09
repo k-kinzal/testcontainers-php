@@ -16,11 +16,26 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('8188d93d8a27', $instance->getContainerId());
     }
 
+    public function testGetMappedPort()
+    {
+        $instance = new GenericContainerInstance('8188d93d8a27', [
+            'ports' => [
+                80 => 8080,
+            ],
+        ]);
+
+        $this->assertSame(8080, $instance->getMappedPort(80));
+    }
+
     public function testGetOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['echo', 'Hello, World!']);
         $instance = $container->start();
+
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
@@ -30,6 +45,10 @@ class GenericContainerInstanceTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['ls', '/not-exist-dir']);
         $instance = $container->start();
+
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
 
         $this->assertSame("ls: /not-exist-dir: No such file or directory\n", $instance->getErrorOutput());
     }
