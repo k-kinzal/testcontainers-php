@@ -25,6 +25,18 @@ class GenericContainer implements Container
     private $image;
 
     /**
+     * The commands to be executed in the container.
+     * @var null|string|string[]
+     */
+    protected static $COMMANDS;
+
+    /**
+     * The commands to be executed in the container.
+     * @var string[]
+     */
+    private $commands = [];
+
+    /**
      * @param string|null $image The image to be used for the container.
      */
     public function __construct($image = null)
@@ -103,7 +115,9 @@ class GenericContainer implements Container
      */
     public function withCommand($cmd)
     {
-        // TODO: Implement withCommand() method.
+        $this->commands = [$cmd];
+
+        return $this;
     }
 
     /**
@@ -111,7 +125,9 @@ class GenericContainer implements Container
      */
     public function withCommands($commandParts)
     {
-        // TODO: Implement withCommands() method.
+        $this->commands = $commandParts;
+
+        return $this;
     }
 
     /**
@@ -195,12 +211,45 @@ class GenericContainer implements Container
     }
 
     /**
+     * Retrieve the command to be executed in the container.
+     *
+     * This method returns the command that should be executed in the container.
+     * If a specific command is set, it will return that. Otherwise, it will
+     * attempt to retrieve the default command from the provider.
+     *
+     * @return string|string[]|null
+     */
+    protected function commands()
+    {
+        if (static::$COMMANDS) {
+            return static::$COMMANDS;
+        }
+        if ($this->commands) {
+            return $this->commands;
+        }
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function start()
     {
+        $commands = $this->commands();
+        if (is_string($commands)) {
+            $commands = [$commands];
+        }
+        $command = null;
+        $args = [];
+        if (is_array($commands)) {
+            $command = $commands[0];
+            if (count($commands) > 1) {
+                $args = array_slice($commands, 1);
+            }
+        }
+
         $client = DockerClientFactory::create();
-        $output = $client->run($this->image, null, null, [
+        $output = $client->run($this->image, $command, $args, [
             'detach' => true,
         ]);
         if (!($output instanceof DockerRunWithDetachOutput)) {

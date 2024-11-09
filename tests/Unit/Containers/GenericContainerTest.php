@@ -16,4 +16,22 @@ class GenericContainerTest extends TestCase
         $this->assertInstanceOf(ContainerInstance::class, $instance);
         $this->assertNotEmpty($instance->getContainerId());
     }
+
+    public function testStartWithCommand()
+    {
+        $container = (new GenericContainer('alpine:latest'))
+            ->withCommand('pwd');
+        $instance = $container->start();
+
+        $this->assertSame("/\n", $instance->getOutput());
+    }
+
+    public function testStartWithCommands()
+    {
+        $container = (new GenericContainer('alpine:latest'))
+            ->withCommands(['echo', 'Hello, World!']);
+        $instance = $container->start();
+
+        $this->assertSame("Hello, World!\n", $instance->getOutput());
+    }
 }

@@ -18,34 +18,20 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testGetOutput()
     {
-        $container = new GenericContainer('nginx:1.27.2');
+        $container = (new GenericContainer('alpine:latest'))
+            ->withCommands(['echo', 'Hello, World!']);
         $instance = $container->start();
 
-        $this->assertNotEmpty($instance->getOutput());
-    }
-
-    public function testGetOutputStopsContainer()
-    {
-        $instance = new GenericContainerInstance('8188d93d8a27'); // not exist container id
-        $instance->stop();
-
-        $this->assertFalse($instance->getOutput());
+        $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
 
     public function testGetErrorOutput()
     {
-        $container = new GenericContainer('nginx:1.27.2');
+        $container = (new GenericContainer('alpine:latest'))
+            ->withCommands(['ls', '/not-exist-dir']);
         $instance = $container->start();
 
-        $this->assertNotEmpty($instance->getErrorOutput());
-    }
-
-    public function testGetErrorOutputStopsContainer()
-    {
-        $instance = new GenericContainerInstance('8188d93d8a27'); // not exist container id
-        $instance->stop();
-
-        $this->assertFalse($instance->getErrorOutput());
+        $this->assertSame("ls: /not-exist-dir: No such file or directory\n", $instance->getErrorOutput());
     }
 
     public function testIsRunning()

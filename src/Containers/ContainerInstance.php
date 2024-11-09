@@ -17,14 +17,14 @@ interface ContainerInstance
     /**
      * Retrieve the standard output from the container.
      *
-     * @return string|false The standard output from the container, or false if the container does not exist.
+     * @return string The standard output from the container.
      */
     public function getOutput();
 
     /**
      * Retrieve the error output from the container.
      *
-     * @return string|false The error output from the container, or false if the container does not exist.
+     * @return string The error output from the container.
      */
     public function getErrorOutput();
 }
