@@ -4,6 +4,7 @@ namespace Tests\Unit\Docker;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
+use Testcontainers\Docker\DockerFollowLogsOutput;
 use Testcontainers\Docker\DockerLogsOutput;
 use Testcontainers\Docker\DockerProcessStatusOutput;
 use Testcontainers\Docker\DockerRunOutput;
@@ -160,6 +161,33 @@ class DockerClientTest extends TestCase
             $this->assertInstanceOf(DockerLogsOutput::class, $logsOutput);
             $this->assertSame(0, $logsOutput->getExitCode());
             $this->assertNotEmpty($logsOutput->getOutput());
+        } finally {
+            $client->stop($output->getContainerId());
+        }
+    }
+
+    public function testFollowLogs()
+    {
+        $client = new DockerClient();
+        $output = $client->run('jpetazzo/clock:latest', null, null, [
+            'detach' => true,
+        ]);
+
+        try {
+            $containerId = $output->getContainerId();
+            $logsOutput = $client->followLogs($containerId);
+            $iter = $logsOutput->getIterator();
+
+            $lines = [];
+            for ($i = 0; $i < 3; $i++) {
+                $lines[] = $iter->current();
+                $iter->next();
+            }
+
+            $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
+            $this->assertTrue(preg_match('/^([A-Z][a-z]{2} ){2}\d{1,2} \d{2}:\d{2}:\d{2} [A-Z]{3} \d{4}\n$/', $lines[0]) === 1);
+            $this->assertTrue(preg_match('/^([A-Z][a-z]{2} ){2}\d{1,2} \d{2}:\d{2}:\d{2} [A-Z]{3} \d{4}\n$/', $lines[1]) === 1);
+            $this->assertTrue(preg_match('/^([A-Z][a-z]{2} ){2}\d{1,2} \d{2}:\d{2}:\d{2} [A-Z]{3} \d{4}\n$/', $lines[2]) === 1);
         } finally {
             $client->stop($output->getContainerId());
         }

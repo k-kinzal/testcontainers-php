@@ -394,6 +394,40 @@ class DockerClient
     }
 
     /**
+     * Follow the logs of a Docker container.
+     *
+     * This method wraps the `docker logs` command with the `--follow` option to stream the logs
+     * of the specified container in real-time.
+     *
+     * @param string $containerId The ID of the container to follow logs from.
+     * @param array $options Additional options for the Docker logs command.
+     * @return DockerFollowLogsOutput The output containing the streamed logs of the container.
+     */
+    public function followLogs($containerId, $options = [])
+    {
+        $commandline = array_filter(array_flatten([
+            $this->command,
+            $this->arrayToArgs($this->options),
+            'logs',
+            $this->arrayToArgs(array_merge($options, [
+                'follow' => true,
+            ])),
+            $containerId
+        ]));
+        $process = new Process(
+            $commandline,
+            $this->cwd,
+            $this->env,
+            $this->input,
+            $this->timeout,
+            $this->proc_options
+        );
+        $process->start();
+
+        return new DockerFollowLogsOutput($process);
+    }
+
+    /**
      * Convert array to command line arguments
      *
      * @param array $options command line options (key-value pairs)
