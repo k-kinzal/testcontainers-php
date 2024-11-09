@@ -71,6 +71,15 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * {@inheritdoc}
      */
+    public function getHost()
+    {
+        // TODO: Support for host name resolution from remote hosts and from within containers
+        return 'localhost';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getExposedPorts()
     {
         if (!isset($this->containerDef['ports'])) {
