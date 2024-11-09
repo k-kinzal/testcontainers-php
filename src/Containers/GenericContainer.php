@@ -37,6 +37,18 @@ class GenericContainer implements Container
     private $commands = [];
 
     /**
+     * Define the default environment variables to be used for the container.
+     * @var array|null
+     */
+    protected static $ENVIRONMENTS;
+
+    /**
+     * The environment variables to be used for the container.
+     * @var array
+     */
+    private $env = [];
+
+    /**
      * @param string|null $image The image to be used for the container.
      */
     public function __construct($image = null)
@@ -83,7 +95,9 @@ class GenericContainer implements Container
      */
     public function withEnv($key, $value)
     {
-        // TODO: Implement withEnv() method.
+        $this->env[$key] = $value;
+
+        return $this;
     }
 
     /**
@@ -91,7 +105,9 @@ class GenericContainer implements Container
      */
     public function withEnvs($env)
     {
-        // TODO: Implement withEnvs() method.
+        $this->env = array_merge($this->env, $env);
+
+        return $this;
     }
 
     /**
@@ -231,6 +247,26 @@ class GenericContainer implements Container
     }
 
     /**
+     * Retrieve the environment variables for the container.
+     *
+     * This method returns the environment variables that should be used for the container.
+     * If specific environment variables are set, it will return those. Otherwise, it will
+     * attempt to retrieve the default environment variables from the provider.
+     *
+     * @return array|null The environment variables to be used, or null if none are set.
+     */
+    protected function env()
+    {
+        if (static::$ENVIRONMENTS) {
+            return static::$ENVIRONMENTS;
+        }
+        if ($this->env) {
+            return $this->env;
+        }
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function start()
@@ -251,6 +287,7 @@ class GenericContainer implements Container
         $client = DockerClientFactory::create();
         $output = $client->run($this->image, $command, $args, [
             'detach' => true,
+            'env' => $this->env(),
         ]);
         if (!($output instanceof DockerRunWithDetachOutput)) {
             throw new LogicException('Expected DockerRunWithDetachOutput');
