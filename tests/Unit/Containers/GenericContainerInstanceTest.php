@@ -34,6 +34,15 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame(8080, $instance->getMappedPort(80));
     }
 
+    public function testGetPrivilegedMode()
+    {
+        $instance = new GenericContainerInstance('8188d93d8a27', [
+            'privileged' => true,
+        ]);
+
+        $this->assertTrue($instance->getPrivilegedMode());
+    }
+
     public function testGetOutput()
     {
         $container = (new GenericContainer('alpine:latest'))

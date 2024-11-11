@@ -72,6 +72,20 @@ class GenericContainer implements Container
     private $env = [];
 
     /**
+     * Define the default privileged mode to be used for the container.
+     *
+     * @var bool|null
+     */
+    protected static $PRIVILEGED;
+
+    /**
+     * The privileged mode to be used for the container.
+     *
+     * @var bool
+     */
+    private $privileged = false;
+
+    /**
      * Define the default port strategy to be used for the container.
      * @var string|null
      */
@@ -280,7 +294,9 @@ class GenericContainer implements Container
      */
     public function withPrivilegedMode($mode)
     {
-        // TODO: Implement withPrivilegedMode() method.
+        $this->privileged = $mode;
+
+        return $this;
     }
 
     /**
@@ -369,6 +385,23 @@ class GenericContainer implements Container
             return $this->env;
         }
         return null;
+    }
+
+    /**
+     * Retrieve the privileged mode for the container.
+     *
+     * This method returns whether the container should run in privileged mode.
+     * If a specific privileged mode is set, it will return that. Otherwise, it will
+     * attempt to retrieve the default privileged mode from the provider.
+     *
+     * @return bool True if the container should run in privileged mode, false otherwise.
+     */
+    protected function privileged()
+    {
+        if (static::$PRIVILEGED) {
+            return static::$PRIVILEGED;
+        }
+        return $this->privileged;
     }
 
     /**
@@ -474,6 +507,7 @@ class GenericContainer implements Container
                 'detach' => true,
                 'env' => $this->env(),
                 'publish' => $ports,
+                'privileged' => $this->privileged(),
             ]);
         } catch (PortAlreadyAllocatedException $e) {
             $behavior = $portStrategy->conflictBehavior();
@@ -502,6 +536,7 @@ class GenericContainer implements Container
                 return $carry;
             }, []),
             'env' => $this->env(),
+            'privileged' => $this->privileged(),
         ];
         $instance = new GenericContainerInstance($containerId, $containerDef);
 

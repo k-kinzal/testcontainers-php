@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
+use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
 class GenericContainerTest extends TestCase
 {
@@ -99,5 +100,15 @@ class GenericContainerTest extends TestCase
         $this->assertTrue(is_int($instance->getMappedPort(443)));
         $this->assertGreaterThanOrEqual(49152, $instance->getMappedPort(443));
         $this->assertLessThanOrEqual(65535, $instance->getMappedPort(443));
+    }
+
+    public function testWithPrivilegedMode()
+    {
+        $container = (new GenericContainer('alpine:latest'))
+            ->withPrivilegedMode(true)
+            ->withCommands(['tail', '-f', '/dev/null']);
+        $instance = $container->start();
+
+        $this->assertSame(true, $instance->getPrivilegedMode());
     }
 }
