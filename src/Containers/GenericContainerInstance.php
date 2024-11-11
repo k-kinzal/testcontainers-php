@@ -111,6 +111,14 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * {@inheritdoc}
      */
+    public function getPrivilegedMode()
+    {
+        return isset($this->containerDef['privileged']) ? $this->containerDef['privileged'] : false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getOutput()
     {
         $client = DockerClientFactory::create();

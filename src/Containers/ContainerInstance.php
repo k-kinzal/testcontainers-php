@@ -37,6 +37,13 @@ interface ContainerInstance
     public function getMappedPort($exposedPort);
 
     /**
+     * Get the privileged mode status of the container.
+     *
+     * @return bool True if the container is running in privileged mode, false otherwise.
+     */
+    public function getPrivilegedMode();
+
+    /**
      * Retrieve the standard output from the container.
      *
      * @return string The standard output from the container.
