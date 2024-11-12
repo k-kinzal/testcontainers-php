@@ -15,6 +15,21 @@ interface ContainerInstance
     public function getContainerId();
 
     /**
+     * Get the label of the container.
+     *
+     * @param string $label
+     * @return string|null
+     */
+    public function getLabel($label);
+
+    /**
+     * Get the labels of the container.
+     *
+     * @return array<string, string>
+     */
+    public function getLabels();
+
+    /**
      * Get the host address of the container.
      *
      * @return string The host address of the container.
