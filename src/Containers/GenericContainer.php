@@ -72,6 +72,18 @@ class GenericContainer implements Container
     private $env = [];
 
     /**
+     * Define the default labels to be used for the container.
+     * @var array<string, string>|null
+     */
+    protected static $LABELS;
+
+    /**
+     * The labels to be used for the container.
+     * @var array<string, string>
+     */
+    private $labels = [];
+
+    /**
      * Define the default privileged mode to be used for the container.
      *
      * @var bool|null
@@ -210,7 +222,9 @@ class GenericContainer implements Container
      */
     public function withLabel($key, $value)
     {
-        // TODO: Implement withLabel() method.
+        $this->labels[$key] = $value;
+
+        return $this;
     }
 
     /**
@@ -218,7 +232,9 @@ class GenericContainer implements Container
      */
     public function withLabels($labels)
     {
-        // TODO: Implement withLabels() method.
+        $this->labels = $labels;
+
+        return $this;
     }
 
     /**
@@ -388,6 +404,26 @@ class GenericContainer implements Container
     }
 
     /**
+     * Retrieve the labels for the container.
+     *
+     * This method returns the labels that should be used for the container.
+     * If specific labels are set, it will return those. Otherwise, it will
+     * attempt to retrieve the default labels from the provider.
+     *
+     * @return array<string, string>|null The labels to be used, or null if none are set.
+     */
+    protected function labels()
+    {
+        if (static::$LABELS) {
+            return static::$LABELS;
+        }
+        if ($this->labels) {
+            return $this->labels;
+        }
+        return null;
+    }
+
+    /**
      * Retrieve the privileged mode for the container.
      *
      * This method returns whether the container should run in privileged mode.
@@ -506,10 +542,14 @@ class GenericContainer implements Container
             $output = $client->run($this->image, $command, $args, [
                 'detach' => true,
                 'env' => $this->env(),
+                'label' => $this->labels(),
                 'publish' => $ports,
                 'privileged' => $this->privileged(),
             ]);
         } catch (PortAlreadyAllocatedException $e) {
+            if ($portStrategy === null) {
+                throw $e;
+            }
             $behavior = $portStrategy->conflictBehavior();
             if ($behavior->isRetry()) {
                 return $this->start();
@@ -530,12 +570,13 @@ class GenericContainer implements Container
             'image' => $this->image,
             'command' => $command,
             'args' => $args,
+            'env' => $this->env(),
+            'labels' => $this->labels(),
             'ports' => array_reduce($ports, function ($carry, $item) {
                 $parts = explode(':', $item);
                 $carry[(int)$parts[1]] = (int)$parts[0];
                 return $carry;
             }, []),
-            'env' => $this->env(),
             'privileged' => $this->privileged(),
         ];
         $instance = new GenericContainerInstance($containerId, $containerDef);

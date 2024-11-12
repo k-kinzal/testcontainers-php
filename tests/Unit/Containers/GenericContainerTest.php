@@ -73,7 +73,21 @@ class GenericContainerTest extends TestCase
         $this->assertSame("VALUE2\n", $instance->getOutput());
     }
 
-    public function testWithExposedPorts()
+    public function testStartWIthLabels()
+    {
+        $container = (new GenericContainer('alpine:latest'))
+            ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
+            ->withCommands(['echo', 'Hello, World!']);
+        $instance = $container->start();
+
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
+
+        $this->assertSame("Hello, World!\n", $instance->getOutput());
+    }
+
+    public function testStartWithExposedPorts()
     {
         $container = (new GenericContainer('nginx:latest'))
             ->withExposedPorts(80)
@@ -86,7 +100,7 @@ class GenericContainerTest extends TestCase
         $this->assertLessThanOrEqual(65535, $instance->getMappedPort(80));
     }
 
-    public function testWithExposedPortsMultiple()
+    public function testStartWithExposedPortsMultiple()
     {
         $container = (new GenericContainer('nginx:latest'))
             ->withExposedPorts([80, 443])
@@ -102,7 +116,7 @@ class GenericContainerTest extends TestCase
         $this->assertLessThanOrEqual(65535, $instance->getMappedPort(443));
     }
 
-    public function testWithPrivilegedMode()
+    public function testStartWithPrivilegedMode()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPrivilegedMode(true)

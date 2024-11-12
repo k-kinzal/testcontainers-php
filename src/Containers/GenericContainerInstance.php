@@ -71,6 +71,37 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * {@inheritdoc}
      */
+    public function getLabel($label)
+    {
+        if (!isset($this->containerDef['labels'])) {
+            return null;
+        }
+        if (!is_array($this->containerDef['labels'])) {
+            return null;
+        }
+        if (!isset($this->containerDef['labels'][$label])) {
+            return null;
+        }
+        return $this->containerDef['labels'][$label];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLabels()
+    {
+        if (!isset($this->containerDef['labels'])) {
+            return [];
+        }
+        if (!is_array($this->containerDef['labels'])) {
+            return [];
+        }
+        return $this->containerDef['labels'] ?: [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getHost()
     {
         // TODO: Support for host name resolution from remote hosts and from within containers

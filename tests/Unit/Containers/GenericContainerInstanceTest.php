@@ -16,6 +16,28 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('8188d93d8a27', $instance->getContainerId());
     }
 
+    public function testGetLabel()
+    {
+        $instance = new GenericContainerInstance('8188d93d8a27', [
+            'labels' => [
+                'com.example.label' => 'value',
+            ],
+        ]);
+
+        $this->assertSame('value', $instance->getLabel('com.example.label'));
+    }
+
+    public function testGetLabels()
+    {
+        $instance = new GenericContainerInstance('8188d93d8a27', [
+            'labels' => [
+                'com.example.label' => 'value',
+            ],
+        ]);
+
+        $this->assertSame(['com.example.label' => 'value'], $instance->getLabels());
+    }
+
     public function testGetHost()
     {
         $instance = new GenericContainerInstance('8188d93d8a27');
