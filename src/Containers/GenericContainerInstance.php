@@ -96,7 +96,7 @@ class GenericContainerInstance implements ContainerInstance
         if (!is_array($this->containerDef['labels'])) {
             return [];
         }
-        return $this->containerDef['labels'];
+        return $this->containerDef['labels'] ?: [];
     }
 
     /**
