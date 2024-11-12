@@ -222,7 +222,9 @@ class GenericContainer implements Container
      */
     public function withLabel($key, $value)
     {
-        // TODO: Implement withLabel() method.
+        $this->labels[$key] = $value;
+
+        return $this;
     }
 
     /**
