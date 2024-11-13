@@ -1,0 +1,20 @@
+[pr_description]
+publish_labels=true
+publish_description_as_comment=true
+generate_ai_title=true
+final_update_message=false
+
+[pr_reviewer]
+enable_review_labels_effort = true
+inline_code_comments=false
+require_score_review=true
+require_can_be_split_review=true
+num_code_suggestions="3"
+extra_instructions="This project must be reviewed against PHP 5.6."
+
+[pr_code_suggestions]
+focus_only_on_problems=true
+num_code_suggestions_per_chunk="3"
+
+[best_practices]
+enable_global_best_practices = true
