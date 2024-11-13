@@ -5,6 +5,7 @@ namespace Tests\Unit\Containers;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer;
+use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
@@ -99,6 +100,15 @@ class GenericContainerTest extends TestCase
         $this->assertTrue(is_int($instance->getMappedPort(443)));
         $this->assertGreaterThanOrEqual(49152, $instance->getMappedPort(443));
         $this->assertLessThanOrEqual(65535, $instance->getMappedPort(443));
+    }
+
+    public function testStartWithImagePullPolicy()
+    {
+        $container = (new GenericContainer('alpine:latest'))
+            ->withImagePullPolicy(ImagePullPolicy::MISSING());
+        $instance = $container->start();
+
+        $this->assertSame(ImagePullPolicy::$MISSING, $instance->getImagePullPolicy()->toString());
     }
 
     public function testStartWithWorkingDirectory()

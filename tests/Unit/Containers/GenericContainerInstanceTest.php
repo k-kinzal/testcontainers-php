@@ -5,6 +5,7 @@ namespace Tests\Unit\Containers;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer;
 use Testcontainers\Containers\GenericContainerInstance;
+use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 
 class GenericContainerInstanceTest extends TestCase
@@ -54,6 +55,16 @@ class GenericContainerInstanceTest extends TestCase
         ]);
 
         $this->assertSame(8080, $instance->getMappedPort(80));
+    }
+
+    public function testGetImagePullPolicy()
+    {
+        $pullPolicy = ImagePullPolicy::ALWAYS();
+        $instance = new GenericContainerInstance('8188d93d8a27', [
+            'pull' => $pullPolicy,
+        ]);
+
+        $this->assertSame($pullPolicy, $instance->getImagePullPolicy());
     }
 
     public function testGetPrivilegedMode()
