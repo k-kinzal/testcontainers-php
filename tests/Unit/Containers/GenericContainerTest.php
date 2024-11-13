@@ -64,11 +64,12 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
-            ->withCommands(['echo', 'Hello, World!'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
 
-        $this->assertSame("Hello, World!\n", $instance->getOutput());
+        $this->assertSame("VALUE1", $instance->getLabel('KEY1'));
+        $this->assertSame("VALUE2", $instance->getLabel('KEY2'));
+        $this->assertSame(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'], $instance->getLabels());
     }
 
     public function testStartWithExposedPorts()
@@ -107,10 +108,6 @@ class GenericContainerTest extends TestCase
             ->withCommands(['pwd'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("/tmp\n", $instance->getOutput());
     }
