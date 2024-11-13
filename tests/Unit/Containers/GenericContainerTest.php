@@ -73,7 +73,7 @@ class GenericContainerTest extends TestCase
         $this->assertSame("VALUE2\n", $instance->getOutput());
     }
 
-    public function testStartWIthLabels()
+    public function testStartWithLabels()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
@@ -114,6 +114,20 @@ class GenericContainerTest extends TestCase
         $this->assertTrue(is_int($instance->getMappedPort(443)));
         $this->assertGreaterThanOrEqual(49152, $instance->getMappedPort(443));
         $this->assertLessThanOrEqual(65535, $instance->getMappedPort(443));
+    }
+
+    public function testStartWithWorkingDirectory()
+    {
+        $container = (new GenericContainer('alpine:latest'))
+            ->withWorkingDirectory('/tmp')
+            ->withCommands(['pwd']);
+        $instance = $container->start();
+
+        while ($instance->isRunning()) {
+            usleep(100);
+        }
+
+        $this->assertSame("/tmp\n", $instance->getOutput());
     }
 
     public function testStartWithPrivilegedMode()
