@@ -84,6 +84,18 @@ class GenericContainer implements Container
     private $labels = [];
 
     /**
+     * Define the default working directory to be used for the container.
+     * @var string|null
+     */
+    protected static $WORKDIR;
+
+    /**
+     * The working directory to be used for the container.
+     * @var string|null
+     */
+    private $workDir;
+
+    /**
      * Define the default privileged mode to be used for the container.
      *
      * @var bool|null
@@ -294,7 +306,9 @@ class GenericContainer implements Container
      */
     public function withWorkingDirectory($workDir)
     {
-        // TODO: Implement withWorkingDirectory() method.
+        $this->workDir = $workDir;
+
+        return $this;
     }
 
     /**
@@ -424,6 +438,19 @@ class GenericContainer implements Container
     }
 
     /**
+     * Retrieve the working directory for the container.
+     *
+     * @return string|null
+     */
+    protected function workDir()
+    {
+        if (static::$WORKDIR) {
+            return static::$WORKDIR;
+        }
+        return $this->workDir;
+    }
+
+    /**
      * Retrieve the privileged mode for the container.
      *
      * This method returns whether the container should run in privileged mode.
@@ -544,6 +571,7 @@ class GenericContainer implements Container
                 'env' => $this->env(),
                 'label' => $this->labels(),
                 'publish' => $ports,
+                'workdir' => $this->workDir(),
                 'privileged' => $this->privileged(),
             ]);
         } catch (PortAlreadyAllocatedException $e) {
@@ -577,6 +605,7 @@ class GenericContainer implements Container
                 $carry[(int)$parts[1]] = (int)$parts[0];
                 return $carry;
             }, []),
+            'workdir' => $this->workDir(),
             'privileged' => $this->privileged(),
         ];
         $instance = new GenericContainerInstance($containerId, $containerDef);
