@@ -26,6 +26,7 @@ class GenericContainerInstance implements ContainerInstance
      *     command?: string,
      *     args?: string[],
      *     ports?: array<int, int>,
+     *     pull?: ImagePullPolicy,
      *     env?: array<string, string>,
      * } The container definition.
      */
@@ -137,6 +138,14 @@ class GenericContainerInstance implements ContainerInstance
             return null;
         }
         return $this->containerDef['ports'][$exposedPort];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImagePullPolicy()
+    {
+        return isset($this->containerDef['pull']) ? $this->containerDef['pull'] : null;
     }
 
     /**

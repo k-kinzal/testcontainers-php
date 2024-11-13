@@ -84,6 +84,18 @@ class GenericContainer implements Container
     private $labels = [];
 
     /**
+     * Define the default image pull policy to be used for the container.
+     * @var ImagePullPolicy|null
+     */
+    protected static $PULL_POLICY;
+
+    /**
+     * The image pull policy to be used for the container.
+     * @var ImagePullPolicy|null
+     */
+    private $pullPolicy;
+
+    /**
      * Define the default working directory to be used for the container.
      * @var string|null
      */
@@ -296,9 +308,11 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withImagePullPolicy($policy)
+    public function withImagePullPolicy($pullPolicy)
     {
-        // TODO: Implement withImagePullPolicy() method.
+        $this->pullPolicy = $pullPolicy;
+
+        return $this;
     }
 
     /**
@@ -438,6 +452,23 @@ class GenericContainer implements Container
     }
 
     /**
+     * Retrieve the image pull policy for the container.
+     *
+     * This method returns the image pull policy that should be used for the container.
+     * If a specific image pull policy is set, it will return that. Otherwise, it will
+     * attempt to retrieve the default image pull policy from the provider.
+     *
+     * @return ImagePullPolicy|null The image pull policy to be used, or null if none is set.
+     */
+    protected function pullPolicy()
+    {
+        if (static::$PULL_POLICY) {
+            return static::$PULL_POLICY;
+        }
+        return $this->pullPolicy;
+    }
+
+    /**
      * Retrieve the working directory for the container.
      *
      * @return string|null
@@ -571,6 +602,7 @@ class GenericContainer implements Container
                 'env' => $this->env(),
                 'label' => $this->labels(),
                 'publish' => $ports,
+                'pull' => $this->pullPolicy(),
                 'workdir' => $this->workDir(),
                 'privileged' => $this->privileged(),
             ]);
@@ -605,6 +637,7 @@ class GenericContainer implements Container
                 $carry[(int)$parts[1]] = (int)$parts[0];
                 return $carry;
             }, []),
+            'pull' => $this->pullPolicy(),
             'workdir' => $this->workDir(),
             'privileged' => $this->privileged(),
         ];

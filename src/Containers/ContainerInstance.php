@@ -52,6 +52,13 @@ interface ContainerInstance
     public function getMappedPort($exposedPort);
 
     /**
+     * Get the image pull policy of the container.
+     *
+     * @return ImagePullPolicy|null The image pull policy, or null if not set.
+     */
+    public function getImagePullPolicy();
+
+    /**
      * Get the privileged mode status of the container.
      *
      * @return bool True if the container is running in privileged mode, false otherwise.

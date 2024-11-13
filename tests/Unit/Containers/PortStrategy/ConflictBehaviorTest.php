@@ -52,6 +52,15 @@ class ConflictBehaviorTest extends TestCase
         $this->assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
     }
 
+    public function testFromStringWithInvalidAction()
+    {
+        $this->expectException(InvalidConflictBehaviorException::class);
+        $this->expectExceptionMessage('Invalid conflict behavior: invalid');
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        ConflictBehavior::fromString('invalid');
+    }
+
     public function testIsRetry()
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$RETRY);
@@ -66,14 +75,5 @@ class ConflictBehaviorTest extends TestCase
 
         $this->assertTrue($conflictBehavior->isFail());
         $this->assertFalse($conflictBehavior->isRetry());
-    }
-
-    public function testFromStringWithInvalidAction()
-    {
-        $this->expectException(InvalidConflictBehaviorException::class);
-        $this->expectExceptionMessage('Invalid conflict behavior: invalid');
-
-        /** @noinspection PhpUnhandledExceptionInspection */
-        ConflictBehavior::fromString('invalid');
     }
 }
