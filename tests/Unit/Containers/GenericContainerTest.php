@@ -25,22 +25,15 @@ class GenericContainerTest extends TestCase
             ->withCommand('pwd');
         $instance = $container->start();
 
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
-
         $this->assertSame("/\n", $instance->getOutput());
     }
 
     public function testStartWithCommands()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withCommands(['echo', 'Hello, World!']);
+            ->withCommands(['echo', 'Hello, World!'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
@@ -49,12 +42,9 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withEnv('KEY', 'VALUE')
-            ->withCommands(['printenv', 'KEY']);
+            ->withCommands(['printenv', 'KEY'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("VALUE\n", $instance->getOutput());
     }
@@ -63,12 +53,9 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withEnvs(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
-            ->withCommands(['printenv', 'KEY2']);
+            ->withCommands(['printenv', 'KEY2'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("VALUE2\n", $instance->getOutput());
     }
@@ -77,19 +64,17 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
-            ->withCommands(['echo', 'Hello, World!']);
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
 
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
-
-        $this->assertSame("Hello, World!\n", $instance->getOutput());
+        $this->assertSame("VALUE1", $instance->getLabel('KEY1'));
+        $this->assertSame("VALUE2", $instance->getLabel('KEY2'));
+        $this->assertSame(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'], $instance->getLabels());
     }
 
     public function testStartWithExposedPorts()
     {
-        $container = (new GenericContainer('nginx:latest'))
+        $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts(80)
             ->withPortStrategy(new LocalRandomPortStrategy());
         $instance = $container->start();
@@ -102,7 +87,7 @@ class GenericContainerTest extends TestCase
 
     public function testStartWithExposedPortsMultiple()
     {
-        $container = (new GenericContainer('nginx:latest'))
+        $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts([80, 443])
             ->withPortStrategy(new LocalRandomPortStrategy());
         $instance = $container->start();
@@ -120,12 +105,9 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withWorkingDirectory('/tmp')
-            ->withCommands(['pwd']);
+            ->withCommands(['pwd'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("/tmp\n", $instance->getOutput());
     }
@@ -133,8 +115,7 @@ class GenericContainerTest extends TestCase
     public function testStartWithPrivilegedMode()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withPrivilegedMode(true)
-            ->withCommands(['tail', '-f', '/dev/null']);
+            ->withPrivilegedMode(true);
         $instance = $container->start();
 
         $this->assertSame(true, $instance->getPrivilegedMode());
