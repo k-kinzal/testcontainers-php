@@ -1,3 +1,10 @@
+[github_app]
+pr_commands = [
+    "/describe",
+    "/review auto_approve",
+    "/improve",
+]
+
 [pr_description]
 publish_labels=true
 publish_description_as_comment=true
@@ -10,6 +17,7 @@ inline_code_comments=false
 require_score_review=true
 require_can_be_split_review=true
 num_code_suggestions="3"
+enable_auto_approval=true
 extra_instructions="This project must be reviewed against PHP 5.6."
 
 [pr_code_suggestions]
