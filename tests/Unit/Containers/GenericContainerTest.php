@@ -25,10 +25,6 @@ class GenericContainerTest extends TestCase
             ->withCommand('pwd');
         $instance = $container->start();
 
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
-
         $this->assertSame("/\n", $instance->getOutput());
     }
 
@@ -77,7 +73,7 @@ class GenericContainerTest extends TestCase
 
     public function testStartWithExposedPorts()
     {
-        $container = (new GenericContainer('nginx:latest'))
+        $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts(80)
             ->withPortStrategy(new LocalRandomPortStrategy());
         $instance = $container->start();
@@ -90,7 +86,7 @@ class GenericContainerTest extends TestCase
 
     public function testStartWithExposedPortsMultiple()
     {
-        $container = (new GenericContainer('nginx:latest'))
+        $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts([80, 443])
             ->withPortStrategy(new LocalRandomPortStrategy());
         $instance = $container->start();
@@ -122,8 +118,7 @@ class GenericContainerTest extends TestCase
     public function testStartWithPrivilegedMode()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withPrivilegedMode(true)
-            ->withCommands(['tail', '-f', '/dev/null']);
+            ->withPrivilegedMode(true);
         $instance = $container->start();
 
         $this->assertSame(true, $instance->getPrivilegedMode());
