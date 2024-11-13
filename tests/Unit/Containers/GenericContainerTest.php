@@ -35,12 +35,9 @@ class GenericContainerTest extends TestCase
     public function testStartWithCommands()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withCommands(['echo', 'Hello, World!']);
+            ->withCommands(['echo', 'Hello, World!'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
@@ -49,12 +46,9 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withEnv('KEY', 'VALUE')
-            ->withCommands(['printenv', 'KEY']);
+            ->withCommands(['printenv', 'KEY'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("VALUE\n", $instance->getOutput());
     }
@@ -63,12 +57,9 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withEnvs(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
-            ->withCommands(['printenv', 'KEY2']);
+            ->withCommands(['printenv', 'KEY2'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("VALUE2\n", $instance->getOutput());
     }
@@ -77,12 +68,9 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
-            ->withCommands(['echo', 'Hello, World!']);
+            ->withCommands(['echo', 'Hello, World!'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
-
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
@@ -120,7 +108,8 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withWorkingDirectory('/tmp')
-            ->withCommands(['pwd']);
+            ->withCommands(['pwd'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
 
         while ($instance->isRunning()) {
