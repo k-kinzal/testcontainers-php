@@ -4,7 +4,7 @@ namespace Tests\Unit\Containers\PortStrategy;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\PortStrategy\ConflictBehavior;
-use Testcontainers\Containers\PortStrategy\InvalidConflictBehaviorException;
+use Testcontainers\Exceptions\InvalidFormatException;
 
 class ConflictBehaviorTest extends TestCase
 {
@@ -54,8 +54,8 @@ class ConflictBehaviorTest extends TestCase
 
     public function testFromStringWithInvalidAction()
     {
-        $this->expectException(InvalidConflictBehaviorException::class);
-        $this->expectExceptionMessage('Invalid conflict behavior: invalid');
+        $this->expectException(InvalidFormatException::class);
+        $this->expectExceptionMessage('Invalid format: invalid, expects: retry, fail');
 
         /** @noinspection PhpUnhandledExceptionInspection */
         ConflictBehavior::fromString('invalid');

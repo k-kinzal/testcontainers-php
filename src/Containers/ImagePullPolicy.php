@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers;
 
+use Testcontainers\Exceptions\InvalidFormatException;
+
 /**
  * Defines the policy for determining when to pull a container image.
  */
@@ -80,12 +82,12 @@ class ImagePullPolicy
      *
      * @param string $policy The string representation of the pull policy.
      * @return self
-     * @throws InvalidImagePullPolicyException If the provided policy is not valid.
+     * @throws InvalidFormatException If the provided policy is not valid.
      */
     public static function fromString($policy)
     {
         if (!in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER])) {
-            throw new InvalidImagePullPolicyException("Invalid pull policy: $policy");
+            throw new InvalidFormatException($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]);
         }
         return new self($policy);
     }

@@ -4,7 +4,7 @@ namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\ImagePullPolicy;
-use Testcontainers\Containers\InvalidImagePullPolicyException;
+use Testcontainers\Exceptions\InvalidFormatException;
 
 class ImagePullPolicyTest extends TestCase
 {
@@ -76,7 +76,8 @@ class ImagePullPolicyTest extends TestCase
 
     public function testFromStringWithInvalidPolicy()
     {
-        $this->expectException(InvalidImagePullPolicyException::class);
+        $this->expectException(InvalidFormatException::class);
+        $this->expectExceptionMessage('Invalid format: invalid, expects: always, missing, never');
         /** @noinspection PhpUnhandledExceptionInspection */
         ImagePullPolicy::fromString('invalid');
     }
