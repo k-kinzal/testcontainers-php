@@ -5,7 +5,6 @@ namespace Testcontainers;
 use LogicException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\GenericContainer;
 
 /**
  * Class Testcontainers
