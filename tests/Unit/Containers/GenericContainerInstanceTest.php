@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer;
 use Testcontainers\Containers\GenericContainerInstance;
 use Testcontainers\Containers\ImagePullPolicy;
-use Testcontainers\Docker\Exception\NoSuchContainerException;
 
 class GenericContainerInstanceTest extends TestCase
 {

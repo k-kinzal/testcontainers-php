@@ -3,9 +3,6 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\GenericContainer;
-use Testcontainers\Docker\Exception\DockerException;
-use Testcontainers\Hook\AfterStartHook;
 use Testcontainers\Testcontainers;
 use Tests\Images\AlpineContainer;
 

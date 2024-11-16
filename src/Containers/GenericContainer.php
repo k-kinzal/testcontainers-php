@@ -308,9 +308,9 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withImagePullPolicy($pullPolicy)
+    public function withImagePullPolicy($policy)
     {
-        $this->pullPolicy = $pullPolicy;
+        $this->pullPolicy = $policy;
 
         return $this;
     }
@@ -532,7 +532,7 @@ class GenericContainer implements Container
      * @param ContainerInstance $instance The container instance for which to get the wait strategy.
      * @return WaitStrategy|null The wait strategy to be used, or null if none is set.
      */
-    protected function waitStrategy($instance)
+    protected function waitStrategy(/** @noinspection PhpUnusedParameterInspection */ $instance)
     {
         if (static::$WAIT_STRATEGY !== null) {
             $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);

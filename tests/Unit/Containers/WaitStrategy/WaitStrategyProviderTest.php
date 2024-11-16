@@ -52,7 +52,6 @@ class TestWaitStrategy implements WaitStrategy
 {
     public function waitUntilReady($instance)
     {
-        return;
     }
 
     public function getName()
