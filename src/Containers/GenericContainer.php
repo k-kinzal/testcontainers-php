@@ -556,10 +556,10 @@ class GenericContainer implements Container
             }
 
             if (!isset($volume['name'])) {
-                throw new LogicException('Missing container name in volumes from: ' . $volume);
+                throw new LogicException('Missing container name in volumes from');
             }
             if (!isset($volume['mode'])) {
-                throw new LogicException('Missing bind mode in volumes from: ' . $volume);
+                throw new LogicException('Missing bind mode in volumes from');
             }
 
             $volumesFrom[] = $volume;
