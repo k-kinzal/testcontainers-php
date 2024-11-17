@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
+use Testcontainers\Exceptions\InvalidFormatException;
+
 /**
  * Represents the behavior to take when a port conflict occurs.
  *
@@ -79,12 +81,12 @@ class ConflictBehavior
      * @param string $action The action to take on port conflict. Valid values are 'retry' or 'fail'.
      * @return ConflictBehavior The ConflictBehavior instance corresponding to the action.
      *
-     * @throws InvalidConflictBehaviorException If the action is invalid.
+     * @throws InvalidFormatException If the action is invalid.
      */
     public static function fromString($action)
     {
         if (!in_array($action, [static::$RETRY, static::$FAIL])) {
-            throw new InvalidConflictBehaviorException($action);
+            throw new InvalidFormatException($action, [static::$RETRY, static::$FAIL]);
         }
         return new self($action);
     }
