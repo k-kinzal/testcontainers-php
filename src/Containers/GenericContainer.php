@@ -50,7 +50,7 @@ class GenericContainer implements Container
 
     /**
      * Define the default mounts to be used for the container.
-     * @var string[]
+     * @var string[]|null
      */
     protected static $MOUNTS;
 
@@ -63,6 +63,21 @@ class GenericContainer implements Container
      * }
      */
     private $mounts = [];
+
+    /**
+     * Define the default volumes to be used for the container.
+     * @var string[]|null
+     */
+    protected static $VOLUMES_FROM;
+
+    /**
+     * The volumes to be used for the container.
+     * @var array{
+     *    name: string,
+     *    mode: BindMode,
+     * }[]
+     */
+    private $volumesFrom = [];
 
     /**
      * Define the default ports to be exposed by the container.
@@ -218,7 +233,12 @@ class GenericContainer implements Container
      */
     public function withVolumesFrom($container, $mode)
     {
-        // TODO: Implement withVolumesFrom() method.
+        $this->volumesFrom[] = [
+            'name' => $container->getContainerId(),
+            'mode' => $mode,
+        ];
+
+        return $this;
     }
 
     /**
@@ -491,10 +511,10 @@ class GenericContainer implements Container
                     $mount['mode'] = BindMode::READ_WRITE();
                 }
                 if (!isset($mount['hostPath'])) {
-                    throw new LogicException('Missing host path in mount: ' . $mount);
+                    throw new LogicException('Missing host path in mount');
                 }
                 if (!isset($mount['containerPath'])) {
-                    throw new LogicException('Missing container path in mount: ' . $mount);
+                    throw new LogicException('Missing container path in mount');
                 }
                 $mounts[] = $mount;
             } else {
@@ -503,6 +523,49 @@ class GenericContainer implements Container
         }
 
         return empty($mounts) ? null : $mounts;
+    }
+
+    /**
+     * Retrieve the volumes to be used for the container.
+     *
+     * This method returns an array of volumes, where each volume is an associative array
+     * containing the container name and bind mode.
+     *
+     * @return array{
+     *     name: string,
+     *     mode: BindMode,
+     * }[] The volumes to be used for the container.
+     *
+     * @throws InvalidFormatException If the volume format is invalid.
+     */
+    protected function volumesFrom()
+    {
+        $targets = static::$VOLUMES_FROM;
+        if ($targets === null) {
+            $targets = $this->volumesFrom;
+        }
+
+        $volumesFrom = [];
+        foreach ($targets as $volume) {
+            if (is_string($volume)) {
+                $parts = explode(':', $volume);
+                $volume = [
+                    'name' => $parts[0],
+                    'mode' => isset($parts[1]) ? BindMode::fromString($parts[1]) : BindMode::READ_WRITE(),
+                ];
+            }
+
+            if (!isset($volume['name'])) {
+                throw new LogicException('Missing container name in volumes from: ' . $volume);
+            }
+            if (!isset($volume['mode'])) {
+                throw new LogicException('Missing bind mode in volumes from: ' . $volume);
+            }
+
+            $volumesFrom[] = $volume;
+        }
+
+        return empty($volumesFrom) ? null : $volumesFrom;
     }
 
     /**
@@ -683,6 +746,8 @@ class GenericContainer implements Container
 
     /**
      * {@inheritdoc}
+     *
+     * @throws InvalidFormatException If the provided mode is not valid.
      */
     public function start()
     {
@@ -714,6 +779,18 @@ class GenericContainer implements Container
             }
         }
 
+        $containerVolumes = $this->volumesFrom();
+        $volumesFrom = [];
+        if ($containerVolumes) {
+            foreach ($containerVolumes as $volume) {
+                $s = $volume['name'];
+                if ($volume['mode'] === BindMode::READ_ONLY()) {
+                    $s .= ':ro';
+                }
+                $volumesFrom[] = $s;
+            }
+        }
+
         $portStrategy = $this->portStrategy();
         $containerPorts = $this->ports();
         $ports = [];
@@ -731,6 +808,7 @@ class GenericContainer implements Container
                 'env' => $this->env(),
                 'label' => $this->labels(),
                 'mount' => $mounts,
+                'volumesFrom' => $volumesFrom,
                 'publish' => $ports,
                 'pull' => $this->pullPolicy(),
                 'workdir' => $this->workDir(),
@@ -763,6 +841,7 @@ class GenericContainer implements Container
             'env' => $this->env(),
             'labels' => $this->labels(),
             'mounts' => $mounts,
+            'volumesFrom' => $volumesFrom,
             'ports' => array_reduce($ports, function ($carry, $item) {
                 $parts = explode(':', $item);
                 $carry[(int)$parts[1]] = (int)$parts[0];
