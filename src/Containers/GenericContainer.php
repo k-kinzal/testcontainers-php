@@ -17,6 +17,7 @@ use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+use Testcontainers\Exceptions\InvalidFormatException;
 
 /**
  * GenericContainer is a generic implementation of docker container.
@@ -46,6 +47,22 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
+
+    /**
+     * Define the default mounts to be used for the container.
+     * @var string[]
+     */
+    protected static $MOUNTS;
+
+    /**
+     * The mounts to be used for the container.
+     * @var array{
+     *     'hostPath': string,
+     *     'containerPath': string,
+     *     'mode': BindMode
+     * }
+     */
+    private $mounts = [];
 
     /**
      * Define the default ports to be exposed by the container.
@@ -186,7 +203,14 @@ class GenericContainer implements Container
      */
     public function withFileSystemBind($hostPath, $containerPath, $mode)
     {
-        // TODO: Implement withFileSystemBind() method.
+        $this->mounts[] = [
+            'type' => 'bind',
+            'hostPath' => $hostPath,
+            'containerPath' => $containerPath,
+            'mode' => $mode,
+        ];
+
+        return $this;
     }
 
     /**
@@ -392,6 +416,96 @@ class GenericContainer implements Container
     }
 
     /**
+     * Retrieve the mounts to be used for the container.
+     *
+     * This method returns an array of mounts, where each mount is an associative array
+     * containing the host path, container path, and bind mode.
+     *
+     * @return array{
+     *   hostPath: string,
+     *   containerPath: string,
+     *   mode: BindMode
+     * }[] The mounts to be used for the container.
+     *
+     * @throws InvalidFormatException If the mount format is invalid.
+     */
+    protected function mounts()
+    {
+        $targets = static::$MOUNTS;
+        if ($targets === null) {
+            $targets = $this->mounts;
+        }
+
+        $mounts = [];
+        foreach ($targets as $mount) {
+            if (is_array($mount)) {
+                $mounts[] = $mount;
+            } elseif (strpos($mount, ':') > 0) {
+                // source:destination[:mode]
+                $parts = explode(':', $mount);
+                $mounts[] = [
+                    'hostPath' => $parts[0],
+                    'containerPath' => $parts[1],
+                    'mode' => isset($parts[2]) ? BindMode::fromString($parts[2]) : BindMode::READ_WRITE(),
+                ];
+            } elseif (strpos($mount, ',') === 0) {
+                // type=bind,source=...,target=...,readonly
+                $parts = explode(',', $mount);
+                $mount = [];
+                foreach ($parts as $part) {
+                    $subParts = explode('=', $part);
+                    if ($subParts[0] === 'type') {
+                        switch ($subParts[1]) {
+                            case 'bind':
+                            case 'tmpfs':
+                                $mount['type'] = $subParts[1];
+                                break;
+                            default:
+                                throw new LogicException('Invalid mount type: ' . $subParts[1]);
+                        }
+                    } elseif ($subParts[0] === 'source' || $subParts[0] === 'src') {
+                        $mount['hostPath'] = $subParts[1];
+                    } elseif ($subParts[0] === 'target' || $subParts[0] === 'destination' || $subParts[0] === 'dst') {
+                        $mount['containerPath'] = $subParts[1];
+                    } elseif ($subParts[0] === 'readonly') {
+                        $mount['mode'] = BindMode::READ_ONLY();
+                    } elseif ($subParts[0] === 'bind-propagation') {
+                        switch ($subParts[1]) {
+                            case 'rprivate':
+                            case 'private':
+                            case 'rshared':
+                            case 'shared':
+                            case 'rslave':
+                            case 'slave':
+                                $mount['propagation'] = $subParts[1];
+                                break;
+                            default:
+                                throw new LogicException('Invalid bind propagation: ' . $subParts[1]);
+                        }
+                    }
+                }
+                if (!isset($mount['type'])) {
+                    $mount['type'] = 'bind';
+                }
+                if (!isset($mount['mode'])) {
+                    $mount['mode'] = BindMode::READ_WRITE();
+                }
+                if (!isset($mount['hostPath'])) {
+                    throw new LogicException('Missing host path in mount: ' . $mount);
+                }
+                if (!isset($mount['containerPath'])) {
+                    throw new LogicException('Missing container path in mount: ' . $mount);
+                }
+                $mounts[] = $mount;
+            } else {
+                throw new LogicException('Invalid mount format: ' . $mount);
+            }
+        }
+
+        return empty($mounts) ? null : $mounts;
+    }
+
+    /**
      * Retrieve the ports to be exposed by the container.
      *
      * This method returns the ports that should be exposed by the container.
@@ -585,6 +699,21 @@ class GenericContainer implements Container
             }
         }
 
+        $bindMounts = $this->mounts();
+        $mounts = [];
+        if ($bindMounts) {
+            foreach ($bindMounts as $mount) {
+                $s = sprintf('type=%s,source=%s,target=%s', $mount['type'], $mount['hostPath'], $mount['containerPath']);
+                if ($mount['mode'] === BindMode::READ_ONLY()) {
+                    $s .= ',readonly';
+                }
+                if (isset($mount['propagation'])) {
+                    $s .= ',bind-propagation=' . $mount['propagation'];
+                }
+                $mounts[] = $s;
+            }
+        }
+
         $portStrategy = $this->portStrategy();
         $containerPorts = $this->ports();
         $ports = [];
@@ -601,6 +730,7 @@ class GenericContainer implements Container
                 'detach' => true,
                 'env' => $this->env(),
                 'label' => $this->labels(),
+                'mount' => $mounts,
                 'publish' => $ports,
                 'pull' => $this->pullPolicy(),
                 'workdir' => $this->workDir(),
@@ -632,6 +762,7 @@ class GenericContainer implements Container
             'args' => $args,
             'env' => $this->env(),
             'labels' => $this->labels(),
+            'mounts' => $mounts,
             'ports' => array_reduce($ports, function ($carry, $item) {
                 $parts = explode(':', $item);
                 $carry[(int)$parts[1]] = (int)$parts[0];

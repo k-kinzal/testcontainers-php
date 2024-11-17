@@ -25,6 +25,7 @@ class GenericContainerInstance implements ContainerInstance
      *     image?: string,
      *     command?: string,
      *     args?: string[],
+     *     mounts?: string[],
      *     ports?: array<int, int>,
      *     pull?: ImagePullPolicy,
      *     env?: array<string, string>,
@@ -49,6 +50,15 @@ class GenericContainerInstance implements ContainerInstance
 
     /**
      * @param string $containerId The unique identifier for the container.
+     * @param array{
+     *   image?: string,
+     *   command?: string,
+     *   args?: string[],
+     *   mounts?: string[],
+     *   ports?: array<int, int>,
+     *   pull?: ImagePullPolicy,
+     *   env?: array<string, string>,
+     * } $containerDef The container definition.
      */
     public function __construct($containerId, $containerDef = [])
     {

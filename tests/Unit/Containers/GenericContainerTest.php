@@ -3,6 +3,7 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
+use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer;
 use Testcontainers\Containers\ImagePullPolicy;
@@ -18,6 +19,22 @@ class GenericContainerTest extends TestCase
 
         $this->assertInstanceOf(ContainerInstance::class, $instance);
         $this->assertNotEmpty($instance->getContainerId());
+    }
+
+    public function testWithFileSystemBind()
+    {
+        $fp = tmpfile();
+        fwrite($fp, 'Hello, World!');
+        $meta = stream_get_meta_data($fp);
+        $path = $meta['uri'];
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withFileSystemBind($path, '/tmp/test', BindMode::READ_WRITE())
+            ->withCommands(['cat', '/tmp/test'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
+        $instance = $container->start();
+
+        $this->assertSame("Hello, World!", $instance->getOutput());
     }
 
     public function testStartWithCommand()
