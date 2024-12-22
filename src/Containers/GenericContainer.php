@@ -49,6 +49,24 @@ class GenericContainer implements Container
     private $commands = [];
 
     /**
+     * Define the default extra hosts to be used for the container.
+     * @var array{
+     *      hostname: string,
+     *      ipAddress: string
+     *  }[]|null
+     */
+    protected static $EXTRA_HOSTS;
+
+    /**
+     * The extra hosts to be used for the container.
+     * @var array{
+     *      hostname: string,
+     *      ipAddress: string
+     *  }[]
+     */
+    private $extraHosts = [];
+
+    /**
      * Define the default mounts to be used for the container.
      * @var string[]|null
      */
@@ -330,7 +348,12 @@ class GenericContainer implements Container
      */
     public function withExtraHost($hostname, $ipAddress)
     {
-        // TODO: Implement withExtraHost() method.
+        $this->extraHosts[] = [
+            'hostname' => $hostname,
+            'ipAddress' => $ipAddress,
+        ];
+
+        return $this;
     }
 
     /**
@@ -433,6 +456,25 @@ class GenericContainer implements Container
             return $this->commands;
         }
         return null;
+    }
+
+    /**
+     * Retrieve the extra hosts to be used for the container.
+     *
+     * @return array{
+     *     hostname: string,
+     *     ipAddress: string
+     * }[]
+     */
+    protected function extraHost()
+    {
+        if (static::$EXTRA_HOSTS) {
+            return static::$EXTRA_HOSTS;
+        }
+        if ($this->extraHosts) {
+            return $this->extraHosts;
+        }
+        return [];
     }
 
     /**
@@ -764,6 +806,14 @@ class GenericContainer implements Container
             }
         }
 
+        $extraHosts = $this->extraHost();
+        $hosts = [];
+        if ($extraHosts) {
+            foreach ($extraHosts as $extraHost) {
+                $hosts[] = $extraHost['hostname'] . ':' . $extraHost['ipAddress'];
+            }
+        }
+
         $bindMounts = $this->mounts();
         $mounts = [];
         if ($bindMounts) {
@@ -804,6 +854,7 @@ class GenericContainer implements Container
         $client = DockerClientFactory::create();
         try {
             $output = $client->run($this->image, $command, $args, [
+                'addHost' => $hosts,
                 'detach' => true,
                 'env' => $this->env(),
                 'label' => $this->labels(),
@@ -838,6 +889,7 @@ class GenericContainer implements Container
             'image' => $this->image,
             'command' => $command,
             'args' => $args,
+            'hosts' => $hosts,
             'env' => $this->env(),
             'labels' => $this->labels(),
             'mounts' => $mounts,
