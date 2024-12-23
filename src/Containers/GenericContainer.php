@@ -67,6 +67,18 @@ class GenericContainer implements Container
     private $extraHosts = [];
 
     /**
+     * Define the default network mode to be used for the container.
+     * @var string|null
+     */
+    protected static $NETWORK_MODE;
+
+    /**
+     * The network mode to be used for the container.
+     * @var string|null
+     */
+    private $networkMode;
+
+    /**
      * Define the default mounts to be used for the container.
      * @var string[]|null
      */
@@ -361,7 +373,9 @@ class GenericContainer implements Container
      */
     public function withNetworkMode($networkMode)
     {
-        // TODO: Implement withNetworkMode() method.
+        $this->networkMode = $networkMode;
+
+        return $this;
     }
 
     /**
@@ -475,6 +489,22 @@ class GenericContainer implements Container
             return $this->extraHosts;
         }
         return [];
+    }
+
+    /**
+     * Retrieve the network mode to be used for the container.
+     *
+     * @return string|null
+     */
+    protected function networkMode()
+    {
+        if (static::$NETWORK_MODE) {
+            return static::$NETWORK_MODE;
+        }
+        if ($this->networkMode) {
+            return $this->networkMode;
+        }
+        return null;
     }
 
     /**
@@ -859,6 +889,7 @@ class GenericContainer implements Container
                 'env' => $this->env(),
                 'label' => $this->labels(),
                 'mount' => $mounts,
+                'network' => $this->networkMode(),
                 'volumesFrom' => $volumesFrom,
                 'publish' => $ports,
                 'pull' => $this->pullPolicy(),
@@ -893,6 +924,7 @@ class GenericContainer implements Container
             'env' => $this->env(),
             'labels' => $this->labels(),
             'mounts' => $mounts,
+            'networkMode' => $this->networkMode(),
             'volumesFrom' => $volumesFrom,
             'ports' => array_reduce($ports, function ($carry, $item) {
                 $parts = explode(':', $item);

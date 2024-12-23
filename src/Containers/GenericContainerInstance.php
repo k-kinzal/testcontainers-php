@@ -56,6 +56,7 @@ class GenericContainerInstance implements ContainerInstance
      *   args?: string[],
      *   hosts?: string[],
      *   mounts?: string[],
+     *   network?: string,
      *   volumesFrom?: string[],
      *   ports?: array<int, int>,
      *   pull?: ImagePullPolicy,
