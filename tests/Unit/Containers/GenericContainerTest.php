@@ -86,6 +86,16 @@ class GenericContainerTest extends TestCase
         $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
     }
 
+    public function testStartWithNetworkMode()
+    {
+        $container = (new GenericContainer('alpine:latest'))
+            ->withNetworkMode('none')
+            ->withCommands(['sh', '-c', 'ls /sys/class/net']);
+        $instance = $container->start();
+
+        $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
+    }
+
     public function testStartWithEnv()
     {
         $container = (new GenericContainer('alpine:latest'))
