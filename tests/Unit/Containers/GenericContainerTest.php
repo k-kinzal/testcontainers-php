@@ -93,7 +93,7 @@ class GenericContainerTest extends TestCase
             ->withCommands(['sh', '-c', 'ls /sys/class/net']);
         $instance = $container->start();
 
-        $this->assertNotContains('eth0', $instance->getOutput());
+        $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
     }
 
     public function testStartWithEnv()
