@@ -21,7 +21,7 @@ class GenericContainerTest extends TestCase
         $this->assertNotEmpty($instance->getContainerId());
     }
 
-    public function testWithFileSystemBind()
+    public function testStartWithFileSystemBind()
     {
         $fp = tmpfile();
         fwrite($fp, 'Hello, World!');
@@ -37,7 +37,7 @@ class GenericContainerTest extends TestCase
         $this->assertSame("Hello, World!", $instance->getOutput());
     }
 
-    public function testWithVolumesFrom()
+    public function testStartWithVolumesFrom()
     {
         $fp = tmpfile();
         fwrite($fp, 'Hello, World!');
