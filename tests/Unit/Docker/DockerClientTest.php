@@ -12,6 +12,8 @@ use Testcontainers\Docker\DockerRunWithDetachOutput;
 use Testcontainers\Docker\DockerStopOutput;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+use Testcontainers\Testcontainers;
+use Tests\Images\DinD;
 
 class DockerClientTest extends TestCase
 {
@@ -92,24 +94,30 @@ class DockerClientTest extends TestCase
     {
         $this->expectException(PortAlreadyAllocatedException::class);
 
+        $instance = Testcontainers::run(DinD::class);
+
         $client = new DockerClient();
-        $output1 = $client->run('nginx:1.27.2', null, null, [
+        $client->withGlobalOptions([
+            'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
+        ]);
+        $client->run('nginx:1.27.2', null, null, [
             'detach' => true,
             'publish' => ['38793:80'],
         ]);
-        try {
-            $client->run('nginx:1.27.2', null, null, [
-                'detach' => true,
-                'publish' => ['38793:80'],
-            ]);
-        } finally {
-            $client->stop($output1->getContainerId());
-        }
+        $client->run('nginx:1.27.2', null, null, [
+            'detach' => true,
+            'publish' => ['38793:80'],
+        ]);
     }
 
     public function testStop()
     {
+        $instance = Testcontainers::run(DinD::class);
+
         $client = new DockerClient();
+        $client->withGlobalOptions([
+            'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
+        ]);
         $output = $client->run('alpine:latest', 'tail', ['-f', '/dev/null'], [
             'detach' => true,
         ]);
@@ -149,47 +157,49 @@ class DockerClientTest extends TestCase
 
     public function testLogs()
     {
+        $instance = Testcontainers::run(DinD::class);
+
         $client = new DockerClient();
+        $client->withGlobalOptions([
+            'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
+        ]);
         $output = $client->run('jpetazzo/clock:latest', null, null, [
             'detach' => true,
         ]);
 
-        try {
-            $containerId = $output->getContainerId();
-            $logsOutput = $client->logs($containerId);
+        $containerId = $output->getContainerId();
+        $logsOutput = $client->logs($containerId);
 
-            $this->assertInstanceOf(DockerLogsOutput::class, $logsOutput);
-            $this->assertSame(0, $logsOutput->getExitCode());
-            $this->assertNotEmpty($logsOutput->getOutput());
-        } finally {
-            $client->stop($output->getContainerId());
-        }
+        $this->assertInstanceOf(DockerLogsOutput::class, $logsOutput);
+        $this->assertSame(0, $logsOutput->getExitCode());
+        $this->assertNotEmpty($logsOutput->getOutput());
     }
 
     public function testFollowLogs()
     {
+        $instance = Testcontainers::run(DinD::class);
+
         $client = new DockerClient();
+        $client->withGlobalOptions([
+            'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
+        ]);
         $output = $client->run('jpetazzo/clock:latest', null, null, [
             'detach' => true,
         ]);
 
-        try {
-            $containerId = $output->getContainerId();
-            $logsOutput = $client->followLogs($containerId);
-            $iter = $logsOutput->getIterator();
+        $containerId = $output->getContainerId();
+        $logsOutput = $client->followLogs($containerId);
+        $iter = $logsOutput->getIterator();
 
-            $lines = [];
-            for ($i = 0; $i < 3; $i++) {
-                $lines[] = $iter->current();
-                $iter->next();
-            }
-
-            $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
-            $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
-            $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
-            $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);
-        } finally {
-            $client->stop($output->getContainerId());
+        $lines = [];
+        for ($i = 0; $i < 3; $i++) {
+            $lines[] = $iter->current();
+            $iter->next();
         }
+
+        $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
+        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
+        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
+        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);
     }
 }
