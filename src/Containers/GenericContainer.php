@@ -14,6 +14,7 @@ use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
+use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
@@ -24,6 +25,12 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class GenericContainer implements Container
 {
+    /**
+     * The Docker client.
+     * @var DockerClient|null
+     */
+    private $client;
+
     /**
      * Define the default image to be used for the container.
      * @var string|null
@@ -77,6 +84,18 @@ class GenericContainer implements Container
      * @var string|null
      */
     private $networkMode;
+
+    /**
+     * Define the default network aliases to be used for the container.
+     * @var string[]|null
+     */
+    protected static $NETWORK_ALIASES;
+
+    /**
+     * The network aliases to be used for the container.
+     * @var string[]
+     */
+    private $networkAliases = [];
 
     /**
      * Define the default mounts to be used for the container.
@@ -244,6 +263,18 @@ class GenericContainer implements Container
     }
 
     /**
+     * Set the Docker client.
+     * @param DockerClient $client The Docker client.
+     * @return self
+     */
+    public function withDockerClient($client)
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function withFileSystemBind($hostPath, $containerPath, $mode)
@@ -383,7 +414,9 @@ class GenericContainer implements Container
      */
     public function withNetworkAliases($aliases)
     {
-        // TODO: Implement withNetworkAliases() method.
+        $this->networkAliases = $aliases;
+
+        return $this;
     }
 
     /**
@@ -505,6 +538,22 @@ class GenericContainer implements Container
             return $this->networkMode;
         }
         return null;
+    }
+
+    /**
+     * Retrieve the network aliases to be used for the container.
+     *
+     * @return string[]
+     */
+    protected function networkAliases()
+    {
+        if (static::$NETWORK_ALIASES) {
+            return static::$NETWORK_ALIASES;
+        }
+        if ($this->networkAliases) {
+            return $this->networkAliases;
+        }
+        return [];
     }
 
     /**
@@ -881,7 +930,7 @@ class GenericContainer implements Container
             }
         }
 
-        $client = DockerClientFactory::create();
+        $client = $this->client ? $this->client : DockerClientFactory::create();
         try {
             $output = $client->run($this->image, $command, $args, [
                 'addHost' => $hosts,
@@ -890,6 +939,7 @@ class GenericContainer implements Container
                 'label' => $this->labels(),
                 'mount' => $mounts,
                 'network' => $this->networkMode(),
+                'networkAlias' => $this->networkAliases(),
                 'volumesFrom' => $volumesFrom,
                 'publish' => $ports,
                 'pull' => $this->pullPolicy(),
@@ -925,6 +975,7 @@ class GenericContainer implements Container
             'labels' => $this->labels(),
             'mounts' => $mounts,
             'networkMode' => $this->networkMode(),
+            'networkAliases' => $this->networkAliases(),
             'volumesFrom' => $volumesFrom,
             'ports' => array_reduce($ports, function ($carry, $item) {
                 $parts = explode(':', $item);
@@ -936,6 +987,7 @@ class GenericContainer implements Container
             'privileged' => $this->privileged(),
         ];
         $instance = new GenericContainerInstance($containerId, $containerDef);
+        $instance->setDockerClient($client);
 
         $waitStrategy = $this->waitStrategy($instance);
         if ($waitStrategy) {

@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers;
 
 use LogicException;
+use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 
@@ -11,6 +12,13 @@ use Testcontainers\Docker\Exception\NoSuchContainerException;
  */
 class GenericContainerInstance implements ContainerInstance
 {
+    /**
+     * The docker client.
+     *
+     * @var DockerClient|null The docker client.
+     */
+    private $client;
+
     /**
      * The unique identifier for the container.
      *
@@ -57,6 +65,7 @@ class GenericContainerInstance implements ContainerInstance
      *   hosts?: string[],
      *   mounts?: string[],
      *   network?: string,
+     *   networkAliases?: string[],
      *   volumesFrom?: string[],
      *   ports?: array<int, int>,
      *   pull?: ImagePullPolicy,
@@ -72,6 +81,17 @@ class GenericContainerInstance implements ContainerInstance
     public function __destruct()
     {
         $this->stop();
+    }
+
+    /**
+     * Sets the docker client.
+     *
+     * @param DockerClient $client
+     * @return void
+     */
+    public function setDockerClient($client)
+    {
+        $this->client = $client;
     }
 
     /**
@@ -174,7 +194,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getOutput()
     {
-        $client = DockerClientFactory::create();
+        $client = $this->client ? $this->client : DockerClientFactory::create();
         $output = $client->logs($this->containerId);
         return $output->getOutput();
     }
@@ -184,7 +204,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getErrorOutput()
     {
-        $client = DockerClientFactory::create();
+        $client = $this->client ? $this->client : DockerClientFactory::create();
         $output = $client->logs($this->containerId);
         return $output->getErrorOutput();
     }
@@ -219,7 +239,7 @@ class GenericContainerInstance implements ContainerInstance
         if ($this->running === false) {
             return false;
         }
-        $client = DockerClientFactory::create();
+        $client = $this->client ? $this->client : DockerClientFactory::create();
         $output = $client->processStatus([
             'filter' => "id=$this->containerId",
         ]);
@@ -240,7 +260,7 @@ class GenericContainerInstance implements ContainerInstance
     public function stop()
     {
         try {
-            $client = DockerClientFactory::create();
+            $client = $this->client ? $this->client : DockerClientFactory::create();
             $client->stop($this->containerId);
         } catch (NoSuchContainerException $e) {
             // Do nothing

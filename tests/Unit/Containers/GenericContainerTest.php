@@ -9,6 +9,9 @@ use Testcontainers\Containers\GenericContainer;
 use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
+use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Testcontainers;
+use Tests\Images\DinD;
 
 class GenericContainerTest extends TestCase
 {
@@ -94,6 +97,28 @@ class GenericContainerTest extends TestCase
         $instance = $container->start();
 
         $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
+    }
+
+    public function testStartWithNetworkAliases()
+    {
+        $instance = Testcontainers::run(DinD::class);
+
+        $client = DockerClientFactory::create([
+            'globalOptions' => [
+                'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375)
+            ],
+        ]);
+        $network = md5(uniqid());
+        $client->networkCreate($network);
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withDockerClient($client)
+            ->withNetworkMode($network)
+            ->withNetworkAliases(['my-alias'])
+            ->withCommands(['sh', '-c', 'ping -c 1 my-alias']);
+        $instance = $container->start();
+
+        $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
 
     public function testStartWithEnv()

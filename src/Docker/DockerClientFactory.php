@@ -17,9 +17,9 @@ class DockerClientFactory
      * This static property holds the Docker client instance. It is initialized
      * when the `create` method is called for the first time.
      *
-     * @var DockerClient|null
+     * @var array<string, DockerClient>
      */
-    private static $client;
+    private static $client = [];
 
     /**
      * The configuration options for the Docker client.
@@ -52,36 +52,40 @@ class DockerClientFactory
      * It returns a clone of the Docker client to ensure that each call to this method
      * provides a fresh instance.
      *
+     * @param array $config The configuration options for the Docker client.
      * @return DockerClient A new instance of DockerClient.
      */
-    public static function create()
+    public static function create($config = [])
     {
-        if (self::$client === null) {
+        $config = array_merge(self::$config, $config);
+        $hash = md5(serialize($config));
+
+        if (!isset(self::$client[$hash])) {
             $client = new DockerClient();
-            if (isset(self::$config['command'])) {
-                $client = $client->withCommand(self::$config['command']);
+            if (isset($config['command'])) {
+                $client = $client->withCommand($config['command']);
             }
-            if (isset(self::$config['globalOptions'])) {
-                $client = $client->withGlobalOptions(self::$config['globalOptions']);
+            if (isset($config['globalOptions'])) {
+                $client = $client->withGlobalOptions($config['globalOptions']);
             }
-            if (isset(self::$config['cwd'])) {
-                $client = $client->withCwd(self::$config['cwd']);
+            if (isset($config['cwd'])) {
+                $client = $client->withCwd($config['cwd']);
             }
-            if (isset(self::$config['env'])) {
-                $client = $client->withEnv(self::$config['env']);
+            if (isset($config['env'])) {
+                $client = $client->withEnv($config['env']);
             }
-            if (isset(self::$config['input'])) {
-                $client = $client->withInput(self::$config['input']);
+            if (isset($config['input'])) {
+                $client = $client->withInput($config['input']);
             }
-            if (isset(self::$config['timeout'])) {
-                $client = $client->withTimeout(self::$config['timeout']);
+            if (isset($config['timeout'])) {
+                $client = $client->withTimeout($config['timeout']);
             }
-            if (isset(self::$config['procOptions'])) {
-                $client = $client->withProcOptions(self::$config['procOptions']);
+            if (isset($config['procOptions'])) {
+                $client = $client->withProcOptions($config['procOptions']);
             }
-            self::$client = $client;
+            self::$client[$hash] = $client;
         }
 
-        return clone self::$client;
+        return clone self::$client[$hash];
     }
 }
