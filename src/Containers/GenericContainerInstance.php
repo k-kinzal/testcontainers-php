@@ -195,7 +195,7 @@ class GenericContainerInstance implements ContainerInstance
     public function getOutput()
     {
         $client = $this->client ? $this->client : DockerClientFactory::create();
-        $output = $this->client->logs($this->containerId);
+        $output = $client->logs($this->containerId);
         return $output->getOutput();
     }
 
