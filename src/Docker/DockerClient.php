@@ -274,12 +274,12 @@ class DockerClient
         }
 
         $commandline = array_filter(array_flatten([
-        $this->command,
-        $this->arrayToArgs($this->options),
-        'stop',
-        $this->arrayToArgs($options),
-        $containerIds,
-    ]));
+            $this->command,
+            $this->arrayToArgs($this->options),
+            'stop',
+            $this->arrayToArgs($options),
+            $containerIds,
+        ]));
         $process = new Process(
             $commandline,
             $this->cwd,
@@ -425,6 +425,42 @@ class DockerClient
         $process->start();
 
         return new DockerFollowLogsOutput($process);
+    }
+
+    /**
+     * Create a new Docker network.
+     *
+     * This method wraps the `docker network create` command to create a new Docker network.
+     *
+     * @param string $network The name of the Docker network to create.
+     * @param array $options Additional options for the Docker network create command.
+     * @return DockerNetworkCreateOutput The output of the Docker network create command.
+     */
+    public function networkCreate($network, $options = [])
+    {
+        $commandline = array_filter(array_flatten([
+            $this->command,
+            $this->arrayToArgs($this->options),
+            'network',
+            'create',
+            $this->arrayToArgs($options),
+            $network,
+        ]));
+        $process = new Process(
+            $commandline,
+            $this->cwd,
+            $this->env,
+            $this->input,
+            $this->timeout,
+            $this->proc_options
+        );
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new DockerException($process);
+        }
+
+        return new DockerNetworkCreateOutput($process);
     }
 
     /**

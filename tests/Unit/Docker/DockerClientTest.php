@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerFollowLogsOutput;
 use Testcontainers\Docker\DockerLogsOutput;
+use Testcontainers\Docker\DockerNetworkCreateOutput;
 use Testcontainers\Docker\DockerProcessStatusOutput;
 use Testcontainers\Docker\DockerRunOutput;
 use Testcontainers\Docker\DockerRunWithDetachOutput;
@@ -201,5 +202,20 @@ class DockerClientTest extends TestCase
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);
+    }
+
+    public function testNetworkCreate()
+    {
+        $instance = Testcontainers::run(DinD::class);
+
+        $client = new DockerClient();
+        $client->withGlobalOptions([
+            'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
+        ]);
+        $output = $client->networkCreate('test-network');
+
+        $this->assertInstanceOf(DockerNetworkCreateOutput::class, $output);
+        $this->assertSame(0, $output->getExitCode());
+        $this->assertTrue(preg_match('/^[0-9a-f]{64}/', $output->getOutput()) === 1);
     }
 }
