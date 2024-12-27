@@ -38,15 +38,6 @@ interface Container
     public function withExposedPorts($ports);
 
     /**
-     * Set the content to be copied to the container before it starts.
-     *
-     * @param Transferable $transferable The content to be copied.
-     * @param string $containerPath The destination path inside the container.
-     * @return self
-     */
-    public function withCopyToContainer($transferable, $containerPath);
-
-    /**
      * Add an environment variable to the container.
      *
      * @param string $key The name of the environment variable.
