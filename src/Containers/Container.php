@@ -140,7 +140,7 @@ interface Container
     /**
      * Set the duration of waiting time until the container is treated as started.
      *
-     * @param Duration $timeout The duration to wait.
+     * @param int $timeout The duration to wait.
      * @return self
      */
     public function withStartupTimeout($timeout);

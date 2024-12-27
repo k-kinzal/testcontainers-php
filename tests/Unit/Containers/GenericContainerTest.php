@@ -3,6 +3,7 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer;
@@ -202,6 +203,16 @@ class GenericContainerTest extends TestCase
         $instance = $container->start();
 
         $this->assertSame("/tmp\n", $instance->getOutput());
+    }
+
+    public function testStartWithStartupTimeout()
+    {
+        $this->expectException(ProcessTimedOutException::class);
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withStartupTimeout(1)
+            ->withCommands(['sleep', '5']);
+        $instance = $container->start();
     }
 
     public function testStartWithPrivilegedMode()
