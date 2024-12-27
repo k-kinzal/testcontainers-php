@@ -333,14 +333,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withCopyToContainer($transferable, $containerPath)
-    {
-        // TODO: Implement withCopyToContainer() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withEnv($key, $value)
     {
         $this->env[$key] = $value;
