@@ -189,6 +189,18 @@ class GenericContainer implements Container
     private $workDir;
 
     /**
+     * Define the default startup timeout to be used for the container.
+     * @var int|null
+     */
+    protected static $STARTUP_TIMEOUT;
+
+    /**
+     * The startup timeout to be used for the container.
+     * @var int|null
+     */
+    private $startupTimeout;
+
+    /**
      * Define the default privileged mode to be used for the container.
      *
      * @var bool|null
@@ -444,7 +456,9 @@ class GenericContainer implements Container
      */
     public function withStartupTimeout($timeout)
     {
-        // TODO: Implement withStartupTimeout() method.
+        $this->startupTimeout = $timeout;
+
+        return $this;
     }
 
     /**
@@ -780,6 +794,19 @@ class GenericContainer implements Container
     }
 
     /**
+     * Retrieve the startup timeout for the container.
+     *
+     * @return int|null
+     */
+    protected function startupTimeout()
+    {
+        if (static::$STARTUP_TIMEOUT) {
+            return static::$STARTUP_TIMEOUT;
+        }
+        return $this->startupTimeout;
+    }
+
+    /**
      * Retrieve the privileged mode for the container.
      *
      * This method returns whether the container should run in privileged mode.
@@ -931,8 +958,9 @@ class GenericContainer implements Container
         }
 
         $client = $this->client ? $this->client : DockerClientFactory::create();
+
         try {
-            $output = $client->run($this->image, $command, $args, [
+            $options = [
                 'addHost' => $hosts,
                 'detach' => true,
                 'env' => $this->env(),
@@ -945,7 +973,13 @@ class GenericContainer implements Container
                 'pull' => $this->pullPolicy(),
                 'workdir' => $this->workDir(),
                 'privileged' => $this->privileged(),
-            ]);
+            ];
+            $timeout = $this->startupTimeout();
+            if ($timeout !== null) {
+                $output = $client->withTimeout($timeout)->run($this->image, $command, $args, $options);
+            } else {
+                $output = $client->run($this->image, $command, $args, $options);
+            }
         } catch (PortAlreadyAllocatedException $e) {
             if ($portStrategy === null) {
                 throw $e;
