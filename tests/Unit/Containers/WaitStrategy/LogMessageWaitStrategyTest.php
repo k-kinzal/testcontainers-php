@@ -19,7 +19,7 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
     public function testWaitUntilReady()
     {
         $client = new DockerClient();
-        $output = $client->run('jpetazzo/clock:latest', null, null, [
+        $output = $client->run('jpetazzo/clock:latest', null, [], [
             'detach' => true,
         ]);
         $containerId = $output->getContainerId();
