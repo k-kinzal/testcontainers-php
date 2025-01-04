@@ -4,12 +4,12 @@ namespace Tests\Unit\Docker;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
-use Testcontainers\Docker\DockerFollowLogsOutput;
-use Testcontainers\Docker\DockerInspectOutput;
-use Testcontainers\Docker\DockerLogsOutput;
-use Testcontainers\Docker\DockerNetworkCreateOutput;
-use Testcontainers\Docker\DockerProcessStatusOutput;
-use Testcontainers\Docker\DockerStopOutput;
+use Testcontainers\Docker\Output\DockerFollowLogsOutput;
+use Testcontainers\Docker\Output\DockerInspectOutput;
+use Testcontainers\Docker\Output\DockerLogsOutput;
+use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
+use Testcontainers\Docker\Output\DockerProcessStatusOutput;
+use Testcontainers\Docker\Output\DockerStopOutput;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;

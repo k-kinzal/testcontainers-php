@@ -1,8 +1,9 @@
 <?php
 
-namespace Testcontainers\Docker;
+namespace Testcontainers\Docker\Output;
 
 use Symfony\Component\Process\Process;
+use Testcontainers\Docker\Output\DockerRunOutput;
 use Testcontainers\Docker\Types\ContainerId;
 
 /**

@@ -1,10 +1,11 @@
 <?php
 
-namespace Testcontainers\Docker;
+namespace Testcontainers\Docker\Output;
 
 use LogicException;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
+use Testcontainers\Docker\Output\DockerOutput;
 use Testcontainers\Docker\Types\ContainerObject;
 use Testcontainers\Docker\Types\State;
 

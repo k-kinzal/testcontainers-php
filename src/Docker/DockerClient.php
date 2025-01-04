@@ -10,6 +10,12 @@ use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 
+use Testcontainers\Docker\Output\DockerFollowLogsOutput;
+use Testcontainers\Docker\Output\DockerInspectOutput;
+use Testcontainers\Docker\Output\DockerLogsOutput;
+use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
+use Testcontainers\Docker\Output\DockerProcessStatusOutput;
+use Testcontainers\Docker\Output\DockerStopOutput;
 use function Testcontainers\array_flatten;
 
 /**

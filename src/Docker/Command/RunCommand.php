@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Docker\Command;
 
-use Testcontainers\Docker\DockerRunOutput;
-use Testcontainers\Docker\DockerRunWithDetachOutput;
+use Testcontainers\Docker\Output\DockerRunOutput;
+use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 

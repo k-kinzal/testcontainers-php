@@ -1,8 +1,9 @@
 <?php
 
-namespace Testcontainers\Docker;
+namespace Testcontainers\Docker\Output;
 
 use Symfony\Component\Process\Process;
+use Testcontainers\Docker\Output\DockerOutput;
 
 /**
  * Handles the output of a Docker `stop` command executed via Symfony Process.

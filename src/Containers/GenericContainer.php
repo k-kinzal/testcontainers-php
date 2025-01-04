@@ -20,7 +20,7 @@ use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
-use Testcontainers\Docker\DockerRunWithDetachOutput;
+use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Exceptions\InvalidFormatException;
 
