@@ -20,6 +20,7 @@ use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Exceptions\InvalidFormatException;
@@ -1024,6 +1025,18 @@ class GenericContainer implements Container
                 $output = $client->run($this->image, $command, $args, $options);
             }
         } catch (PortAlreadyAllocatedException $e) {
+            if ($portStrategy === null) {
+                throw $e;
+            }
+            $behavior = $portStrategy->conflictBehavior();
+            if ($behavior->isRetry()) {
+                return $this->start();
+            }
+            if ($behavior->isFail()) {
+                throw $e;
+            }
+            throw new LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
+        } catch (BindAddressAlreadyUseException $e) {
             if ($portStrategy === null) {
                 throw $e;
             }
