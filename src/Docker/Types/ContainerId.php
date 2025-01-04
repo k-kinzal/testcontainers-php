@@ -22,6 +22,7 @@ class ContainerId
 
     /**
      * @param string $v
+     *
      * @throws InvalidArgumentException If the container ID is not a valid 64-character hexadecimal string.
      */
     public function __construct($v)
@@ -54,6 +55,14 @@ class ContainerId
         return true;
     }
 
+    /**
+     * Create a ContainerId object from a string.
+     *
+     * @param string $v The container ID.
+     * @return ContainerId The ContainerId object.
+     *
+     * @throws InvalidArgumentException If the container ID is not a valid 64-character hexadecimal string.
+     */
     public static function fromString($v)
     {
         if (!self::isValid($v)) {
