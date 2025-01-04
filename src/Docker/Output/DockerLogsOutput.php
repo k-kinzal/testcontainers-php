@@ -1,6 +1,6 @@
 <?php
 
-namespace Testcontainers\Docker;
+namespace Testcontainers\Docker\Output;
 
 /**
  * Represents the output of a Docker `logs` command executed via Symfony Process.

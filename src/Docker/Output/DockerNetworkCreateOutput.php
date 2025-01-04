@@ -1,6 +1,6 @@
 <?php
 
-namespace Testcontainers\Docker;
+namespace Testcontainers\Docker\Output;
 
 class DockerNetworkCreateOutput extends DockerOutput
 {

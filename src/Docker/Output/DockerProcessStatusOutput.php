@@ -1,6 +1,6 @@
 <?php
 
-namespace Testcontainers\Docker;
+namespace Testcontainers\Docker\Output;
 
 use LogicException;
 use Symfony\Component\Process\Process;
