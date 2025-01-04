@@ -229,7 +229,7 @@ class GenericContainerTest extends TestCase
             ->withStartupTimeout(1)
             ->withCommands(['sleep', '5']);
         /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
+        $container->start();
     }
 
     public function testStartWithPrivilegedMode()

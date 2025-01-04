@@ -2,8 +2,6 @@
 
 namespace Testcontainers\Docker\Types;
 
-use DateTime;
-use Exception;
 use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
 
