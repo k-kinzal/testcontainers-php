@@ -20,7 +20,10 @@ trait StopCommand
      * This method wraps the `docker stop` command to send a stop signal to the specified container(s) to gracefully stop them.
      *
      * @param ContainerId|string|array $containerId The ID or an array of IDs of the container(s) to stop.
-     * @param array $options Additional options for the Docker stop command.
+     * @param array{
+     *     signal?: string,
+     *     time?: int,
+     * } $options Additional options for the Docker stop command.
      * @return DockerStopOutput The output of the Docker stop command, including the stopped container IDs.
      *
      * @throws NoSuchContainerException If the specified container does not exist.
