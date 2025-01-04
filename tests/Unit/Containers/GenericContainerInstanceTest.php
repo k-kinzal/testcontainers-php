@@ -13,7 +13,7 @@ class GenericContainerInstanceTest extends TestCase
     {
         $instance = new GenericContainerInstance('8188d93d8a27');
 
-        $this->assertSame('8188d93d8a27', $instance->getContainerId());
+        $this->assertSame('8188d93d8a27', (string) $instance->getContainerId());
     }
 
     public function testGetLabel()
