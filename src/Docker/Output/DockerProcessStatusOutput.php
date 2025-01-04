@@ -4,7 +4,6 @@ namespace Testcontainers\Docker\Output;
 
 use LogicException;
 use Symfony\Component\Process\Process;
-use Testcontainers\Docker\Output\DockerOutput;
 
 /**
  * Represents the status output of a Docker process.

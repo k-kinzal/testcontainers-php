@@ -3,7 +3,6 @@
 namespace Testcontainers\Docker\Output;
 
 use Generator;
-use Testcontainers\Docker\Output\DockerOutput;
 
 /**
  * Represents the output of a Docker `logs` command executed via Symfony Process.

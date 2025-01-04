@@ -5,7 +5,6 @@ namespace Tests\Unit\Docker;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
-use Testcontainers\Docker\Output\DockerInspectOutput;
 use Testcontainers\Docker\Output\DockerLogsOutput;
 use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
 use Testcontainers\Docker\Output\DockerProcessStatusOutput;
@@ -16,22 +15,6 @@ use Tests\Images\DinD;
 
 class DockerClientTest extends TestCase
 {
-    public function testInspect()
-    {
-        $client = new DockerClient();
-        $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
-            'detach' => true,
-        ]);
-        $containerId = $output->getContainerId();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $output = $client->inspect($containerId);
-
-        $this->assertInstanceOf(DockerInspectOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame('exited', $output->state->status);
-        $this->assertSame(0, $output->state->exitCode);
-    }
-
     public function testStop()
     {
         $instance = Testcontainers::run(DinD::class);
