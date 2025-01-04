@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers;
 
 use Testcontainers\Containers\PortStrategy\PortStrategy;
+use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 
 /**
