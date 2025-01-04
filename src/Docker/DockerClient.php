@@ -6,13 +6,13 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Command\BaseCommand;
 use Testcontainers\Docker\Command\InspectCommand;
 use Testcontainers\Docker\Command\RunCommand;
+use Testcontainers\Docker\Command\StopCommand;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Docker\Output\DockerLogsOutput;
 use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
 use Testcontainers\Docker\Output\DockerProcessStatusOutput;
-use Testcontainers\Docker\Output\DockerStopOutput;
 
 use function Testcontainers\array_flatten;
 
@@ -27,58 +27,7 @@ class DockerClient
     use BaseCommand;
     use RunCommand;
     use InspectCommand;
-
-    /**
-     * Stop one or more running Docker containers.
-     *
-     * This method wraps the `docker stop` command to send a stop signal to the specified container(s) to gracefully stop them.
-     *
-     * @param string|array $containerId The ID or an array of IDs of the container(s) to stop.
-     * @param array $options Additional options for the Docker stop command.
-     * @return DockerStopOutput The output of the Docker stop command, including the stopped container IDs.
-     *
-     * @throws NoSuchContainerException If the specified container does not exist.
-     * @throws DockerException If the Docker command fails for any other reason.
-     */
-    public function stop($containerId, $options = [])
-    {
-        $containerIds = [];
-        if (is_array($containerId)) {
-            $containerIds = $containerId;
-        } else {
-            $containerIds[] = $containerId;
-        }
-
-        $commandline = array_filter(array_flatten([
-            $this->command,
-            $this->arrayToArgs($this->options),
-            'stop',
-            $this->arrayToArgs($options),
-            $containerIds,
-        ]));
-        $process = new Process(
-            $commandline,
-            $this->cwd,
-            $this->env,
-            $this->input,
-            $this->timeout,
-            $this->proc_options
-        );
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            $stderr = $process->getErrorOutput();
-            if (NoSuchContainerException::match($stderr)) {
-                throw new NoSuchContainerException($process);
-            }
-            throw new DockerException($process);
-        }
-
-        $stdout = $process->getOutput();
-        $containerIds = explode("\n", trim($stdout));
-
-        return new DockerStopOutput($process, $containerIds);
-    }
+    use StopCommand;
 
     /**
      * Get the status of Docker processes.

@@ -3,12 +3,12 @@
 namespace Testcontainers\Docker\Output;
 
 use Symfony\Component\Process\Process;
+use Testcontainers\Docker\Types\ContainerId;
 
 /**
- * Handles the output of a Docker `stop` command executed via Symfony Process.
+ * Represents the output of a Docker `stop` command executed via Symfony Process.
  *
- * This class extends DockerOutput to provide methods for retrieving the IDs
- * of Docker containers that were stopped by the `docker stop` command.
+ * This class extends DockerOutput to include the container IDs of the Docker containers that were stopped
  */
 class DockerStopOutput extends DockerOutput
 {
@@ -18,17 +18,26 @@ class DockerStopOutput extends DockerOutput
      * This property holds the IDs of the Docker containers that were stopped
      * by the `docker stop` command executed by the Symfony Process instance.
      *
-     * @var string[]
+     * @var ContainerId[]
      */
     private $containerIds;
 
     /**
      * @param Process $process
-     * @param string[] $containerIds
      */
-    public function __construct($process, $containerIds)
+    public function __construct($process)
     {
         parent::__construct($process);
+
+        $output = $process->getOutput();
+        $containerIds = [];
+        foreach (explode("\n", $output) as $line) {
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+            $containerIds[] = new ContainerId($line);
+        }
 
         $this->containerIds = $containerIds;
     }
@@ -39,7 +48,7 @@ class DockerStopOutput extends DockerOutput
      * This method returns an array of container IDs that were stopped
      * by the `docker stop` command executed by the Symfony Process instance.
      *
-     * @return string[] An array of Docker container IDs.
+     * @return ContainerId[] An array of Docker container IDs.
      */
     public function getContainerIds()
     {
