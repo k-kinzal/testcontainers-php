@@ -69,4 +69,3 @@ class DockerInspectOutput extends DockerOutput
         return $this->object->$name;
     }
 }
-

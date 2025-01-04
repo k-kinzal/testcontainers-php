@@ -59,7 +59,7 @@ class State
     public static function ensureStatusFromArray($arr)
     {
         if (!isset($arr['Status'])) {
-            throw new InvalidValueException( "State expects a string 'Status' property, but 'Status' is missing", ['data' => $arr]);
+            throw new InvalidValueException("State expects a string 'Status' property, but 'Status' is missing", ['data' => $arr]);
         }
         if (!is_string($arr['Status'])) {
             throw new InvalidValueException(
@@ -93,7 +93,7 @@ class State
     public static function ensureExitCodeFromArray($arr)
     {
         if (!isset($arr['ExitCode'])) {
-            throw new InvalidValueException( "State expects a integer 'ExitCode' property, but 'ExitCode' is missing", ['data' => $arr]);
+            throw new InvalidValueException("State expects a integer 'ExitCode' property, but 'ExitCode' is missing", ['data' => $arr]);
         }
         if (!is_int($arr['ExitCode'])) {
             throw new InvalidValueException(
