@@ -176,4 +176,8 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/composer,symfony,phpstorm+all,phpunit,phpcodesniffer
 
+# Composer
 composer.lock
+
+# Qodo
+.qodo/
