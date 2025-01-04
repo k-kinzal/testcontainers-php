@@ -1000,7 +1000,7 @@ class GenericContainer implements Container
             }
         }
 
-        $client = $this->client ? $this->client : DockerClientFactory::create();
+        $client = $this->client ?: DockerClientFactory::create();
 
         try {
             $options = [
