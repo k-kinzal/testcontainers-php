@@ -19,6 +19,7 @@ class GenericContainerTest extends TestCase
     public function testStart()
     {
         $container = new GenericContainer('alpine:latest');
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertInstanceOf(ContainerInstance::class, $instance);
@@ -36,6 +37,7 @@ class GenericContainerTest extends TestCase
             ->withFileSystemBind($path, '/tmp/test', BindMode::READ_WRITE())
             ->withCommands(['cat', '/tmp/test'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("Hello, World!", $instance->getOutput());
@@ -50,12 +52,14 @@ class GenericContainerTest extends TestCase
 
         $container = (new GenericContainer('alpine:latest'))
             ->withFileSystemBind($path, '/tmp/test', BindMode::READ_WRITE());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance1 = $container->start();
 
         $container = (new GenericContainer('alpine:latest'))
             ->withVolumesFrom($instance1, BindMode::READ_ONLY())
             ->withCommands(['cat', '/tmp/test'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance2 = $container->start();
 
         $this->assertSame("Hello, World!", $instance2->getOutput());
@@ -65,6 +69,7 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommand('pwd');
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("/\n", $instance->getOutput());
@@ -75,6 +80,7 @@ class GenericContainerTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['echo', 'Hello, World!'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());
@@ -85,6 +91,7 @@ class GenericContainerTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withExtraHost('example.com', '127.0.0.1')
             ->withCommands(['sh', '-c', 'ping -c 1 example.com']);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
@@ -95,6 +102,7 @@ class GenericContainerTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withNetworkMode('none')
             ->withCommands(['sh', '-c', 'ls /sys/class/net']);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
@@ -117,6 +125,7 @@ class GenericContainerTest extends TestCase
             ->withNetworkMode($network)
             ->withNetworkAliases(['my-alias'])
             ->withCommands(['sh', '-c', 'ping -c 1 my-alias']);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
@@ -128,6 +137,7 @@ class GenericContainerTest extends TestCase
             ->withEnv('KEY', 'VALUE')
             ->withCommands(['printenv', 'KEY'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("VALUE\n", $instance->getOutput());
@@ -139,6 +149,7 @@ class GenericContainerTest extends TestCase
             ->withEnvs(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
             ->withCommands(['printenv', 'KEY2'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("VALUE2\n", $instance->getOutput());
@@ -149,6 +160,7 @@ class GenericContainerTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("VALUE1", $instance->getLabel('KEY1'));
@@ -161,6 +173,7 @@ class GenericContainerTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts(80)
             ->withPortStrategy(new LocalRandomPortStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertInstanceOf(ContainerInstance::class, $instance);
@@ -174,6 +187,7 @@ class GenericContainerTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts([80, 443])
             ->withPortStrategy(new LocalRandomPortStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertInstanceOf(ContainerInstance::class, $instance);
@@ -189,6 +203,7 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withImagePullPolicy(ImagePullPolicy::MISSING());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame(ImagePullPolicy::$MISSING, $instance->getImagePullPolicy()->toString());
@@ -200,6 +215,7 @@ class GenericContainerTest extends TestCase
             ->withWorkingDirectory('/tmp')
             ->withCommands(['pwd'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("/tmp\n", $instance->getOutput());
@@ -212,6 +228,7 @@ class GenericContainerTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withStartupTimeout(1)
             ->withCommands(['sleep', '5']);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
     }
 
@@ -219,6 +236,7 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPrivilegedMode(true);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame(true, $instance->getPrivilegedMode());
