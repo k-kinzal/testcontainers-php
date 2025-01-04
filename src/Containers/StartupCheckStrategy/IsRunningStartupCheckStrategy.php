@@ -22,7 +22,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     public function waitUntilStartupSuccessful($containerId)
     {
-        $client = $this->client ? $this->client : DockerClientFactory::create();
+        $client = $this->client ?: DockerClientFactory::create();
         try {
             while (true) {
                 $output = $client->inspect($containerId);

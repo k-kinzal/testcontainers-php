@@ -3,7 +3,6 @@
 namespace Tests\Unit\Containers\StartupCheckStrategy;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\GenericContainerInstance;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Docker\DockerClient;
 
