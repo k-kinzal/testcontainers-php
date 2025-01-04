@@ -33,5 +33,5 @@ trait InspectCommand
         return new DockerInspectOutput($process);
     }
 
-    abstract protected function execute($command, $subcommand = null, $args = [], $options = []);
+    abstract protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true);
 }
