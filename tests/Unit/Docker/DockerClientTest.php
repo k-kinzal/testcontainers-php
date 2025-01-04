@@ -7,30 +7,11 @@ use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Docker\Output\DockerLogsOutput;
 use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
-use Testcontainers\Docker\Output\DockerProcessStatusOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
 class DockerClientTest extends TestCase
 {
-    public function testProcessStatus()
-    {
-        $client = new DockerClient();
-        $output = $client->run('alpine:latest', 'sleep', ['60'], [
-            'detach' => true,
-        ]);
-        $containerId = $output->getContainerId();
-        $output = $client->processStatus();
-
-        $status = $output->get($containerId);
-
-        $this->assertInstanceOf(DockerProcessStatusOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame(substr($containerId, 0, 12), $status['ID']);
-        $this->assertSame('alpine:latest', $status['Image']);
-        $this->assertSame('running', $status['State']);
-    }
-
     public function testLogs()
     {
         $instance = Testcontainers::run(DinD::class);

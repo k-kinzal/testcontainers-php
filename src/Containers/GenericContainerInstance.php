@@ -6,6 +6,8 @@ use LogicException;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
+use Testcontainers\Docker\Exception\NoSuchObjectException;
+use Testcontainers\Docker\Types\ContainerId;
 
 /**
  * GenericContainerInstance is a generic implementation of docker container.
@@ -22,7 +24,7 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * The unique identifier for the container.
      *
-     * @var string The container ID.
+     * @var ContainerId The container ID.
      */
     private $containerId;
 
@@ -57,7 +59,7 @@ class GenericContainerInstance implements ContainerInstance
     private $data = [];
 
     /**
-     * @param string $containerId The unique identifier for the container.
+     * @param ContainerId|string $containerId The unique identifier for the container.
      * @param array{
      *   image?: string,
      *   command?: string,
@@ -74,6 +76,9 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function __construct($containerId, $containerDef = [])
     {
+        if (is_string($containerId)) {
+            $containerId = new ContainerId($containerId);
+        }
         $this->containerId = $containerId;
         $this->containerDef = $containerDef;
     }
@@ -239,17 +244,22 @@ class GenericContainerInstance implements ContainerInstance
         if ($this->running === false) {
             return false;
         }
-        $client = $this->client ?: DockerClientFactory::create();
-        $output = $client->processStatus([
-            'filter' => "id=$this->containerId",
-        ]);
-        $status = $output->get($this->containerId);
-        if ($status === null) {
+
+        try {
+            $client = $this->client ?: DockerClientFactory::create();
+            $output = $client->inspect($this->containerId);
+            switch ($output->state->status) {
+                case 'running':
+                    $this->running = true;
+                    return true;
+                default:
+                    $this->running = false;
+                    return false;
+            }
+        } catch (NoSuchObjectException $e) {
             $this->running = false;
             return false;
         }
-
-        return true;
     }
 
     /**
