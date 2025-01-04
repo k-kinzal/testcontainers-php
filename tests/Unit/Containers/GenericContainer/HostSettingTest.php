@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\HostSetting;
+use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
 class HostSettingTest extends TestCase
 {
@@ -21,7 +22,8 @@ class HostSettingTest extends TestCase
     public function testStaticExtraHosts()
     {
         $container = (new HostSettingWithExtraHostsContainer('alpine:latest'))
-            ->withCommands(['sh', '-c', 'ping -c 1 example.com']);
+            ->withCommands(['sh', '-c', 'ping -c 1 example.com'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
@@ -30,7 +32,8 @@ class HostSettingTest extends TestCase
     public function testStaticHosts()
     {
         $container = (new HostSettingWithHostsContainer('alpine:latest'))
-            ->withCommands(['sh', '-c', 'ping -c 1 example.org']);
+            ->withCommands(['sh', '-c', 'ping -c 1 example.org'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
@@ -40,7 +43,8 @@ class HostSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExtraHost('example.com', '127.0.0.1')
-            ->withCommands(['sh', '-c', 'ping -c 1 example.com']);
+            ->withCommands(['sh', '-c', 'ping -c 1 example.com'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
@@ -62,7 +66,8 @@ class HostSettingTest extends TestCase
                 ['hostname' => 'example.com', 'ipAddress' => '127.0.0.1'],
                 ['hostname' => 'example.org', 'ipAddress' => '127.0.0.1'],
             ])
-            ->withCommands(['sh', '-c', 'ping -c 1 example.org']);
+            ->withCommands(['sh', '-c', 'ping -c 1 example.org'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
