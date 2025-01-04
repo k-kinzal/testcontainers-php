@@ -5,6 +5,7 @@ namespace Tests\Unit\Docker;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerFollowLogsOutput;
+use Testcontainers\Docker\DockerInspectOutput;
 use Testcontainers\Docker\DockerLogsOutput;
 use Testcontainers\Docker\DockerNetworkCreateOutput;
 use Testcontainers\Docker\DockerProcessStatusOutput;
@@ -109,6 +110,22 @@ class DockerClientTest extends TestCase
             'detach' => true,
             'publish' => ['38793:80'],
         ]);
+    }
+
+    public function testInspect()
+    {
+        $client = new DockerClient();
+        $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'detach' => true,
+        ]);
+        $containerId = $output->getContainerId();
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $output = $client->inspect($containerId);
+
+        $this->assertInstanceOf(DockerInspectOutput::class, $output);
+        $this->assertSame(0, $output->getExitCode());
+        $this->assertSame('exited', $output->state->status);
+        $this->assertSame(0, $output->state->exitCode);
     }
 
     public function testStop()
