@@ -209,6 +209,7 @@ trait BaseCommand
      * @param string|null $subcommand The subcommand to execute (optional).
      * @param array $args The arguments for the command (optional).
      * @param array $options Additional options for the Docker command.
+     * @param bool $wait Whether to wait for the command to finish executing.
      * @return Process The Symfony Process instance that was executed
      *
      * @throws NoSuchContainerException If the specified container does not exist.
@@ -216,7 +217,7 @@ trait BaseCommand
      * @throws PortAlreadyAllocatedException If the specified port is already allocated.
      * @throws DockerException If the Docker command fails.
      */
-    protected function execute($command, $subcommand = null, $args = [], $options = [])
+    protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true)
     {
         // docker [global options] command [subcommand] [options] [args]
         $commandLine = ['docker'];
@@ -241,18 +242,21 @@ trait BaseCommand
             $this->timeout,
             $this->proc_options
         );
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            $stderr = $process->getErrorOutput();
-            if (NoSuchContainerException::match($stderr)) {
-                throw new NoSuchContainerException($process);
-            } elseif (NoSuchObjectException::match($stderr)) {
-                throw new NoSuchObjectException($process);
-            } elseif (PortAlreadyAllocatedException::match($stderr)) {
-                throw new PortAlreadyAllocatedException($process);
+        if ($wait) {
+            $process->run();
+            if (!$process->isSuccessful()) {
+                $stderr = $process->getErrorOutput();
+                if (NoSuchContainerException::match($stderr)) {
+                    throw new NoSuchContainerException($process);
+                } elseif (NoSuchObjectException::match($stderr)) {
+                    throw new NoSuchObjectException($process);
+                } elseif (PortAlreadyAllocatedException::match($stderr)) {
+                    throw new PortAlreadyAllocatedException($process);
+                }
+                throw new DockerException($process);
             }
-            throw new DockerException($process);
+        } else {
+            $process->start();
         }
 
         return $process;

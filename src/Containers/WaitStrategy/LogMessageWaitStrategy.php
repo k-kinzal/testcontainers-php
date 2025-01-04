@@ -2,7 +2,9 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use LogicException;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 
 /**
  * LogMessageWaitStrategy waits until a specified log message is found in the container logs.
@@ -35,7 +37,10 @@ class LogMessageWaitStrategy implements WaitStrategy
         $containerId = $instance->getContainerId();
 
         $client = DockerClientFactory::create();
-        $output = $client->withTimeout($this->timeout)->followLogs($containerId);
+        $output = $client->withTimeout($this->timeout)->logs($containerId, ['follow' => true]);
+        if (!($output instanceof DockerFollowLogsOutput)) {
+            throw new LogicException('Expected DockerFollowLogsOutput instance: `' . get_class($output) . '`');
+        }
         $iter = $output->getIterator();
         $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';
         foreach ($iter as $line) {
