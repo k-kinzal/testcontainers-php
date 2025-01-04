@@ -8,6 +8,10 @@ use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
+use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
+use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
+use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
+use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
@@ -215,6 +219,24 @@ class GenericContainer implements Container
     private $privileged = false;
 
     /**
+     * Define the default startup check strategy to be used for the container.
+     * @var string|null
+     */
+    protected static $STARTUP_CHECK_STRATEGY;
+
+    /**
+     * The startup check strategy to be used for the container.
+     * @var StartupCheckStrategy|null
+     */
+    private $startupCheckStrategy;
+
+    /**
+     * The startup check strategy provider.
+     * @var StartupCheckStrategyProvider
+     */
+    private $startupCheckStrategyProvider;
+
+    /**
      * Define the default port strategy to be used for the container.
      * @var string|null
      */
@@ -253,6 +275,7 @@ class GenericContainer implements Container
     /**
      * @param string|null $image The image to be used for the container.
      *
+     * @throws AlreadyExistsStartupStrategyException if the startup strategy already exists.
      * @throws AlreadyExistsPortStrategyException if the port strategy already exists.
      * @throws AlreadyExistsWaitStrategyException if the wait strategy already exists.
      */
@@ -262,6 +285,8 @@ class GenericContainer implements Container
 
         $this->image = $image ?: static::$IMAGE;
 
+        $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
+        $this->startupCheckStrategyProvider->register(new IsRunningStartupCheckStrategy());
 
         $this->portStrategyProvider = new PortStrategyProvider();
         $this->portStrategyProvider->register(new LocalRandomPortStrategy());
@@ -468,7 +493,9 @@ class GenericContainer implements Container
      */
     public function withStartupCheckStrategy($strategy)
     {
-        // TODO: Implement withStartupCheckStrategy() method.
+        $this->startupCheckStrategy = $strategy;
+
+        return $this;
     }
 
     /**
@@ -816,6 +843,30 @@ class GenericContainer implements Container
     }
 
     /**
+     * Retrieve the startup check strategy for the container.
+     *
+     * This method returns the startup check strategy that should be used for the container.
+     * If a specific startup check strategy is set, it will return that. Otherwise, it will
+     * attempt to retrieve the default startup check strategy from the provider.
+     *
+     * @return StartupCheckStrategy|null The startup check strategy to be used, or null if none is set.
+     */
+    protected function startupCheckStrategy()
+    {
+        if (static::$STARTUP_CHECK_STRATEGY !== null) {
+            $strategy = $this->startupCheckStrategyProvider->get(static::$STARTUP_CHECK_STRATEGY);
+            if (!$strategy) {
+                throw new LogicException("Startup check strategy not found: " . static::$STARTUP_CHECK_STRATEGY);
+            }
+            return $strategy;
+        }
+        if ($this->startupCheckStrategy) {
+            return $this->startupCheckStrategy;
+        }
+        return null;
+    }
+
+    /**
      * Retrieve the port strategy for the container.
      *
      * This method returns the port strategy that should be used for the container.
@@ -1014,6 +1065,13 @@ class GenericContainer implements Container
         ];
         $instance = new GenericContainerInstance($containerId, $containerDef);
         $instance->setDockerClient($client);
+
+        $startupCheckStrategy = $this->startupCheckStrategy();
+        if ($startupCheckStrategy) {
+            if ($startupCheckStrategy->waitUntilStartupSuccessful($instance) === false) {
+                throw new RuntimeException('Illegal state of container');
+            }
+        }
 
         $waitStrategy = $this->waitStrategy($instance);
         if ($waitStrategy) {
