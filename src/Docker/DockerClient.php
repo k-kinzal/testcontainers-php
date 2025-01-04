@@ -6,6 +6,7 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
+use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
 use function Testcontainers\array_flatten;
@@ -261,8 +262,8 @@ class DockerClient
      * @param string $containerId The ID of the container to inspect.
      * @return DockerInspectOutput The output of the Docker inspect command, including detailed information about the container.
      *
-     * @throws NoSuchContainerException If the specified container does not exist.
      * @throws DockerException If the Docker command fails for any other reason.
+     * @throws NoSuchObjectException If the specified container does not exist.
      * @throws InvalidValueException If the output of the `docker inspect` command is not valid JSON.
      */
     public function inspect($containerId)
@@ -284,6 +285,9 @@ class DockerClient
         $process->run();
 
         if (!$process->isSuccessful()) {
+            if (NoSuchObjectException::match($process->getErrorOutput())) {
+                throw new NoSuchObjectException($process);
+            }
             throw new DockerException($process);
         }
 
