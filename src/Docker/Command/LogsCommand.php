@@ -6,6 +6,11 @@ use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Docker\Output\DockerLogsOutput;
 use Testcontainers\Docker\Types\ContainerId;
 
+/**
+ * Logs command for Docker.
+ *
+ * This trait provides methods to interact with the logs of Docker containers.
+ */
 trait LogsCommand
 {
     /**
