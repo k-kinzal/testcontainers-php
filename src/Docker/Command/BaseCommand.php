@@ -4,6 +4,7 @@ namespace Testcontainers\Docker\Command;
 
 use LogicException;
 use Symfony\Component\Process\Process;
+use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
@@ -252,6 +253,8 @@ trait BaseCommand
                     throw new NoSuchObjectException($process);
                 } elseif (PortAlreadyAllocatedException::match($stderr)) {
                     throw new PortAlreadyAllocatedException($process);
+                } elseif (BindAddressAlreadyUseException::match($stderr)) {
+                    throw new BindAddressAlreadyUseException($process);
                 }
                 throw new DockerException($process);
             }
