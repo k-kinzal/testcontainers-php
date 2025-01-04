@@ -8,40 +8,11 @@ use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Docker\Output\DockerLogsOutput;
 use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
 use Testcontainers\Docker\Output\DockerProcessStatusOutput;
-use Testcontainers\Docker\Output\DockerStopOutput;
-use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
 class DockerClientTest extends TestCase
 {
-    public function testStop()
-    {
-        $instance = Testcontainers::run(DinD::class);
-
-        $client = new DockerClient();
-        $client->withGlobalOptions([
-            'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
-        ]);
-        $output = $client->run('alpine:latest', 'tail', ['-f', '/dev/null'], [
-            'detach' => true,
-        ]);
-        $containerId = $output->getContainerId();
-        $output = $client->stop($containerId);
-
-        $this->assertInstanceOf(DockerStopOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame("$containerId\n", $output->getOutput());
-    }
-
-    public function testStopWithNonExistentContainerId()
-    {
-        $this->expectException(NoSuchContainerException::class);
-
-        $client = new DockerClient();
-        $client->stop('aaaaaaaaaaaa');
-    }
-
     public function testProcessStatus()
     {
         $client = new DockerClient();

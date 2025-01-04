@@ -19,7 +19,7 @@ class DockerRunWithDetachOutput extends DockerRunOutput
      * This property holds the container ID of the Docker container that was started
      * by the `docker run` command executed by the Symfony Process instance.
      *
-     * @var string
+     * @var ContainerId
      */
     private $containerId;
 
@@ -39,7 +39,7 @@ class DockerRunWithDetachOutput extends DockerRunOutput
      * This method returns the ID of the Docker container that was started
      * by the `docker run` command executed by the Symfony Process instance.
      *
-     * @return string The Docker container ID.
+     * @return ContainerId The Docker container ID.
      */
     public function getContainerId()
     {
