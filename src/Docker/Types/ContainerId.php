@@ -48,7 +48,7 @@ class ContainerId
             return false;
         }
         if (preg_match('/^[a-f0-9]{12}$/', $v) !== 1
-            || preg_match('/^[a-f0-9]{64}$/', $v) !== 1) {
+            && preg_match('/^[a-f0-9]{64}$/', $v) !== 1) {
             return false;
         }
         return true;
