@@ -77,7 +77,7 @@ class ImagePullPolicyTest extends TestCase
     public function testFromStringWithInvalidPolicy()
     {
         $this->expectException(InvalidFormatException::class);
-        $this->expectExceptionMessage('Invalid format: invalid, expects: always, missing, never');
+        $this->expectExceptionMessage('Invalid format: `"invalid"`, expects: `always`, `missing`, `never`');
         /** @noinspection PhpUnhandledExceptionInspection */
         ImagePullPolicy::fromString('invalid');
     }

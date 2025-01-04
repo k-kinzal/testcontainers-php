@@ -55,7 +55,7 @@ class ConflictBehaviorTest extends TestCase
     public function testFromStringWithInvalidAction()
     {
         $this->expectException(InvalidFormatException::class);
-        $this->expectExceptionMessage('Invalid format: invalid, expects: retry, fail');
+        $this->expectExceptionMessage('Invalid format: `"invalid"`, expects: `retry`, `fail`');
 
         /** @noinspection PhpUnhandledExceptionInspection */
         ConflictBehavior::fromString('invalid');
