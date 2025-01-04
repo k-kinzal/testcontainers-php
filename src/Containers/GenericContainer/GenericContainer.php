@@ -1,9 +1,14 @@
 <?php
 
-namespace Testcontainers\Containers;
+namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
 use RuntimeException;
+use Testcontainers\Containers\BindMode;
+use Testcontainers\Containers\Container;
+use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
+use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
@@ -30,6 +35,8 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class GenericContainer implements Container
 {
+    use HostSetting;
+
     /**
      * The Docker client.
      * @var DockerClient|null
@@ -59,24 +66,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default extra hosts to be used for the container.
-     * @var array{
-     *      hostname: string,
-     *      ipAddress: string
-     *  }[]|null
-     */
-    protected static $EXTRA_HOSTS;
-
-    /**
-     * The extra hosts to be used for the container.
-     * @var array{
-     *      hostname: string,
-     *      ipAddress: string
-     *  }[]
-     */
-    private $extraHosts = [];
 
     /**
      * Define the default network mode to be used for the container.
@@ -419,19 +408,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withExtraHost($hostname, $ipAddress)
-    {
-        $this->extraHosts[] = [
-            'hostname' => $hostname,
-            'ipAddress' => $ipAddress,
-        ];
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withNetworkMode($networkMode)
     {
         $this->networkMode = $networkMode;
@@ -537,25 +513,6 @@ class GenericContainer implements Container
             return $this->commands;
         }
         return null;
-    }
-
-    /**
-     * Retrieve the extra hosts to be used for the container.
-     *
-     * @return array{
-     *     hostname: string,
-     *     ipAddress: string
-     * }[]
-     */
-    protected function extraHost()
-    {
-        if (static::$EXTRA_HOSTS) {
-            return static::$EXTRA_HOSTS;
-        }
-        if ($this->extraHosts) {
-            return $this->extraHosts;
-        }
-        return [];
     }
 
     /**
@@ -956,11 +913,11 @@ class GenericContainer implements Container
             }
         }
 
-        $extraHosts = $this->extraHost();
+        $extraHosts = $this->extraHosts();
         $hosts = [];
         if ($extraHosts) {
-            foreach ($extraHosts as $extraHost) {
-                $hosts[] = $extraHost['hostname'] . ':' . $extraHost['ipAddress'];
+            foreach ($extraHosts as $host) {
+                $hosts[] = $host->toString();
             }
         }
 

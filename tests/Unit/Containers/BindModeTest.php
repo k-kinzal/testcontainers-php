@@ -55,7 +55,7 @@ class BindModeTest extends TestCase
     public function testFromStringWithInvalidMode()
     {
         $this->expectException(InvalidFormatException::class);
-        $this->expectExceptionMessage('Invalid format: invalid, expects: ro, rw');
+        $this->expectExceptionMessage('Invalid format: `"invalid"`, expects: `ro`, `rw`');
 
         /** @noinspection PhpUnhandledExceptionInspection */
         BindMode::fromString('invalid');

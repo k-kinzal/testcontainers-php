@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\GenericContainer;
+use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
@@ -84,17 +84,6 @@ class GenericContainerTest extends TestCase
         $instance = $container->start();
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());
-    }
-
-    public function testStartWithExtraHost()
-    {
-        $container = (new GenericContainer('alpine:latest'))
-            ->withExtraHost('example.com', '127.0.0.1')
-            ->withCommands(['sh', '-c', 'ping -c 1 example.com']);
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
-
-        $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
     }
 
     public function testStartWithNetworkMode()

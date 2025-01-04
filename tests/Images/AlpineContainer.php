@@ -2,7 +2,7 @@
 
 namespace Tests\Images;
 
-use Testcontainers\Containers\GenericContainer;
+use Testcontainers\Containers\GenericContainer\GenericContainer;
 
 class AlpineContainer extends GenericContainer
 {
