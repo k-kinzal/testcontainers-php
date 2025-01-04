@@ -22,7 +22,6 @@ class InvalidFormatException extends Exception
     public function __construct($actual, $expects = [], $code = 0, $previous = null)
     {
         if (empty($expects)) {
-            $message = "Invalid format: $actual";
             parent::__construct("Invalid format: $actual", $code, $previous);
         } else {
             $expects = implode(', ', $expects);
