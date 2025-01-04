@@ -1,8 +1,9 @@
 <?php
 
-namespace Testcontainers\Containers;
+namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
+use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\NoSuchContainerException;

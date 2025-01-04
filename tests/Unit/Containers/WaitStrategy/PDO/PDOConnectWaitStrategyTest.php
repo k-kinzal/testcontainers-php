@@ -3,7 +3,7 @@
 namespace Tests\Unit\Containers\WaitStrategy\PDO;
 
 use LogicException;
-use Testcontainers\Containers\GenericContainerInstance;
+use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\WaitStrategy\PDO\PDOConnectWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\PDO\SQLiteDSN;
 use Tests\Unit\Containers\WaitStrategy\WaitStrategyTestCase;

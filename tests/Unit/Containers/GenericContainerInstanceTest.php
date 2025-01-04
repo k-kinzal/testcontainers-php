@@ -3,8 +3,8 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\GenericContainer;
-use Testcontainers\Containers\GenericContainerInstance;
+use Testcontainers\Containers\GenericContainer\GenericContainer;
+use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\ImagePullPolicy;
 
 class GenericContainerInstanceTest extends TestCase

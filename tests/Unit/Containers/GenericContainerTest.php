@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\GenericContainer;
+use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;

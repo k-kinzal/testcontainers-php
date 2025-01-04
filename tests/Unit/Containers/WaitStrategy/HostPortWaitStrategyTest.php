@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Containers\WaitStrategy;
 
-use Testcontainers\Containers\GenericContainerInstance;
+use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\PortProbe;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;

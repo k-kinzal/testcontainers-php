@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Containers\WaitStrategy;
 
-use Testcontainers\Containers\GenericContainerInstance;
+use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClient;
 

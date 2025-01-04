@@ -1,9 +1,14 @@
 <?php
 
-namespace Testcontainers\Containers;
+namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
 use RuntimeException;
+use Testcontainers\Containers\BindMode;
+use Testcontainers\Containers\Container;
+use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
+use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
