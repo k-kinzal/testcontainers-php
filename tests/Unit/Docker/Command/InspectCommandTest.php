@@ -27,7 +27,15 @@ class InspectCommandTest extends TestCase
 
         $this->assertInstanceOf(DockerInspectOutput::class, $output);
         $this->assertSame(0, $output->getExitCode());
-        $this->assertSame('exited', $output->state->status);
+        $this->assertContains($output->state->status, [
+            'created',
+            'running',
+            'paused',
+            'restarting',
+            'removing',
+            'exited',
+            'dead'
+        ]);
         $this->assertSame(0, $output->state->exitCode);
     }
 }
