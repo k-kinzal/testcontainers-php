@@ -4,6 +4,7 @@ namespace Testcontainers\Containers;
 
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
+use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 
 /**
@@ -91,11 +92,22 @@ interface Container
     /**
      * Add an extra host entry to be passed to the container.
      *
-     * @param string $hostname The hostname to add.
-     * @param string $ipAddress The IP address associated with the hostname.
+     * @param HostToIp|string|array $hostname The hostname to add.
+     * @param null|string $ipAddress The IP address associated with the hostname.
      * @return self
      */
-    public function withExtraHost($hostname, $ipAddress);
+    public function withExtraHost($hostname, $ipAddress = null);
+
+    /**
+     * Add multiple extra host entries to be passed to the container.
+     *
+     * @param HostToIp[]|string[]|array{
+     *      hostname: string,
+     *      ipAddress: string
+     *  }[] $extraHosts The extra hosts to add.
+     * @return self
+     */
+    public function withExtraHosts($extraHosts);
 
     /**
      * Set the network mode for this container, similar to the `--net <name>` option on the Docker CLI.

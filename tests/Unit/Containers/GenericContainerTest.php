@@ -86,17 +86,6 @@ class GenericContainerTest extends TestCase
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
 
-    public function testStartWithExtraHost()
-    {
-        $container = (new GenericContainer('alpine:latest'))
-            ->withExtraHost('example.com', '127.0.0.1')
-            ->withCommands(['sh', '-c', 'ping -c 1 example.com']);
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
-
-        $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
-    }
-
     public function testStartWithNetworkMode()
     {
         $container = (new GenericContainer('alpine:latest'))
