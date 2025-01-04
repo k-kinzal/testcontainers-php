@@ -8,6 +8,7 @@ use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+
 use function Testcontainers\kebab;
 
 /**
