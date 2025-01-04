@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection */
 
 namespace Tests\Unit\Containers\GenericContainer;
