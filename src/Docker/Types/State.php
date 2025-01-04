@@ -116,7 +116,7 @@ class State
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new LogicException('ContainerObject::' . $name . ' does not exist');
+            throw new LogicException('State::' . $name . ' does not exist');
         }
         return $this->$name;
     }
