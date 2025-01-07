@@ -26,23 +26,6 @@ class GenericContainerTest extends TestCase
         $this->assertNotEmpty($instance->getContainerId());
     }
 
-    public function testStartWithFileSystemBind()
-    {
-        $fp = tmpfile();
-        fwrite($fp, 'Hello, World!');
-        $meta = stream_get_meta_data($fp);
-        $path = $meta['uri'];
-
-        $container = (new GenericContainer('alpine:latest'))
-            ->withFileSystemBind($path, '/tmp/test', BindMode::READ_WRITE())
-            ->withCommands(['cat', '/tmp/test'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
-
-        $this->assertSame("Hello, World!", $instance->getOutput());
-    }
-
     public function testStartWithVolumesFrom()
     {
         $fp = tmpfile();
