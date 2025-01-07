@@ -61,7 +61,7 @@ class MountTest extends TestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $mount = Mount::fromString('target=/container/path');
 
-        $this->assertSame('volume', $mount->type);
+        $this->assertSame('bind', $mount->type);
         $this->assertNull($mount->source);
         $this->assertSame('/container/path', $mount->destination);
         $this->assertNull($mount->subpath);
