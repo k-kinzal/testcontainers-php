@@ -175,7 +175,7 @@ trait MountSetting
         if (empty($mounts)) {
             $mounts = static::$VOLUMES;
         }
-        if (count($mounts) > 0) {
+        if (!empty($mounts)) {
             $m = [];
             foreach ($mounts as $mount) {
                 $m[] = Mount::fromString($mount);
