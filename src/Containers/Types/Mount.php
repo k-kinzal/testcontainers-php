@@ -123,7 +123,6 @@ class Mount
                 // See: https://docs.docker.com/engine/storage/volumes/#options-for---volume
                 $readonly = $parts[2] === 'ro';
             }
-
         }
         return new self('bind', $source, $destination, $subpath, $readonly, false, []);
     }
