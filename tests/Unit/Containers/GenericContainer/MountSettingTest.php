@@ -70,6 +70,39 @@ class MountSettingTest extends TestCase
 
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
+
+    public function testStartWithVolume()
+    {
+        $tmpdir = sys_get_temp_dir();
+        file_put_contents($tmpdir . '/to', 'Hello, World!');
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withVolume("$tmpdir/to:/container/path/to:ro")
+            ->withCommands(['cat', '/container/path/to'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
+        $instance = $container->start();
+
+        $this->assertSame('Hello, World!', $instance->getOutput());
+    }
+
+    public function testStartWithMount()
+    {
+        $tmpdir = sys_get_temp_dir();
+        file_put_contents($tmpdir . '/to', 'Hello, World!');
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withMount([
+                'type' => 'bind',
+                'source' => "$tmpdir/to",
+                'destination' => '/container/path/to',
+                'readonly' => true,
+            ])
+            ->withCommands(['cat', '/container/path/to'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
+        $instance = $container->start();
+
+        $this->assertSame('Hello, World!', $instance->getOutput());
+    }
 }
 
 class MountSettingWithMountsContainer extends GenericContainer
@@ -84,7 +117,4 @@ class MountSettingWithVolumesContainer extends GenericContainer
     public static $VOLUMES = [
         '${HOST_DIR}:/container/path:ro',
     ];
-}
-{
-
 }

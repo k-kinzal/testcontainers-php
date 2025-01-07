@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use InvalidArgumentException;
 use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\Types\Mount;
 use Testcontainers\Exceptions\InvalidFormatException;
@@ -52,21 +53,67 @@ trait MountSetting
     /**
      * Adds a file system binding to the container.
      *
-     * @param string $hostPath The path on the host machine.
-     * @param string $containerPath The path inside the container.
-     * @param BindMode $mode The mode of the bind (e.g., read-only or read-write).
+     * @param string|array|Mount $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
+     * @param null|string $containerPath The path inside the container.
+     * @param null|BindMode $mode The mode of the bind (e.g., read-only or read-write).
      * @return self
+     *
+     * @throws InvalidFormatException If the mount format is invalid.
      */
-    public function withFileSystemBind($hostPath, $containerPath, $mode)
+    public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
-        $this->mounts[] = Mount::fromArray([
-            'type' => 'bind',
-            'source' => $hostPath,
-            'destination' => $containerPath,
-            'readonly' => $mode->isReadOnly(),
-        ]);
+        if (!isset($containerPath) || !isset($mode)) {
+            if (is_string($hostPath)) {
+                $mount = Mount::fromString($hostPath);
+            } else if (is_array($hostPath)) {
+                $mount = Mount::fromArray($hostPath);
+            } else if ($hostPath instanceof Mount) {
+                $mount = $hostPath;
+            } else {
+                throw new InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
+            }
+        } else {
+            $mount = Mount::fromArray([
+                'type' => 'bind',
+                'source' => $hostPath,
+                'destination' => $containerPath,
+                'readonly' => $mode->isReadOnly(),
+            ]);
+        }
+
+        $this->mounts[] = $mount;
 
         return $this;
+    }
+
+    /**
+     * Adds a file system binding to the container. (Alias for withFileSystemBind)
+     *
+     * @param string|array|Mount $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
+     * @param null|string $containerPath The path inside the container.
+     * @param null|BindMode $mode The mode of the bind (e.g., read-only or read-write).
+     * @return self
+     *
+     * @throws InvalidFormatException If the mount format is invalid.
+     */
+    public function withVolume($hostPath, $containerPath = null, $mode = null)
+    {
+        return $this->withFileSystemBind($hostPath, $containerPath, $mode);
+    }
+
+    /**
+     * Adds a file system binding to the container. (Alias for withFileSystemBind)
+     *
+     * @param string|array|Mount $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
+     * @param null|string $containerPath The path inside the container.
+     * @param null|BindMode $mode The mode of the bind (e.g., read-only or read-write).
+     * @return self
+     *
+     * @throws InvalidFormatException If the mount format is invalid.
+     */
+    public function withMount($hostPath, $containerPath = null, $mode = null)
+    {
+        return $this->withFileSystemBind($hostPath, $containerPath, $mode);
     }
 
     /**
