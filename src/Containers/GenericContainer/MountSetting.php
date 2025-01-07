@@ -87,6 +87,23 @@ trait MountSetting
     }
 
     /**
+     * Adds multiple file system bindings to the container.
+     *
+     * @param string[]|array[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration.
+     * @return self
+     *
+     * @throws InvalidFormatException If the mount format is invalid.
+     */
+    public function withFileSystemBinds($mounts)
+    {
+        $this->mounts = [];
+        foreach ($mounts as $mount) {
+            $this->withFileSystemBind($mount);
+        }
+        return $this;
+    }
+
+    /**
      * Adds a file system binding to the container. (Alias for withFileSystemBind)
      *
      * @param string|array|Mount $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
@@ -102,6 +119,19 @@ trait MountSetting
     }
 
     /**
+     * Adds multiple file system bindings to the container. (Alias for withFileSystemBinds)
+     *
+     * @param string[]|array[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration.
+     * @return self
+     *
+     * @throws InvalidFormatException If the mount format is invalid.
+     */
+    public function withVolumes($mounts)
+    {
+        return $this->withFileSystemBinds($mounts);
+    }
+
+    /**
      * Adds a file system binding to the container. (Alias for withFileSystemBind)
      *
      * @param string|array|Mount $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
@@ -114,6 +144,19 @@ trait MountSetting
     public function withMount($hostPath, $containerPath = null, $mode = null)
     {
         return $this->withFileSystemBind($hostPath, $containerPath, $mode);
+    }
+
+    /**
+     * Adds multiple file system bindings to the container. (Alias for withFileSystemBinds)
+     *
+     * @param string[]|array[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration.
+     * @return self
+     *
+     * @throws InvalidFormatException If the mount format is invalid.
+     */
+    public function withMounts($mounts)
+    {
+        return $this->withFileSystemBinds($mounts);
     }
 
     /**

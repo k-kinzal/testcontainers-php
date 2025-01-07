@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\MountSetting;
+use Testcontainers\Containers\Types\Mount;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClientFactory;
 
@@ -71,6 +72,22 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    public function testStartWithFileSystemBinds()
+    {
+        $tmpdir = sys_get_temp_dir();
+        file_put_contents($tmpdir . '/to', 'Hello, World!');
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withFileSystemBinds([
+                "$tmpdir/to:/container/path/to:ro",
+            ])
+            ->withCommands(['cat', '/container/path/to'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
+        $instance = $container->start();
+
+        $this->assertSame('Hello, World!', $instance->getOutput());
+    }
+
     public function testStartWithVolume()
     {
         $tmpdir = sys_get_temp_dir();
@@ -78,6 +95,27 @@ class MountSettingTest extends TestCase
 
         $container = (new GenericContainer('alpine:latest'))
             ->withVolume("$tmpdir/to:/container/path/to:ro")
+            ->withCommands(['cat', '/container/path/to'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
+        $instance = $container->start();
+
+        $this->assertSame('Hello, World!', $instance->getOutput());
+    }
+
+    public function testStartWithVolumes()
+    {
+        $tmpdir = sys_get_temp_dir();
+        file_put_contents($tmpdir . '/to', 'Hello, World!');
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withVolumes([
+                [
+                    'type' => 'bind',
+                    'source' => "$tmpdir/to",
+                    'target' => '/container/path/to',
+                    'readonly' => true,
+                ]
+            ])
             ->withCommands(['cat', '/container/path/to'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
         $instance = $container->start();
@@ -96,6 +134,22 @@ class MountSettingTest extends TestCase
                 'source' => "$tmpdir/to",
                 'destination' => '/container/path/to',
                 'readonly' => true,
+            ])
+            ->withCommands(['cat', '/container/path/to'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
+        $instance = $container->start();
+
+        $this->assertSame('Hello, World!', $instance->getOutput());
+    }
+
+    public function testStartWithMounts()
+    {
+        $tmpdir = sys_get_temp_dir();
+        file_put_contents($tmpdir . '/to', 'Hello, World!');
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withMounts([
+                Mount::fromString("$tmpdir/to:/container/path/to:ro"),
             ])
             ->withCommands(['cat', '/container/path/to'])
             ->withWaitStrategy(new LogMessageWaitStrategy());

@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\Types;
 
+use InvalidArgumentException;
 use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
 
@@ -194,9 +195,13 @@ class Mount
      * @param array{
      *     type?: string,
      *     source?: string,
-     *     destination: string,
+     *     src?: string,
+     *     destination?: string,
+     *     dst?: string,
+     *     target?: string,
      *     subpath?: string,
      *     readonly?: bool,
+     *     ro?: bool,
      *     nocopy?: bool,
      *     opt?: array<string, string>
      * } $v The mount array.
@@ -206,9 +211,24 @@ class Mount
     {
         $type = isset($v['type']) ? $v['type'] : null;
         $source = isset($v['source']) ? $v['source'] : null;
-        $destination = $v['destination'];
+        if ($source === null) {
+            $source = isset($v['src']) ? $v['src'] : null;
+        }
+        $destination = isset($v['destination']) ? $v['destination'] : null;
+        if ($destination === null) {
+            $destination = isset($v['dst']) ? $v['dst'] : null;
+        }
+        if ($destination === null) {
+            $destination = isset($v['target']) ? $v['target'] : null;
+        }
+        if ($destination === null) {
+            throw new InvalidArgumentException('Invalid mount configuration: destination is required');
+        }
         $subpath = isset($v['subpath']) ? $v['subpath'] : null;
         $readonly = isset($v['readonly']) ? $v['readonly'] : false;
+        if ($readonly === false) {
+            $readonly = isset($v['ro']) ? $v['ro'] : false;
+        }
         $nocopy = isset($v['nocopy']) ? $v['nocopy'] : false;
         $opt = isset($v['opt']) ? $v['opt'] : [];
 
