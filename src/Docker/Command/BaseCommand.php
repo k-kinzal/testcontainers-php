@@ -288,18 +288,18 @@ trait BaseCommand
             }
             if (is_scalar($value)) {
                 $result[] = "--$key";
-                $result[] = $value;
+                $result[] = $this->expandEnv($value);
                 continue;
             }
             if (is_array($value)) {
                 foreach ($value as $k => $v) {
                     $result[] = "--$key";
                     if (is_string($k)) {
-                        $result[] = "$k=$v";
+                        $result[] = $k . '=' . $this->expandEnv($v);
                     } elseif (is_scalar($v) && !is_bool($v)) {
-                        $result[] = $v;
+                        $result[] = $this->expandEnv($v);
                     } elseif (method_exists($v, '__toString')) {
-                        $result[] = (string) $v;
+                        $result[] = $this->expandEnv((string) $v);
                     } else {
                         throw new LogicException('Unsupported value type: `' . var_export($v, true) . '`');
                     }
@@ -308,5 +308,31 @@ trait BaseCommand
         }
 
         return $result;
+    }
+
+    /**
+     * Expand environment variables in a string.
+     *
+     * This method expands environment variables in a string using the current environment variables
+     * of the PHP process. If the `$env` parameter is set, it will use the specified environment variables
+     * instead of the current PHP process environment variables.
+     *
+     * @param string $s The string to expand.
+     * @return string The expanded string. If no environment variables are found, the original string is returned.
+     */
+    public function expandEnv($s)
+    {
+        $env = $this->env;
+
+        $expanded = preg_replace_callback('/\$\{([a-zA-Z_][a-zA-Z0-9_]*)}/', function ($m) use ($env) {
+            if (empty($env)) {
+                $v = getenv($m[1]);
+                return $v !== false ? $v : $m[0];
+            } else {
+                return isset($env[$m[1]]) ? $env[$m[1]] : $m[0];
+            }
+        }, $s);
+
+        return $expanded !== null ? $expanded : $s;
     }
 }
