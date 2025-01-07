@@ -38,6 +38,12 @@ trait MountSetting
     protected static $MOUNTS;
 
     /**
+     * Define the default volumes to be used for the container. (Alias for $MOUNTS)
+     * @var string[]|null
+     */
+    protected static $VOLUMES;
+
+    /**
      * The mounts to be used for the container.
      * @var Mount[]
      */
@@ -75,12 +81,16 @@ trait MountSetting
      */
     protected function mounts()
     {
-        if (!empty(static::$MOUNTS)) {
-            $mounts = [];
-            foreach (static::$MOUNTS as $mount) {
-                $mounts[] = Mount::fromString($mount);
+        $mounts = static::$MOUNTS;
+        if (empty($mounts)) {
+            $mounts = static::$VOLUMES;
+        }
+        if (count($mounts) > 0) {
+            $m = [];
+            foreach ($mounts as $mount) {
+                $m[] = Mount::fromString($mount);
             }
-            return $mounts;
+            return $m;
         }
         return $this->mounts;
     }

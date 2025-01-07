@@ -39,6 +39,24 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    public function testStaticVolumes()
+    {
+        $tmpdir = sys_get_temp_dir();
+        file_put_contents($tmpdir . '/to', 'Hello, World!');
+
+        $client = DockerClientFactory::create()->withEnv([
+            'HOST_DIR' => $tmpdir,
+        ]);
+
+        $container = (new MountSettingWithVolumesContainer('alpine:latest'))
+            ->withDockerClient($client)
+            ->withCommands(['cat', '/container/path/to'])
+            ->withWaitStrategy(new LogMessageWaitStrategy());
+        $instance = $container->start();
+
+        $this->assertSame('Hello, World!', $instance->getOutput());
+    }
+
     public function testStartWithFileSystemBind()
     {
         $tmpdir = sys_get_temp_dir();
@@ -57,6 +75,16 @@ class MountSettingTest extends TestCase
 class MountSettingWithMountsContainer extends GenericContainer
 {
     public static $MOUNTS = [
+        'type=bind,source=${HOST_DIR},target=/container/path,readonly',
+    ];
+}
+
+class MountSettingWithVolumesContainer extends GenericContainer
+{
+    public static $VOLUMES = [
         '${HOST_DIR}:/container/path:ro',
     ];
+}
+{
+
 }

@@ -139,9 +139,9 @@ class Mount
     {
         $parts = explode(',', $v);
         if (count($parts) < 1) {
-            throw new InvalidFormatException($v, 'type=volume[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
+            throw new InvalidFormatException($v, 'type=<type>[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
         }
-        $type = 'volume';
+        $type = 'bind';
         $source = null;
         $destination = null;
         $subpath = null;
@@ -181,11 +181,8 @@ class Mount
             }
         }
 
-        if ($type !== 'volume') {
-            throw new InvalidFormatException($v, 'type=volume[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
-        }
         if (!isset($destination) || !is_string($destination)) {
-            throw new InvalidFormatException($v, 'type=volume[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
+            throw new InvalidFormatException($v, 'type=<type>[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
         }
 
         return new self($type, $source, $destination, $subpath, $readonly, $nocopy, $opt);
