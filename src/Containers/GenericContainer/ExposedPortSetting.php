@@ -31,6 +31,18 @@ trait ExposedPortSetting
     protected static $EXPOSED_PORTS;
 
     /**
+     * Define the default ports to be exposed by the container. Alias for `EXPOSED_PORTS`.
+     * @var int[]|null
+     */
+    protected static $EXPOSE;
+
+    /**
+     * Define the default ports to be exposed by the container. Alias for `EXPOSED_PORTS`.
+     * @var int[]|null
+     */
+    protected static $PORTS;
+
+    /**
      * The ports to be exposed by the container.
      * @var int[]
      */
@@ -53,6 +65,28 @@ trait ExposedPortSetting
     }
 
     /**
+     * Set the port that this container listens on. Alias for `withExposedPort`.
+     *
+     * @param int|string $port The port to expose.
+     * @return self
+     */
+    public function withExpose($port)
+    {
+        return $this->withExposedPort($port);
+    }
+
+    /**
+     * Set the port that this container listens on. Alias for `withExposedPort`.
+     *
+     * @param int|string $port The port to expose.
+     * @return self
+     */
+    public function withPort($port)
+    {
+        return $this->withExposedPort($port);
+    }
+
+    /**
      * Set the ports that this container listens on.
      *
      * @param array|int|string $ports The ports to expose. Can be a single port, a range of ports, or an array of ports.
@@ -72,6 +106,28 @@ trait ExposedPortSetting
     }
 
     /**
+     * Set the ports that this container listens on. Alias for `withExposedPorts`.
+     *
+     * @param array|int|string $ports The ports to expose. Can be a single port, a range of ports, or an array of ports.
+     * @return self
+     */
+    public function withExposes($ports)
+    {
+        return $this->withExposedPorts($ports);
+    }
+
+    /**
+     * Set the ports that this container listens on. Alias for `withExposedPorts`.
+     *
+     * @param array|int|string $ports The ports to expose. Can be a single port, a range of ports, or an array of ports.
+     * @return self
+     */
+    public function withPorts($ports)
+    {
+        return $this->withExposedPorts($ports);
+    }
+
+    /**
      * Retrieve the ports to be exposed by the container.
      *
      * This method returns the ports that should be exposed by the container.
@@ -84,6 +140,12 @@ trait ExposedPortSetting
     {
         if (static::$EXPOSED_PORTS) {
             return static::$EXPOSED_PORTS;
+        }
+        if (static::$EXPOSE) {
+            return static::$EXPOSE;
+        }
+        if (static::$PORTS) {
+            return static::$PORTS;
         }
         if ($this->exposedPorts) {
             return $this->exposedPorts;
