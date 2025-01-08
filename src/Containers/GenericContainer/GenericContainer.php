@@ -34,8 +34,9 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class GenericContainer implements Container
 {
-    use MountSetting;
+    use ExposedPortSetting;
     use HostSetting;
+    use MountSetting;
 
     /**
      * The Docker client.
@@ -105,18 +106,6 @@ class GenericContainer implements Container
      * }[]
      */
     private $volumesFrom = [];
-
-    /**
-     * Define the default ports to be exposed by the container.
-     * @var int[]|null
-     */
-    protected static $PORTS;
-
-    /**
-     * The ports to be exposed by the container.
-     * @var int[]
-     */
-    private $ports = [];
 
     /**
      * Define the default environment variables to be used for the container.
@@ -294,22 +283,6 @@ class GenericContainer implements Container
             'name' => $container->getContainerId(),
             'mode' => $mode,
         ];
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withExposedPorts($ports)
-    {
-        if (is_int($ports)) {
-            $ports = [$ports];
-        }
-        if (is_string($ports)) {
-            $ports = [intval($ports)];
-        }
-        $this->ports = $ports;
 
         return $this;
     }
@@ -557,26 +530,6 @@ class GenericContainer implements Container
         }
 
         return empty($volumesFrom) ? null : $volumesFrom;
-    }
-
-    /**
-     * Retrieve the ports to be exposed by the container.
-     *
-     * This method returns the ports that should be exposed by the container.
-     * If specific ports are set, it will return those. Otherwise, it will
-     * attempt to retrieve the default ports from the provider.
-     *
-     * @return int[]|null The ports to be exposed, or null if none are set.
-     */
-    protected function ports()
-    {
-        if (static::$PORTS) {
-            return static::$PORTS;
-        }
-        if ($this->ports) {
-            return $this->ports;
-        }
-        return null;
     }
 
     /**
