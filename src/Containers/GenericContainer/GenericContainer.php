@@ -766,7 +766,7 @@ class GenericContainer implements Container
         }
 
         $portStrategy = $this->portStrategy();
-        $containerPorts = $this->ports();
+        $containerPorts = $this->exposedPorts();
         $ports = [];
         if ($portStrategy && $containerPorts) {
             foreach ($containerPorts as $containerPort) {

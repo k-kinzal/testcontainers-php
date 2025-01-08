@@ -6,20 +6,20 @@ namespace Testcontainers\Containers\GenericContainer;
  * ExposedPortSetting is a trait that provides the ability to expose ports on a container.
  *
  * Two formats are supported:
- * 1. static variable `$PORTS`:
+ * 1. static variable `$EXPOSED_PORTS`:
  *
  * <code>
  * class YourContainer extends GenericContainer
  * {
- *     protected static $PORTS = [80, 443];
+ *     protected static $EXPOSED_PORTS = [80, 443];
  * }
  * </code>
  *
  * 2. method `withExposedPorts`:
  *
  * <code>
- *     $container = (new YourContainer('image'))
- *        ->withExposedPorts(80);
+ * $container = (new YourContainer('image'))
+ *     ->withExposedPorts(80);
  * </code>
  */
 trait ExposedPortSetting
@@ -28,13 +28,13 @@ trait ExposedPortSetting
      * Define the default ports to be exposed by the container.
      * @var int[]|null
      */
-    protected static $PORTS;
+    protected static $EXPOSED_PORTS;
 
     /**
      * The ports to be exposed by the container.
      * @var int[]
      */
-    private $ports = [];
+    private $exposedPorts = [];
 
     /**
      * Set the ports that this container listens on.
@@ -50,7 +50,7 @@ trait ExposedPortSetting
         if (is_string($ports)) {
             $ports = [intval($ports)];
         }
-        $this->ports = $ports;
+        $this->exposedPorts = $ports;
 
         return $this;
     }
@@ -64,13 +64,13 @@ trait ExposedPortSetting
      *
      * @return int[]|null The ports to be exposed, or null if none are set.
      */
-    protected function ports()
+    protected function exposedPorts()
     {
-        if (static::$PORTS) {
-            return static::$PORTS;
+        if (static::$EXPOSED_PORTS) {
+            return static::$EXPOSED_PORTS;
         }
-        if ($this->ports) {
-            return $this->ports;
+        if ($this->exposedPorts) {
+            return $this->exposedPorts;
         }
         return null;
     }

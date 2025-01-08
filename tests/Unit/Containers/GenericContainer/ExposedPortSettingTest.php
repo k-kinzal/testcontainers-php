@@ -39,7 +39,7 @@ class ExposedPortSettingTest extends TestCase
 
 class ExposedPortSettingWithPortsContainer extends GenericContainer
 {
-    protected static $PORTS = [80, 443];
+    protected static $EXPOSED_PORTS = [80, 443];
 
     protected static $PORT_STRATEGY = 'local_random';
 }
