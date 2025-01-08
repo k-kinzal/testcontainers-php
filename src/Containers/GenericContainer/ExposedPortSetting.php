@@ -130,11 +130,13 @@ trait ExposedPortSetting
     /**
      * Retrieve the ports to be exposed by the container.
      *
-     * This method returns the ports that should be exposed by the container.
-     * If specific ports are set, it will return those. Otherwise, it will
-     * attempt to retrieve the default ports from the provider.
+     * This method checks for ports defined in the following order:
+     * 1. Static variable `$EXPOSED_PORTS`
+     * 2. Static variable `$EXPOSE`
+     * 3. Static variable `$PORTS`
+     * 4. Instance variable `$exposedPorts`
      *
-     * @return int[]|null The ports to be exposed, or null if none are set.
+     * @return int[] The list of ports to be exposed.
      */
     protected function exposedPorts()
     {
@@ -150,6 +152,6 @@ trait ExposedPortSetting
         if ($this->exposedPorts) {
             return $this->exposedPorts;
         }
-        return null;
+        return [];
     }
 }
