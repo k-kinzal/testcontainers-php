@@ -37,6 +37,22 @@ trait ExposedPortSetting
     private $exposedPorts = [];
 
     /**
+     * Set the port that this container listens on.
+     *
+     * @param int|string $port The port to expose.
+     * @return self
+     */
+    public function withExposedPort($port)
+    {
+        if (is_string($port)) {
+            $port = intval($port);
+        }
+        $this->exposedPorts[] = $port;
+
+        return $this;
+    }
+
+    /**
      * Set the ports that this container listens on.
      *
      * @param array|int|string $ports The ports to expose. Can be a single port, a range of ports, or an array of ports.
