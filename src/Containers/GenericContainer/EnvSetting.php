@@ -38,7 +38,7 @@ trait EnvSetting
      */
     public function withEnvs($env)
     {
-        $this->env = array_merge($this->env, $env);
+        $this->env = $env;
 
         return $this;
     }
