@@ -103,30 +103,6 @@ class GenericContainerTest extends TestCase
         $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
 
-    public function testStartWithEnv()
-    {
-        $container = (new GenericContainer('alpine:latest'))
-            ->withEnv('KEY', 'VALUE')
-            ->withCommands(['printenv', 'KEY'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
-
-        $this->assertSame("VALUE\n", $instance->getOutput());
-    }
-
-    public function testStartWithEnvs()
-    {
-        $container = (new GenericContainer('alpine:latest'))
-            ->withEnvs(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
-            ->withCommands(['printenv', 'KEY2'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
-
-        $this->assertSame("VALUE2\n", $instance->getOutput());
-    }
-
     public function testStartWithLabels()
     {
         $container = (new GenericContainer('alpine:latest'))

@@ -34,6 +34,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class GenericContainer implements Container
 {
+    use EnvSetting;
     use ExposedPortSetting;
     use HostSetting;
     use MountSetting;
@@ -106,18 +107,6 @@ class GenericContainer implements Container
      * }[]
      */
     private $volumesFrom = [];
-
-    /**
-     * Define the default environment variables to be used for the container.
-     * @var array|null
-     */
-    protected static $ENVIRONMENTS;
-
-    /**
-     * The environment variables to be used for the container.
-     * @var array
-     */
-    private $env = [];
 
     /**
      * Define the default labels to be used for the container.
@@ -283,26 +272,6 @@ class GenericContainer implements Container
             'name' => $container->getContainerId(),
             'mode' => $mode,
         ];
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withEnv($key, $value)
-    {
-        $this->env[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withEnvs($env)
-    {
-        $this->env = array_merge($this->env, $env);
 
         return $this;
     }
@@ -530,26 +499,6 @@ class GenericContainer implements Container
         }
 
         return empty($volumesFrom) ? null : $volumesFrom;
-    }
-
-    /**
-     * Retrieve the environment variables for the container.
-     *
-     * This method returns the environment variables that should be used for the container.
-     * If specific environment variables are set, it will return those. Otherwise, it will
-     * attempt to retrieve the default environment variables from the provider.
-     *
-     * @return array|null The environment variables to be used, or null if none are set.
-     */
-    protected function env()
-    {
-        if (static::$ENVIRONMENTS) {
-            return static::$ENVIRONMENTS;
-        }
-        if ($this->env) {
-            return $this->env;
-        }
-        return null;
     }
 
     /**
