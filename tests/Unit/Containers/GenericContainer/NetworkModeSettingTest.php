@@ -36,17 +36,6 @@ class NetworkModeSettingTest extends TestCase
 
         $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
     }
-
-//    public function testStartWithNetworkMode()
-//    {
-//        $container = (new GenericContainer('alpine:latest'))
-//            ->withNetworkMode('none')
-//            ->withCommands(['sh', '-c', 'ls /sys/class/net']);
-//        /** @noinspection PhpUnhandledExceptionInspection */
-//        $instance = $container->start();
-//
-//        $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
-//    }
 }
 
 class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
