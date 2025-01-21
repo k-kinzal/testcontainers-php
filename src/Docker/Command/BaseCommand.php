@@ -291,6 +291,11 @@ trait BaseCommand
                 $result[] = $this->expandEnv($value);
                 continue;
             }
+            if (method_exists($value, '__toString')) {
+                $result[] = "--$key";
+                $result[] = (string) $value;
+                continue;
+            }
             if (is_array($value)) {
                 foreach ($value as $k => $v) {
                     $result[] = "--$key";

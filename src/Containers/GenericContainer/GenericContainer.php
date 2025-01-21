@@ -38,6 +38,7 @@ class GenericContainer implements Container
     use ExposedPortSetting;
     use HostSetting;
     use MountSetting;
+    use NetworkModeSetting;
 
     /**
      * The Docker client.
@@ -68,18 +69,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default network mode to be used for the container.
-     * @var string|null
-     */
-    protected static $NETWORK_MODE;
-
-    /**
-     * The network mode to be used for the container.
-     * @var string|null
-     */
-    private $networkMode;
 
     /**
      * Define the default network aliases to be used for the container.
@@ -319,16 +308,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withNetworkMode($networkMode)
-    {
-        $this->networkMode = $networkMode;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withNetworkAliases($aliases)
     {
         $this->networkAliases = $aliases;
@@ -422,22 +401,6 @@ class GenericContainer implements Container
         }
         if ($this->commands) {
             return $this->commands;
-        }
-        return null;
-    }
-
-    /**
-     * Retrieve the network mode to be used for the container.
-     *
-     * @return string|null
-     */
-    protected function networkMode()
-    {
-        if (static::$NETWORK_MODE) {
-            return static::$NETWORK_MODE;
-        }
-        if ($this->networkMode) {
-            return $this->networkMode;
         }
         return null;
     }
