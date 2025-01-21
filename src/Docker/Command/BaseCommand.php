@@ -291,7 +291,7 @@ trait BaseCommand
                 $result[] = $this->expandEnv($value);
                 continue;
             }
-            if (method_exists($value, '__toString')) {
+            if (is_object($value) && method_exists($value, '__toString')) {
                 $result[] = "--$key";
                 $result[] = (string) $value;
                 continue;
@@ -303,7 +303,7 @@ trait BaseCommand
                         $result[] = $k . '=' . $this->expandEnv($v);
                     } elseif (is_scalar($v) && !is_bool($v)) {
                         $result[] = $this->expandEnv($v);
-                    } elseif (method_exists($v, '__toString')) {
+                    } elseif (is_object($v) && method_exists($v, '__toString')) {
                         $result[] = $this->expandEnv((string) $v);
                     } else {
                         throw new LogicException('Unsupported value type: `' . var_export($v, true) . '`');
