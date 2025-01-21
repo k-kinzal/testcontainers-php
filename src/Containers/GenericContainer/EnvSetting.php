@@ -2,6 +2,30 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+/**
+ * EnvSetting is a trait that provides the ability to add environment variables to a container.
+ *
+ * Two formats are supported:
+ * 1. static variable `$ENVIRONMENTS` or `$ENV`:
+ *
+ * <code>
+ * class YourContainer extends GenericContainer
+ * {
+ *     protected static $ENVIRONMENTS = [
+ *         'ENV1' => 'value1',
+ *         'ENV2' => 'value2',
+ *     ];
+ * }
+ * </code>
+ *
+ * 2. method `withEnv` or `withEnvs`:
+ *
+ * <code>
+ * $container = (new YourContainer('image'))
+ *     ->withEnv('ENV1', 'value1')
+ *     ->withEnv('ENV2', 'value2');
+ * </code>
+ */
 trait EnvSetting
 {
     /**
@@ -9,6 +33,12 @@ trait EnvSetting
      * @var array|null
      */
     protected static $ENVIRONMENTS;
+
+    /**
+     * Define the default environment variables to be used for the container. Alias for `ENVIRONMENTS`.
+     * @var array|null
+     */
+    protected static $ENV;
 
     /**
      * The environment variables to be used for the container.
@@ -50,16 +80,19 @@ trait EnvSetting
      * If specific environment variables are set, it will return those. Otherwise, it will
      * attempt to retrieve the default environment variables from the provider.
      *
-     * @return array|null The environment variables to be used, or null if none are set.
+     * @return array The environment variables to be used for the container.
      */
     protected function env()
     {
         if (static::$ENVIRONMENTS) {
             return static::$ENVIRONMENTS;
         }
+        if (static::$ENV) {
+            return static::$ENV;
+        }
         if ($this->env) {
             return $this->env;
         }
-        return null;
+        return [];
     }
 }
