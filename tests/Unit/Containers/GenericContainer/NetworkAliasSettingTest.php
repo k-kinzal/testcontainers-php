@@ -30,7 +30,7 @@ class NetworkAliasSettingTest extends TestCase
                 'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375)
             ],
         ]);
-        $network =NetworkMode::fromString(md5(uniqid()));
+        $network = NetworkMode::fromString(md5(uniqid()));
         $client->networkCreate($network);
 
         $container = (new NetworkAliasSettingWithStaticNetworkAliasContainer('alpine:latest'))
