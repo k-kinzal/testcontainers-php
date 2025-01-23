@@ -37,6 +37,19 @@ trait NetworkAliasSetting
     private $networkAliases = [];
 
     /**
+     * Set the network alias for this container, similar to the `--network-alias <my-service>` option on the Docker CLI.
+     *
+     * @param string $alias The network alias to set.
+     * @return self
+     */
+    public function withNetworkAlias($alias)
+    {
+        $this->networkAliases[] = $alias;
+
+        return $this;
+    }
+
+    /**
      * Set the network aliases for this container, similar to the `--network-alias <my-service>` option on the Docker CLI.
      *
      * @param string[] $aliases The network aliases to set.

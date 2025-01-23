@@ -42,6 +42,28 @@ class NetworkAliasSettingTest extends TestCase
         $this->assertStringStartsWith('PING my-service', $instance->getOutput());
     }
 
+    public function testStartWithNetworkAlias()
+    {
+        $instance = Testcontainers::run(DinD::class);
+
+        $client = DockerClientFactory::create([
+            'globalOptions' => [
+                'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375)
+            ],
+        ]);
+        $network = NetworkMode::fromString(md5(uniqid()));
+        $client->networkCreate($network);
+
+        $container = (new GenericContainer('alpine:latest'))
+            ->withDockerClient($client)
+            ->withNetworkMode($network)
+            ->withNetworkAlias('my-alias')
+            ->withCommands(['sh', '-c', 'ping -c 1 my-alias']);
+        $instance = $container->start();
+
+        $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
+    }
+
     public function testStartWithNetworkAliases()
     {
         $instance = Testcontainers::run(DinD::class);
