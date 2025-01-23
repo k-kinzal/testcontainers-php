@@ -38,6 +38,7 @@ class GenericContainer implements Container
     use ExposedPortSetting;
     use HostSetting;
     use MountSetting;
+    use NetworkAliasSetting;
     use NetworkModeSetting;
 
     /**
@@ -69,18 +70,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default network aliases to be used for the container.
-     * @var string[]|null
-     */
-    protected static $NETWORK_ALIASES;
-
-    /**
-     * The network aliases to be used for the container.
-     * @var string[]
-     */
-    private $networkAliases = [];
 
     /**
      * Define the default volumes to be used for the container.
@@ -308,16 +297,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withNetworkAliases($aliases)
-    {
-        $this->networkAliases = $aliases;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withImagePullPolicy($policy)
     {
         $this->pullPolicy = $policy;
@@ -403,22 +382,6 @@ class GenericContainer implements Container
             return $this->commands;
         }
         return null;
-    }
-
-    /**
-     * Retrieve the network aliases to be used for the container.
-     *
-     * @return string[]
-     */
-    protected function networkAliases()
-    {
-        if (static::$NETWORK_ALIASES) {
-            return static::$NETWORK_ALIASES;
-        }
-        if ($this->networkAliases) {
-            return $this->networkAliases;
-        }
-        return [];
     }
 
     /**
