@@ -559,18 +559,6 @@ class GenericContainer implements Container
             }
         }
 
-        $containerVolumes = $this->volumesFrom();
-        $volumesFrom = [];
-        if ($containerVolumes) {
-            foreach ($containerVolumes as $volume) {
-                $s = $volume['name'];
-                if ($volume['mode'] === BindMode::READ_ONLY()) {
-                    $s .= ':ro';
-                }
-                $volumesFrom[] = $s;
-            }
-        }
-
         $portStrategy = $this->portStrategy();
         $containerPorts = $this->exposedPorts();
         $ports = [];
@@ -592,7 +580,7 @@ class GenericContainer implements Container
                 'mount' => $this->mounts(),
                 'network' => $this->networkMode(),
                 'networkAlias' => $this->networkAliases(),
-                'volumesFrom' => $volumesFrom,
+                'volumesFrom' => $this->volumesFrom(),
                 'publish' => $ports,
                 'pull' => $this->pullPolicy(),
                 'workdir' => $this->workDir(),
@@ -648,7 +636,7 @@ class GenericContainer implements Container
             'mounts' => $this->mounts(),
             'networkMode' => $this->networkMode(),
             'networkAliases' => $this->networkAliases(),
-            'volumesFrom' => $volumesFrom,
+            'volumesFrom' => $this->volumesFrom(),
             'ports' => array_reduce($ports, function ($carry, $item) {
                 $parts = explode(':', $item);
                 $carry[(int)$parts[1]] = (int)$parts[0];

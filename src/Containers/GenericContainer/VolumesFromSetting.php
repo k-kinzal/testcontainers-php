@@ -5,6 +5,7 @@ namespace Testcontainers\Containers\GenericContainer;
 use InvalidArgumentException;
 use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\Types\VolumeFrom;
 use Testcontainers\Exceptions\InvalidFormatException;
 
 /**
@@ -34,16 +35,13 @@ trait VolumesFromSetting
 {
     /**
      * Define the default volumes to be used for the container.
-     * @var string[]|null
+     * @var array{name: string, mode?: string}[]|string[]|null
      */
     protected static $VOLUMES_FROM;
 
     /**
      * The volumes to be used for the container.
-     * @var array{
-     *    name: string,
-     *    mode: BindMode,
-     * }[]
+     * @var VolumeFrom[]
      */
     private $volumesFrom = [];
 
@@ -56,10 +54,7 @@ trait VolumesFromSetting
      */
     public function withVolumesFrom($container, $mode)
     {
-        $this->volumesFrom[] = [
-            'name' => $container->getContainerId(),
-            'mode' => $mode,
-        ];
+        $this->volumesFrom[] = new VolumeFrom((string) $container->getContainerId(), $mode);
 
         return $this;
     }
@@ -70,40 +65,33 @@ trait VolumesFromSetting
      * This method returns an array of volumes, where each volume is an associative array
      * containing the container name and bind mode.
      *
-     * @return array{
-     *     name: string,
-     *     mode: BindMode,
-     * }[] The volumes to be used for the container.
+     * @return VolumeFrom[] The volumes to be used for the container.
      *
      * @throws InvalidFormatException If the volume format is invalid.
      */
     protected function volumesFrom()
     {
         $targets = static::$VOLUMES_FROM;
-        if ($targets === null) {
-            $targets = $this->volumesFrom;
+        if (!empty($targets)) {
+            $volumesFrom = [];
+            foreach ($targets as $volume) {
+                if (is_string($volume)) {
+                    $volumesFrom[] = VolumeFrom::fromString($volume);
+                } elseif (is_array($volume)) {
+                    if (!isset($volume['mode'])) {
+                        $volume['mode'] = BindMode::READ_WRITE();
+                    }
+                    if (is_string($volume['mode'])) {
+                        $volume['mode'] = BindMode::fromString($volume['mode']);
+                    }
+                    $volumesFrom[] = VolumeFrom::fromArray($volume);
+                } else {
+                    throw new InvalidArgumentException('Invalid volume from provided. Expected a string or array.');
+                }
+            }
+            return $volumesFrom;
         }
 
-        $volumesFrom = [];
-        foreach ($targets as $volume) {
-            if (is_string($volume)) {
-                $parts = explode(':', $volume);
-                $volume = [
-                    'name' => $parts[0],
-                    'mode' => isset($parts[1]) ? BindMode::fromString($parts[1]) : BindMode::READ_WRITE(),
-                ];
-            }
-
-            if (!isset($volume['name'])) {
-                throw new InvalidArgumentException('Missing container name in volumes from');
-            }
-            if (!isset($volume['mode'])) {
-                throw new InvalidArgumentException('Missing bind mode in volumes from');
-            }
-
-            $volumesFrom[] = $volume;
-        }
-
-        return empty($volumesFrom) ? null : $volumesFrom;
+        return $this->volumesFrom;
     }
 }
