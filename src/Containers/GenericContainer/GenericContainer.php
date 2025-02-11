@@ -143,7 +143,7 @@ class GenericContainer implements Container
         $instance = new GenericContainerInstance($containerDef);
         $instance->setDockerClient($client);
 
-        $startupCheckStrategy = $this->startupCheckStrategy();
+        $startupCheckStrategy = $this->startupCheckStrategy($instance);
         if ($startupCheckStrategy) {
             if ($startupCheckStrategy->waitUntilStartupSuccessful($instance) === false) {
                 throw new RuntimeException('Illegal state of container');

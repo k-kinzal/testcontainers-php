@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
+use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
@@ -109,9 +110,10 @@ trait StartupSetting
      * If a specific startup check strategy is set, it will return that. Otherwise, it will
      * attempt to retrieve the default startup check strategy from the provider.
      *
+     * @param ContainerInstance $instance The container instance for which to get the startup check strategy.
      * @return StartupCheckStrategy|null The startup check strategy to be used, or null if none is set.
      */
-    protected function startupCheckStrategy()
+    protected function startupCheckStrategy(/** @noinspection PhpUnusedParameterInspection */ $instance)
     {
         if ($this->startupCheckStrategyProvider === null) {
             $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
