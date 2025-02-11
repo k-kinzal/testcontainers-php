@@ -5,12 +5,10 @@ namespace Testcontainers\Containers\GenericContainer;
 use LogicException;
 use RuntimeException;
 use Testcontainers\Containers\Container;
-use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
-use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
@@ -36,6 +34,7 @@ class GenericContainer implements Container
     use PullPolicySetting;
     use StartupSetting;
     use VolumesFromSetting;
+    use WaitSetting;
     use WorkdirSetting;
 
     /**
@@ -67,24 +66,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default wait strategy to be used for the container.
-     * @var string|null
-     */
-    protected static $WAIT_STRATEGY;
-
-    /**
-     * The wait strategy to be used for the container.
-     * @var WaitStrategy|null
-     */
-    private $waitStrategy;
-
-    /**
-     * The wait strategy provider.
-     * @var WaitStrategyProvider
-     */
-    private $waitStrategyProvider;
 
     /**
      * @param string|null $image The image to be used for the container.
@@ -137,16 +118,6 @@ class GenericContainer implements Container
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function withWaitStrategy($waitStrategy)
-    {
-        $this->waitStrategy = $waitStrategy;
-
-        return $this;
-    }
-
-    /**
      * Retrieve the command to be executed in the container.
      *
      * This method returns the command that should be executed in the container.
@@ -164,41 +135,6 @@ class GenericContainer implements Container
             return $this->commands;
         }
         return null;
-    }
-
-    /**
-     * Retrieve the wait strategy for the container.
-     *
-     * This method returns the wait strategy that should be used for the container.
-     * If a specific wait strategy is set, it will return that. Otherwise, it will
-     * attempt to retrieve the default wait strategy from the provider.
-     *
-     * @param ContainerInstance $instance The container instance for which to get the wait strategy.
-     * @return WaitStrategy|null The wait strategy to be used, or null if none is set.
-     */
-    protected function waitStrategy(/** @noinspection PhpUnusedParameterInspection */ $instance)
-    {
-        if (static::$WAIT_STRATEGY !== null) {
-            $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
-            if (!$strategy) {
-                throw new LogicException("Wait strategy not found: " . static::$WAIT_STRATEGY);
-            }
-            return $strategy;
-        }
-        if ($this->waitStrategy) {
-            return $this->waitStrategy;
-        }
-        return null;
-    }
-
-    /**
-     * Register a wait strategy.
-     *
-     * @param WaitStrategyProvider $provider The wait strategy provider.
-     */
-    protected function registerWaitStrategy($provider)
-    {
-        // Override this method to register custom wait strategies
     }
 
     /**
