@@ -86,7 +86,7 @@ trait VolumesFromSetting
                     }
                     $volumesFrom[] = VolumeFrom::fromArray($volume);
                 } else {
-                    throw new InvalidArgumentException('Invalid volume from provided. Expected a string or array.');
+                    throw new InvalidFormatException($volume, 'string|array{name: string, mode?: string}');
                 }
             }
             return $volumesFrom;
