@@ -216,6 +216,7 @@ trait BaseCommand
      * @throws NoSuchContainerException If the specified container does not exist.
      * @throws NoSuchObjectException If the specified object does not exist.
      * @throws PortAlreadyAllocatedException If the specified port is already allocated.
+     * @throws BindAddressAlreadyUseException If the specified bind address is already in use.
      * @throws DockerException If the Docker command fails.
      */
     protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true)

@@ -8,6 +8,9 @@ use Testcontainers\Containers\Container;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
+use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\NoSuchContainerException;
+use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Exceptions\InvalidFormatException;
@@ -64,6 +67,7 @@ class GenericContainer implements Container
      * {@inheritdoc}
      *
      * @throws InvalidFormatException If the provided mode is not valid.
+     * @throws DockerException If the Docker command fails.
      */
     public function start()
     {
@@ -128,9 +132,6 @@ class GenericContainer implements Container
         }
         if (!($output instanceof DockerRunWithDetachOutput)) {
             throw new LogicException('Expected DockerRunWithDetachOutput');
-        }
-        if ($output->getExitCode() !== 0) {
-            throw new RuntimeException('Failed to start container');
         }
         $containerDef = [
             'containerId' => $output->getContainerId(),
