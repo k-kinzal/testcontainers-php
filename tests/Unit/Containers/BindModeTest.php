@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
@@ -38,7 +40,6 @@ class BindModeTest extends TestCase
 
     public function testFromStringWithReadOnly()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $bindMode = BindMode::fromString(BindMode::$READ_ONLY);
 
         $this->assertSame(BindMode::$READ_ONLY, $bindMode->toString());
@@ -46,7 +47,6 @@ class BindModeTest extends TestCase
 
     public function testFromStringWithReadWrite()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $bindMode = BindMode::fromString(BindMode::$READ_WRITE);
 
         $this->assertSame(BindMode::$READ_WRITE, $bindMode->toString());
@@ -57,7 +57,6 @@ class BindModeTest extends TestCase
         $this->expectException(InvalidFormatException::class);
         $this->expectExceptionMessage('Invalid format: `"invalid"`, expects: `ro`, `rw`');
 
-        /** @noinspection PhpUnhandledExceptionInspection */
         BindMode::fromString('invalid');
     }
 

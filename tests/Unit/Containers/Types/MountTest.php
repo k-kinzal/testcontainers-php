@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace Tests\Unit\Containers\Types;
 
 use PHPUnit\Framework\TestCase;
@@ -30,7 +32,6 @@ class MountTest extends TestCase
 
     public function testFromStringParsesTargetOnlyBindMountString()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $mount = Mount::fromString('/container/path');
 
         $this->assertSame('bind', $mount->type);
@@ -44,7 +45,6 @@ class MountTest extends TestCase
 
     public function testFromStringParsesCompleteBindMountString()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $mount = Mount::fromString('/host/path:/container/path:ro');
 
         $this->assertSame('bind', $mount->type);
@@ -58,7 +58,6 @@ class MountTest extends TestCase
 
     public function testFromStringParsesTargetOnlyMountString()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $mount = Mount::fromString('target=/container/path');
 
         $this->assertSame('bind', $mount->type);
@@ -72,7 +71,6 @@ class MountTest extends TestCase
 
     public function testFromStringParsesCompleteMountString()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $mount = Mount::fromString('type=volume,source=/host/path,destination=/container/path,volume-subpath=/sub/path,readonly,volume-nocopy');
 
         $this->assertSame('volume', $mount->type);

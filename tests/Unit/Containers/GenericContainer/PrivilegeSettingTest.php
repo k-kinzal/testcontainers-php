@@ -29,7 +29,6 @@ class PrivilegeSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPrivilegedMode(true);
-        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame(true, $instance->getPrivilegedMode());

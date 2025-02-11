@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Docker\Command;
 
+use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
+use Testcontainers\Docker\Exception\NoSuchContainerException;
+use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Output\DockerRunOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\DockerException;
@@ -39,7 +42,10 @@ trait RunCommand
      * } $options Additional options for the Docker command.
      * @return DockerRunOutput|DockerRunWithDetachOutput The output of the Docker run command. If the `detach` option is set to `true`, a `DockerRunWithDetachOutput` object is returned.
      *
+     * @throws NoSuchContainerException If the specified container does not exist.
+     * @throws NoSuchObjectException If the specified object does not exist.
      * @throws PortAlreadyAllocatedException If the specified port is already allocated.
+     * @throws BindAddressAlreadyUseException If the specified bind address is already in use.
      * @throws DockerException If the Docker command fails.
      */
     public function run($image, $command = null, $args = [], $options = [])

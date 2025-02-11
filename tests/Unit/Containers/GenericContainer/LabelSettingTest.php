@@ -11,7 +11,7 @@ use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
 class LabelSettingTest extends TestCase
 {
-    public function testHasEnvSettingTrait()
+    public function testHasLabelSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
 
@@ -33,7 +33,6 @@ class LabelSettingTest extends TestCase
             ->withLabel('KEY1', 'VALUE1')
             ->withLabel('KEY2', 'VALUE2')
             ->withWaitStrategy(new LogMessageWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("VALUE1", $instance->getLabel('KEY1'));
@@ -46,7 +45,6 @@ class LabelSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("VALUE1", $instance->getLabel('KEY1'));

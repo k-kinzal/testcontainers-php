@@ -4,6 +4,26 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use Testcontainers\Containers\Types\NetworkMode;
 
+/**
+ * NetworkModeSetting is a trait that provides the ability to set the network mode for a container.
+ *
+ * Two formats are supported:
+ * 1. static variable `$NETWORK_MODE`:
+ *
+ * <code>
+ *     class YourContainer extends GenericContainer
+ *     {
+ *         protected static $NETWORK_MODE = 'host';
+ *     }
+ * </code>
+ *
+ * 2. method `withNetworkMode`:
+ *
+ * <code>
+ *     $container = (new YourContainer('image'))
+ *         ->withNetworkMode('host');
+ * </code>
+ */
 trait NetworkModeSetting
 {
     /**

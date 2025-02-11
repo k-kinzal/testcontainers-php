@@ -8,6 +8,9 @@ use Testcontainers\Containers\Container;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
+use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\NoSuchContainerException;
+use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Exceptions\InvalidFormatException;
@@ -64,44 +67,45 @@ class GenericContainer implements Container
      * {@inheritdoc}
      *
      * @throws InvalidFormatException If the provided mode is not valid.
+     * @throws DockerException If the Docker command fails.
      */
     public function start()
     {
-        $extraHosts = $this->extraHosts();
-        $hosts = [];
-        if ($extraHosts) {
-            foreach ($extraHosts as $host) {
-                $hosts[] = $host->toString();
-            }
-        }
+        $client = $this->client ?: DockerClientFactory::create();
 
         $portStrategy = $this->portStrategy();
         $ports = $this->ports();
-        $client = $this->client ?: DockerClientFactory::create();
+
+        $image = $this->image();
+        $command = $this->command();
+        $args = $this->args();
+        $options = [
+            'addHost' => $this->extraHosts(),
+            'detach' => true,
+            'env' => $this->env(),
+            'label' => $this->labels(),
+            'mount' => $this->mounts(),
+            'network' => $this->networkMode(),
+            'networkAlias' => $this->networkAliases(),
+            'volumesFrom' => $this->volumesFrom(),
+            'publish' => array_map(function ($containerPort, $hostPort) {
+                return $hostPort . ':' . $containerPort;
+            }, array_keys($ports), array_values($ports)),
+            'pull' => $this->pullPolicy(),
+            'workdir' => $this->workDir(),
+            'privileged' => $this->privileged(),
+            'name' => $this->name(),
+        ];
+        $timeout = $this->startupTimeout();
 
         try {
-            $options = [
-                'addHost' => $hosts,
-                'detach' => true,
-                'env' => $this->env(),
-                'label' => $this->labels(),
-                'mount' => $this->mounts(),
-                'network' => $this->networkMode(),
-                'networkAlias' => $this->networkAliases(),
-                'volumesFrom' => $this->volumesFrom(),
-                'publish' => array_map(function ($containerPort, $hostPort) {
-                    return $hostPort . ':' . $containerPort;
-                }, array_keys($ports), array_values($ports)),
-                'pull' => $this->pullPolicy(),
-                'workdir' => $this->workDir(),
-                'privileged' => $this->privileged(),
-                'name' => $this->name(),
-            ];
-            $timeout = $this->startupTimeout();
             if ($timeout !== null) {
-                $output = $client->withTimeout($timeout)->run($this->image(), $this->command(), $this->args(), $options);
+                $output = $client->withTimeout($timeout)->run($image, $command, $args, $options);
             } else {
-                $output = $client->run($this->image(), $this->command(), $this->args(), $options);
+                $output = $client->run($image, $command, $args, $options);
+            }
+            if (!($output instanceof DockerRunWithDetachOutput)) {
+                throw new LogicException('Expected DockerRunWithDetachOutput');
             }
         } catch (PortAlreadyAllocatedException $e) {
             if ($portStrategy === null) {
@@ -128,12 +132,7 @@ class GenericContainer implements Container
             }
             throw new LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
         }
-        if (!($output instanceof DockerRunWithDetachOutput)) {
-            throw new LogicException('Expected DockerRunWithDetachOutput');
-        }
-        if ($output->getExitCode() !== 0) {
-            throw new RuntimeException('Failed to start container');
-        }
+
         $containerDef = [
             'containerId' => $output->getContainerId(),
             'labels' => $this->labels(),
@@ -144,10 +143,10 @@ class GenericContainer implements Container
         $instance = new GenericContainerInstance($containerDef);
         $instance->setDockerClient($client);
 
-        $startupCheckStrategy = $this->startupCheckStrategy();
+        $startupCheckStrategy = $this->startupCheckStrategy($instance);
         if ($startupCheckStrategy) {
             if ($startupCheckStrategy->waitUntilStartupSuccessful($instance) === false) {
-                throw new RuntimeException('Illegal state of container');
+                throw new RuntimeException('failed startup check: illegal state of container');
             }
         }
 

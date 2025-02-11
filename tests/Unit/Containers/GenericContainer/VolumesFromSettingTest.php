@@ -15,7 +15,7 @@ use Tests\Images\DinD;
 
 class VolumesFromSettingTest extends TestCase
 {
-    public function testHasNetworkModeSettingTrait()
+    public function testHasVolumesFromSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
 
@@ -43,6 +43,7 @@ class VolumesFromSettingTest extends TestCase
             ->withDockerClient($client)
             ->withName('volumes-from-container')
             ->withFileSystemBind($path, $path, BindMode::READ_WRITE());
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $instance1 = $container->start();
 
         $container = (new VolumesFromSettingWithStaticVolumesFromContainer('alpine:latest'))
