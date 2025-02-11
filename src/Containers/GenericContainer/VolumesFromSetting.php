@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use InvalidArgumentException;
 use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\Types\VolumeFrom;
