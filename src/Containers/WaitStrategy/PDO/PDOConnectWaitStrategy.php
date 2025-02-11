@@ -181,12 +181,4 @@ class PDOConnectWaitStrategy implements WaitStrategy
         $this->retryInterval = $interval;
         return $this;
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getName()
-    {
-        return 'pdo_connect';
-    }
 }

@@ -54,11 +54,6 @@ class TestPortStrategy implements PortStrategy
         return 0;
     }
 
-    public function getName()
-    {
-        return 'test';
-    }
-
     public function conflictBehavior()
     {
         return ConflictBehavior::RETRY();

@@ -11,16 +11,9 @@ use Testcontainers\Containers\ContainerInstance;
 interface WaitStrategy
 {
     /**
-    * Waits until the container instance is ready.
-    *
-    * @param ContainerInstance $instance The container instance to check.
-    */
-    public function waitUntilReady($instance);
-
-    /**
-     * Returns the name of the wait strategy.
+     * Waits until the container instance is ready.
      *
-     * @return string The name of the wait strategy.
+     * @param ContainerInstance $instance The container instance to check.
      */
-    public function getName();
+    public function waitUntilReady($instance);
 }

@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace Tests\Unit\Containers\WaitStrategy;
 
 use PHPUnit\Framework\TestCase;
@@ -12,8 +14,7 @@ class WaitStrategyProviderTest extends TestCase
     public function testRegister()
     {
         $provider = new WaitStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new TestWaitStrategy());
+        $provider->register('test', new TestWaitStrategy());
 
         $this->assertTrue(true);
     }
@@ -24,18 +25,15 @@ class WaitStrategyProviderTest extends TestCase
         $this->expectException(AlreadyExistsWaitStrategyException::class);
 
         $provider = new WaitStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new TestWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new TestWaitStrategy());
+        $provider->register('test', new TestWaitStrategy());
+        $provider->register('test', new TestWaitStrategy());
     }
 
     public function testGet()
     {
         $strategy = new TestWaitStrategy();
         $provider = new WaitStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register($strategy);
+        $provider->register('test', $strategy);
 
         $this->assertSame($strategy, $provider->get('test'));
     }
@@ -52,10 +50,5 @@ class TestWaitStrategy implements WaitStrategy
 {
     public function waitUntilReady($instance)
     {
-    }
-
-    public function getName()
-    {
-        return 'test';
     }
 }

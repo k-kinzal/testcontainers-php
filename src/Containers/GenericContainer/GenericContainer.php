@@ -79,9 +79,9 @@ class GenericContainer implements Container
         $this->image = $image ?: static::$IMAGE;
 
         $this->waitStrategyProvider = new WaitStrategyProvider();
-        $this->waitStrategyProvider->register(new HostPortWaitStrategy());
-        $this->waitStrategyProvider->register(new HttpWaitStrategy());
-        $this->waitStrategyProvider->register(new LogMessageWaitStrategy());
+        $this->waitStrategyProvider->register('host_port', new HostPortWaitStrategy());
+        $this->waitStrategyProvider->register('http', new HttpWaitStrategy());
+        $this->waitStrategyProvider->register('log', new LogMessageWaitStrategy());
         $this->registerWaitStrategy($this->waitStrategyProvider);
     }
 

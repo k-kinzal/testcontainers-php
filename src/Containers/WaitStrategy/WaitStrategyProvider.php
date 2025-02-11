@@ -23,16 +23,17 @@ class WaitStrategyProvider
      *
      * This method adds a given wait strategy to the list of available strategies.
      *
+     * @param string $name The name of the wait strategy to register.
      * @param WaitStrategy $strategy The wait strategy to register.
      *
      * @throws AlreadyExistsWaitStrategyException If a strategy with the same name already exists.
      */
-    public function register($strategy)
+    public function register($name, $strategy)
     {
-        if (isset($this->strategies[$strategy->getName()])) {
-            throw new AlreadyExistsWaitStrategyException($strategy->getName());
+        if (isset($this->strategies[$name])) {
+            throw new AlreadyExistsWaitStrategyException($name);
         }
-        $this->strategies[$strategy->getName()] = $strategy;
+        $this->strategies[$name] = $strategy;
     }
 
     /**
