@@ -101,18 +101,6 @@ class GenericContainerTest extends TestCase
         $this->assertLessThanOrEqual(65535, $instance->getMappedPort(443));
     }
 
-    public function testStartWithWorkingDirectory()
-    {
-        $container = (new GenericContainer('alpine:latest'))
-            ->withWorkingDirectory('/tmp')
-            ->withCommands(['pwd'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
-
-        $this->assertSame("/tmp\n", $instance->getOutput());
-    }
-
     public function testStartWithStartupTimeout()
     {
         $this->expectException(ProcessTimedOutException::class);

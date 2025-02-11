@@ -43,6 +43,7 @@ class GenericContainer implements Container
     use PrivilegeSetting;
     use PullPolicySetting;
     use VolumesFromSetting;
+    use WorkdirSetting;
 
     /**
      * The Docker client.
@@ -73,18 +74,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default working directory to be used for the container.
-     * @var string|null
-     */
-    protected static $WORKDIR;
-
-    /**
-     * The working directory to be used for the container.
-     * @var string|null
-     */
-    private $workDir;
 
     /**
      * Define the default startup timeout to be used for the container.
@@ -214,16 +203,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withWorkingDirectory($workDir)
-    {
-        $this->workDir = $workDir;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withStartupTimeout($timeout)
     {
         $this->startupTimeout = $timeout;
@@ -279,19 +258,6 @@ class GenericContainer implements Container
             return $this->commands;
         }
         return null;
-    }
-
-    /**
-     * Retrieve the working directory for the container.
-     *
-     * @return string|null
-     */
-    protected function workDir()
-    {
-        if (static::$WORKDIR) {
-            return static::$WORKDIR;
-        }
-        return $this->workDir;
     }
 
     /**
