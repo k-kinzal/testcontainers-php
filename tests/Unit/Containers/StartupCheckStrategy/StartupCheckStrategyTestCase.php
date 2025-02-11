@@ -3,6 +3,7 @@
 namespace Tests\Unit\Containers\StartupCheckStrategy;
 
 use PHPUnit\Framework\TestCase;
+use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Docker\DockerClient;
 
@@ -21,8 +22,10 @@ abstract class StartupCheckStrategyTestCase extends TestCase
         $output = $client->run('alpine:latest', null, [], [
             'detach' => true,
         ]);
-        $containerId = $output->getContainerId();
+        $instance = new GenericContainerInstance([
+            'containerId' => $output->getContainerId(),
+        ]);
 
-        $this->assertTrue($strategy->waitUntilStartupSuccessful($containerId));
+        $this->assertTrue($strategy->waitUntilStartupSuccessful($instance));
     }
 }

@@ -35,7 +35,7 @@ class StartupSettingTest extends TestCase
         $this->expectExceptionMessage('Illegal state of container');
 
         $container = (new StartupSettingWithStaticStartupCheckStrategyContainer('alpine:latest'))
-            ->withCommands(['echo', '1']);
+            ->withCommands(['sh', '-c', 'exit 1']);
         $container->start();
     }
 
@@ -56,7 +56,7 @@ class StartupSettingTest extends TestCase
 
         $container = (new GenericContainer('alpine:latest'))
             ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
-            ->withCommands(['echo', '1']);
+            ->withCommands(['sh', '-c', 'exit 1']);
         $container->start();
     }
 }
