@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Containers\PortStrategy;
 
-use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
+use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
 class LocalRandomPortStrategyTest extends PortStrategyTestCase
 {
@@ -11,6 +11,6 @@ class LocalRandomPortStrategyTest extends PortStrategyTestCase
      */
     public function resolvePortStrategy()
     {
-        return new LocalRandomPortStrategy();
+        return new RandomPortStrategy();
     }
 }

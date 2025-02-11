@@ -5,7 +5,7 @@ namespace Tests\Unit\Containers;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
-use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
+use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Testcontainers;
@@ -71,7 +71,7 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts(80)
-            ->withPortStrategy(new LocalRandomPortStrategy());
+            ->withPortStrategy(new RandomPortStrategy());
         /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
@@ -85,7 +85,7 @@ class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts([80, 443])
-            ->withPortStrategy(new LocalRandomPortStrategy());
+            ->withPortStrategy(new RandomPortStrategy());
         /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 

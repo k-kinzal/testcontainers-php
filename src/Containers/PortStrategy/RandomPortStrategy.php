@@ -7,7 +7,7 @@ use RuntimeException;
 /**
  * A port strategy that selects a random port from the ephemeral port range.
  */
-class LocalRandomPortStrategy implements PortStrategy
+class RandomPortStrategy implements PortStrategy
 {
     /**
      * @inheritDoc

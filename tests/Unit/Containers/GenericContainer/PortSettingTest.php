@@ -7,7 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\PortSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
-use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
+use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
 class PortSettingTest extends TestCase
 {
@@ -46,7 +46,7 @@ class PortSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExposedPort(80)
-            ->withPortStrategy(new LocalRandomPortStrategy());
+            ->withPortStrategy(new RandomPortStrategy());
         $instance = $container->start();
 
         $this->assertSame([80], $instance->getExposedPorts());
@@ -56,7 +56,7 @@ class PortSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExpose(80)
-            ->withPortStrategy(new LocalRandomPortStrategy());
+            ->withPortStrategy(new RandomPortStrategy());
         $instance = $container->start();
 
         $this->assertSame([80], $instance->getExposedPorts());
@@ -66,7 +66,7 @@ class PortSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPort(80)
-            ->withPortStrategy(new LocalRandomPortStrategy());
+            ->withPortStrategy(new RandomPortStrategy());
         $instance = $container->start();
 
         $this->assertSame([80], $instance->getExposedPorts());
@@ -76,7 +76,7 @@ class PortSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts([80])
-            ->withPortStrategy(new LocalRandomPortStrategy());
+            ->withPortStrategy(new RandomPortStrategy());
         $instance = $container->start();
 
         $this->assertSame([80], $instance->getExposedPorts());
@@ -86,7 +86,7 @@ class PortSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExposes([80])
-            ->withPortStrategy(new LocalRandomPortStrategy());
+            ->withPortStrategy(new RandomPortStrategy());
         $instance = $container->start();
 
         $this->assertSame([80], $instance->getExposedPorts());
@@ -96,7 +96,7 @@ class PortSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPorts([80])
-            ->withPortStrategy(new LocalRandomPortStrategy());
+            ->withPortStrategy(new RandomPortStrategy());
         $instance = $container->start();
 
         $this->assertSame([80], $instance->getExposedPorts());
