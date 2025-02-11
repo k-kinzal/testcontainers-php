@@ -67,33 +67,39 @@ class GenericContainer implements Container
      */
     public function start()
     {
-        $portStrategy = $this->portStrategy();
-        $ports = $this->ports();
         $client = $this->client ?: DockerClientFactory::create();
 
+        $portStrategy = $this->portStrategy();
+        $ports = $this->ports();
+
+        $image = $this->image();
+        $command = $this->command();
+        $args = $this->args();
+        $options = [
+            'addHost' => $this->extraHosts(),
+            'detach' => true,
+            'env' => $this->env(),
+            'label' => $this->labels(),
+            'mount' => $this->mounts(),
+            'network' => $this->networkMode(),
+            'networkAlias' => $this->networkAliases(),
+            'volumesFrom' => $this->volumesFrom(),
+            'publish' => array_map(function ($containerPort, $hostPort) {
+                return $hostPort . ':' . $containerPort;
+            }, array_keys($ports), array_values($ports)),
+            'pull' => $this->pullPolicy(),
+            'workdir' => $this->workDir(),
+            'privileged' => $this->privileged(),
+            'name' => $this->name(),
+        ];
+        $timeout = $this->startupTimeout();
+
+
         try {
-            $options = [
-                'addHost' => $this->extraHosts(),
-                'detach' => true,
-                'env' => $this->env(),
-                'label' => $this->labels(),
-                'mount' => $this->mounts(),
-                'network' => $this->networkMode(),
-                'networkAlias' => $this->networkAliases(),
-                'volumesFrom' => $this->volumesFrom(),
-                'publish' => array_map(function ($containerPort, $hostPort) {
-                    return $hostPort . ':' . $containerPort;
-                }, array_keys($ports), array_values($ports)),
-                'pull' => $this->pullPolicy(),
-                'workdir' => $this->workDir(),
-                'privileged' => $this->privileged(),
-                'name' => $this->name(),
-            ];
-            $timeout = $this->startupTimeout();
             if ($timeout !== null) {
-                $output = $client->withTimeout($timeout)->run($this->image(), $this->command(), $this->args(), $options);
+                $output = $client->withTimeout($timeout)->run($image, $command, $args, $options);
             } else {
-                $output = $client->run($this->image(), $this->command(), $this->args(), $options);
+                $output = $client->run($image, $command, $args, $options);
             }
         } catch (PortAlreadyAllocatedException $e) {
             if ($portStrategy === null) {
