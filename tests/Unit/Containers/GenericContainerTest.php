@@ -101,16 +101,6 @@ class GenericContainerTest extends TestCase
         $this->assertLessThanOrEqual(65535, $instance->getMappedPort(443));
     }
 
-    public function testStartWithImagePullPolicy()
-    {
-        $container = (new GenericContainer('alpine:latest'))
-            ->withImagePullPolicy(ImagePullPolicy::MISSING());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
-
-        $this->assertSame(ImagePullPolicy::$MISSING, $instance->getImagePullPolicy()->toString());
-    }
-
     public function testStartWithWorkingDirectory()
     {
         $container = (new GenericContainer('alpine:latest'))

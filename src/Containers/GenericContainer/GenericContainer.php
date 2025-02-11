@@ -6,7 +6,6 @@ use LogicException;
 use RuntimeException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
@@ -41,6 +40,7 @@ class GenericContainer implements Container
     use MountSetting;
     use NetworkAliasSetting;
     use NetworkModeSetting;
+    use PullPolicySetting;
     use VolumesFromSetting;
 
     /**
@@ -72,18 +72,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default image pull policy to be used for the container.
-     * @var ImagePullPolicy|null
-     */
-    protected static $PULL_POLICY;
-
-    /**
-     * The image pull policy to be used for the container.
-     * @var ImagePullPolicy|null
-     */
-    private $pullPolicy;
 
     /**
      * Define the default working directory to be used for the container.
@@ -239,16 +227,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withImagePullPolicy($policy)
-    {
-        $this->pullPolicy = $policy;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withWorkingDirectory($workDir)
     {
         $this->workDir = $workDir;
@@ -324,23 +302,6 @@ class GenericContainer implements Container
             return $this->commands;
         }
         return null;
-    }
-
-    /**
-     * Retrieve the image pull policy for the container.
-     *
-     * This method returns the image pull policy that should be used for the container.
-     * If a specific image pull policy is set, it will return that. Otherwise, it will
-     * attempt to retrieve the default image pull policy from the provider.
-     *
-     * @return ImagePullPolicy|null The image pull policy to be used, or null if none is set.
-     */
-    protected function pullPolicy()
-    {
-        if (static::$PULL_POLICY) {
-            return static::$PULL_POLICY;
-        }
-        return $this->pullPolicy;
     }
 
     /**
