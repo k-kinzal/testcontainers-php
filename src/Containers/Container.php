@@ -13,6 +13,14 @@ use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 interface Container
 {
     /**
+     * Set the name for this container, similar to the `--name <name>` option on the Docker CLI.
+     *
+     * @param string $name The name to set.
+     * @return self
+     */
+    public function withName($name);
+
+    /**
      * Adds a file system binding to the container.
      *
      * @param string $hostPath The path on the host machine.

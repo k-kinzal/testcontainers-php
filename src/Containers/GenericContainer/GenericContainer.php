@@ -36,10 +36,12 @@ class GenericContainer implements Container
 {
     use EnvSetting;
     use ExposedPortSetting;
+    use GeneralSetting;
     use HostSetting;
     use MountSetting;
     use NetworkAliasSetting;
     use NetworkModeSetting;
+    use VolumesFromSetting;
 
     /**
      * The Docker client.
@@ -70,21 +72,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default volumes to be used for the container.
-     * @var string[]|null
-     */
-    protected static $VOLUMES_FROM;
-
-    /**
-     * The volumes to be used for the container.
-     * @var array{
-     *    name: string,
-     *    mode: BindMode,
-     * }[]
-     */
-    private $volumesFrom = [];
 
     /**
      * Define the default labels to be used for the container.
@@ -244,19 +231,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withVolumesFrom($container, $mode)
-    {
-        $this->volumesFrom[] = [
-            'name' => $container->getContainerId(),
-            'mode' => $mode,
-        ];
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withLabel($key, $value)
     {
         $this->labels[$key] = $value;
@@ -382,49 +356,6 @@ class GenericContainer implements Container
             return $this->commands;
         }
         return null;
-    }
-
-    /**
-     * Retrieve the volumes to be used for the container.
-     *
-     * This method returns an array of volumes, where each volume is an associative array
-     * containing the container name and bind mode.
-     *
-     * @return array{
-     *     name: string,
-     *     mode: BindMode,
-     * }[] The volumes to be used for the container.
-     *
-     * @throws InvalidFormatException If the volume format is invalid.
-     */
-    protected function volumesFrom()
-    {
-        $targets = static::$VOLUMES_FROM;
-        if ($targets === null) {
-            $targets = $this->volumesFrom;
-        }
-
-        $volumesFrom = [];
-        foreach ($targets as $volume) {
-            if (is_string($volume)) {
-                $parts = explode(':', $volume);
-                $volume = [
-                    'name' => $parts[0],
-                    'mode' => isset($parts[1]) ? BindMode::fromString($parts[1]) : BindMode::READ_WRITE(),
-                ];
-            }
-
-            if (!isset($volume['name'])) {
-                throw new LogicException('Missing container name in volumes from');
-            }
-            if (!isset($volume['mode'])) {
-                throw new LogicException('Missing bind mode in volumes from');
-            }
-
-            $volumesFrom[] = $volume;
-        }
-
-        return empty($volumesFrom) ? null : $volumesFrom;
     }
 
     /**
@@ -628,18 +559,6 @@ class GenericContainer implements Container
             }
         }
 
-        $containerVolumes = $this->volumesFrom();
-        $volumesFrom = [];
-        if ($containerVolumes) {
-            foreach ($containerVolumes as $volume) {
-                $s = $volume['name'];
-                if ($volume['mode'] === BindMode::READ_ONLY()) {
-                    $s .= ':ro';
-                }
-                $volumesFrom[] = $s;
-            }
-        }
-
         $portStrategy = $this->portStrategy();
         $containerPorts = $this->exposedPorts();
         $ports = [];
@@ -661,11 +580,12 @@ class GenericContainer implements Container
                 'mount' => $this->mounts(),
                 'network' => $this->networkMode(),
                 'networkAlias' => $this->networkAliases(),
-                'volumesFrom' => $volumesFrom,
+                'volumesFrom' => $this->volumesFrom(),
                 'publish' => $ports,
                 'pull' => $this->pullPolicy(),
                 'workdir' => $this->workDir(),
                 'privileged' => $this->privileged(),
+                'name' => $this->name(),
             ];
             $timeout = $this->startupTimeout();
             if ($timeout !== null) {
@@ -709,13 +629,14 @@ class GenericContainer implements Container
             'image' => $this->image,
             'command' => $command,
             'args' => $args,
+            'name' => $this->name(),
             'hosts' => $hosts,
             'env' => $this->env(),
             'labels' => $this->labels(),
             'mounts' => $this->mounts(),
             'networkMode' => $this->networkMode(),
             'networkAliases' => $this->networkAliases(),
-            'volumesFrom' => $volumesFrom,
+            'volumesFrom' => $this->volumesFrom(),
             'ports' => array_reduce($ports, function ($carry, $item) {
                 $parts = explode(':', $item);
                 $carry[(int)$parts[1]] = (int)$parts[0];
