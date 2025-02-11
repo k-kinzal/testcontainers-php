@@ -53,7 +53,7 @@ class DinD extends GenericContainer
      *
      * @var string
      */
-    protected static $PORT_STRATEGY = 'local_random';
+    protected static $PORT_STRATEGY = 'random';
 
     /**
      * Whether the DinD container should run in privileged mode.

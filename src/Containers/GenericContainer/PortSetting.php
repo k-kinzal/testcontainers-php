@@ -154,6 +154,19 @@ trait PortSetting
     }
 
     /**
+     * Set the port strategy used for determining the ports that the container listens on.
+     *
+     * @param PortStrategy $strategy The port strategy to use.
+     * @return self
+     */
+    public function withPortStrategy($strategy)
+    {
+        $this->portStrategy = $strategy;
+
+        return $this;
+    }
+
+    /**
      * Retrieve the ports to be exposed by the container.
      *
      * This method checks for ports defined in the following order:
@@ -182,16 +195,6 @@ trait PortSetting
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function withPortStrategy($strategy)
-    {
-        $this->portStrategy = $strategy;
-
-        return $this;
-    }
-
-    /**
      * Retrieve the port strategy for the container.
      *
      * This method returns the port strategy that should be used for the container.
@@ -217,6 +220,27 @@ trait PortSetting
             return $this->portStrategy;
         }
         return null;
+    }
+
+    /**
+     * Retrieve Map of ports to be exposed by the container.
+     *
+     * @return array<int, int> Key-value pairs of container ports to host ports.
+     */
+    protected function ports()
+    {
+        $containerPorts = $this->exposedPorts();
+        $strategy = $this->portStrategy();
+        if ($strategy) {
+            $ports = [];
+            foreach ($containerPorts as $containerPort) {
+                $hostPort = $strategy->getPort();
+                $ports[$containerPort] = $hostPort;
+            }
+            return $ports;
+        }
+
+        return [];
     }
 
     /**

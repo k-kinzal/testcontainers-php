@@ -230,15 +230,7 @@ class GenericContainer implements Container
         }
 
         $portStrategy = $this->portStrategy();
-        $containerPorts = $this->exposedPorts();
-        $ports = [];
-        if ($portStrategy && $containerPorts) {
-            foreach ($containerPorts as $containerPort) {
-                $hostPort = $portStrategy->getPort();
-                $ports[] = $hostPort . ':' . $containerPort;
-            }
-        }
-
+        $ports = $this->ports();
         $client = $this->client ?: DockerClientFactory::create();
 
         try {
@@ -251,7 +243,9 @@ class GenericContainer implements Container
                 'network' => $this->networkMode(),
                 'networkAlias' => $this->networkAliases(),
                 'volumesFrom' => $this->volumesFrom(),
-                'publish' => $ports,
+                'publish' => array_map(function ($containerPort, $hostPort) {
+                    return $hostPort . ':' . $containerPort;
+                }, array_keys($ports), array_values($ports)),
                 'pull' => $this->pullPolicy(),
                 'workdir' => $this->workDir(),
                 'privileged' => $this->privileged(),
@@ -297,11 +291,7 @@ class GenericContainer implements Container
         $containerDef = [
             'containerId' => $output->getContainerId(),
             'labels' => $this->labels(),
-            'ports' => array_reduce($ports, function ($carry, $item) {
-                $parts = explode(':', $item);
-                $carry[(int)$parts[1]] = (int)$parts[0];
-                return $carry;
-            }, []),
+            'ports' => $ports,
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
         ];
