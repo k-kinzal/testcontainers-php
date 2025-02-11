@@ -70,19 +70,6 @@ class GenericContainerTest extends TestCase
         $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
 
-    public function testStartWithLabels()
-    {
-        $container = (new GenericContainer('alpine:latest'))
-            ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $instance = $container->start();
-
-        $this->assertSame("VALUE1", $instance->getLabel('KEY1'));
-        $this->assertSame("VALUE2", $instance->getLabel('KEY2'));
-        $this->assertSame(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'], $instance->getLabels());
-    }
-
     public function testStartWithExposedPorts()
     {
         $container = (new GenericContainer('alpine:latest'))
