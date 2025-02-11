@@ -123,4 +123,14 @@ trait StartupSetting
         }
         return null;
     }
+
+    /**
+     * Register a startup check strategy.
+     *
+     * @param StartupCheckStrategyProvider $provider The startup check strategy provider.
+     */
+    protected function registerStartupCheckStrategy($provider)
+    {
+        // Override this method to register custom startup strategies
+    }
 }

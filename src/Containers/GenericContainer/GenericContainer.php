@@ -12,7 +12,6 @@ use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
-use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
@@ -127,6 +126,7 @@ class GenericContainer implements Container
 
         $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
         $this->startupCheckStrategyProvider->register('is_running', new IsRunningStartupCheckStrategy());
+        $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
 
         $this->portStrategyProvider = new PortStrategyProvider();
         $this->portStrategyProvider->register(new LocalRandomPortStrategy());
