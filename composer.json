@@ -40,7 +40,7 @@
             "composer dump-autoload"
         ],
         "format": "php-cs-fixer fix .",
-        "lint:php-cs-fixer": "php-cs-fixer fix --diff --dry-run .",
+        "lint:php-cs-fixer": "php-cs-fixer fix --dry-run .",
         "lint": [
             "@lint:php-cs-fixer"
         ],
