@@ -26,14 +26,6 @@ class LocalRandomPortStrategy implements PortStrategy
     /**
      * @inheritDoc
      */
-    public function getName()
-    {
-        return 'local_random';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function conflictBehavior()
     {
         return ConflictBehavior::RETRY();

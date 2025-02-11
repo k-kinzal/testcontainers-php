@@ -102,7 +102,7 @@ class GenericContainer implements Container
         $this->image = $image ?: static::$IMAGE;
 
         $this->portStrategyProvider = new PortStrategyProvider();
-        $this->portStrategyProvider->register(new LocalRandomPortStrategy());
+        $this->portStrategyProvider->register('local_random', new LocalRandomPortStrategy());
         $this->registerPortStrategy($this->portStrategyProvider);
 
         $this->waitStrategyProvider = new WaitStrategyProvider();
