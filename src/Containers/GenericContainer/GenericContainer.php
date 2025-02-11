@@ -126,7 +126,7 @@ class GenericContainer implements Container
         $this->image = $image ?: static::$IMAGE;
 
         $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
-        $this->startupCheckStrategyProvider->register(new IsRunningStartupCheckStrategy());
+        $this->startupCheckStrategyProvider->register('is_running', new IsRunningStartupCheckStrategy());
 
         $this->portStrategyProvider = new PortStrategyProvider();
         $this->portStrategyProvider->register(new LocalRandomPortStrategy());

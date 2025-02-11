@@ -15,11 +15,4 @@ interface StartupCheckStrategy
      * @return bool
      */
     public function waitUntilStartupSuccessful($containerId);
-
-    /**
-     * Get the name of the strategy.
-     *
-     * @return string The name of the strategy.
-     */
-    public function getName();
 }

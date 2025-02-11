@@ -25,23 +25,4 @@ abstract class StartupCheckStrategyTestCase extends TestCase
 
         $this->assertTrue($strategy->waitUntilStartupSuccessful($containerId));
     }
-
-    public function testInterfaceGetName()
-    {
-        $strategy = $this->resolveStartupCheckStrategy();
-        $name = $strategy->getName();
-
-        $this->assertTrue(is_string($name));
-        $this->assertNotEmpty($name);
-        $this->assertTrue(preg_match('/^[a-z_][a-z0-9_]*$/', $name) === 1);
-    }
-
-    public function testInterfaceGetNameConsistency()
-    {
-        $strategy = $this->resolveStartupCheckStrategy();
-        $name1 = $strategy->getName();
-        $name2 = $strategy->getName();
-
-        $this->assertSame($name1, $name2);
-    }
 }

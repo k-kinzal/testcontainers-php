@@ -52,12 +52,4 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
         $this->client = $client;
         return $this;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'is_running';
-    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace Tests\Unit\Containers\StartupCheckStrategy;
 
 use PHPUnit\Framework\TestCase;
@@ -12,8 +14,7 @@ class StartupCheckStrategyProviderTest extends TestCase
     public function testRegister()
     {
         $provider = new StartupCheckStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new IsRunningStartupCheckStrategy());
+        $provider->register('is_running', new IsRunningStartupCheckStrategy());
 
         $this->assertTrue(true);
     }
@@ -24,17 +25,14 @@ class StartupCheckStrategyProviderTest extends TestCase
         $this->expectException(AlreadyExistsStartupStrategyException::class);
 
         $provider = new StartupCheckStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new IsRunningStartupCheckStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new IsRunningStartupCheckStrategy());
+        $provider->register('is_running', new IsRunningStartupCheckStrategy());
+        $provider->register('is_running', new IsRunningStartupCheckStrategy());
     }
 
     public function testGet()
     {
         $provider = new StartupCheckStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new IsRunningStartupCheckStrategy());
+        $provider->register('is_running', new IsRunningStartupCheckStrategy());
 
         $this->assertSame(IsRunningStartupCheckStrategy::class, get_class($provider->get('is_running')));
     }
