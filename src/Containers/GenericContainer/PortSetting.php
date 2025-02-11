@@ -28,7 +28,7 @@ use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
  *     ->withPortStrategy(new LocalRandomPortStrategy());
  * </code>
  */
-trait ExposedPortSetting
+trait PortSetting
 {
     /**
      * Define the default ports to be exposed by the container.

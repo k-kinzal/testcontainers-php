@@ -5,22 +5,22 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\GenericContainer\ExposedPortSetting;
+use Testcontainers\Containers\GenericContainer\PortSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 
-class ExposedPortSettingTest extends TestCase
+class PortSettingTest extends TestCase
 {
-    public function testHasExposedPortSettingTrait()
+    public function testHasPortSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
 
-        $this->assertContains(ExposedPortSetting::class, $uses);
+        $this->assertContains(PortSetting::class, $uses);
     }
 
     public function testStaticExposedPorts()
     {
-        $container = (new ExposedPortSettingWithExposedPortsContainer('alpine:latest'));
+        $container = (new PortSettingWithExposedPortsContainer('alpine:latest'));
         $instance = $container->start();
 
         $this->assertSame([80, 443], $instance->getExposedPorts());
@@ -28,7 +28,7 @@ class ExposedPortSettingTest extends TestCase
 
     public function testStaticExpose()
     {
-        $container = (new ExposedPortSettingWithExposeContainer('alpine:latest'));
+        $container = (new PortSettingWithExposeContainer('alpine:latest'));
         $instance = $container->start();
 
         $this->assertSame([80, 443], $instance->getExposedPorts());
@@ -36,7 +36,7 @@ class ExposedPortSettingTest extends TestCase
 
     public function testStaticPorts()
     {
-        $container = (new ExposedPortSettingWithPortsContainer('alpine:latest'));
+        $container = (new PortSettingWithPortsContainer('alpine:latest'));
         $instance = $container->start();
 
         $this->assertSame([80, 443], $instance->getExposedPorts());
@@ -103,7 +103,7 @@ class ExposedPortSettingTest extends TestCase
     }
 }
 
-class ExposedPortSettingWithExposedPortsContainer extends GenericContainer
+class PortSettingWithExposedPortsContainer extends GenericContainer
 {
     protected static $EXPOSED_PORTS = [80, 443];
 
@@ -111,14 +111,14 @@ class ExposedPortSettingWithExposedPortsContainer extends GenericContainer
     protected static $PORT_STRATEGY = 'local_random';
 }
 
-class ExposedPortSettingWithExposeContainer extends GenericContainer
+class PortSettingWithExposeContainer extends GenericContainer
 {
     protected static $EXPOSE = [80, 443];
 
     protected static $PORT_STRATEGY = 'local_random';
 }
 
-class ExposedPortSettingWithPortsContainer extends GenericContainer
+class PortSettingWithPortsContainer extends GenericContainer
 {
     protected static $PORTS = [80, 443];
 

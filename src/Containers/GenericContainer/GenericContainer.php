@@ -8,7 +8,6 @@ use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
-use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
@@ -29,13 +28,13 @@ use Testcontainers\Exceptions\InvalidFormatException;
 class GenericContainer implements Container
 {
     use EnvSetting;
-    use ExposedPortSetting;
     use GeneralSetting;
     use HostSetting;
     use LabelSetting;
     use MountSetting;
     use NetworkAliasSetting;
     use NetworkModeSetting;
+    use PortSetting;
     use PrivilegeSetting;
     use PullPolicySetting;
     use StartupSetting;
