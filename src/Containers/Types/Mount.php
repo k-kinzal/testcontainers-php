@@ -103,8 +103,6 @@ class Mount
      *
      * @param string $v The volume string.
      * @return Mount The Mount object.
-     *
-     * @throws InvalidFormatException If the format is invalid.
      */
     public static function fromVolumeString($v)
     {
