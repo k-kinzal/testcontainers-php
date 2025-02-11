@@ -39,30 +39,6 @@ class GenericContainer implements Container
     private $client;
 
     /**
-     * Define the default image to be used for the container.
-     * @var string|null
-     */
-    protected static $IMAGE;
-
-    /**
-     * The image to be used for the container.
-     * @var string
-     */
-    private $image;
-
-    /**
-     * The commands to be executed in the container.
-     * @var null|string|string[]
-     */
-    protected static $COMMANDS;
-
-    /**
-     * The commands to be executed in the container.
-     * @var string[]
-     */
-    private $commands = [];
-
-    /**
      * @param string|null $image The image to be used for the container.
      */
     public function __construct($image = null)
@@ -86,64 +62,11 @@ class GenericContainer implements Container
 
     /**
      * {@inheritdoc}
-     */
-    public function withCommand($cmd)
-    {
-        $this->commands = [$cmd];
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withCommands($commandParts)
-    {
-        $this->commands = $commandParts;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the command to be executed in the container.
-     *
-     * This method returns the command that should be executed in the container.
-     * If a specific command is set, it will return that. Otherwise, it will
-     * attempt to retrieve the default command from the provider.
-     *
-     * @return string|string[]|null
-     */
-    protected function commands()
-    {
-        if (static::$COMMANDS) {
-            return static::$COMMANDS;
-        }
-        if ($this->commands) {
-            return $this->commands;
-        }
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
      *
      * @throws InvalidFormatException If the provided mode is not valid.
      */
     public function start()
     {
-        $commands = $this->commands();
-        if (is_string($commands)) {
-            $commands = [$commands];
-        }
-        $command = null;
-        $args = [];
-        if (is_array($commands)) {
-            $command = $commands[0];
-            if (count($commands) > 1) {
-                $args = array_slice($commands, 1);
-            }
-        }
-
         $extraHosts = $this->extraHosts();
         $hosts = [];
         if ($extraHosts) {
@@ -176,9 +99,9 @@ class GenericContainer implements Container
             ];
             $timeout = $this->startupTimeout();
             if ($timeout !== null) {
-                $output = $client->withTimeout($timeout)->run($this->image, $command, $args, $options);
+                $output = $client->withTimeout($timeout)->run($this->image(), $this->command(), $this->args(), $options);
             } else {
-                $output = $client->run($this->image, $command, $args, $options);
+                $output = $client->run($this->image(), $this->command(), $this->args(), $options);
             }
         } catch (PortAlreadyAllocatedException $e) {
             if ($portStrategy === null) {
