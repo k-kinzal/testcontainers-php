@@ -15,13 +15,6 @@ interface PortStrategy
     public function getPort();
 
     /**
-     * Get the name of the port strategy.
-     *
-     * @return string The name of the port strategy.
-     */
-    public function getName();
-
-    /**
      * Get the conflict behavior of the port strategy.
      *
      * @return ConflictBehavior The conflict behavior of the port strategy.

@@ -7,7 +7,7 @@ use RuntimeException;
 /**
  * A port strategy that selects a random port from the ephemeral port range.
  */
-class LocalRandomPortStrategy implements PortStrategy
+class RandomPortStrategy implements PortStrategy
 {
     /**
      * @inheritDoc
@@ -21,14 +21,6 @@ class LocalRandomPortStrategy implements PortStrategy
             }
         }
         throw new RuntimeException('Could not find an available port');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getName()
-    {
-        return 'local_random';
     }
 
     /**

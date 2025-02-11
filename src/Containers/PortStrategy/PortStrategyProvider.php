@@ -23,16 +23,17 @@ class PortStrategyProvider
      *
      * This method adds a given port strategy to the list of available strategies.
      *
+     * @param string $name The name of the port strategy to register.
      * @param PortStrategy $strategy The port strategy to register.
      *
      * @throws AlreadyExistsPortStrategyException If a strategy with the same name already exists.
      */
-    public function register($strategy)
+    public function register($name, $strategy)
     {
-        if (isset($this->strategies[$strategy->getName()])) {
-            throw new AlreadyExistsPortStrategyException($strategy->getName());
+        if (isset($this->strategies[$name])) {
+            throw new AlreadyExistsPortStrategyException($name);
         }
-        $this->strategies[$strategy->getName()] = $strategy;
+        $this->strategies[$name] = $strategy;
     }
 
     /**

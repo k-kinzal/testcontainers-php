@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace Tests\Unit\Containers\PortStrategy;
 
 use PHPUnit\Framework\TestCase;
@@ -13,8 +15,7 @@ class PortStrategyProviderTest extends TestCase
     public function testRegister()
     {
         $provider = new PortStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new TestPortStrategy());
+        $provider->register('test', new TestPortStrategy());
 
         $this->assertTrue(true);
     }
@@ -25,18 +26,15 @@ class PortStrategyProviderTest extends TestCase
         $this->expectException(AlreadyExistsPortStrategyException::class);
 
         $provider = new PortStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new TestPortStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register(new TestPortStrategy());
+        $provider->register('test', new TestPortStrategy());
+        $provider->register('test', new TestPortStrategy());
     }
 
     public function testGet()
     {
         $strategy = new TestPortStrategy();
         $provider = new PortStrategyProvider();
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $provider->register($strategy);
+        $provider->register('test', $strategy);
 
         $this->assertSame($strategy, $provider->get('test'));
     }

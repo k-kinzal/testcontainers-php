@@ -6,10 +6,6 @@ use LogicException;
 use RuntimeException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
-use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
-use Testcontainers\Containers\PortStrategy\PortStrategy;
-use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
@@ -29,13 +25,13 @@ use Testcontainers\Exceptions\InvalidFormatException;
 class GenericContainer implements Container
 {
     use EnvSetting;
-    use ExposedPortSetting;
     use GeneralSetting;
     use HostSetting;
     use LabelSetting;
     use MountSetting;
     use NetworkAliasSetting;
     use NetworkModeSetting;
+    use PortSetting;
     use PrivilegeSetting;
     use PullPolicySetting;
     use StartupSetting;
@@ -73,24 +69,6 @@ class GenericContainer implements Container
     private $commands = [];
 
     /**
-     * Define the default port strategy to be used for the container.
-     * @var string|null
-     */
-    protected static $PORT_STRATEGY;
-
-    /**
-     * The port strategy to be used for the container.
-     * @var PortStrategy|null
-     */
-    private $portStrategy;
-
-    /**
-     * The port strategy provider.
-     * @var PortStrategyProvider
-     */
-    private $portStrategyProvider;
-
-    /**
      * Define the default wait strategy to be used for the container.
      * @var string|null
      */
@@ -111,7 +89,6 @@ class GenericContainer implements Container
     /**
      * @param string|null $image The image to be used for the container.
      *
-     * @throws AlreadyExistsPortStrategyException if the port strategy already exists.
      * @throws AlreadyExistsWaitStrategyException if the wait strategy already exists.
      */
     public function __construct($image = null)
@@ -119,10 +96,6 @@ class GenericContainer implements Container
         assert($image || static::$IMAGE);
 
         $this->image = $image ?: static::$IMAGE;
-
-        $this->portStrategyProvider = new PortStrategyProvider();
-        $this->portStrategyProvider->register(new LocalRandomPortStrategy());
-        $this->registerPortStrategy($this->portStrategyProvider);
 
         $this->waitStrategyProvider = new WaitStrategyProvider();
         $this->waitStrategyProvider->register(new HostPortWaitStrategy());
@@ -166,16 +139,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withPortStrategy($strategy)
-    {
-        $this->portStrategy = $strategy;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withWaitStrategy($waitStrategy)
     {
         $this->waitStrategy = $waitStrategy;
@@ -204,30 +167,6 @@ class GenericContainer implements Container
     }
 
     /**
-     * Retrieve the port strategy for the container.
-     *
-     * This method returns the port strategy that should be used for the container.
-     * If a specific port strategy is set, it will return that. Otherwise, it will
-     * attempt to retrieve the default port strategy from the provider.
-     *
-     * @return PortStrategy|null The port strategy to be used, or null if none is set.
-     */
-    protected function portStrategy()
-    {
-        if (static::$PORT_STRATEGY !== null) {
-            $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
-            if (!$strategy) {
-                throw new LogicException("Port strategy not found: " . static::$PORT_STRATEGY);
-            }
-            return $strategy;
-        }
-        if ($this->portStrategy) {
-            return $this->portStrategy;
-        }
-        return null;
-    }
-
-    /**
      * Retrieve the wait strategy for the container.
      *
      * This method returns the wait strategy that should be used for the container.
@@ -250,16 +189,6 @@ class GenericContainer implements Container
             return $this->waitStrategy;
         }
         return null;
-    }
-
-    /**
-     * Register a port strategy.
-     *
-     * @param PortStrategyProvider $provider The port strategy provider.
-     */
-    protected function registerPortStrategy($provider)
-    {
-        // Override this method to register custom port strategies
     }
 
     /**
@@ -301,15 +230,7 @@ class GenericContainer implements Container
         }
 
         $portStrategy = $this->portStrategy();
-        $containerPorts = $this->exposedPorts();
-        $ports = [];
-        if ($portStrategy && $containerPorts) {
-            foreach ($containerPorts as $containerPort) {
-                $hostPort = $portStrategy->getPort();
-                $ports[] = $hostPort . ':' . $containerPort;
-            }
-        }
-
+        $ports = $this->ports();
         $client = $this->client ?: DockerClientFactory::create();
 
         try {
@@ -322,7 +243,9 @@ class GenericContainer implements Container
                 'network' => $this->networkMode(),
                 'networkAlias' => $this->networkAliases(),
                 'volumesFrom' => $this->volumesFrom(),
-                'publish' => $ports,
+                'publish' => array_map(function ($containerPort, $hostPort) {
+                    return $hostPort . ':' . $containerPort;
+                }, array_keys($ports), array_values($ports)),
                 'pull' => $this->pullPolicy(),
                 'workdir' => $this->workDir(),
                 'privileged' => $this->privileged(),
@@ -368,11 +291,7 @@ class GenericContainer implements Container
         $containerDef = [
             'containerId' => $output->getContainerId(),
             'labels' => $this->labels(),
-            'ports' => array_reduce($ports, function ($carry, $item) {
-                $parts = explode(':', $item);
-                $carry[(int)$parts[1]] = (int)$parts[0];
-                return $carry;
-            }, []),
+            'ports' => $ports,
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
         ];
