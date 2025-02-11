@@ -11,7 +11,7 @@ use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 
 class ExposedPortSettingTest extends TestCase
 {
-    public function testHasMountSettingTrait()
+    public function testHasExposedPortSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
 

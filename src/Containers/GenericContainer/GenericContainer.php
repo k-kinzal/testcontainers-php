@@ -73,24 +73,6 @@ class GenericContainer implements Container
     private $commands = [];
 
     /**
-     * Define the default port strategy to be used for the container.
-     * @var string|null
-     */
-    protected static $PORT_STRATEGY;
-
-    /**
-     * The port strategy to be used for the container.
-     * @var PortStrategy|null
-     */
-    private $portStrategy;
-
-    /**
-     * The port strategy provider.
-     * @var PortStrategyProvider
-     */
-    private $portStrategyProvider;
-
-    /**
      * Define the default wait strategy to be used for the container.
      * @var string|null
      */
@@ -166,16 +148,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withPortStrategy($strategy)
-    {
-        $this->portStrategy = $strategy;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withWaitStrategy($waitStrategy)
     {
         $this->waitStrategy = $waitStrategy;
@@ -204,30 +176,6 @@ class GenericContainer implements Container
     }
 
     /**
-     * Retrieve the port strategy for the container.
-     *
-     * This method returns the port strategy that should be used for the container.
-     * If a specific port strategy is set, it will return that. Otherwise, it will
-     * attempt to retrieve the default port strategy from the provider.
-     *
-     * @return PortStrategy|null The port strategy to be used, or null if none is set.
-     */
-    protected function portStrategy()
-    {
-        if (static::$PORT_STRATEGY !== null) {
-            $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
-            if (!$strategy) {
-                throw new LogicException("Port strategy not found: " . static::$PORT_STRATEGY);
-            }
-            return $strategy;
-        }
-        if ($this->portStrategy) {
-            return $this->portStrategy;
-        }
-        return null;
-    }
-
-    /**
      * Retrieve the wait strategy for the container.
      *
      * This method returns the wait strategy that should be used for the container.
@@ -250,16 +198,6 @@ class GenericContainer implements Container
             return $this->waitStrategy;
         }
         return null;
-    }
-
-    /**
-     * Register a port strategy.
-     *
-     * @param PortStrategyProvider $provider The port strategy provider.
-     */
-    protected function registerPortStrategy($provider)
-    {
-        // Override this method to register custom port strategies
     }
 
     /**

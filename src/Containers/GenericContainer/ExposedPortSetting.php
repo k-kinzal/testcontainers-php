@@ -2,16 +2,21 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use LogicException;
+use Testcontainers\Containers\PortStrategy\PortStrategy;
+use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
+
 /**
  * ExposedPortSetting is a trait that provides the ability to expose ports on a container.
  *
  * Two formats are supported:
- * 1. static variable `$EXPOSED_PORTS`:
+ * 1. static variable `$EXPOSED_PORTS` and `PORT_STRATEGY`:
  *
  * <code>
  * class YourContainer extends GenericContainer
  * {
  *     protected static $EXPOSED_PORTS = [80, 443];
+ *     protected static $PORT_STRATEGY = 'local_random';
  * }
  * </code>
  *
@@ -19,7 +24,8 @@ namespace Testcontainers\Containers\GenericContainer;
  *
  * <code>
  * $container = (new YourContainer('image'))
- *     ->withExposedPorts(80);
+ *     ->withExposedPorts(80)
+ *     ->withPortStrategy(new LocalRandomPortStrategy());
  * </code>
  */
 trait ExposedPortSetting
@@ -47,6 +53,24 @@ trait ExposedPortSetting
      * @var int[]
      */
     private $exposedPorts = [];
+
+    /**
+     * Define the default port strategy to be used for the container.
+     * @var string|null
+     */
+    protected static $PORT_STRATEGY;
+
+    /**
+     * The port strategy to be used for the container.
+     * @var PortStrategy|null
+     */
+    private $portStrategy;
+
+    /**
+     * The port strategy provider.
+     * @var PortStrategyProvider
+     */
+    private $portStrategyProvider;
 
     /**
      * Set the port that this container listens on.
@@ -153,5 +177,49 @@ trait ExposedPortSetting
             return $this->exposedPorts;
         }
         return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withPortStrategy($strategy)
+    {
+        $this->portStrategy = $strategy;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the port strategy for the container.
+     *
+     * This method returns the port strategy that should be used for the container.
+     * If a specific port strategy is set, it will return that. Otherwise, it will
+     * attempt to retrieve the default port strategy from the provider.
+     *
+     * @return PortStrategy|null The port strategy to be used, or null if none is set.
+     */
+    protected function portStrategy()
+    {
+        if (static::$PORT_STRATEGY !== null) {
+            $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
+            if (!$strategy) {
+                throw new LogicException("Port strategy not found: " . static::$PORT_STRATEGY);
+            }
+            return $strategy;
+        }
+        if ($this->portStrategy) {
+            return $this->portStrategy;
+        }
+        return null;
+    }
+
+    /**
+     * Register a port strategy.
+     *
+     * @param PortStrategyProvider $provider The port strategy provider.
+     */
+    protected function registerPortStrategy($provider)
+    {
+        // Override this method to register custom port strategies
     }
 }
