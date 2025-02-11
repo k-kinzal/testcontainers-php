@@ -3,8 +3,10 @@
 namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
+use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
+use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
 /**
  * ExposedPortSetting is a trait that provides the ability to expose ports on a container.
@@ -220,6 +222,10 @@ trait PortSetting
      */
     protected function registerPortStrategy($provider)
     {
-        // Override this method to register custom port strategies
+        try {
+            $this->portStrategyProvider->register('random', new RandomPortStrategy());
+        } catch (AlreadyExistsPortStrategyException $e) {
+            throw new LogicException("Port strategy already registered: random");
+        }
     }
 }

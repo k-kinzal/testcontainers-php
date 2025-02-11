@@ -6,8 +6,6 @@ use LogicException;
 use RuntimeException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
-use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
@@ -92,7 +90,6 @@ class GenericContainer implements Container
     /**
      * @param string|null $image The image to be used for the container.
      *
-     * @throws AlreadyExistsPortStrategyException if the port strategy already exists.
      * @throws AlreadyExistsWaitStrategyException if the wait strategy already exists.
      */
     public function __construct($image = null)
@@ -102,7 +99,6 @@ class GenericContainer implements Container
         $this->image = $image ?: static::$IMAGE;
 
         $this->portStrategyProvider = new PortStrategyProvider();
-        $this->portStrategyProvider->register('random', new RandomPortStrategy());
         $this->registerPortStrategy($this->portStrategyProvider);
 
         $this->waitStrategyProvider = new WaitStrategyProvider();
