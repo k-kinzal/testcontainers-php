@@ -40,6 +40,7 @@ class GenericContainer implements Container
     use MountSetting;
     use NetworkAliasSetting;
     use NetworkModeSetting;
+    use PrivilegeSetting;
     use PullPolicySetting;
     use VolumesFromSetting;
 
@@ -96,20 +97,6 @@ class GenericContainer implements Container
      * @var int|null
      */
     private $startupTimeout;
-
-    /**
-     * Define the default privileged mode to be used for the container.
-     *
-     * @var bool|null
-     */
-    protected static $PRIVILEGED;
-
-    /**
-     * The privileged mode to be used for the container.
-     *
-     * @var bool
-     */
-    private $privileged = false;
 
     /**
      * Define the default startup check strategy to be used for the container.
@@ -247,16 +234,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withPrivilegedMode($mode)
-    {
-        $this->privileged = $mode;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withStartupCheckStrategy($strategy)
     {
         $this->startupCheckStrategy = $strategy;
@@ -328,23 +305,6 @@ class GenericContainer implements Container
             return static::$STARTUP_TIMEOUT;
         }
         return $this->startupTimeout;
-    }
-
-    /**
-     * Retrieve the privileged mode for the container.
-     *
-     * This method returns whether the container should run in privileged mode.
-     * If a specific privileged mode is set, it will return that. Otherwise, it will
-     * attempt to retrieve the default privileged mode from the provider.
-     *
-     * @return bool True if the container should run in privileged mode, false otherwise.
-     */
-    protected function privileged()
-    {
-        if (static::$PRIVILEGED) {
-            return static::$PRIVILEGED;
-        }
-        return $this->privileged;
     }
 
     /**
