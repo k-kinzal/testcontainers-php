@@ -5,11 +5,6 @@ namespace Testcontainers\Containers\GenericContainer;
 use LogicException;
 use RuntimeException;
 use Testcontainers\Containers\Container;
-use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
-use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
-use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
-use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
-use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
@@ -69,20 +64,12 @@ class GenericContainer implements Container
 
     /**
      * @param string|null $image The image to be used for the container.
-     *
-     * @throws AlreadyExistsWaitStrategyException if the wait strategy already exists.
      */
     public function __construct($image = null)
     {
         assert($image || static::$IMAGE);
 
         $this->image = $image ?: static::$IMAGE;
-
-        $this->waitStrategyProvider = new WaitStrategyProvider();
-        $this->waitStrategyProvider->register('host_port', new HostPortWaitStrategy());
-        $this->waitStrategyProvider->register('http', new HttpWaitStrategy());
-        $this->waitStrategyProvider->register('log', new LogMessageWaitStrategy());
-        $this->registerWaitStrategy($this->waitStrategyProvider);
     }
 
     /**

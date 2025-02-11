@@ -4,6 +4,10 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
+use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
+use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
+use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 
@@ -72,6 +76,10 @@ trait WaitSetting
      */
     protected function waitStrategy(/** @noinspection PhpUnusedParameterInspection */ $instance)
     {
+        if ($this->waitStrategyProvider === null) {
+            $this->waitStrategyProvider = new WaitStrategyProvider();
+            $this->registerWaitStrategy($this->waitStrategyProvider);
+        }
         if (static::$WAIT_STRATEGY !== null) {
             $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
             if (!$strategy) {
@@ -92,6 +100,12 @@ trait WaitSetting
      */
     protected function registerWaitStrategy($provider)
     {
-        // Override this method to register custom wait strategies
+        try {
+            $provider->register('host_port', new HostPortWaitStrategy());
+            $provider->register('http', new HttpWaitStrategy());
+            $provider->register('log', new LogMessageWaitStrategy());
+        } catch (AlreadyExistsWaitStrategyException $e) {
+            throw new LogicException("Wait strategy already exists", 0, $e);
+        }
     }
 }
