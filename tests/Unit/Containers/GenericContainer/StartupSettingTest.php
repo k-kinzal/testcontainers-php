@@ -32,7 +32,7 @@ class StartupSettingTest extends TestCase
     public function testStaticStartupCheckStrategy()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Illegal state of container');
+        $this->expectExceptionMessage('failed startup check: illegal state of container');
 
         $container = (new StartupSettingWithStaticStartupCheckStrategyContainer('alpine:latest'))
             ->withCommands(['sh', '-c', 'exit 1']);
@@ -52,7 +52,7 @@ class StartupSettingTest extends TestCase
     public function testStartWithStartupCheckStrategy()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Illegal state of container');
+        $this->expectExceptionMessage('failed startup check: illegal state of container');
 
         $container = (new GenericContainer('alpine:latest'))
             ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
