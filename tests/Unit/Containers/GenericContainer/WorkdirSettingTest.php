@@ -34,7 +34,6 @@ class WorkdirSettingTest extends TestCase
             ->withWorkingDirectory('/tmp')
             ->withCommands(['pwd'])
             ->withWaitStrategy(new LogMessageWaitStrategy());
-        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame("/tmp\n", $instance->getOutput());

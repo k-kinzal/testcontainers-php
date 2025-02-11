@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
@@ -52,7 +54,6 @@ class ImagePullPolicyTest extends TestCase
 
     public function testFromStringWithAlways()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$ALWAYS);
 
         $this->assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
@@ -60,7 +61,6 @@ class ImagePullPolicyTest extends TestCase
 
     public function testFromStringWithMissing()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$MISSING);
 
         $this->assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
@@ -68,7 +68,6 @@ class ImagePullPolicyTest extends TestCase
 
     public function testFromStringWithNever()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$NEVER);
 
         $this->assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
@@ -78,7 +77,6 @@ class ImagePullPolicyTest extends TestCase
     {
         $this->expectException(InvalidFormatException::class);
         $this->expectExceptionMessage('Invalid format: `"invalid"`, expects: `always`, `missing`, `never`');
-        /** @noinspection PhpUnhandledExceptionInspection */
         ImagePullPolicy::fromString('invalid');
     }
 

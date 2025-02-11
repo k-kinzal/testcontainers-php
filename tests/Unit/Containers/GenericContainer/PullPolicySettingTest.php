@@ -30,7 +30,6 @@ class PullPolicySettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withImagePullPolicy(ImagePullPolicy::MISSING());
-        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         $this->assertSame(ImagePullPolicy::$MISSING, $instance->getImagePullPolicy()->toString());

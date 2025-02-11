@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace Tests\Unit\Containers\PortStrategy;
 
 use PHPUnit\Framework\TestCase;
@@ -38,7 +40,6 @@ class ConflictBehaviorTest extends TestCase
 
     public function testFromStringWithRetry()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $conflictBehavior = ConflictBehavior::fromString(ConflictBehavior::$RETRY);
 
         $this->assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
@@ -46,7 +47,6 @@ class ConflictBehaviorTest extends TestCase
 
     public function testFromStringWithFail()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $conflictBehavior = ConflictBehavior::fromString(ConflictBehavior::$FAIL);
 
         $this->assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
@@ -57,7 +57,6 @@ class ConflictBehaviorTest extends TestCase
         $this->expectException(InvalidFormatException::class);
         $this->expectExceptionMessage('Invalid format: `"invalid"`, expects: `retry`, `fail`');
 
-        /** @noinspection PhpUnhandledExceptionInspection */
         ConflictBehavior::fromString('invalid');
     }
 

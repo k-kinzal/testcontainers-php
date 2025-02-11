@@ -15,7 +15,7 @@ use Tests\Images\DinD;
 
 class VolumesFromSettingTest extends TestCase
 {
-    public function testHasNetworkModeSettingTrait()
+    public function testHasVolumesFromSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
 

@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
@@ -89,7 +91,6 @@ class GenericContainerInstanceTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['echo', 'Hello, World!']);
-        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         while ($instance->isRunning()) {
@@ -103,7 +104,6 @@ class GenericContainerInstanceTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['ls', '/not-exist-dir']);
-        /** @noinspection PhpUnhandledExceptionInspection */
         $instance = $container->start();
 
         while ($instance->isRunning()) {
