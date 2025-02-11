@@ -8,7 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Types\ContainerId;
+use Testcontainers\Testcontainers;
+use Tests\Images\DinD;
 
 class GenericContainerInstanceTest extends TestCase
 {
@@ -52,6 +55,19 @@ class GenericContainerInstanceTest extends TestCase
         ]);
 
         $this->assertSame('localhost', $instance->getHost());
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testGetHostFromOverride()
+    {
+        putenv('TESTCONTAINERS_HOST_OVERRIDE=override.local');
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+
+        $this->assertSame('override.local', $instance->getHost());
     }
 
     public function testGetMappedPort()

@@ -10,6 +10,7 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Types\ContainerId;
+use Testcontainers\Environments;
 
 /**
  * GenericContainerInstance is a generic implementation of docker container.
@@ -125,8 +126,25 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getHost()
     {
-        // TODO: Support for host name resolution from remote hosts and from within containers
-        return 'localhost';
+        $override = Environments::TESTCONTAINERS_HOST_OVERRIDE();
+        if ($override) {
+            return $override;
+        }
+
+        $client = $this->client ?: DockerClientFactory::create();
+        $host = $client->getHost();
+        if ($host !== null) {
+            return 'localhost';
+        }
+        $url = parse_url($host);
+        switch ($url['scheme']) {
+            case 'http':
+            case 'https':
+            case 'tcp':
+                return $url['host'];
+            default:
+                return 'localhost';
+        }
     }
 
     /**
