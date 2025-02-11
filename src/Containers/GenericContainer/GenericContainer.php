@@ -10,9 +10,6 @@ use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
-use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
-use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
-use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
@@ -114,7 +111,6 @@ class GenericContainer implements Container
     /**
      * @param string|null $image The image to be used for the container.
      *
-     * @throws AlreadyExistsStartupStrategyException if the startup strategy already exists.
      * @throws AlreadyExistsPortStrategyException if the port strategy already exists.
      * @throws AlreadyExistsWaitStrategyException if the wait strategy already exists.
      */
@@ -123,10 +119,6 @@ class GenericContainer implements Container
         assert($image || static::$IMAGE);
 
         $this->image = $image ?: static::$IMAGE;
-
-        $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
-        $this->startupCheckStrategyProvider->register('is_running', new IsRunningStartupCheckStrategy());
-        $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
 
         $this->portStrategyProvider = new PortStrategyProvider();
         $this->portStrategyProvider->register(new LocalRandomPortStrategy());

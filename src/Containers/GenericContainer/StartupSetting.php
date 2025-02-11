@@ -3,6 +3,8 @@
 namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
+use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
+use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 
@@ -111,6 +113,11 @@ trait StartupSetting
      */
     protected function startupCheckStrategy()
     {
+        if ($this->startupCheckStrategyProvider === null) {
+            $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
+            $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
+        }
+
         if (static::$STARTUP_CHECK_STRATEGY !== null) {
             $strategy = $this->startupCheckStrategyProvider->get(static::$STARTUP_CHECK_STRATEGY);
             if (!$strategy) {
@@ -131,6 +138,10 @@ trait StartupSetting
      */
     protected function registerStartupCheckStrategy($provider)
     {
-        // Override this method to register custom startup strategies
+        try {
+            $provider->register('is_running', new IsRunningStartupCheckStrategy());
+        } catch (AlreadyExistsStartupStrategyException $e) {
+            throw new LogicException("Startup check strategy with name is_running already exists.", 0, $e);
+        }
     }
 }
