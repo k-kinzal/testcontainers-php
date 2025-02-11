@@ -48,14 +48,6 @@ class DinD extends GenericContainer
     protected static $PORTS = [2375];
 
     /**
-     * The port strategy to be used for the DinD container.
-     * Port 2375 is used when TLS is disabled, and port 2376 is used when TLS is enabled.
-     *
-     * @var string
-     */
-    protected static $PORT_STRATEGY = 'random';
-
-    /**
      * Whether the DinD container should run in privileged mode.
      *
      * @var bool

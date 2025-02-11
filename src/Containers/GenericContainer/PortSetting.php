@@ -225,12 +225,17 @@ trait PortSetting
     /**
      * Retrieve Map of ports to be exposed by the container.
      *
+     * If an exposure port is set and the port strategy is empty, the random port strategy is used by default.
+     *
      * @return array<int, int> Key-value pairs of container ports to host ports.
      */
     protected function ports()
     {
         $containerPorts = $this->exposedPorts();
         $strategy = $this->portStrategy();
+        if ($strategy === null && count($containerPorts) > 0) {
+            $strategy = $this->portStrategyProvider->get('random');
+        }
         if ($strategy) {
             $ports = [];
             foreach ($containerPorts as $containerPort) {

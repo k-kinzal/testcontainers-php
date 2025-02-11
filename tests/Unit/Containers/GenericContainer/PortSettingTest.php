@@ -106,21 +106,14 @@ class PortSettingTest extends TestCase
 class PortSettingWithExposedPortsContainer extends GenericContainer
 {
     protected static $EXPOSED_PORTS = [80, 443];
-
-    // TODO: implements default port strategy
-    protected static $PORT_STRATEGY = 'random';
 }
 
 class PortSettingWithExposeContainer extends GenericContainer
 {
     protected static $EXPOSE = [80, 443];
-
-    protected static $PORT_STRATEGY = 'random';
 }
 
 class PortSettingWithPortsContainer extends GenericContainer
 {
     protected static $PORTS = [80, 443];
-
-    protected static $PORT_STRATEGY = 'random';
 }
