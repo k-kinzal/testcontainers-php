@@ -202,6 +202,10 @@ trait PortSetting
      */
     protected function portStrategy()
     {
+        if ($this->portStrategyProvider === null) {
+            $this->portStrategyProvider = new PortStrategyProvider();
+            $this->registerPortStrategy($this->portStrategyProvider);
+        }
         if (static::$PORT_STRATEGY !== null) {
             $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
             if (!$strategy) {
@@ -223,7 +227,7 @@ trait PortSetting
     protected function registerPortStrategy($provider)
     {
         try {
-            $this->portStrategyProvider->register('random', new RandomPortStrategy());
+            $provider->register('random', new RandomPortStrategy());
         } catch (AlreadyExistsPortStrategyException $e) {
             throw new LogicException("Port strategy already registered: random");
         }

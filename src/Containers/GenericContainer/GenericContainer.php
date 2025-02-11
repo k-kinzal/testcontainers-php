@@ -6,7 +6,6 @@ use LogicException;
 use RuntimeException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
@@ -97,9 +96,6 @@ class GenericContainer implements Container
         assert($image || static::$IMAGE);
 
         $this->image = $image ?: static::$IMAGE;
-
-        $this->portStrategyProvider = new PortStrategyProvider();
-        $this->registerPortStrategy($this->portStrategyProvider);
 
         $this->waitStrategyProvider = new WaitStrategyProvider();
         $this->waitStrategyProvider->register(new HostPortWaitStrategy());
