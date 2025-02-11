@@ -98,7 +98,6 @@ class GenericContainer implements Container
         ];
         $timeout = $this->startupTimeout();
 
-
         try {
             if ($timeout !== null) {
                 $output = $client->withTimeout($timeout)->run($image, $command, $args, $options);
