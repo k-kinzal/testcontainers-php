@@ -6,19 +6,23 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Docker\Types\ContainerId;
 
 class GenericContainerInstanceTest extends TestCase
 {
     public function testGetContainerId()
     {
-        $instance = new GenericContainerInstance('8188d93d8a27');
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
 
         $this->assertSame('8188d93d8a27', (string) $instance->getContainerId());
     }
 
     public function testGetLabel()
     {
-        $instance = new GenericContainerInstance('8188d93d8a27', [
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
             'labels' => [
                 'com.example.label' => 'value',
             ],
@@ -29,7 +33,8 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testGetLabels()
     {
-        $instance = new GenericContainerInstance('8188d93d8a27', [
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
             'labels' => [
                 'com.example.label' => 'value',
             ],
@@ -40,14 +45,17 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testGetHost()
     {
-        $instance = new GenericContainerInstance('8188d93d8a27');
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
 
         $this->assertSame('localhost', $instance->getHost());
     }
 
     public function testGetMappedPort()
     {
-        $instance = new GenericContainerInstance('8188d93d8a27', [
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
             'ports' => [
                 80 => 8080,
             ],
@@ -59,7 +67,8 @@ class GenericContainerInstanceTest extends TestCase
     public function testGetImagePullPolicy()
     {
         $pullPolicy = ImagePullPolicy::ALWAYS();
-        $instance = new GenericContainerInstance('8188d93d8a27', [
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
             'pull' => $pullPolicy,
         ]);
 
@@ -68,7 +77,8 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testGetPrivilegedMode()
     {
-        $instance = new GenericContainerInstance('8188d93d8a27', [
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
             'privileged' => true,
         ]);
 
@@ -107,7 +117,9 @@ class GenericContainerInstanceTest extends TestCase
     {
         $data = new CustomData();
 
-        $instance = new GenericContainerInstance('8188d93d8a27');
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
         $instance->setData($data);
 
         $this->assertSame($data, $instance->getData(CustomData::class));
@@ -115,14 +127,18 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testIsRunning()
     {
-        $instance = new GenericContainerInstance('8188d93d8a27');
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
 
         $this->assertFalse($instance->isRunning());
     }
 
     public function testStop()
     {
-        $instance = new GenericContainerInstance('8188d93d8a27');
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
         $instance->stop();
 
         $this->assertFalse($instance->isRunning());
