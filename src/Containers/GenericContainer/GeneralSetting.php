@@ -39,6 +39,18 @@ trait GeneralSetting
     private $image;
 
     /**
+     * The commands to be executed in the container.
+     * @var null|string|string[]
+     */
+    protected static $COMMANDS;
+
+    /**
+     * The commands to be executed in the container.
+     * @var string[]
+     */
+    private $commands = [];
+
+    /**
      * Define the default name to be used for the container.
      * @var string|null
      */
@@ -49,6 +61,26 @@ trait GeneralSetting
      * @var string|null
      */
     private $name;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withCommand($cmd)
+    {
+        $this->commands = [$cmd];
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withCommands($commandParts)
+    {
+        $this->commands = $commandParts;
+
+        return $this;
+    }
 
     /**
      * Set the name for this container, similar to the `--name <name>` option on the Docker CLI.
@@ -71,6 +103,60 @@ trait GeneralSetting
     public function image()
     {
         return $this->image;
+    }
+
+    /**
+     * Retrieve the command to be executed in the container.
+     *
+     * This method returns the command that should be executed in the container.
+     * If a specific command is set, it will return that. Otherwise, it will
+     * attempt to retrieve the default command from the provider.
+     *
+     * @return string|string[]|null
+     */
+    protected function commands()
+    {
+        if (static::$COMMANDS) {
+            return static::$COMMANDS;
+        }
+        if ($this->commands) {
+            return $this->commands;
+        }
+        return null;
+    }
+
+    /**
+     * Retrieve the command to be executed
+     *
+     * @return string|null
+     */
+    protected function command()
+    {
+        $commands = $this->commands();
+        if (is_string($commands)) {
+            $commands = [$commands];
+        }
+        if (is_array($commands) && count($commands) > 0) {
+            return $commands[0];
+        }
+        return null;
+    }
+
+    /**
+     * Retrieve the arguments to be passed to the command
+     *
+     * @return string[]
+     */
+    protected function args()
+    {
+        $commands = $this->commands();
+        if (is_string($commands)) {
+            $commands = [$commands];
+        }
+        if (is_array($commands) && count($commands) > 1) {
+            return array_slice($commands, 1);
+        }
+        return [];
     }
 
     /**
