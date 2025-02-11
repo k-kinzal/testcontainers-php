@@ -16,16 +16,17 @@ class StartupCheckStrategyProvider
      *
      * This method adds a given wait strategy to the list of available strategies.
      *
+     * @param string $name The name of the wait strategy to register.
      * @param StartupCheckStrategy $strategy The wait strategy to register.
      *
      * @throws AlreadyExistsStartupStrategyException If a strategy with the same name already exists.
      */
-    public function register($strategy)
+    public function register($name, $strategy)
     {
-        if (isset($this->strategies[$strategy->getName()])) {
-            throw new AlreadyExistsStartupStrategyException($strategy->getName());
+        if (isset($this->strategies[$name])) {
+            throw new AlreadyExistsStartupStrategyException($name);
         }
-        $this->strategies[$strategy->getName()] = $strategy;
+        $this->strategies[$name] = $strategy;
     }
 
     /**

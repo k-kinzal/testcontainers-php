@@ -10,10 +10,6 @@ use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\LocalRandomPortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
-use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
-use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
-use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
-use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
@@ -42,6 +38,7 @@ class GenericContainer implements Container
     use NetworkModeSetting;
     use PrivilegeSetting;
     use PullPolicySetting;
+    use StartupSetting;
     use VolumesFromSetting;
     use WorkdirSetting;
 
@@ -74,36 +71,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default startup timeout to be used for the container.
-     * @var int|null
-     */
-    protected static $STARTUP_TIMEOUT;
-
-    /**
-     * The startup timeout to be used for the container.
-     * @var int|null
-     */
-    private $startupTimeout;
-
-    /**
-     * Define the default startup check strategy to be used for the container.
-     * @var string|null
-     */
-    protected static $STARTUP_CHECK_STRATEGY;
-
-    /**
-     * The startup check strategy to be used for the container.
-     * @var StartupCheckStrategy|null
-     */
-    private $startupCheckStrategy;
-
-    /**
-     * The startup check strategy provider.
-     * @var StartupCheckStrategyProvider
-     */
-    private $startupCheckStrategyProvider;
 
     /**
      * Define the default port strategy to be used for the container.
@@ -144,7 +111,6 @@ class GenericContainer implements Container
     /**
      * @param string|null $image The image to be used for the container.
      *
-     * @throws AlreadyExistsStartupStrategyException if the startup strategy already exists.
      * @throws AlreadyExistsPortStrategyException if the port strategy already exists.
      * @throws AlreadyExistsWaitStrategyException if the wait strategy already exists.
      */
@@ -153,9 +119,6 @@ class GenericContainer implements Container
         assert($image || static::$IMAGE);
 
         $this->image = $image ?: static::$IMAGE;
-
-        $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
-        $this->startupCheckStrategyProvider->register(new IsRunningStartupCheckStrategy());
 
         $this->portStrategyProvider = new PortStrategyProvider();
         $this->portStrategyProvider->register(new LocalRandomPortStrategy());
@@ -203,26 +166,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withStartupTimeout($timeout)
-    {
-        $this->startupTimeout = $timeout;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withStartupCheckStrategy($strategy)
-    {
-        $this->startupCheckStrategy = $strategy;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withPortStrategy($strategy)
     {
         $this->portStrategy = $strategy;
@@ -256,43 +199,6 @@ class GenericContainer implements Container
         }
         if ($this->commands) {
             return $this->commands;
-        }
-        return null;
-    }
-
-    /**
-     * Retrieve the startup timeout for the container.
-     *
-     * @return int|null
-     */
-    protected function startupTimeout()
-    {
-        if (static::$STARTUP_TIMEOUT) {
-            return static::$STARTUP_TIMEOUT;
-        }
-        return $this->startupTimeout;
-    }
-
-    /**
-     * Retrieve the startup check strategy for the container.
-     *
-     * This method returns the startup check strategy that should be used for the container.
-     * If a specific startup check strategy is set, it will return that. Otherwise, it will
-     * attempt to retrieve the default startup check strategy from the provider.
-     *
-     * @return StartupCheckStrategy|null The startup check strategy to be used, or null if none is set.
-     */
-    protected function startupCheckStrategy()
-    {
-        if (static::$STARTUP_CHECK_STRATEGY !== null) {
-            $strategy = $this->startupCheckStrategyProvider->get(static::$STARTUP_CHECK_STRATEGY);
-            if (!$strategy) {
-                throw new LogicException("Startup check strategy not found: " . static::$STARTUP_CHECK_STRATEGY);
-            }
-            return $strategy;
-        }
-        if ($this->startupCheckStrategy) {
-            return $this->startupCheckStrategy;
         }
         return null;
     }
