@@ -25,7 +25,9 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $containerId = $output->getContainerId();
 
         try {
-            $instance = new GenericContainerInstance($containerId);
+            $instance = new GenericContainerInstance([
+                'containerId' => $containerId,
+            ]);
             $strategy = (new LogMessageWaitStrategy())
                 ->withPattern('\d{2}:\d{2}:\d{2}')
                 ->withTimeoutSeconds(5);

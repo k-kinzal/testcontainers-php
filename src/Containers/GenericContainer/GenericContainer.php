@@ -4,7 +4,6 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
 use RuntimeException;
-use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\ImagePullPolicy;
@@ -624,29 +623,18 @@ class GenericContainer implements Container
         if ($output->getExitCode() !== 0) {
             throw new RuntimeException('Failed to start container');
         }
-        $containerId = $output->getContainerId();
         $containerDef = [
-            'image' => $this->image,
-            'command' => $command,
-            'args' => $args,
-            'name' => $this->name(),
-            'hosts' => $hosts,
-            'env' => $this->env(),
+            'containerId' => $output->getContainerId(),
             'labels' => $this->labels(),
-            'mounts' => $this->mounts(),
-            'networkMode' => $this->networkMode(),
-            'networkAliases' => $this->networkAliases(),
-            'volumesFrom' => $this->volumesFrom(),
             'ports' => array_reduce($ports, function ($carry, $item) {
                 $parts = explode(':', $item);
                 $carry[(int)$parts[1]] = (int)$parts[0];
                 return $carry;
             }, []),
             'pull' => $this->pullPolicy(),
-            'workdir' => $this->workDir(),
             'privileged' => $this->privileged(),
         ];
-        $instance = new GenericContainerInstance($containerId, $containerDef);
+        $instance = new GenericContainerInstance($containerDef);
         $instance->setDockerClient($client);
 
         $startupCheckStrategy = $this->startupCheckStrategy();

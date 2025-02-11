@@ -4,6 +4,7 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
@@ -23,23 +24,14 @@ class GenericContainerInstance implements ContainerInstance
     private $client;
 
     /**
-     * The unique identifier for the container.
-     *
-     * @var ContainerId The container ID.
-     */
-    private $containerId;
-
-    /**
      * The container definition.
      *
      * @var array{
-     *     image?: string,
-     *     command?: string,
-     *     args?: string[],
-     *     mounts?: string[],
+     *     containerId: ContainerId,
+     *     labels?: array<string, string>[]|null,
      *     ports?: array<int, int>,
-     *     pull?: ImagePullPolicy,
-     *     env?: array<string, string>,
+     *     pull?: ImagePullPolicy|null,
+     *     privileged?: bool,
      * } The container definition.
      */
     private $containerDef;
@@ -60,27 +52,16 @@ class GenericContainerInstance implements ContainerInstance
     private $data = [];
 
     /**
-     * @param ContainerId|string $containerId The unique identifier for the container.
      * @param array{
-     *   image?: string,
-     *   command?: string,
-     *   args?: string[],
-     *   hosts?: string[],
-     *   mounts?: string[],
-     *   network?: string,
-     *   networkAliases?: string[],
-     *   volumesFrom?: string[],
-     *   ports?: array<int, int>,
-     *   pull?: ImagePullPolicy,
-     *   env?: array<string, string>,
+     *     containerId: ContainerId,
+     *     labels?: array<string, string>[]|null,
+     *     ports?: array<int, int>,
+     *     pull?: ImagePullPolicy|null,
+     *     privileged?: bool,
      * } $containerDef The container definition.
      */
-    public function __construct($containerId, $containerDef = [])
+    public function __construct($containerDef = [])
     {
-        if (is_string($containerId)) {
-            $containerId = new ContainerId($containerId);
-        }
-        $this->containerId = $containerId;
         $this->containerDef = $containerDef;
     }
 
@@ -105,7 +86,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getContainerId()
     {
-        return $this->containerId;
+        return $this->containerDef['containerId'];
     }
 
     /**
@@ -201,7 +182,7 @@ class GenericContainerInstance implements ContainerInstance
     public function getOutput()
     {
         $client = $this->client ?: DockerClientFactory::create();
-        $output = $client->logs($this->containerId);
+        $output = $client->logs($this->containerDef['containerId']);
         return $output->getOutput();
     }
 
@@ -211,7 +192,7 @@ class GenericContainerInstance implements ContainerInstance
     public function getErrorOutput()
     {
         $client = $this->client ?: DockerClientFactory::create();
-        $output = $client->logs($this->containerId);
+        $output = $client->logs($this->containerDef['containerId']);
         return $output->getErrorOutput();
     }
 
@@ -248,7 +229,7 @@ class GenericContainerInstance implements ContainerInstance
 
         try {
             $client = $this->client ?: DockerClientFactory::create();
-            $output = $client->inspect($this->containerId);
+            $output = $client->inspect($this->containerDef['containerId']);
             switch ($output->state->status) {
                 case 'running':
                     $this->running = true;
@@ -272,7 +253,7 @@ class GenericContainerInstance implements ContainerInstance
     {
         try {
             $client = $this->client ?: DockerClientFactory::create();
-            $client->stop($this->containerId);
+            $client->stop($this->containerDef['containerId']);
         } catch (NoSuchContainerException $e) {
             // Do nothing
         }
