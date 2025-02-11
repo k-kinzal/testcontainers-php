@@ -50,6 +50,17 @@ trait WorkdirSetting
     }
 
     /**
+     * Set the working directory that the container should use on startup. Alias for `withWorkingDirectory`.
+     *
+     * @param string $workDir The path to the working directory inside the container.
+     * @return self
+     */
+    public function withWorkDir($workDir)
+    {
+        return $this->withWorkingDirectory($workDir);
+    }
+
+    /**
      * Retrieve the working directory for the container.
      *
      * @return string|null
