@@ -9,6 +9,7 @@ use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+use Testcontainers\Environments;
 
 use function Testcontainers\kebab;
 
@@ -201,6 +202,34 @@ trait BaseCommand
         $this->proc_options = $proc_options;
 
         return $this;
+    }
+
+    /**
+     * Get the Docker host.
+     *
+     * @return string
+     */
+    public function getHost()
+    {
+        // Check if the host is set in the global options
+        $host = isset($this->options['host']) ? $this->options['host'] : null;
+        if (is_array($host)) {
+            return $host[0];
+        } elseif (is_string($host)) {
+            return $host;
+        }
+        // Check if the host is set in the environment variables
+        $host = isset($this->env['DOCKER_HOST']) ? $this->env['DOCKER_HOST'] : null;
+        if (is_string($host)) {
+            return $host;
+        }
+        // Check if the host is set in the DOCKER_HOST environment variable
+        $host = Environments::DOCKER_HOST();
+        if ($host) {
+            return $host;
+        }
+
+        return 'unix:///var/run/docker.sock';
     }
 
     /**

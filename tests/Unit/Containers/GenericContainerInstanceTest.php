@@ -54,6 +54,20 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('localhost', $instance->getHost());
     }
 
+    public function testGetHostFromOverride()
+    {
+        try {
+            putenv('TESTCONTAINERS_HOST_OVERRIDE=override.local');
+            $instance = new GenericContainerInstance([
+                'containerId' => new ContainerId('8188d93d8a27'),
+            ]);
+
+            $this->assertSame('override.local', $instance->getHost());
+        } finally {
+            putenv('TESTCONTAINERS_HOST_OVERRIDE');
+        }
+    }
+
     public function testGetMappedPort()
     {
         $instance = new GenericContainerInstance([
