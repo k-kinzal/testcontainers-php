@@ -39,18 +39,6 @@ class GenericContainer implements Container
     private $client;
 
     /**
-     * Define the default image to be used for the container.
-     * @var string|null
-     */
-    protected static $IMAGE;
-
-    /**
-     * The image to be used for the container.
-     * @var string
-     */
-    private $image;
-
-    /**
      * The commands to be executed in the container.
      * @var null|string|string[]
      */
@@ -176,9 +164,9 @@ class GenericContainer implements Container
             ];
             $timeout = $this->startupTimeout();
             if ($timeout !== null) {
-                $output = $client->withTimeout($timeout)->run($this->image, $command, $args, $options);
+                $output = $client->withTimeout($timeout)->run($this->image(), $command, $args, $options);
             } else {
-                $output = $client->run($this->image, $command, $args, $options);
+                $output = $client->run($this->image(), $command, $args, $options);
             }
         } catch (PortAlreadyAllocatedException $e) {
             if ($portStrategy === null) {

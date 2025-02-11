@@ -6,11 +6,13 @@ namespace Testcontainers\Containers\GenericContainer;
  * GeneralSetting is a trait that provides the ability to set the name for a container.
  *
  * Two formats are supported:
- * 1. static variable `$NAME`:
+ * 1. static variable `$IMAGE` and `$NAME`:
  *
  * <code>
  * class YourContainer extends GenericContainer
  * {
+ *     protected static $IMAGE = 'image';
+ *
  *     protected static $NAME = 'your-container';
  * }
  * </code>
@@ -24,6 +26,18 @@ namespace Testcontainers\Containers\GenericContainer;
  */
 trait GeneralSetting
 {
+    /**
+     * Define the default image to be used for the container.
+     * @var string|null
+     */
+    protected static $IMAGE;
+
+    /**
+     * The image to be used for the container.
+     * @var string
+     */
+    private $image;
+
     /**
      * Define the default name to be used for the container.
      * @var string|null
@@ -47,6 +61,16 @@ trait GeneralSetting
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * Retrieve the image to be used for the container.
+     *
+     * @return string
+     */
+    public function image()
+    {
+        return $this->image;
     }
 
     /**
