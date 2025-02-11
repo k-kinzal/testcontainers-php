@@ -67,21 +67,13 @@ class GenericContainer implements Container
      */
     public function start()
     {
-        $extraHosts = $this->extraHosts();
-        $hosts = [];
-        if ($extraHosts) {
-            foreach ($extraHosts as $host) {
-                $hosts[] = $host->toString();
-            }
-        }
-
         $portStrategy = $this->portStrategy();
         $ports = $this->ports();
         $client = $this->client ?: DockerClientFactory::create();
 
         try {
             $options = [
-                'addHost' => $hosts,
+                'addHost' => $this->extraHosts(),
                 'detach' => true,
                 'env' => $this->env(),
                 'label' => $this->labels(),
