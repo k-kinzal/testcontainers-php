@@ -91,12 +91,4 @@ class HostPortWaitStrategy implements WaitStrategy
 
         return $this;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'host_port';
-    }
 }

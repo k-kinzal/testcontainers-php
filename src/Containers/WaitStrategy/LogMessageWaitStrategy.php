@@ -75,12 +75,4 @@ class LogMessageWaitStrategy implements WaitStrategy
 
         return $this;
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getName()
-    {
-        return 'log_message';
-    }
 }

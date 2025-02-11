@@ -201,12 +201,4 @@ class HttpWaitStrategy implements WaitStrategy
 
         return $this;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'http';
-    }
 }
