@@ -37,6 +37,7 @@ class GenericContainer implements Container
     use ExposedPortSetting;
     use GeneralSetting;
     use HostSetting;
+    use LabelSetting;
     use MountSetting;
     use NetworkAliasSetting;
     use NetworkModeSetting;
@@ -71,18 +72,6 @@ class GenericContainer implements Container
      * @var string[]
      */
     private $commands = [];
-
-    /**
-     * Define the default labels to be used for the container.
-     * @var array<string, string>|null
-     */
-    protected static $LABELS;
-
-    /**
-     * The labels to be used for the container.
-     * @var array<string, string>
-     */
-    private $labels = [];
 
     /**
      * Define the default image pull policy to be used for the container.
@@ -230,26 +219,6 @@ class GenericContainer implements Container
     /**
      * {@inheritdoc}
      */
-    public function withLabel($key, $value)
-    {
-        $this->labels[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withLabels($labels)
-    {
-        $this->labels = $labels;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function withCommand($cmd)
     {
         $this->commands = [$cmd];
@@ -353,26 +322,6 @@ class GenericContainer implements Container
         }
         if ($this->commands) {
             return $this->commands;
-        }
-        return null;
-    }
-
-    /**
-     * Retrieve the labels for the container.
-     *
-     * This method returns the labels that should be used for the container.
-     * If specific labels are set, it will return those. Otherwise, it will
-     * attempt to retrieve the default labels from the provider.
-     *
-     * @return array<string, string>|null The labels to be used, or null if none are set.
-     */
-    protected function labels()
-    {
-        if (static::$LABELS) {
-            return static::$LABELS;
-        }
-        if ($this->labels) {
-            return $this->labels;
         }
         return null;
     }
