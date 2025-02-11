@@ -10,6 +10,7 @@ use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
+use Testcontainers\Environments;
 use function Testcontainers\kebab;
 
 /**
@@ -223,8 +224,8 @@ trait BaseCommand
             return $host;
         }
         // Check if the host is set in the DOCKER_HOST environment variable
-        $host = getenv('DOCKER_HOST');
-        if (is_string($host)) {
+        $host = Environments::DOCKER_HOST();
+        if ($host) {
             return $host;
         }
 
