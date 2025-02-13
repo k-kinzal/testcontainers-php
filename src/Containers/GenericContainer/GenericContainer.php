@@ -9,11 +9,11 @@ use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
 use Testcontainers\Docker\Exception\DockerException;
-use Testcontainers\Docker\Exception\NoSuchContainerException;
-use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+use Testcontainers\Environments;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\SSH\Tunnel;
 
 /**
  * GenericContainer is a generic implementation of docker container.
@@ -30,6 +30,7 @@ class GenericContainer implements Container
     use PortSetting;
     use PrivilegeSetting;
     use PullPolicySetting;
+    use SSHPortForwardSetting;
     use StartupSetting;
     use VolumesFromSetting;
     use WaitSetting;
@@ -147,6 +148,29 @@ class GenericContainer implements Container
         if ($startupCheckStrategy) {
             if ($startupCheckStrategy->waitUntilStartupSuccessful($instance) === false) {
                 throw new RuntimeException('failed startup check: illegal state of container');
+            }
+        }
+
+        if (count($ports) > 0) {
+            $sshPortForward = $this->sshPortForward();
+            if ($sshPortForward) {
+                $port = $instance->getMappedPort(array_keys($ports)[0]);
+                $remoteHost = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE();
+                if ($remoteHost === null) {
+                    $remoteHost = '127.0.0.1';
+                }
+                $sshHost = isset($sshPortForward['sshHost']) ? $sshPortForward['sshHost'] : $instance->getHost();
+                $sshUser = isset($sshPortForward['sshUser']) ? $sshPortForward['sshUser'] : null;
+                $sshPort = isset($sshPortForward['sshPort']) ? $sshPortForward['sshPort'] : null;
+                $tunnel = (new Tunnel($port, $remoteHost, $port, $sshHost));
+                if ($sshUser) {
+                    $tunnel->withUser($sshUser);
+                }
+                if ($sshPort) {
+                    $tunnel->withSshPort($sshPort);
+                }
+                $session = $tunnel->open();
+                $instance->setData($session);
             }
         }
 
