@@ -44,6 +44,7 @@
         "lint": [
             "@lint:php-cs-fixer"
         ],
-        "test": "phpunit tests"
+        "test": "phpunit --testsuite unit",
+        "e2e": "phpunit --testsuite e2e"
     }
 }

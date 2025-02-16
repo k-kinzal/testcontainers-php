@@ -1,0 +1,53 @@
+version: 2.1
+
+jobs:
+  docker_executor:
+    docker:
+      - image: cimg/php:8.3
+    steps:
+      - run: env
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-dependencies-docker-{{ checksum "composer.json" }}
+            - v1-dependencies-docker-
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: v1-dependencies-docker-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+      - run: composer e2e
+  machine_executor:
+    machine: true
+    steps:
+      - run: env
+      - run:
+          name: Update packages and install PHP dependencies
+          command: |
+            sudo apt-get install ca-certificates apt-transport-https software-properties-common
+            sudo add-apt-repository -y ppa:ondrej/php
+            sudo apt-get update
+            sudo apt-get install -y php8.3 php8.3-dom php8.3-mbstring php8.3-xml php8.3-xmlwriter php8.3-pdo php8.3-mysql
+      - run:
+          name: Install Composer
+          command: |
+            curl -sS https://getcomposer.org/installer | php
+            sudo mv composer.phar /usr/local/bin/composer
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-machine-{{ checksum "composer.json" }}
+            - v1-dependencies-machine-
+      - run: composer install -n --prefer-dist --ignore-platform-reqs
+      - save_cache:
+          key: v1-dependencies-machine-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+      - run: composer e2e
+
+workflows:
+  e2e:
+    jobs:
+      - docker_executor
+      - machine_executor
