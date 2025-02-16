@@ -72,22 +72,26 @@ class PDOConnectWaitStrategy implements WaitStrategy
             throw new LogicException('The DSN for the PDO connection is not set');
         }
 
-        $now = time();
-
-        $host = str_replace('localhost', '127.0.0.1', $instance->getHost());
-        $ports = $instance->getExposedPorts();
-        if (count($ports) !== 1) {
-            throw new LogicException('PDOConnectWaitStrategy requires exactly one exposed port: ' . count($ports) . ' exposed');
-        }
-        $port = $instance->getMappedPort($ports[0]);
-
         $dsn = clone $this->dsn;
-        $dsn = $dsn
-            ->withHost($host)
-            ->withPort($port);
+        if ($dsn->getHost() === null) {
+            $host = str_replace('localhost', '127.0.0.1', $instance->getHost());
+            $dsn = $dsn->withHost($host);
+        }
+        if ($dsn->getPort() === null) {
+            $ports = $instance->getExposedPorts();
+            if (count($ports) !== 1) {
+                throw new LogicException('PDOConnectWaitStrategy requires exactly one exposed port: ' . count($ports) . ' exposed');
+            }
+            $port = $instance->getMappedPort($ports[0]);
+            $dsn = $dsn->withPort($port);
+        }
+
+        $now = time();
+        $ex = null;
         while (1) {
             if (time() - $now > $this->timeout) {
-                throw new WaitingTimeoutException($this->timeout);
+                $message = $dsn->toString() . ': ' . $ex->getMessage();
+                throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
             }
             try {
                 $pdo = new PDO($dsn->toString(), $this->username, $this->password, [
@@ -99,7 +103,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
 
                 break;
             } catch (PDOException $e) {
-                // Do nothing
+                $ex = $e;
             }
             usleep($this->retryInterval);
         }

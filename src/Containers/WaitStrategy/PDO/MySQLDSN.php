@@ -54,11 +54,27 @@ class MySQLDSN implements DSN
     /**
      * {@inheritdoc}
      */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function withPort($port)
     {
         $this->port = $port;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPort()
+    {
+        return $this->port;
     }
 
     /**
