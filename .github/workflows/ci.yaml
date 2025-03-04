@@ -18,6 +18,7 @@ jobs:
       - run: docker context ls
       - run: docker context show
       - run: docker info
+      - run: docker context use tcc
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
