@@ -17,6 +17,7 @@ jobs:
       - run: env
       - run: docker context ls
       - run: docker context show
+      - run: docker info
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
