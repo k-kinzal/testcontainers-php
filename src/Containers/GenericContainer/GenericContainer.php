@@ -38,6 +38,7 @@ class GenericContainer implements Container
 
     /**
      * The Docker client.
+     *
      * @var DockerClient|null
      */
     private $client;
@@ -54,6 +55,7 @@ class GenericContainer implements Container
 
     /**
      * Set the Docker client.
+     *
      * @param DockerClient $client The Docker client.
      * @return self
      */
@@ -65,6 +67,16 @@ class GenericContainer implements Container
     }
 
     /**
+     * Get the Docker client.
+     *
+     * @return DockerClient
+     */
+    protected function client()
+    {
+        return $this->client ?: DockerClientFactory::create();
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws InvalidFormatException If the provided mode is not valid.
@@ -72,7 +84,7 @@ class GenericContainer implements Container
      */
     public function start()
     {
-        $client = $this->client ?: DockerClientFactory::create();
+        $client = $this->client();
 
         $portStrategy = $this->portStrategy();
         $ports = $this->ports();
