@@ -83,6 +83,7 @@ class DockerClientFactory
             if (isset($config['procOptions'])) {
                 $client = $client->withProcOptions($config['procOptions']);
             }
+            var_dump('### Docker Host', $client->getHost());
             self::$client[$hash] = $client;
         }
 

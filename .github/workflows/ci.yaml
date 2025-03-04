@@ -15,6 +15,8 @@ jobs:
         with:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
       - run: env
+      - run: docker context ls
+      - run: docker context show
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
