@@ -3,6 +3,8 @@
 namespace Testcontainers\Docker\Command;
 
 use LogicException;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
 use Testcontainers\Docker\Exception\DockerException;
@@ -86,6 +88,13 @@ trait BaseCommand
      * @var array
      */
     private $proc_options = [];
+
+    /**
+     * Logger instance.
+     *
+     * @var LoggerInterface|null
+     */
+    private $logger = null;
 
     /**
      * Set the Docker command path.
@@ -204,6 +213,22 @@ trait BaseCommand
         return $this;
     }
 
+    public function withLogger($logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    protected function logger()
+    {
+        if ($this->logger === null) {
+            return new NullLogger();
+        } else {
+            return $this->logger;
+        }
+    }
+
     /**
      * Get the Docker host.
      *
@@ -265,6 +290,13 @@ trait BaseCommand
         if (count($args) > 0) {
             $commandLine = array_merge($commandLine, $args);
         }
+        $this->logger()->debug(implode(' ', $commandLine), [
+            'cwd' => $this->cwd,
+            'env' => $this->env,
+            'input' => $this->input,
+            'timeout' => $this->timeout,
+            'proc_options' => $this->proc_options,
+        ]);
         $process = new Process(
             $commandLine,
             $this->cwd,
