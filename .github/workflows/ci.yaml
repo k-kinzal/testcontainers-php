@@ -14,6 +14,7 @@ jobs:
       - uses: atomicjar/testcontainers-cloud-setup-action@main
         with:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
+      - run: env
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
