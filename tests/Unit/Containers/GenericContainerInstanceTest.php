@@ -5,10 +5,15 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Types\ContainerId;
+use Testcontainers\SSH\Session;
+use Testcontainers\Testcontainers;
+use Tests\Images\DinD;
 
 class GenericContainerInstanceTest extends TestCase
 {
@@ -50,6 +55,41 @@ class GenericContainerInstanceTest extends TestCase
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
+
+        $this->assertSame('localhost', $instance->getHost());
+    }
+
+    public function testGetHostFromDockerHost()
+    {
+        $dind = Testcontainers::run(DinD::class);
+        $client = DockerClientFactory::create([
+            'globalOptions' => [
+                'host' => 'tcp://' . $dind->getHost() . ':' . $dind->getMappedPort(2375)
+            ],
+        ]);
+
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($client);
+
+        $this->assertSame($dind->getHost(), $instance->getHost());
+    }
+
+    public function testGetHostFromPortForward()
+    {
+        $dind = Testcontainers::run(DinD::class);
+        $client = DockerClientFactory::create([
+            'globalOptions' => [
+                'host' => 'tcp://' . $dind->getHost() . ':' . $dind->getMappedPort(2375)
+            ],
+        ]);
+
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($client);
+        $instance->setData(new Session(new Process('pwd')));
 
         $this->assertSame('localhost', $instance->getHost());
     }

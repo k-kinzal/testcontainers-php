@@ -11,6 +11,7 @@ use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\Environments;
+use Testcontainers\SSH\Session;
 
 /**
  * GenericContainerInstance is a generic implementation of docker container.
@@ -126,6 +127,10 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getHost()
     {
+        if ($this->tryGetData(Session::class)) {
+            return 'localhost';
+        }
+
         $override = Environments::TESTCONTAINERS_HOST_OVERRIDE();
         if ($override) {
             return $override;
@@ -232,6 +237,18 @@ class GenericContainerInstance implements ContainerInstance
             throw new LogicException("No data of type $class associated with the container");
         }
         return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function tryGetData($class)
+    {
+        if (isset($this->data[$class])) {
+            return $this->data[$class];
+        } else {
+            return null;
+        }
     }
 
     /**
