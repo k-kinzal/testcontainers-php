@@ -97,4 +97,13 @@ interface ContainerInstance
      * @return T The data associated with the specified class.
      */
     public function getData($class);
+
+    /**
+     * Retrieve data associated with the container, if it exists.
+     *
+     * @template T
+     * @param class-string<T> $class The class name of the data to retrieve.
+     * @return null|T The data associated with the specified class.
+     */
+    public function tryGetData($class);
 }
