@@ -89,7 +89,7 @@ class GenericContainerInstanceTest extends TestCase
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
         $instance->setDockerClient($client);
-        $instance->setData(new Session(new Process('pwd')));
+        $instance->setData(new Session(new Process(['pwd'])));
 
         $this->assertSame('localhost', $instance->getHost());
     }
