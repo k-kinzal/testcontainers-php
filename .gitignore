@@ -186,3 +186,6 @@ composer.lock
 # Cline
 .clinerules
 .cline/
+
+# VSCode
+.vscode/
