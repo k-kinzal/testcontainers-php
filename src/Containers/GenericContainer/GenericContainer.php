@@ -117,6 +117,9 @@ class GenericContainer implements Container
             } else {
                 $output = $client->run($image, $command, $args, $options);
             }
+            if (!($output instanceof DockerRunWithDetachOutput)) {
+                throw new LogicException('Expected DockerRunWithDetachOutput');
+            }
         } catch (PortAlreadyAllocatedException $e) {
             if ($portStrategy === null) {
                 throw $e;
@@ -143,10 +146,6 @@ class GenericContainer implements Container
             throw new LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
         }
 
-        if (!($output instanceof DockerRunWithDetachOutput)) {
-            throw new LogicException('Expected DockerRunWithDetachOutput');
-        }
-        
         $containerDef = [
             'containerId' => $output->getContainerId(),
             'labels' => $this->labels(),
