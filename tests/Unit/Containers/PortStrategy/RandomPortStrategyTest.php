@@ -4,7 +4,7 @@ namespace Tests\Unit\Containers\PortStrategy;
 
 use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
-class LocalRandomPortStrategyTest extends PortStrategyTestCase
+class RandomPortStrategyTest extends PortStrategyTestCase
 {
     /**
      * @inheritDoc
