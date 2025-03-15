@@ -181,3 +181,8 @@ composer.lock
 
 # Qodo
 .qodo/
+.qodo
+
+# Cline
+.clinerules
+.cline/
