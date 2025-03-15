@@ -29,16 +29,16 @@ class GenericContainerTest extends TestCase
             ->withExposedPort(80)
             ->withPortStrategy(new StaticPortStrategy(50000))
             ->withCommands(['tail', '-f', '/dev/null']);
-        
+
         $instance1 = $container1->start();
-        
+
         $this->assertInstanceOf(ContainerInstance::class, $instance1);
         $this->assertEquals(50000, $instance1->getMappedPort(80));
-        
+
         $container2 = (new GenericContainer('alpine:latest'))
             ->withExposedPort(80)
             ->withPortStrategy(new StaticPortStrategy(50000));
-        
+
         $container2->start();
     }
 }

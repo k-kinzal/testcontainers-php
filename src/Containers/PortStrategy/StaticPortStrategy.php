@@ -13,7 +13,7 @@ class StaticPortStrategy implements PortStrategy
      * @var int
      */
     private $port;
-    
+
     /**
      * @param int $port The port to return.
      */
@@ -21,7 +21,7 @@ class StaticPortStrategy implements PortStrategy
     {
         $this->port = $port;
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -29,7 +29,7 @@ class StaticPortStrategy implements PortStrategy
     {
         return $this->port;
     }
-    
+
     /**
      * @inheritDoc
      */

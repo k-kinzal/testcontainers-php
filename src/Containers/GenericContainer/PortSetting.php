@@ -219,12 +219,12 @@ trait PortSetting
         if ($this->portStrategy) {
             return $this->portStrategy;
         }
-        
+
         $containerPorts = $this->exposedPorts();
         if (count($containerPorts) > 0) {
             return $this->portStrategyProvider->get('random');
         }
-        
+
         return null;
     }
 
