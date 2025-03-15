@@ -252,9 +252,7 @@ class GenericContainerInstance implements ContainerInstance
     }
 
     /**
-     * Checks if the container is currently running.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function isRunning()
     {
@@ -278,11 +276,9 @@ class GenericContainerInstance implements ContainerInstance
             return false;
         }
     }
-
+    
     /**
-     * Stops the container if it is running.
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function stop()
     {

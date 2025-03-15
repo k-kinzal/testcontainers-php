@@ -106,4 +106,18 @@ interface ContainerInstance
      * @return null|T The data associated with the specified class.
      */
     public function tryGetData($class);
+
+    /**
+     * Checks if the container is currently running.
+     *
+     * @return bool True if the container is running, false otherwise.
+     */
+    public function isRunning();
+
+    /**
+     * Stops the container if it is running.
+     *
+     * @return void
+     */
+    public function stop();
 }
