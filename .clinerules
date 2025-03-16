@@ -1,0 +1,57 @@
+# Normative Rules
+
+These rules represent absolute and strict constraints that must be followed in all interactions between Claude (AI) and the user. The .clinerules file contains normative directives that are mandatory and non-negotiable.
+
+## Communication Rules
+
+This file defines the communication rules between Claude (AI) and the user.
+
+### 1. Use English as the Default Language
+
+- Use English as the primary language for all interactions
+- All thinking processes, created files, code comments, etc. should be in English
+- Exception: Match the language used in the user's input when providing responses
+
+## Coding Rules
+
+This section defines the coding standards that must be followed.
+
+### 1. Coding Style Consistency
+
+- All code must adhere to the existing coding style of the project
+- Follow the established patterns, indentation, naming conventions, and structure
+- Maintain consistency with the current codebase
+
+### 2. Knowledge-Based Coding
+
+- Reference appropriate knowledge sources when writing code
+- Implement coding solutions based on project-specific knowledge in `.cline/memory_data/`
+- When existing patterns are not available, follow general best practices for the language and framework
+
+## Task Execution Rules
+
+This section defines how knowledge should be managed during task execution.
+
+### 1. Knowledge Management
+
+- Always write all knowledge necessary for task execution to `.cline/memory.md`
+- `.cline/memory.md` is the designated place to document newly acquired learnings during task execution
+- Remove any information from `.cline/memory.md` that is not relevant to the current task
+- Maintain precise and sufficient information in `.cline/memory.md` without excess or deficiency
+
+### 2. Knowledge Sources
+
+- Project-specific knowledge is stored in `.cline/memory_data/` directory
+- `.cline/memory_data/` is the repository for preserving valuable knowledge that should be retained long-term
+- Use `.cline/memory_data/index.md` to locate relevant knowledge files
+- Research general (non-project-specific) knowledge using browser tools when needed
+- Transfer all necessary knowledge to `.cline/memory.md` before task execution
+
+### 3. Knowledge Workflow
+
+- Always read `.cline/memory.md` before executing any task
+- Continuously update `.cline/memory.md` with new learnings during task execution
+- When completing a task:
+  - Extract valuable information from `.cline/memory.md`
+  - Add, update, or delete files in `.cline/memory_data/` as appropriate
+  - Ensure `.cline/memory_data/index.md` is always kept up-to-date

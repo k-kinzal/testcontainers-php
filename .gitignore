@@ -183,9 +183,5 @@ composer.lock
 .qodo/
 .qodo
 
-# Cline
-.clinerules
-.cline/
-
 # VSCode
 .vscode/
