@@ -9,6 +9,7 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\SSH\Session;
@@ -38,6 +39,18 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('value', $instance->getLabel('com.example.label'));
     }
 
+    public function testGetLabelWhenLabelDoesNotExist()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+            'labels' => [
+                'com.example.label' => 'value',
+            ],
+        ]);
+
+        $this->assertNull($instance->getLabel('non.existent.label'));
+    }
+
     public function testGetLabels()
     {
         $instance = new GenericContainerInstance([
@@ -48,6 +61,15 @@ class GenericContainerInstanceTest extends TestCase
         ]);
 
         $this->assertSame(['com.example.label' => 'value'], $instance->getLabels());
+    }
+
+    public function testGetLabelsWhenLabelsNotSet()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+
+        $this->assertSame([], $instance->getLabels());
     }
 
     public function testGetHost()
@@ -96,8 +118,8 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testGetHostFromOverride()
     {
+        putenv('TESTCONTAINERS_HOST_OVERRIDE=override.local');
         try {
-            putenv('TESTCONTAINERS_HOST_OVERRIDE=override.local');
             $instance = new GenericContainerInstance([
                 'containerId' => new ContainerId('8188d93d8a27'),
             ]);
@@ -106,6 +128,47 @@ class GenericContainerInstanceTest extends TestCase
         } finally {
             putenv('TESTCONTAINERS_HOST_OVERRIDE');
         }
+    }
+
+    public function testGetHostWithHttpScheme()
+    {
+        $mockClient = $this->createMock(DockerClient::class);
+        $mockClient->method('getHost')
+            ->willReturn('http://example.com:2375');
+
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($mockClient);
+
+        $this->assertSame('example.com', $instance->getHost());
+    }
+
+    public function testGetHostWithHttpsScheme()
+    {
+        $mockClient = $this->createMock(DockerClient::class);
+        $mockClient->method('getHost')
+            ->willReturn('https://example.com:2375');
+
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($mockClient);
+
+        $this->assertSame('example.com', $instance->getHost());
+    }
+
+    public function testGetExposedPorts()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+            'ports' => [
+                80 => 8080,
+                443 => 8443,
+            ],
+        ]);
+
+        $this->assertSame([80, 443], $instance->getExposedPorts());
     }
 
     public function testGetMappedPort()
@@ -120,6 +183,18 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame(8080, $instance->getMappedPort(80));
     }
 
+    public function testGetMappedPortWhenPortNotMapped()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+            'ports' => [
+                80 => 8080,
+            ],
+        ]);
+
+        $this->assertNull($instance->getMappedPort(443));
+    }
+
     public function testGetImagePullPolicy()
     {
         $pullPolicy = ImagePullPolicy::ALWAYS();
@@ -131,6 +206,15 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame($pullPolicy, $instance->getImagePullPolicy());
     }
 
+    public function testGetImagePullPolicyWhenNotSet()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+
+        $this->assertNull($instance->getImagePullPolicy());
+    }
+
     public function testGetPrivilegedMode()
     {
         $instance = new GenericContainerInstance([
@@ -139,6 +223,15 @@ class GenericContainerInstanceTest extends TestCase
         ]);
 
         $this->assertTrue($instance->getPrivilegedMode());
+    }
+
+    public function testGetPrivilegedModeWhenNotSet()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+
+        $this->assertFalse($instance->getPrivilegedMode());
     }
 
     public function testGetOutput()
@@ -177,6 +270,28 @@ class GenericContainerInstanceTest extends TestCase
         $instance->setData($data);
 
         $this->assertSame($data, $instance->getData(CustomData::class));
+    }
+
+
+    public function testTryGetData()
+    {
+        $data = new CustomData();
+
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setData($data);
+
+        $this->assertSame($data, $instance->tryGetData(CustomData::class));
+    }
+
+    public function testTryGetDataReturnsNullWhenDataNotSet()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+
+        $this->assertNull($instance->tryGetData(CustomData::class));
     }
 
     public function testIsRunning()

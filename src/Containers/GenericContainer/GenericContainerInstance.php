@@ -99,9 +99,6 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['labels'])) {
             return null;
         }
-        if (!is_array($this->containerDef['labels'])) {
-            return null;
-        }
         if (!isset($this->containerDef['labels'][$label])) {
             return null;
         }
@@ -114,9 +111,6 @@ class GenericContainerInstance implements ContainerInstance
     public function getLabels()
     {
         if (!isset($this->containerDef['labels'])) {
-            return [];
-        }
-        if (!is_array($this->containerDef['labels'])) {
             return [];
         }
         return $this->containerDef['labels'] ?: [];
@@ -138,7 +132,7 @@ class GenericContainerInstance implements ContainerInstance
 
         $client = $this->client ?: DockerClientFactory::create();
         $host = $client->getHost();
-        if ($host !== null) {
+        if ($host === null) {
             return 'localhost';
         }
         $url = parse_url($host);
@@ -160,9 +154,6 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['ports'])) {
             return [];
         }
-        if (!is_array($this->containerDef['ports'])) {
-            return [];
-        }
         return array_keys($this->containerDef['ports']);
     }
 
@@ -172,9 +163,6 @@ class GenericContainerInstance implements ContainerInstance
     public function getMappedPort($exposedPort)
     {
         if (!isset($this->containerDef['ports'])) {
-            return null;
-        }
-        if (!is_array($this->containerDef['ports'])) {
             return null;
         }
         if (!isset($this->containerDef['ports'][$exposedPort])) {
@@ -232,11 +220,10 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getData($class)
     {
-        $value = $this->data[$class];
-        if ($value === null) {
+        if (!isset($this->data[$class])) {
             throw new LogicException("No data of type $class associated with the container");
         }
-        return $value;
+        return $this->data[$class];
     }
 
     /**
@@ -244,11 +231,10 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function tryGetData($class)
     {
-        if (isset($this->data[$class])) {
-            return $this->data[$class];
-        } else {
+        if (!isset($this->data[$class])) {
             return null;
         }
+        return $this->data[$class];
     }
 
     /**

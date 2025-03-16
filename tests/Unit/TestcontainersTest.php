@@ -10,25 +10,34 @@ class TestcontainersTest extends TestCase
 {
     public function testWithContainerClassString()
     {
-        try {
-            $instance = Testcontainers::run(AlpineContainer::class);
-            $running = $instance->isRunning();
+        $instance = Testcontainers::run(AlpineContainer::class);
+        $running = $instance->isRunning();
 
-            $this->assertTrue($running);
-        } finally {
-            Testcontainers::stop();
-        }
+        $this->assertTrue($running);
     }
 
     public function testWithContainerInstance()
     {
-        try {
-            $instance = Testcontainers::run(new AlpineContainer());
-            $running = $instance->isRunning();
+        $instance = Testcontainers::run(new AlpineContainer());
+        $running = $instance->isRunning();
 
-            $this->assertTrue($running);
-        } finally {
-            Testcontainers::stop();
-        }
+        $this->assertTrue($running);
+    }
+
+    public function testStopMultipleInstances()
+    {
+        $instance1 = Testcontainers::run(new AlpineContainer());
+        $instance2 = Testcontainers::run(new AlpineContainer());
+        $instance3 = Testcontainers::run(new AlpineContainer());
+
+        $this->assertTrue($instance1->isRunning());
+        $this->assertTrue($instance2->isRunning());
+        $this->assertTrue($instance3->isRunning());
+
+        Testcontainers::stop();
+
+        $this->assertFalse($instance1->isRunning());
+        $this->assertFalse($instance2->isRunning());
+        $this->assertFalse($instance3->isRunning());
     }
 }
