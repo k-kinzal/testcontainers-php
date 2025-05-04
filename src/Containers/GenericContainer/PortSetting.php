@@ -259,7 +259,7 @@ trait PortSetting
         try {
             $provider->register('random', new RandomPortStrategy());
         } catch (AlreadyExistsPortStrategyException $e) {
-            throw new LogicException("Port strategy already registered: random");
+            throw new LogicException("Port strategy already registered: random", 0, $e);
         }
     }
 }
