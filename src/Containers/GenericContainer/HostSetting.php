@@ -68,7 +68,6 @@ trait HostSetting
      * @return self
      *
      * @throws InvalidArgumentException If the arguments are invalid.
-     * @throws InvalidFormatException If the format is invalid.
      *
      * @see Container::withExtraHost()
      */
@@ -101,7 +100,6 @@ trait HostSetting
      * @return self
      *
      * @throws InvalidArgumentException If the arguments are invalid.
-     * @throws InvalidFormatException If the format is invalid.
      *
      * @see Container::withExtraHosts()
      */
