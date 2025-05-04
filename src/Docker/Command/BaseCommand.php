@@ -36,7 +36,7 @@ trait BaseCommand
      *
      * These options are applied to all Docker commands executed by this client.
      *
-     * @var array
+     * @var array<string, string>
      */
     private $options = [];
 
@@ -56,7 +56,7 @@ trait BaseCommand
      * These variables are passed to the Docker process when executing commands.
      * If set to null, the current environment variables of the PHP process are used.
      *
-     * @var array An associative array of environment variables or null if not set.
+     * @var array<string, string> An associative array of environment variables or null if not set.
      */
     private $env = [];
 
@@ -85,7 +85,7 @@ trait BaseCommand
      * These options are used when creating a new process using the `proc_open` function.
      * Refer to the PHP documentation for `proc_open` for more details on available options.
      *
-     * @var array
+     * @var array<string, string>
      */
     private $proc_options = [];
 

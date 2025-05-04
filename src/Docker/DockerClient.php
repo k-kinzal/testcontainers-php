@@ -25,16 +25,4 @@ class DockerClient
     use NetworkCreateCommand;
     use RunCommand;
     use StopCommand;
-
-    public function __clone()
-    {
-        return (new self())
-            ->withCommand($this->command)
-            ->withGlobalOptions($this->options)
-            ->withCwd($this->cwd)
-            ->withEnv($this->env)
-            ->withInput($this->input)
-            ->withTimeout($this->timeout)
-            ->withProcOptions($this->proc_options);
-    }
 }
