@@ -3,7 +3,6 @@
 namespace Testcontainers\Containers\Types;
 
 use LogicException;
-use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Exceptions\InvalidFormatException;
 
 /**
@@ -32,9 +31,6 @@ class VolumeFrom
      */
     public function __construct($name, $mode)
     {
-        assert(is_string($name));
-        assert($mode instanceof BindMode);
-
         $this->name = $name;
         $this->mode = $mode;
     }
@@ -84,6 +80,10 @@ class VolumeFrom
         return $this->name . ':' . $this->mode->toString();
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
