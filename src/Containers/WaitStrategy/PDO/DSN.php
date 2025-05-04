@@ -10,7 +10,8 @@ interface DSN
     /**
      * Set the host for the DSN.
      *
-     * @param string $host The hostname to set.
+     * @param string $host the hostname to set
+     *
      * @return $this
      */
     public function withHost($host);
@@ -18,14 +19,15 @@ interface DSN
     /**
      * Get the host for the DSN.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getHost();
 
     /**
      * Set the port for the DSN.
      *
-     * @param int $port The port to set.
+     * @param int $port the port to set
+     *
      * @return $this
      */
     public function withPort($port);
@@ -33,16 +35,14 @@ interface DSN
     /**
      * Get the port for the DSN.
      *
-     * @return int|null
+     * @return null|int
      */
     public function getPort();
 
     /**
      * Convert the DSN to a string representation.
      *
-     * @return string The string representation of the DSN.
+     * @return string the string representation of the DSN
      */
     public function toString();
-
-    public function __toString();
 }

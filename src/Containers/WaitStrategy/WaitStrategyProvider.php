@@ -14,7 +14,7 @@ class WaitStrategyProvider
     /**
      * An associative array that maps strategy names to their corresponding WaitStrategy instances.
      *
-     * @var array<string, WaitStrategy> The array of registered wait strategies.
+     * @var array<string, WaitStrategy> the array of registered wait strategies
      */
     private $strategies = [];
 
@@ -23,10 +23,10 @@ class WaitStrategyProvider
      *
      * This method adds a given wait strategy to the list of available strategies.
      *
-     * @param string $name The name of the wait strategy to register.
-     * @param WaitStrategy $strategy The wait strategy to register.
+     * @param string       $name     the name of the wait strategy to register
+     * @param WaitStrategy $strategy the wait strategy to register
      *
-     * @throws AlreadyExistsWaitStrategyException If a strategy with the same name already exists.
+     * @throws AlreadyExistsWaitStrategyException if a strategy with the same name already exists
      */
     public function register($name, $strategy)
     {
@@ -43,8 +43,9 @@ class WaitStrategyProvider
      * WaitStrategy instance if it exists. If no strategy is found with the given name,
      * it returns null.
      *
-     * @param string $name The name of the wait strategy to retrieve.
-     * @return WaitStrategy|null The WaitStrategy instance if found, or null if not found.
+     * @param string $name the name of the wait strategy to retrieve
+     *
+     * @return null|WaitStrategy the WaitStrategy instance if found, or null if not found
      */
     public function get($name)
     {

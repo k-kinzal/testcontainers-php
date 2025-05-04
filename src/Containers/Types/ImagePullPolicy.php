@@ -1,13 +1,14 @@
 <?php
 
-namespace Testcontainers\Containers;
+namespace Testcontainers\Containers\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Defines the policy for determining when to pull a container image.
  */
-class ImagePullPolicy
+class ImagePullPolicy implements Stringable
 {
     /**
      * The policy to always pull the image.
@@ -47,6 +48,11 @@ class ImagePullPolicy
         $this->policy = $policy;
     }
 
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
     /**
      * Create a new instance of `PullPolicy` with the `ALWAYS` policy.
      *
@@ -80,22 +86,25 @@ class ImagePullPolicy
     /**
      * Create a new instance of `PullPolicy` from a string representation.
      *
-     * @param string $policy The string representation of the pull policy.
+     * @param string $policy the string representation of the pull policy
+     *
+     * @throws InvalidFormatException if the provided policy is not valid
+     *
      * @return self
-     * @throws InvalidFormatException If the provided policy is not valid.
      */
     public static function fromString($policy)
     {
         if (!in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER])) {
             throw new InvalidFormatException($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]);
         }
+
         return new self($policy);
     }
 
     /**
      * Check if the pull policy is set to `ALWAYS`.
      *
-     * @return bool True if the policy is `ALWAYS`, false otherwise.
+     * @return bool true if the policy is `ALWAYS`, false otherwise
      */
     public function isAlways()
     {
@@ -105,7 +114,7 @@ class ImagePullPolicy
     /**
      * Check if the pull policy is set to `MISSING`.
      *
-     * @return bool True if the policy is `MISSING`, false otherwise.
+     * @return bool true if the policy is `MISSING`, false otherwise
      */
     public function isMissing()
     {
@@ -115,7 +124,7 @@ class ImagePullPolicy
     /**
      * Check if the pull policy is set to `NEVER`.
      *
-     * @return bool True if the policy is `NEVER`, false otherwise.
+     * @return bool true if the policy is `NEVER`, false otherwise
      */
     public function isNever()
     {
@@ -125,15 +134,10 @@ class ImagePullPolicy
     /**
      * Get the string representation of the pull policy.
      *
-     * @return string The string representation of the pull policy.
+     * @return string the string representation of the pull policy
      */
     public function toString()
     {
         return $this->policy;
-    }
-
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

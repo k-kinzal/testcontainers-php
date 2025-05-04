@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Docker\Exception;
 
-use RuntimeException;
 use Symfony\Component\Process\Process;
 
 /**
@@ -13,7 +12,7 @@ use Symfony\Component\Process\Process;
  * detailed information about the command that was executed and the
  * exit code returned by the Docker process.
  */
-class DockerException extends RuntimeException
+class DockerException extends \RuntimeException
 {
     /**
      * @var Process
@@ -29,7 +28,7 @@ class DockerException extends RuntimeException
         $exitCode = $process->getExitCode();
         parent::__construct(
             sprintf(
-                "Failed to docker command: `%s`, exit code: `%s`, stderr: `%s`",
+                'Failed to docker command: `%s`, exit code: `%s`, stderr: `%s`',
                 $command,
                 $exitCode,
                 $process->getErrorOutput()
@@ -42,7 +41,7 @@ class DockerException extends RuntimeException
     /**
      * Retrieves the error output from the Docker process.
      *
-     * @return string The error output from the Docker process.
+     * @return string the error output from the Docker process
      */
     public function getErrorOutput()
     {

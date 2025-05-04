@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\VolumeFrom;
 use Testcontainers\Exceptions\InvalidFormatException;
 
@@ -34,12 +34,14 @@ trait VolumesFromSetting
 {
     /**
      * Define the default volumes to be used for the container.
-     * @var array{name: string, mode?: string}[]|string[]|null
+     *
+     * @var null|array{name: string, mode?: string}[]|string[]
      */
     protected static $VOLUMES_FROM;
 
     /**
      * The volumes to be used for the container.
+     *
      * @var VolumeFrom[]
      */
     private $volumesFrom = [];
@@ -47,8 +49,9 @@ trait VolumesFromSetting
     /**
      * Adds container volumes to the current container instance.
      *
-     * @param ContainerInstance $container The container instance from which to add volumes.
-     * @param BindMode $mode The mode of the bind (e.g., read-only or read-write).
+     * @param ContainerInstance $container the container instance from which to add volumes
+     * @param BindMode          $mode      The mode of the bind (e.g., read-only or read-write).
+     *
      * @return self
      */
     public function withVolumesFrom($container, $mode)
@@ -64,9 +67,9 @@ trait VolumesFromSetting
      * This method returns an array of volumes, where each volume is an associative array
      * containing the container name and bind mode.
      *
-     * @return VolumeFrom[] The volumes to be used for the container.
+     * @throws InvalidFormatException if the volume format is invalid
      *
-     * @throws InvalidFormatException If the volume format is invalid.
+     * @return VolumeFrom[] the volumes to be used for the container
      */
     protected function volumesFrom()
     {
@@ -88,6 +91,7 @@ trait VolumesFromSetting
                     throw new InvalidFormatException($volume, 'string|array{name: string, mode?: string}');
                 }
             }
+
             return $volumesFrom;
         }
 

@@ -2,7 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
-use LogicException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * MySQLDSN provides a way to define a MySQL Data Source Name (DSN).
@@ -10,40 +10,41 @@ use LogicException;
  *
  * @see https://www.php.net/manual/en/ref.pdo-mysql.connection.php
  */
-class MySQLDSN implements DSN
+class MySQLDSN implements DSN, Stringable
 {
     /**
      * The hostname for the DSN.
      *
-     * @var string|null
+     * @var null|string
      */
     private $host;
 
     /**
      * The port number for the DSN.
      *
-     * @var int|null
+     * @var null|int
      */
     private $port;
 
     /**
      * The name of the database.
      *
-     * @var string|null
+     * @var null|string
      */
     private $dbname;
-
 
     /**
      * The character set to use for the DSN.
      *
-     * @var string|null
+     * @var null|string
      */
     private $charset;
 
-    /**
-     * {@inheritdoc}
-     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
     public function withHost($host)
     {
         $this->host = $host;
@@ -51,17 +52,11 @@ class MySQLDSN implements DSN
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHost()
     {
         return $this->host;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withPort($port)
     {
         $this->port = $port;
@@ -69,9 +64,6 @@ class MySQLDSN implements DSN
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPort()
     {
         return $this->port;
@@ -80,7 +72,8 @@ class MySQLDSN implements DSN
     /**
      * Set the database name for the DSN.
      *
-     * @param string $dbname The name of the database.
+     * @param string $dbname the name of the database
+     *
      * @return $this
      */
     public function withDbname($dbname)
@@ -93,7 +86,8 @@ class MySQLDSN implements DSN
     /**
      * Set the character set for the DSN.
      *
-     * @param string $charset The character set to use.
+     * @param string $charset the character set to use
+     *
      * @return $this
      */
     public function withCharset($charset)
@@ -103,29 +97,22 @@ class MySQLDSN implements DSN
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toString()
     {
-        if ($this->host === null) {
-            throw new LogicException('Host is required');
+        if (null === $this->host) {
+            throw new \LogicException('Host is required');
         }
         $dsn = sprintf('mysql:host=%s;', $this->host);
-        if ($this->port !== null) {
-            $dsn .= 'port=' . $this->port . ';';
+        if (null !== $this->port) {
+            $dsn .= 'port='.$this->port.';';
         }
-        if ($this->dbname !== null) {
-            $dsn .= 'dbname=' . $this->dbname . ';';
+        if (null !== $this->dbname) {
+            $dsn .= 'dbname='.$this->dbname.';';
         }
-        if ($this->charset !== null) {
-            $dsn .= 'charset=' . $this->charset . ';';
+        if (null !== $this->charset) {
+            $dsn .= 'charset='.$this->charset.';';
         }
-        return $dsn;
-    }
 
-    public function __toString()
-    {
-        return $this->toString();
+        return $dsn;
     }
 }

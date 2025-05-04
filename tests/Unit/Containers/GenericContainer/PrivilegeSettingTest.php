@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PrivilegeSetting;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class PrivilegeSettingTest extends TestCase
 {
     public function testHasPrivilegeSettingTrait()
@@ -28,7 +33,8 @@ class PrivilegeSettingTest extends TestCase
     public function testStartWithPrivilegedMode()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withPrivilegedMode(true);
+            ->withPrivilegedMode(true)
+        ;
         $instance = $container->start();
 
         $this->assertSame(true, $instance->getPrivilegedMode());

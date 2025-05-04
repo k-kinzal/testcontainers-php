@@ -2,18 +2,22 @@
 
 namespace Tests\E2E\CircleCI;
 
-use PDO;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 use Testcontainers\Containers\WaitStrategy\PDO\PDOConnectWaitStrategy;
 use Testcontainers\Testcontainers;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class MachineExecutorTest extends TestCase
 {
     public function test()
     {
-        if (getenv('CIRCLECI') !== 'true' || getenv('DOCKER_HOST') !== false) {
+        if ('true' !== getenv('CIRCLECI') || false !== getenv('DOCKER_HOST')) {
             $this->markTestSkipped('This test is only for CircleCI (machine executor)');
         }
 
@@ -31,7 +35,7 @@ class MachineExecutorTest extends TestCase
                 )
         );
 
-        $pdo = new PDO('mysql:host=127.0.0.1;port=' . $instance->getMappedPort(3306), 'root', 'test');
+        $pdo = new \PDO('mysql:host=127.0.0.1;port='.$instance->getMappedPort(3306), 'root', 'test');
         $result = $pdo->query('SELECT 1')->fetchColumn();
 
         $this->assertSame(1, $result);

@@ -5,9 +5,14 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ImagePullPolicyTest extends TestCase
 {
     public function testImagePullPolicyAlways()

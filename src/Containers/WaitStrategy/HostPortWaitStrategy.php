@@ -39,9 +39,6 @@ class HostPortWaitStrategy implements WaitStrategy
         $this->probe = $probe ?: new PortProbeTcp();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function waitUntilReady($instance)
     {
         $now = time();
@@ -49,7 +46,11 @@ class HostPortWaitStrategy implements WaitStrategy
         $host = $instance->getHost();
         $mappedPorts = [];
         foreach ($instance->getExposedPorts() as $port) {
-            $mappedPorts[] = $instance->getMappedPort($port);
+            $p = $instance->getMappedPort($port);
+            if (null === $p) {
+                continue;
+            }
+            $mappedPorts[] = $p;
         }
 
         $ports = array_merge($this->ports, $mappedPorts);
@@ -69,8 +70,9 @@ class HostPortWaitStrategy implements WaitStrategy
     /**
      * Sets the ports to be checked for readiness.
      *
-     * @param int[] $ports An array of port numbers.
-     * @return $this The current instance for method chaining.
+     * @param int[] $ports an array of port numbers
+     *
+     * @return $this the current instance for method chaining
      */
     public function withPorts($ports)
     {
@@ -80,11 +82,12 @@ class HostPortWaitStrategy implements WaitStrategy
     }
 
     /**
-    * Sets the timeout duration for waiting until the container instance is ready.
-    *
-    * @param int $seconds The number of seconds to wait before timing out.
-    * @return $this The current instance for method chaining.
-    */
+     * Sets the timeout duration for waiting until the container instance is ready.
+     *
+     * @param int $seconds the number of seconds to wait before timing out
+     *
+     * @return $this the current instance for method chaining
+     */
     public function withTimeoutSeconds($seconds)
     {
         $this->timeout = $seconds;

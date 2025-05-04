@@ -1,10 +1,11 @@
 <?php
 
-namespace Testcontainers\Containers;
+namespace Testcontainers\Containers\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
-class BindMode
+class BindMode implements Stringable
 {
     /**
      * The mode for read-only bind.
@@ -37,6 +38,11 @@ class BindMode
         $this->mode = $mode;
     }
 
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
     /**
      * Create a new instance of `BindMode` with the `READ_ONLY` mode.
      *
@@ -60,22 +66,25 @@ class BindMode
     /**
      * Create a new instance of `BindMode` from a string representation.
      *
-     * @param string $mode The string representation of the bind mode.
+     * @param string $mode the string representation of the bind mode
+     *
+     * @throws InvalidFormatException if the provided mode is not valid
+     *
      * @return self
-     * @throws InvalidFormatException If the provided mode is not valid.
      */
     public static function fromString($mode)
     {
         if (!in_array($mode, [static::$READ_ONLY, static::$READ_WRITE])) {
             throw new InvalidFormatException($mode, [static::$READ_ONLY, static::$READ_WRITE]);
         }
+
         return new self($mode);
     }
 
     /**
      * Check if the bind mode is set to read-only.
      *
-     * @return bool True if the mode is read-only, false otherwise.
+     * @return bool true if the mode is read-only, false otherwise
      */
     public function isReadOnly()
     {
@@ -85,7 +94,7 @@ class BindMode
     /**
      * Check if the bind mode is set to read-write.
      *
-     * @return bool True if the mode is read-write, false otherwise.
+     * @return bool true if the mode is read-write, false otherwise
      */
     public function isReadWrite()
     {
@@ -95,15 +104,10 @@ class BindMode
     /**
      * Get the string representation of the bind mode.
      *
-     * @return string The string representation of the bind mode.
+     * @return string the string representation of the bind mode
      */
     public function toString()
     {
         return $this->mode;
-    }
-
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

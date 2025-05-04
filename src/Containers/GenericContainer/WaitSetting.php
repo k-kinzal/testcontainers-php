@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
@@ -35,18 +34,21 @@ trait WaitSetting
 {
     /**
      * Define the default wait strategy to be used for the container.
-     * @var string|null
+     *
+     * @var null|string
      */
     protected static $WAIT_STRATEGY;
 
     /**
      * The wait strategy to be used for the container.
-     * @var WaitStrategy|null
+     *
+     * @var null|WaitStrategy
      */
     private $waitStrategy;
 
     /**
      * The wait strategy provider.
+     *
      * @var WaitStrategyProvider
      */
     private $waitStrategyProvider;
@@ -54,7 +56,8 @@ trait WaitSetting
     /**
      * Set the wait strategy used for waiting for the container to start.
      *
-     * @param WaitStrategy $waitStrategy The wait strategy to use.
+     * @param WaitStrategy $waitStrategy the wait strategy to use
+     *
      * @return self
      */
     public function withWaitStrategy($waitStrategy)
@@ -71,32 +74,35 @@ trait WaitSetting
      * If a specific wait strategy is set, it will return that. Otherwise, it will
      * attempt to retrieve the default wait strategy from the provider.
      *
-     * @param ContainerInstance $instance The container instance for which to get the wait strategy.
-     * @return WaitStrategy|null The wait strategy to be used, or null if none is set.
+     * @param ContainerInstance $instance the container instance for which to get the wait strategy
+     *
+     * @return null|WaitStrategy the wait strategy to be used, or null if none is set
      */
-    protected function waitStrategy(/** @noinspection PhpUnusedParameterInspection */ $instance)
+    protected function waitStrategy(/* @noinspection PhpUnusedParameterInspection */ $instance)
     {
-        if ($this->waitStrategyProvider === null) {
+        if (null === $this->waitStrategyProvider) {
             $this->waitStrategyProvider = new WaitStrategyProvider();
             $this->registerWaitStrategy($this->waitStrategyProvider);
         }
-        if (static::$WAIT_STRATEGY !== null) {
+        if (null !== static::$WAIT_STRATEGY) {
             $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
             if (!$strategy) {
-                throw new LogicException("Wait strategy not found: " . static::$WAIT_STRATEGY);
+                throw new \LogicException('Wait strategy not found: '.static::$WAIT_STRATEGY);
             }
+
             return $strategy;
         }
         if ($this->waitStrategy) {
             return $this->waitStrategy;
         }
+
         return null;
     }
 
     /**
      * Register a wait strategy.
      *
-     * @param WaitStrategyProvider $provider The wait strategy provider.
+     * @param WaitStrategyProvider $provider the wait strategy provider
      */
     protected function registerWaitStrategy($provider)
     {
@@ -105,7 +111,7 @@ trait WaitSetting
             $provider->register('http', new HttpWaitStrategy());
             $provider->register('log', new LogMessageWaitStrategy());
         } catch (AlreadyExistsWaitStrategyException $e) {
-            throw new LogicException("Wait strategy already exists", 0, $e);
+            throw new \LogicException('Wait strategy already exists', 0, $e);
         }
     }
 }

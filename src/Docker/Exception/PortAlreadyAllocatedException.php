@@ -14,12 +14,13 @@ class PortAlreadyAllocatedException extends DockerException
     /**
      * Checks if the given output matches the "port is already allocated" error message.
      *
-     * @param string $output The output to check.
-     * @return bool True if the output matches the error message, false otherwise.
+     * @param string $output the output to check
+     *
+     * @return bool true if the output matches the error message, false otherwise
      */
     public static function match($output)
     {
-        return strpos($output, 'Error response from daemon:') !== false
-            && strpos($output, 'port is already allocated.') !== false;
+        return false !== strpos($output, 'Error response from daemon:')
+            && false !== strpos($output, 'port is already allocated.');
     }
 }

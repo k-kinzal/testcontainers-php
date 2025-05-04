@@ -5,14 +5,19 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\BindMode;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\VolumesFromSetting;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class VolumesFromSettingTest extends TestCase
 {
     public function testHasVolumesFromSettingTrait()
@@ -35,25 +40,28 @@ class VolumesFromSettingTest extends TestCase
         );
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375)
+                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
             ],
         ]);
 
         $container = (new GenericContainer('alpine:latest'))
             ->withDockerClient($client)
             ->withName('volumes-from-container')
-            ->withFileSystemBind($path, $path, BindMode::READ_WRITE());
+            ->withFileSystemBind($path, $path, BindMode::READ_WRITE())
+        ;
+
         /** @noinspection PhpUnusedLocalVariableInspection */
         $instance1 = $container->start();
 
         $container = (new VolumesFromSettingWithStaticVolumesFromContainer('alpine:latest'))
             ->withDockerClient($client)
             ->withCommands(['cat', $path])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance2 = $container->start();
 
         $this->assertSame('', $instance2->getErrorOutput());
-        $this->assertSame("Hello, World!", $instance2->getOutput());
+        $this->assertSame('Hello, World!', $instance2->getOutput());
     }
 
     public function testStartWithVolumesFrom()
@@ -64,16 +72,18 @@ class VolumesFromSettingTest extends TestCase
         $path = $meta['uri'];
 
         $container = (new GenericContainer('alpine:latest'))
-            ->withFileSystemBind($path, '/tmp/test', BindMode::READ_WRITE());
+            ->withFileSystemBind($path, '/tmp/test', BindMode::READ_WRITE())
+        ;
         $instance1 = $container->start();
 
         $container = (new GenericContainer('alpine:latest'))
             ->withVolumesFrom($instance1, BindMode::READ_ONLY())
             ->withCommands(['cat', '/tmp/test'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance2 = $container->start();
 
-        $this->assertSame("Hello, World!", $instance2->getOutput());
+        $this->assertSame('Hello, World!', $instance2->getOutput());
     }
 }
 

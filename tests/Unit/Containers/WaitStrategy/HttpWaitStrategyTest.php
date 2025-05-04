@@ -7,11 +7,13 @@ use Testcontainers\Containers\WaitStrategy\HttpProbe;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 use Testcontainers\Docker\Types\ContainerId;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class HttpWaitStrategyTest extends WaitStrategyTestCase
 {
-    /**
-     * @inheritDoc
-     */
     public function resolveWaitStrategy()
     {
         return new HttpWaitStrategy();
@@ -25,7 +27,8 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         ]);
         $probe = $this->createMock(HttpProbe::class);
         $probe->method('available')
-            ->willReturnOnConsecutiveCalls(false, false, true);
+            ->willReturnOnConsecutiveCalls(false, false, true)
+        ;
         $strategy = new HttpWaitStrategy($probe);
         $strategy->waitUntilReady($instance);
 

@@ -9,18 +9,18 @@ use Exception;
  *
  * @template T
  */
-class InvalidValueException extends Exception
+class InvalidValueException extends \Exception
 {
     /**
      * The context of the invalid value.
      *
-     * @var T|null
+     * @var null|T
      */
     private $context;
 
     /**
      * @param string $message
-     * @param T|null $context
+     * @param null|T $context
      */
     public function __construct($message, $context = null)
     {
@@ -31,7 +31,7 @@ class InvalidValueException extends Exception
     /**
      * Get the context of the invalid value.
      *
-     * @return T|null
+     * @return null|T
      */
     public function getContext()
     {

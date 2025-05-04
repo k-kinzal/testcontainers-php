@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\EnvSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class EnvSettingTest extends TestCase
 {
     public function testHasEnvSettingTrait()
@@ -20,7 +25,8 @@ class EnvSettingTest extends TestCase
     public function testStaticEnvironments()
     {
         $container = (new EnvSettingWithStaticEnvironmentsContainer('alpine:latest'))
-            ->withCommands(['printenv', 'ENV1', 'ENV2']);
+            ->withCommands(['printenv', 'ENV1', 'ENV2'])
+        ;
         $instance = $container->start();
 
         $this->assertSame("value1\nvalue2\n", $instance->getOutput());
@@ -31,7 +37,8 @@ class EnvSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withEnv('ENV1', 'value1')
             ->withEnv('ENV2', 'value2')
-            ->withCommands(['printenv', 'ENV1', 'ENV2']);
+            ->withCommands(['printenv', 'ENV1', 'ENV2'])
+        ;
         $instance = $container->start();
 
         $this->assertSame("value1\nvalue2\n", $instance->getOutput());
@@ -44,7 +51,8 @@ class EnvSettingTest extends TestCase
                 'ENV1' => 'value1',
                 'ENV2' => 'value2',
             ])
-            ->withCommands(['printenv', 'ENV1', 'ENV2']);
+            ->withCommands(['printenv', 'ENV1', 'ENV2'])
+        ;
         $instance = $container->start();
 
         $this->assertSame("value1\nvalue2\n", $instance->getOutput());

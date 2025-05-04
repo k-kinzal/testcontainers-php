@@ -7,8 +7,13 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PullPolicySetting;
-use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Containers\Types\ImagePullPolicy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class PullPolicySettingTest extends TestCase
 {
     public function testHasPullPolicySettingTrait()
@@ -23,16 +28,23 @@ class PullPolicySettingTest extends TestCase
         $container = new PullPolicySettingWithStaticPullPolicyContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(ImagePullPolicy::$ALWAYS, $instance->getImagePullPolicy()->toString());
+        $pullPolicy = $instance->getImagePullPolicy();
+
+        $this->assertNotNull($pullPolicy);
+        $this->assertSame(ImagePullPolicy::$ALWAYS, $pullPolicy->toString());
     }
 
     public function testStartWithImagePullPolicy()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withImagePullPolicy(ImagePullPolicy::MISSING());
+            ->withImagePullPolicy(ImagePullPolicy::MISSING())
+        ;
         $instance = $container->start();
 
-        $this->assertSame(ImagePullPolicy::$MISSING, $instance->getImagePullPolicy()->toString());
+        $pullPolicy = $instance->getImagePullPolicy();
+
+        $this->assertNotNull($pullPolicy);
+        $this->assertSame(ImagePullPolicy::$MISSING, $pullPolicy->toString());
     }
 }
 

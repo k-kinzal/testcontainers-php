@@ -27,7 +27,15 @@ class DockerClientFactory
      * This static property holds the configuration options for the Docker client.
      * It is set using the `config` method before the `create` method is called.
      *
-     * @var array
+     * @var array{
+     *             command?: string,
+     *             globalOptions?: array<string, string>,
+     *             cwd?: string,
+     *             env?: array<string, string>,
+     *             input?: mixed|null,
+     *             timeout?: int|float|null,
+     *             procOptions?: array<string, string>
+     *             }
      */
     private static $config = [];
 
@@ -38,7 +46,15 @@ class DockerClientFactory
      * options are used to initialize the Docker client instance when the `create` method
      * is called.
      *
-     * @param array $config The configuration options for the Docker client.
+     * @param array{
+     *      command?: string,
+     *      globalOptions?: array<string, string>,
+     *      cwd?: string,
+     *      env?: array<string, string>,
+     *      input?: mixed|null,
+     *      timeout?: int|float|null,
+     *      procOptions?: array<string, string>
+     *  } $config The configuration options for the Docker client
      */
     public static function config($config = [])
     {
@@ -52,8 +68,17 @@ class DockerClientFactory
      * It returns a clone of the Docker client to ensure that each call to this method
      * provides a fresh instance.
      *
-     * @param array $config The configuration options for the Docker client.
-     * @return DockerClient A new instance of DockerClient.
+     * @param array{
+     *     command?: string,
+     *     globalOptions?: array<string, string>,
+     *     cwd?: string,
+     *     env?: array<string, string>,
+     *     input?: mixed|null,
+     *     timeout?: int|float|null,
+     *     procOptions?: array<string, string>
+     * } $config The configuration options for the Docker client
+     *
+     * @return DockerClient a new instance of DockerClient
      */
     public static function create($config = [])
     {

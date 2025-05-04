@@ -9,6 +9,11 @@ namespace Testcontainers\Containers\StartupCheckStrategy;
  */
 class StartupCheckStrategyProvider
 {
+    /**
+     * An associative array that maps strategy names to their corresponding StartupCheckStrategy instances.
+     *
+     * @var array<string, StartupCheckStrategy> the array of registered startup check strategies
+     */
     private $strategies = [];
 
     /**
@@ -16,10 +21,10 @@ class StartupCheckStrategyProvider
      *
      * This method adds a given wait strategy to the list of available strategies.
      *
-     * @param string $name The name of the wait strategy to register.
-     * @param StartupCheckStrategy $strategy The wait strategy to register.
+     * @param string               $name     the name of the wait strategy to register
+     * @param StartupCheckStrategy $strategy the wait strategy to register
      *
-     * @throws AlreadyExistsStartupStrategyException If a strategy with the same name already exists.
+     * @throws AlreadyExistsStartupStrategyException if a strategy with the same name already exists
      */
     public function register($name, $strategy)
     {
@@ -36,8 +41,9 @@ class StartupCheckStrategyProvider
      * WaitStrategy instance if it exists. If no strategy is found with the given name,
      * it returns null.
      *
-     * @param string $name The name of the wait strategy to retrieve.
-     * @return StartupCheckStrategy|null The WaitStrategy instance if found, or null if not found.
+     * @param string $name the name of the wait strategy to retrieve
+     *
+     * @return null|StartupCheckStrategy the WaitStrategy instance if found, or null if not found
      */
     public function get($name)
     {

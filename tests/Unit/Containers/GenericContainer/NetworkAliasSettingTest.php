@@ -12,6 +12,11 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class NetworkAliasSettingTest extends TestCase
 {
     public function testHasNetworkAliasSettingTrait()
@@ -27,7 +32,7 @@ class NetworkAliasSettingTest extends TestCase
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375)
+                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
             ],
         ]);
         $network = NetworkMode::fromString(md5(uniqid()));
@@ -36,7 +41,8 @@ class NetworkAliasSettingTest extends TestCase
         $container = (new NetworkAliasSettingWithStaticNetworkAliasContainer('alpine:latest'))
             ->withDockerClient($client)
             ->withNetworkMode($network)
-            ->withCommands(['sh', '-c', 'ping -c 1 my-service']);
+            ->withCommands(['sh', '-c', 'ping -c 1 my-service'])
+        ;
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING my-service', $instance->getOutput());
@@ -48,7 +54,7 @@ class NetworkAliasSettingTest extends TestCase
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375)
+                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
             ],
         ]);
         $network = NetworkMode::fromString(md5(uniqid()));
@@ -58,7 +64,8 @@ class NetworkAliasSettingTest extends TestCase
             ->withDockerClient($client)
             ->withNetworkMode($network)
             ->withNetworkAlias('my-alias')
-            ->withCommands(['sh', '-c', 'ping -c 1 my-alias']);
+            ->withCommands(['sh', '-c', 'ping -c 1 my-alias'])
+        ;
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
@@ -70,7 +77,7 @@ class NetworkAliasSettingTest extends TestCase
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375)
+                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
             ],
         ]);
         $network = NetworkMode::fromString(md5(uniqid()));
@@ -80,7 +87,8 @@ class NetworkAliasSettingTest extends TestCase
             ->withDockerClient($client)
             ->withNetworkMode($network)
             ->withNetworkAliases(['my-alias'])
-            ->withCommands(['sh', '-c', 'ping -c 1 my-alias']);
+            ->withCommands(['sh', '-c', 'ping -c 1 my-alias'])
+        ;
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING my-alias', $instance->getOutput());

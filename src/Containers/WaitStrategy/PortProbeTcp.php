@@ -7,16 +7,14 @@ namespace Testcontainers\Containers\WaitStrategy;
  */
 class PortProbeTcp implements PortProbe
 {
-    /**
-     * @inheritDoc
-     */
     public function available($host, $port)
     {
         $fp = @fsockopen($host, $port);
-        if ($fp === false) {
+        if (false === $fp) {
             return false;
         }
         fclose($fp);
+
         return true;
     }
 }

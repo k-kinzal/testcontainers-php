@@ -5,12 +5,16 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StartupSetting;
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class StartupSettingTest extends TestCase
 {
     public function testHasStartupSettingTrait()
@@ -25,17 +29,19 @@ class StartupSettingTest extends TestCase
         $this->expectException(ProcessTimedOutException::class);
 
         $container = (new StartupSettingWithStaticStartupTimeoutContainer('alpine:latest'))
-            ->withCommands(['sleep', '5']);
+            ->withCommands(['sleep', '5'])
+        ;
         $container->start();
     }
 
     public function testStaticStartupCheckStrategy()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('failed startup check: illegal state of container');
 
         $container = (new StartupSettingWithStaticStartupCheckStrategyContainer('alpine:latest'))
-            ->withCommands(['sh', '-c', 'exit 1']);
+            ->withCommands(['sh', '-c', 'exit 1'])
+        ;
         $container->start();
     }
 
@@ -45,18 +51,20 @@ class StartupSettingTest extends TestCase
 
         $container = (new GenericContainer('alpine:latest'))
             ->withStartupTimeout(1)
-            ->withCommands(['sleep', '5']);
+            ->withCommands(['sleep', '5'])
+        ;
         $container->start();
     }
 
     public function testStartWithStartupCheckStrategy()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('failed startup check: illegal state of container');
 
         $container = (new GenericContainer('alpine:latest'))
             ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
-            ->withCommands(['sh', '-c', 'exit 1']);
+            ->withCommands(['sh', '-c', 'exit 1'])
+        ;
         $container->start();
     }
 }

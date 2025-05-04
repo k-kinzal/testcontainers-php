@@ -14,7 +14,7 @@ class PortStrategyProvider
     /**
      * An associative array that maps strategy names to their corresponding PortStrategy instances.
      *
-     * @var array<string, PortStrategy> The array of registered port strategies.
+     * @var array<string, PortStrategy> the array of registered port strategies
      */
     private $strategies = [];
 
@@ -23,10 +23,10 @@ class PortStrategyProvider
      *
      * This method adds a given port strategy to the list of available strategies.
      *
-     * @param string $name The name of the port strategy to register.
-     * @param PortStrategy $strategy The port strategy to register.
+     * @param string       $name     the name of the port strategy to register
+     * @param PortStrategy $strategy the port strategy to register
      *
-     * @throws AlreadyExistsPortStrategyException If a strategy with the same name already exists.
+     * @throws AlreadyExistsPortStrategyException if a strategy with the same name already exists
      */
     public function register($name, $strategy)
     {
@@ -43,8 +43,9 @@ class PortStrategyProvider
      * PortStrategy instance if it exists. If no strategy is found with the given name,
      * it returns null.
      *
-     * @param string $name The name of the port strategy to retrieve.
-     * @return PortStrategy|null The PortStrategy instance if found, or null if not found.
+     * @param string $name the name of the port strategy to retrieve
+     *
+     * @return null|PortStrategy the PortStrategy instance if found, or null if not found
      */
     public function get($name)
     {

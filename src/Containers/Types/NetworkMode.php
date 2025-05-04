@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\Types;
 
+use Testcontainers\Utility\Stringable;
+
 /**
  * Represents a network mode for a container.
  *
@@ -9,7 +11,7 @@ namespace Testcontainers\Containers\Types;
  * convenient access to common network modes (`host`, `bridge`), as well as supporting
  * custom network modes.
  */
-class NetworkMode
+class NetworkMode implements Stringable
 {
     /**
      * Host network mode.
@@ -59,10 +61,15 @@ class NetworkMode
         $this->mode = $mode;
     }
 
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
     /**
      * Creates a NetworkMode object with the host network mode.
      *
-     * @return self A NetworkMode object with the host network mode.
+     * @return self a NetworkMode object with the host network mode
      */
     public static function HOST()
     {
@@ -72,7 +79,7 @@ class NetworkMode
     /**
      * Creates a NetworkMode object with the bridge network mode.
      *
-     * @return self A NetworkMode object with the bridge network mode.
+     * @return self a NetworkMode object with the bridge network mode
      */
     public static function BRIDGE()
     {
@@ -82,7 +89,7 @@ class NetworkMode
     /**
      * Creates a NetworkMode object with the none network mode.
      *
-     * @return self A NetworkMode object with the none network mode.
+     * @return self a NetworkMode object with the none network mode
      */
     public static function NONE()
     {
@@ -92,8 +99,9 @@ class NetworkMode
     /**
      * Creates a NetworkMode object from a string.
      *
-     * @param string $s The network mode string.
-     * @return NetworkMode A NetworkMode object representing the given network mode.
+     * @param string $s the network mode string
+     *
+     * @return NetworkMode a NetworkMode object representing the given network mode
      */
     public static function fromString($s)
     {
@@ -103,20 +111,10 @@ class NetworkMode
     /**
      * Returns the network mode as a string.
      *
-     * @return string The network mode.
+     * @return string the network mode
      */
     public function toString()
     {
         return $this->mode;
-    }
-
-    /**
-     * Returns the network mode as a string (alias for toString()).
-     *
-     * @return string The network mode.
-     */
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

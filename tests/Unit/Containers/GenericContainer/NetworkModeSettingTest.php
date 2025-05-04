@@ -9,6 +9,11 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\NetworkModeSetting;
 use Testcontainers\Containers\Types\NetworkMode;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class NetworkModeSettingTest extends TestCase
 {
     public function testHasNetworkModeSettingTrait()
@@ -21,20 +26,22 @@ class NetworkModeSettingTest extends TestCase
     public function testStaticNetworkMode()
     {
         $container = (new NetworkModeSettingWithStaticNetworkModeContainer('alpine:latest'))
-            ->withCommands(['sh', '-c', 'ls /sys/class/net']);
+            ->withCommands(['sh', '-c', 'ls /sys/class/net'])
+        ;
         $instance = $container->start();
 
-        $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
+        $this->assertTrue(false === strpos($instance->getOutput(), 'eth0'));
     }
 
     public function testStartWithNetworkMode()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withNetworkMode(NetworkMode::NONE())
-            ->withCommands(['sh', '-c', 'ls /sys/class/net']);
+            ->withCommands(['sh', '-c', 'ls /sys/class/net'])
+        ;
         $instance = $container->start();
 
-        $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
+        $this->assertTrue(false === strpos($instance->getOutput(), 'eth0'));
     }
 }
 

@@ -2,26 +2,27 @@
 
 namespace Testcontainers\Docker\Types;
 
-use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
 
 /**
  * Represents the state of a container.
  *
- * @property-read string $status Container status of "created", "running", "paused", "restarting", "removing", "exited", or "dead"
- * @property-read integer $exitCode The last exit code of the container
+ * @property string $status   Container status of "created", "running", "paused", "restarting", "removing", "exited", or "dead"
+ * @property int    $exitCode The last exit code of the container
  */
 class State
 {
     /**
-     * Container status of "created", "running", "paused", "restarting", "removing", "exited", or "dead"
-     * @var string $status
+     * Container status of "created", "running", "paused", "restarting", "removing", "exited", or "dead".
+     *
+     * @var string
      */
     private $status;
 
     /**
-     * The last exit code of the container
-     * @var integer $exitCode
+     * The last exit code of the container.
+     *
+     * @var int
      */
     private $exitCode;
 
@@ -30,12 +31,29 @@ class State
     }
 
     /**
+     * Retrieve the value of a property.
+     *
+     * @param string $name the name of the property to retrieve
+     *
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (!property_exists($this, $name)) {
+            throw new \LogicException('State::'.$name.' does not exist');
+        }
+
+        return $this->{$name};
+    }
+
+    /**
      * Create a State object from an array.
      *
-     * @param array $arr The array to create the State object from.
-     * @return State
+     * @param array $arr the array to create the State object from
      *
-     * @throws InvalidValueException If the array does not contain the expected properties.
+     * @throws InvalidValueException if the array does not contain the expected properties
+     *
+     * @return State
      */
     public static function fromArray($arr)
     {
@@ -49,10 +67,11 @@ class State
     /**
      * Ensure that the 'Status' property is a string and is one of the expected values.
      *
-     * @param array $arr The array to check.
-     * @return string
+     * @param array $arr the array to check
      *
-     * @throws InvalidValueException If the 'Status' property is missing, not a string, or not one of the expected values.
+     * @throws InvalidValueException if the 'Status' property is missing, not a string, or not one of the expected values
+     *
+     * @return string
      */
     public static function ensureStatusFromArray($arr)
     {
@@ -77,16 +96,18 @@ class State
                 ['data' => $arr]
             );
         }
+
         return $arr['Status'];
     }
 
     /**
      * Ensure that the 'ExitCode' property is an integer.
      *
-     * @param array $arr The array to check.
-     * @return integer
+     * @param array $arr the array to check
      *
-     * @throws InvalidValueException If the 'ExitCode' property is missing or not an integer.
+     * @throws InvalidValueException if the 'ExitCode' property is missing or not an integer
+     *
+     * @return int
      */
     public static function ensureExitCodeFromArray($arr)
     {
@@ -102,20 +123,7 @@ class State
                 ['data' => $arr]
             );
         }
-        return $arr['ExitCode'];
-    }
 
-    /**
-     * Retrieve the value of a property.
-     *
-     * @param string $name The name of the property to retrieve.
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        if (!property_exists($this, $name)) {
-            throw new LogicException('State::' . $name . ' does not exist');
-        }
-        return $this->$name;
+        return $arr['ExitCode'];
     }
 }

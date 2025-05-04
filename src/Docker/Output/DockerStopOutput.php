@@ -48,7 +48,7 @@ class DockerStopOutput extends DockerOutput
      * This method returns an array of container IDs that were stopped
      * by the `docker stop` command executed by the Symfony Process instance.
      *
-     * @return ContainerId[] An array of Docker container IDs.
+     * @return ContainerId[] an array of Docker container IDs
      */
     public function getContainerIds()
     {

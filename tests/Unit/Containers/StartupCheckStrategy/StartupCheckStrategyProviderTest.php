@@ -9,6 +9,11 @@ use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyE
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class StartupCheckStrategyProviderTest extends TestCase
 {
     public function testRegister()
@@ -34,6 +39,9 @@ class StartupCheckStrategyProviderTest extends TestCase
         $provider = new StartupCheckStrategyProvider();
         $provider->register('is_running', new IsRunningStartupCheckStrategy());
 
-        $this->assertSame(IsRunningStartupCheckStrategy::class, get_class($provider->get('is_running')));
+        $strategy = $provider->get('is_running');
+
+        $this->assertNotNull($strategy);
+        $this->assertInstanceOf(IsRunningStartupCheckStrategy::class, $strategy);
     }
 }

@@ -8,11 +8,13 @@ use Testcontainers\Containers\WaitStrategy\PortProbe;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Docker\Types\ContainerId;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class HostPortWaitStrategyTest extends WaitStrategyTestCase
 {
-    /**
-     * @inheritDoc
-     */
     public function resolveWaitStrategy()
     {
         return new HostPortWaitStrategy();
@@ -26,7 +28,8 @@ class HostPortWaitStrategyTest extends WaitStrategyTestCase
         ]);
         $probe = $this->createMock(PortProbe::class);
         $probe->method('available')
-            ->willReturnOnConsecutiveCalls(false, false, true);
+            ->willReturnOnConsecutiveCalls(false, false, true)
+        ;
         $strategy = new HostPortWaitStrategy($probe);
         $strategy->waitUntilReady($instance);
 

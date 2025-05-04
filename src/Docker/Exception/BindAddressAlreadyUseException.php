@@ -14,12 +14,13 @@ class BindAddressAlreadyUseException extends DockerException
     /**
      * Checks if the given output matches the "bind address already in use" error message.
      *
-     * @param string $output The output to check.
-     * @return bool True if the output matches the error message, false otherwise.
+     * @param string $output the output to check
+     *
+     * @return bool true if the output matches the error message, false otherwise
      */
     public static function match($output)
     {
-        return strpos($output, 'Error response from daemon:') !== false
-            && strpos($output, 'bind: address already in use.') !== false;
+        return false !== strpos($output, 'Error response from daemon:')
+            && false !== strpos($output, 'bind: address already in use.');
     }
 }

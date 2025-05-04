@@ -8,13 +8,18 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
-use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\SSH\Session;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class GenericContainerInstanceTest extends TestCase
 {
     public function testGetContainerId()
@@ -64,7 +69,7 @@ class GenericContainerInstanceTest extends TestCase
         $dind = Testcontainers::run(DinD::class);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://' . $dind->getHost() . ':' . $dind->getMappedPort(2375)
+                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
             ],
         ]);
 
@@ -81,7 +86,7 @@ class GenericContainerInstanceTest extends TestCase
         $dind = Testcontainers::run(DinD::class);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://' . $dind->getHost() . ':' . $dind->getMappedPort(2375)
+                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
             ],
         ]);
 
@@ -144,7 +149,8 @@ class GenericContainerInstanceTest extends TestCase
     public function testGetOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withCommands(['echo', 'Hello, World!']);
+            ->withCommands(['echo', 'Hello, World!'])
+        ;
         $instance = $container->start();
 
         while ($instance->isRunning()) {
@@ -157,7 +163,8 @@ class GenericContainerInstanceTest extends TestCase
     public function testGetErrorOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withCommands(['ls', '/not-exist-dir']);
+            ->withCommands(['ls', '/not-exist-dir'])
+        ;
         $instance = $container->start();
 
         while ($instance->isRunning()) {

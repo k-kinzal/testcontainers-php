@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\PortStrategy;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Represents the behavior to take when a port conflict occurs.
@@ -10,7 +11,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  * This class defines the actions that can be taken when a port conflict is detected,
  * such as retrying the operation or failing immediately.
  */
-class ConflictBehavior
+class ConflictBehavior implements Stringable
 {
     /**
      * Retry action for conflict behavior.
@@ -49,13 +50,18 @@ class ConflictBehavior
         $this->action = $action;
     }
 
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
     /**
      * Creates a ConflictBehavior instance with the retry action.
      *
      * This method returns a new ConflictBehavior instance configured to retry
      * when a port conflict occurs.
      *
-     * @return self A ConflictBehavior instance with the retry action.
+     * @return self a ConflictBehavior instance with the retry action
      */
     public static function RETRY()
     {
@@ -68,7 +74,7 @@ class ConflictBehavior
      * This method returns a new ConflictBehavior instance configured to fail
      * when a port conflict occurs.
      *
-     * @return self A ConflictBehavior instance with the fail action.
+     * @return self a ConflictBehavior instance with the fail action
      */
     public static function FAIL()
     {
@@ -79,22 +85,24 @@ class ConflictBehavior
      * Creates a ConflictBehavior instance from a string.
      *
      * @param string $action The action to take on port conflict. Valid values are 'retry' or 'fail'.
-     * @return ConflictBehavior The ConflictBehavior instance corresponding to the action.
      *
-     * @throws InvalidFormatException If the action is invalid.
+     * @throws InvalidFormatException if the action is invalid
+     *
+     * @return ConflictBehavior the ConflictBehavior instance corresponding to the action
      */
     public static function fromString($action)
     {
         if (!in_array($action, [static::$RETRY, static::$FAIL])) {
             throw new InvalidFormatException($action, [static::$RETRY, static::$FAIL]);
         }
+
         return new self($action);
     }
 
     /**
      * Checks if the conflict behavior is set to retry.
      *
-     * @return bool True if the action is retry, false otherwise.
+     * @return bool true if the action is retry, false otherwise
      */
     public function isRetry()
     {
@@ -104,7 +112,7 @@ class ConflictBehavior
     /**
      * Checks if the conflict behavior is set to fail.
      *
-     * @return bool True if the action is fail, false otherwise.
+     * @return bool true if the action is fail, false otherwise
      */
     public function isFail()
     {
@@ -114,15 +122,10 @@ class ConflictBehavior
     /**
      * Converts the conflict behavior to a string representation.
      *
-     * @return string The string representation of the conflict behavior.
+     * @return string the string representation of the conflict behavior
      */
     public function toString()
     {
         return $this->action;
-    }
-
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

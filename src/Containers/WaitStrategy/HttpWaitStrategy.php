@@ -23,7 +23,7 @@ class HttpWaitStrategy implements WaitStrategy
      * This can be a full URL or null. If null, the endpoint will be constructed
      * using the schema, host, port, and path properties.
      *
-     * @var string|null
+     * @var null|string
      */
     private $endpoint;
 
@@ -32,7 +32,7 @@ class HttpWaitStrategy implements WaitStrategy
      *
      * If not set, the default value 'http' will be used.
      *
-     * @var string|null
+     * @var null|string
      */
     private $schema;
 
@@ -41,7 +41,7 @@ class HttpWaitStrategy implements WaitStrategy
      *
      * If not set, the default value 'localhost' will be used.
      *
-     * @var string|null
+     * @var null|string
      */
     private $host;
 
@@ -50,17 +50,17 @@ class HttpWaitStrategy implements WaitStrategy
      *
      * If not set, the default value '/' will be used.
      *
-     * @var string|null The path to be used in the endpoint URL, or null if not set.
+     * @var null|string the path to be used in the endpoint URL, or null if not set
      */
     private $path;
 
     /**
-    * The port to be used in the endpoint URL.
-    *
-    * If not set, the port will be determined dynamically based on the container's exposed ports.
-    *
-    * @var int|null The port number, or null if not set.
-    */
+     * The port to be used in the endpoint URL.
+     *
+     * If not set, the port will be determined dynamically based on the container's exposed ports.
+     *
+     * @var null|int the port number, or null if not set
+     */
     private $port;
 
     /**
@@ -76,23 +76,23 @@ class HttpWaitStrategy implements WaitStrategy
      * This value determines how long the strategy will wait for the container to become ready
      * before throwing a timeout exception. The default is 30 seconds.
      *
-     * @var int The timeout duration in seconds.
+     * @var int the timeout duration in seconds
      */
     private $timeout = 30;
 
+    /**
+     * @param null|HttpProbe $probe
+     */
     public function __construct($probe = null)
     {
         $this->probe = $probe ?: new HttpProbeGetHeaders();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function waitUntilReady($instance)
     {
         $now = time();
         $endpoint = $this->endpoint;
-        if ($endpoint === null) {
+        if (null === $endpoint) {
             $schema = $this->schema ?: 'http';
             $host = $this->host ?: $instance->getHost();
             $port = $this->port ?: $instance->getMappedPort($instance->getExposedPorts()[0]);
@@ -114,7 +114,8 @@ class HttpWaitStrategy implements WaitStrategy
     /**
      * Sets the endpoint to be checked for readiness.
      *
-     * @param string $endpoint The endpoint to be checked.
+     * @param string $endpoint the endpoint to be checked
+     *
      * @return $this
      */
     public function withEndpoint($endpoint)
@@ -127,7 +128,8 @@ class HttpWaitStrategy implements WaitStrategy
     /**
      * Sets the schema to be used in the endpoint URL.
      *
-     * @param string $schema The schema to be used.
+     * @param string $schema the schema to be used
+     *
      * @return $this
      */
     public function withSchema($schema)
@@ -140,7 +142,8 @@ class HttpWaitStrategy implements WaitStrategy
     /**
      * Sets the host to be used in the endpoint URL.
      *
-     * @param string $host The host to be used.
+     * @param string $host the host to be used
+     *
      * @return $this
      */
     public function withHost($host)
@@ -153,7 +156,8 @@ class HttpWaitStrategy implements WaitStrategy
     /**
      * Sets the path to be used in the endpoint URL.
      *
-     * @param string $path The path to be used.
+     * @param string $path the path to be used
+     *
      * @return $this
      */
     public function withPath($path)
@@ -166,7 +170,8 @@ class HttpWaitStrategy implements WaitStrategy
     /**
      * Sets the port to be used in the endpoint URL.
      *
-     * @param int $port The port to be used.
+     * @param int $port the port to be used
+     *
      * @return $this
      */
     public function withPort($port)
@@ -179,7 +184,8 @@ class HttpWaitStrategy implements WaitStrategy
     /**
      * Sets the expected HTTP response code for the endpoint.
      *
-     * @param int $responseCode The expected HTTP response code.
+     * @param int $responseCode the expected HTTP response code
+     *
      * @return $this
      */
     public function withExpectedResponseCode($responseCode)
@@ -192,8 +198,9 @@ class HttpWaitStrategy implements WaitStrategy
     /**
      * Sets the timeout duration for waiting until the container instance is ready.
      *
-     * @param int $seconds The number of seconds to wait before timing out.
-     * @return $this The current instance for method chaining.
+     * @param int $seconds the number of seconds to wait before timing out
+     *
+     * @return $this the current instance for method chaining
      */
     public function withTimeoutSeconds($seconds)
     {

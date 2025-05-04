@@ -5,9 +5,14 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\BindMode;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class BindModeTest extends TestCase
 {
     public function testBindModeReadOnly()

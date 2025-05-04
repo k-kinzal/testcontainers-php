@@ -27,7 +27,7 @@ trait PrivilegeSetting
     /**
      * Define the default privileged mode to be used for the container.
      *
-     * @var bool|null
+     * @var null|bool
      */
     protected static $PRIVILEGED;
 
@@ -41,7 +41,8 @@ trait PrivilegeSetting
     /**
      * Set the privileged mode for the container.
      *
-     * @param boolean $mode Whether to enable privileged mode.
+     * @param bool $mode whether to enable privileged mode
+     *
      * @return self
      */
     public function withPrivilegedMode($mode)
@@ -58,13 +59,14 @@ trait PrivilegeSetting
      * If a specific privileged mode is set, it will return that. Otherwise, it will
      * attempt to retrieve the default privileged mode from the provider.
      *
-     * @return bool True if the container should run in privileged mode, false otherwise.
+     * @return bool true if the container should run in privileged mode, false otherwise
      */
     protected function privileged()
     {
         if (static::$PRIVILEGED) {
             return static::$PRIVILEGED;
         }
+
         return $this->privileged;
     }
 }

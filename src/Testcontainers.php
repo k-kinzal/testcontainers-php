@@ -2,12 +2,11 @@
 
 namespace Testcontainers;
 
-use LogicException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 
 /**
- * Class Testcontainers
+ * Class Testcontainers.
  *
  * This class provides methods to manage the lifecycle of Docker containers for testing purposes.
  * It allows you to start and stop containers programmatically.
@@ -43,27 +42,28 @@ use Testcontainers\Containers\ContainerInstance;
 class Testcontainers
 {
     /**
-     * List of started containers
+     * List of started containers.
      *
-     * @var ContainerInstance[] $instances
+     * @var ContainerInstance[]
      */
     private static $instances = [];
 
     /**
-     * Flag to ensure that the shutdown handler is set only once
+     * Flag to ensure that the shutdown handler is set only once.
      *
-     * @var bool $setOnceShutdownHandler
+     * @var bool
      */
     private static $setOnceShutdownHandler = false;
 
     /**
-     * Run a container
+     * Run a container.
      *
      *　This method initializes and starts a container of the specified class.
      *  The container class must extend GenericContainer.
      *  If the container class has `beforeStart` and `afterStart` methods, they will be called appropriately.
      *
-     * @param class-string<Container>|Container $containerClass The class name of the container to run.
+     * @param class-string<Container>|Container $containerClass the class name of the container to run
+     *
      * @return ContainerInstance
      */
     public static function run($containerClass)
@@ -73,11 +73,7 @@ class Testcontainers
         } elseif ($containerClass instanceof Container) {
             $container = $containerClass;
         } else {
-            throw new LogicException('The container class must be a valid class name or an instance of `Container`');
-        }
-
-        if (!($container instanceof Container)) {
-            throw new LogicException('The container class must be a valid class name or an instance of `Container`');
+            throw new \LogicException('The container class must be a valid class name or an instance of `Container`');
         }
 
         if (method_exists($container, 'beforeStart')) {
@@ -97,12 +93,10 @@ class Testcontainers
     }
 
     /**
-     * Stop all started containers
+     * Stop all started containers.
      *
      * This method stops all containers that were started using the `run` method.
      * It iterates over the list of started containers and calls the `stop` method on each instance.
-     *
-     * @return void
      */
     public static function stop()
     {
@@ -113,13 +107,11 @@ class Testcontainers
     }
 
     /**
-     * Stop all started containers when the script ends
-     *
-     * @return void
+     * Stop all started containers when the script ends.
      */
     private static function registerOnceShutdownHandler()
     {
-        if (self::$setOnceShutdownHandler === false) {
+        if (false === self::$setOnceShutdownHandler) {
             register_shutdown_function(function () {
                 self::stop();
             });

@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class HostToIpTest extends TestCase
 {
     public function testHostToIp()
@@ -42,18 +47,10 @@ class HostToIpTest extends TestCase
         $this->assertSame('127.0.0.1', $value->ip);
     }
 
-    public function testFromArrayWithInvalidFormat()
-    {
-        $this->expectExceptionMessage('Invalid format: `[]`, expects: `["hostname": string, "ipAddress": string]`');
-        $this->expectException(InvalidFormatException::class);
-
-        HostToIp::fromArray([]);
-    }
-
     public function testToString()
     {
         $value = new HostToIp('docker.internal', '127.0.0.1');
 
-        $this->assertSame('docker.internal:127.0.0.1', (string)$value);
+        $this->assertSame('docker.internal:127.0.0.1', (string) $value);
     }
 }

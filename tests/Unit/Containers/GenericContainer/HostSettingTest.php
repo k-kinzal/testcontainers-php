@@ -4,12 +4,16 @@
 
 namespace Tests\Unit\Containers\GenericContainer;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\HostSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class HostSettingTest extends TestCase
 {
     public function testHasHostSettingTrait()
@@ -23,7 +27,8 @@ class HostSettingTest extends TestCase
     {
         $container = (new HostSettingWithExtraHostsContainer('alpine:latest'))
             ->withCommands(['sh', '-c', 'ping -c 1 example.com'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
@@ -33,7 +38,8 @@ class HostSettingTest extends TestCase
     {
         $container = (new HostSettingWithHostsContainer('alpine:latest'))
             ->withCommands(['sh', '-c', 'ping -c 1 example.org'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
@@ -44,7 +50,8 @@ class HostSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withExtraHost('example.com', '127.0.0.1')
             ->withCommands(['sh', '-c', 'ping -c 1 example.com'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
@@ -53,10 +60,11 @@ class HostSettingTest extends TestCase
     public function testStartWithInvalidCall()
     {
         $this->expectExceptionMessage('Invalid arguments: withExtraHost(`{"hostname":"example.com","ipAddress":"127.0.0.1"}`, `"192.168.0.1"`)');
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         (new GenericContainer('alpine:latest'))
-            ->withExtraHost(['hostname' => 'example.com', 'ipAddress' => '127.0.0.1'], '192.168.0.1');
+            ->withExtraHost(['hostname' => 'example.com', 'ipAddress' => '127.0.0.1'], '192.168.0.1')
+        ;
     }
 
     public function testStartWithExtraHosts()
@@ -67,7 +75,8 @@ class HostSettingTest extends TestCase
                 ['hostname' => 'example.org', 'ipAddress' => '127.0.0.1'],
             ])
             ->withCommands(['sh', '-c', 'ping -c 1 example.org'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance = $container->start();
 
         $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
@@ -77,7 +86,7 @@ class HostSettingTest extends TestCase
 class HostSettingWithExtraHostsContainer extends GenericContainer
 {
     public static $EXTRA_HOSTS = [
-        'example.com:127.0.0.1'
+        'example.com:127.0.0.1',
     ];
 }
 

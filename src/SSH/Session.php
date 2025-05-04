@@ -18,7 +18,7 @@ class Session
     private $process;
 
     /**
-     * @param Process $process The process to use for the SSH session.
+     * @param Process $process the process to use for the SSH session
      */
     public function __construct($process)
     {
@@ -42,8 +42,6 @@ class Session
 
     /**
      * Stops the SSH session.
-     *
-     * @return void
      */
     public function stop()
     {

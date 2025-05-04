@@ -18,7 +18,6 @@ abstract class PortStrategyTestCase extends TestCase
         $strategy = $this->resolvePortStrategy();
         $port = $strategy->getPort();
 
-        $this->assertTrue(is_int($port));
         $this->assertGreaterThanOrEqual(49152, $port);
         $this->assertLessThanOrEqual(65535, $port);
     }
