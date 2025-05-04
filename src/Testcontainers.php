@@ -76,10 +76,6 @@ class Testcontainers
             throw new LogicException('The container class must be a valid class name or an instance of `Container`');
         }
 
-        if (!($container instanceof Container)) {
-            throw new LogicException('The container class must be a valid class name or an instance of `Container`');
-        }
-
         if (method_exists($container, 'beforeStart')) {
             $container->beforeStart();
         }
