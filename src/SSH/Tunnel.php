@@ -2,7 +2,6 @@
 
 namespace Testcontainers\SSH;
 
-use InvalidArgumentException;
 use Symfony\Component\Process\Process;
 use Testcontainers\SSH\Exceptions\TunnelException;
 
