@@ -97,6 +97,7 @@ trait WaitSetting
      * Register a wait strategy.
      *
      * @param WaitStrategyProvider $provider The wait strategy provider.
+     * @return void
      */
     protected function registerWaitStrategy($provider)
     {
