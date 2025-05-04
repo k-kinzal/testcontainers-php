@@ -4,7 +4,7 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use LogicException;
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\NoSuchContainerException;

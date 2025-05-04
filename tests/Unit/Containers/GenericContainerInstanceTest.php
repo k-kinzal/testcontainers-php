@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
-use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\SSH\Session;

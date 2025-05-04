@@ -494,13 +494,13 @@ class MyContainer extends GenericContainer
 {
     protected function pullPolicy()
     {
-        return \Testcontainers\Containers\ImagePullPolicy::ALWAYS();
+        return \Testcontainers\Containers\Types\ImagePullPolicy::ALWAYS();
     }
 }
 
 // Fluent API
 $container = (new GenericContainer('nginx:latest'))
-    ->withImagePullPolicy(\Testcontainers\Containers\ImagePullPolicy::ALWAYS());
+    ->withImagePullPolicy(\Testcontainers\Containers\Types\ImagePullPolicy::ALWAYS());
 ```
 
 ### Startup Settings

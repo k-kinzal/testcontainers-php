@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers;
 
+use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\Types\ContainerId;
 
 /**

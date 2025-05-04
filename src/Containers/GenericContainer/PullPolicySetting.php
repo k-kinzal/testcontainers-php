@@ -2,7 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use Testcontainers\Containers\ImagePullPolicy;
+use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Exceptions\InvalidFormatException;
 
 /**

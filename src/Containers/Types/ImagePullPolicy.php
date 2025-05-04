@@ -1,6 +1,6 @@
 <?php
 
-namespace Testcontainers\Containers;
+namespace Testcontainers\Containers\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
 
