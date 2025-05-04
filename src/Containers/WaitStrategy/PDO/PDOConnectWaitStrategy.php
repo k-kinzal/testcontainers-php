@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
 use PDO;
+use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 
@@ -60,7 +61,9 @@ class PDOConnectWaitStrategy implements WaitStrategy
     private $retryInterval = 100;
 
     /**
-     * @param mixed $instance
+     * Waits until the container instance is ready.
+     *
+     * @param ContainerInstance $instance the container instance to check
      *
      * @throws WaitingTimeoutException if the timeout duration is exceeded
      */
