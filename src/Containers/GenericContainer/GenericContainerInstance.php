@@ -30,7 +30,7 @@ class GenericContainerInstance implements ContainerInstance
      *
      * @var array{
      *     containerId: ContainerId,
-     *     labels?: array<string, string>[]|null,
+     *     labels?: array<string, string>|null,
      *     ports?: array<int, int>,
      *     pull?: ImagePullPolicy|null,
      *     privileged?: bool,
@@ -48,21 +48,20 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * The data associated with the container.
      *
-     * @template T
-     * @var array<class-string<T>, T> The data associated with the container.
+     * @var array<string, mixed> The data associated with the container.
      */
     private $data = [];
 
     /**
      * @param array{
      *     containerId: ContainerId,
-     *     labels?: array<string, string>[]|null,
+     *     labels?: array<string, string>|null,
      *     ports?: array<int, int>,
      *     pull?: ImagePullPolicy|null,
      *     privileged?: bool,
      * } $containerDef The container definition.
      */
-    public function __construct($containerDef = [])
+    public function __construct($containerDef)
     {
         $this->containerDef = $containerDef;
     }
@@ -99,9 +98,6 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['labels'])) {
             return null;
         }
-        if (!is_array($this->containerDef['labels'])) {
-            return null;
-        }
         if (!isset($this->containerDef['labels'][$label])) {
             return null;
         }
@@ -116,10 +112,7 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['labels'])) {
             return [];
         }
-        if (!is_array($this->containerDef['labels'])) {
-            return [];
-        }
-        return $this->containerDef['labels'] ?: [];
+        return $this->containerDef['labels'];
     }
 
     /**
@@ -127,7 +120,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getHost()
     {
-        if ($this->tryGetData(Session::class)) {
+        if ($this->tryGetData(Session::class) !== null) {
             return 'localhost';
         }
 
@@ -139,6 +132,12 @@ class GenericContainerInstance implements ContainerInstance
         $client = $this->client ?: DockerClientFactory::create();
         $host = $client->getHost();
         $url = parse_url($host);
+        if (!isset($url['scheme'])) {
+            throw new LogicException("Invalid URL: $host");
+        }
+        if (!isset($url['host'])) {
+            throw new LogicException("Invalid URL: $host");
+        }
         switch ($url['scheme']) {
             case 'http':
             case 'https':
@@ -157,9 +156,6 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['ports'])) {
             return [];
         }
-        if (!is_array($this->containerDef['ports'])) {
-            return [];
-        }
         return array_keys($this->containerDef['ports']);
     }
 
@@ -169,9 +165,6 @@ class GenericContainerInstance implements ContainerInstance
     public function getMappedPort($exposedPort)
     {
         if (!isset($this->containerDef['ports'])) {
-            return null;
-        }
-        if (!is_array($this->containerDef['ports'])) {
             return null;
         }
         if (!isset($this->containerDef['ports'][$exposedPort])) {
