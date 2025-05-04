@@ -87,6 +87,7 @@ interface ContainerInstance
      * Set data associated with the container.
      *
      * @param object $value The data to associate with the container.
+     * @return void
      */
     public function setData($value);
 
