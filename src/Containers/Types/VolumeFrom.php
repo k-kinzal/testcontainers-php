@@ -61,9 +61,9 @@ class VolumeFrom implements Stringable
      *
      * @param string $v the volume from string
      *
-     * @return VolumeFrom
-     *
      * @throws InvalidFormatException if the mount format is invalid
+     *
+     * @return VolumeFrom
      */
     public static function fromString($v)
     {

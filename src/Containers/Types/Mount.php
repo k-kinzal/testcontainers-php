@@ -134,9 +134,9 @@ class Mount implements Stringable
      *
      * @param string $v the mount string
      *
-     * @return Mount the Mount object
-     *
      * @throws InvalidFormatException if the format is invalid
+     *
+     * @return Mount the Mount object
      */
     public static function fromString($v)
     {
@@ -181,9 +181,9 @@ class Mount implements Stringable
      *
      * @param string $v the mount string
      *
-     * @return Mount the Mount object
-     *
      * @throws InvalidFormatException if the format is invalid
+     *
+     * @return Mount the Mount object
      */
     public static function fromMountString($v)
     {

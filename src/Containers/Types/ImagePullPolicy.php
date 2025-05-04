@@ -88,9 +88,9 @@ class ImagePullPolicy implements Stringable
      *
      * @param string $policy the string representation of the pull policy
      *
-     * @return self
-     *
      * @throws InvalidFormatException if the provided policy is not valid
+     *
+     * @return self
      */
     public static function fromString($policy)
     {

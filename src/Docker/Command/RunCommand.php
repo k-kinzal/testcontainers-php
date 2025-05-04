@@ -43,13 +43,13 @@ trait RunCommand
      *     workdir?: string|null,
      * } $options Additional options for the Docker command
      *
-     * @return DockerRunOutput|DockerRunWithDetachOutput The output of the Docker run command. If the `detach` option is set to `true`, a `DockerRunWithDetachOutput` object is returned.
-     *
      * @throws NoSuchContainerException       if the specified container does not exist
      * @throws NoSuchObjectException          if the specified object does not exist
      * @throws PortAlreadyAllocatedException  if the specified port is already allocated
      * @throws BindAddressAlreadyUseException if the specified bind address is already in use
      * @throws DockerException                if the Docker command fails
+     *
+     * @return DockerRunOutput|DockerRunWithDetachOutput The output of the Docker run command. If the `detach` option is set to `true`, a `DockerRunWithDetachOutput` object is returned.
      */
     public function run($image, $command = null, $args = [], $options = [])
     {

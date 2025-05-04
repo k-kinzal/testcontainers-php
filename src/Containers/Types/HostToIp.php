@@ -63,9 +63,9 @@ class HostToIp implements Stringable
      *
      * @param string $v the host-to-IP mapping
      *
-     * @return HostToIp the HostToIp object
-     *
      * @throws InvalidFormatException if the format is invalid
+     *
+     * @return HostToIp the HostToIp object
      */
     public static function fromString($v)
     {

@@ -68,9 +68,9 @@ class BindMode implements Stringable
      *
      * @param string $mode the string representation of the bind mode
      *
-     * @return self
-     *
      * @throws InvalidFormatException if the provided mode is not valid
+     *
+     * @return self
      */
     public static function fromString($mode)
     {

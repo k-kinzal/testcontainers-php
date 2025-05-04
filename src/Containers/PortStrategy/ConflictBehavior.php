@@ -86,9 +86,9 @@ class ConflictBehavior implements Stringable
      *
      * @param string $action The action to take on port conflict. Valid values are 'retry' or 'fail'.
      *
-     * @return ConflictBehavior the ConflictBehavior instance corresponding to the action
-     *
      * @throws InvalidFormatException if the action is invalid
+     *
+     * @return ConflictBehavior the ConflictBehavior instance corresponding to the action
      */
     public static function fromString($action)
     {

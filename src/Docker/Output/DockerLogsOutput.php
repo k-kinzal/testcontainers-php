@@ -7,4 +7,6 @@ namespace Testcontainers\Docker\Output;
  *
  * This class extends DockerOutput to provide specific handling for container logs.
  */
-class DockerLogsOutput extends DockerOutput {}
+class DockerLogsOutput extends DockerOutput
+{
+}

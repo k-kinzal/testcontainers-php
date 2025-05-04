@@ -67,9 +67,9 @@ trait VolumesFromSetting
      * This method returns an array of volumes, where each volume is an associative array
      * containing the container name and bind mode.
      *
-     * @return VolumeFrom[] the volumes to be used for the container
-     *
      * @throws InvalidFormatException if the volume format is invalid
+     *
+     * @return VolumeFrom[] the volumes to be used for the container
      */
     protected function volumesFrom()
     {

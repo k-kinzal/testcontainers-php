@@ -65,9 +65,9 @@ class NetworkId implements Stringable
      *
      * @param string $v the network ID
      *
-     * @return NetworkId the NetworkId object
-     *
      * @throws \InvalidArgumentException if the network ID is not valid
+     *
+     * @return NetworkId the NetworkId object
      */
     public static function fromString($v)
     {

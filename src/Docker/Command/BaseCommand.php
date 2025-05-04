@@ -11,7 +11,6 @@ use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Environments;
-
 use function Testcontainers\kebab;
 
 /**
@@ -315,13 +314,13 @@ trait BaseCommand
      * @param array<string, mixed> $options    additional options for the Docker command
      * @param bool                 $wait       whether to wait for the command to finish executing
      *
-     * @return Process The Symfony Process instance that was executed
-     *
      * @throws NoSuchContainerException       if the specified container does not exist
      * @throws NoSuchObjectException          if the specified object does not exist
      * @throws PortAlreadyAllocatedException  if the specified port is already allocated
      * @throws BindAddressAlreadyUseException if the specified bind address is already in use
      * @throws DockerException                if the Docker command fails
+     *
+     * @return Process The Symfony Process instance that was executed
      */
     protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true)
     {

@@ -26,7 +26,9 @@ class State
      */
     private $exitCode;
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * Retrieve the value of a property.
@@ -49,9 +51,9 @@ class State
      *
      * @param array $arr the array to create the State object from
      *
-     * @return State
-     *
      * @throws InvalidValueException if the array does not contain the expected properties
+     *
+     * @return State
      */
     public static function fromArray($arr)
     {
@@ -67,9 +69,9 @@ class State
      *
      * @param array $arr the array to check
      *
-     * @return string
-     *
      * @throws InvalidValueException if the 'Status' property is missing, not a string, or not one of the expected values
+     *
+     * @return string
      */
     public static function ensureStatusFromArray($arr)
     {
@@ -103,9 +105,9 @@ class State
      *
      * @param array $arr the array to check
      *
-     * @return int
-     *
      * @throws InvalidValueException if the 'ExitCode' property is missing or not an integer
+     *
+     * @return int
      */
     public static function ensureExitCodeFromArray($arr)
     {

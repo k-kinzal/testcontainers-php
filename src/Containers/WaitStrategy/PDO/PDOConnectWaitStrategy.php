@@ -60,6 +60,8 @@ class PDOConnectWaitStrategy implements WaitStrategy
     private $retryInterval = 100;
 
     /**
+     * @param mixed $instance
+     *
      * @throws WaitingTimeoutException if the timeout duration is exceeded
      */
     public function waitUntilReady($instance)

@@ -71,9 +71,9 @@ trait MountSetting
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
      *
-     * @return self
-     *
      * @throws InvalidFormatException if the mount format is invalid
+     *
+     * @return self
      */
     public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
@@ -120,9 +120,9 @@ trait MountSetting
      *      opt?: array<string, string>
      *  }[]|string[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      *
-     * @return self
-     *
      * @throws InvalidFormatException if the mount format is invalid
+     *
+     * @return self
      */
     public function withFileSystemBinds($mounts)
     {
@@ -153,9 +153,9 @@ trait MountSetting
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
      *
-     * @return self
-     *
      * @throws InvalidFormatException if the mount format is invalid
+     *
+     * @return self
      */
     public function withVolume($hostPath, $containerPath = null, $mode = null)
     {
@@ -179,9 +179,9 @@ trait MountSetting
      *      opt?: array<string, string>
      *  }[]|string[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      *
-     * @return self
-     *
      * @throws InvalidFormatException if the mount format is invalid
+     *
+     * @return self
      */
     public function withVolumes($mounts)
     {
@@ -207,9 +207,9 @@ trait MountSetting
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
      *
-     * @return self
-     *
      * @throws InvalidFormatException if the mount format is invalid
+     *
+     * @return self
      */
     public function withMount($hostPath, $containerPath = null, $mode = null)
     {
@@ -233,9 +233,9 @@ trait MountSetting
      *      opt?: array<string, string>
      *  }[]|string[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      *
-     * @return self
-     *
      * @throws InvalidFormatException if the mount format is invalid
+     *
+     * @return self
      */
     public function withMounts($mounts)
     {
@@ -248,9 +248,9 @@ trait MountSetting
      * This method returns an array of mounts, where each mount is an associative array
      * containing the host path, container path, and bind mode.
      *
-     * @return Mount[] the mounts to be used for the container
-     *
      * @throws InvalidFormatException if the mount format is invalid
+     *
+     * @return Mount[] the mounts to be used for the container
      */
     protected function mounts()
     {

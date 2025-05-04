@@ -206,4 +206,6 @@ class GenericContainerInstanceTest extends TestCase
     }
 }
 
-class CustomData {}
+class CustomData
+{
+}

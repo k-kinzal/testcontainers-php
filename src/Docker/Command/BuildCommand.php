@@ -57,9 +57,9 @@ trait BuildCommand
      *     ulimit?: string|Stringable|null,
      * } $options Additional options for the Docker command
      *
-     * @return DockerBuildOutput the output of the Docker build command
-     *
      * @throws DockerException if the Docker command fails for any other reason
+     *
+     * @return DockerBuildOutput the output of the Docker build command
      */
     public function build($path, $options = [])
     {

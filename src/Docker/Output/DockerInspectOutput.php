@@ -56,9 +56,9 @@ class DockerInspectOutput extends DockerOutput
      *
      * @param string $s the output of the `docker inspect` command
      *
-     * @return ContainerObject the object representation of the container
-     *
      * @throws InvalidValueException if the output could not be parsed
+     *
+     * @return ContainerObject the object representation of the container
      */
     private function deserialize($s)
     {

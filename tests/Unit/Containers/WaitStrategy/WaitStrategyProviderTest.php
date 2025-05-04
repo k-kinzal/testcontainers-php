@@ -53,5 +53,7 @@ class WaitStrategyProviderTest extends TestCase
 
 class TestWaitStrategy implements WaitStrategy
 {
-    public function waitUntilReady($instance) {}
+    public function waitUntilReady($instance)
+    {
+    }
 }

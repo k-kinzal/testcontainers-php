@@ -18,7 +18,9 @@ class ContainerObject
      */
     private $state;
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * Retrieve the value of a property.
@@ -41,9 +43,9 @@ class ContainerObject
      *
      * @param array $arr the array to create the ContainerObject from
      *
-     * @return self
-     *
      * @throws InvalidValueException if the array does not contain the expected properties
+     *
+     * @return self
      */
     public static function fromArray($arr)
     {
@@ -58,9 +60,9 @@ class ContainerObject
      *
      * @param array $arr the array to check
      *
-     * @return State the state of the container
-     *
      * @throws InvalidValueException if the State property is missing or is not an array
+     *
+     * @return State the state of the container
      */
     private static function ensureStateFromArray($arr)
     {

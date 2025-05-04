@@ -74,9 +74,9 @@ trait PullPolicySetting
      * If a specific image pull policy is set, it will return that. Otherwise, it will
      * attempt to retrieve the default image pull policy from the provider.
      *
-     * @return null|ImagePullPolicy the image pull policy to be used, or null if none is set
-     *
      * @throws InvalidFormatException if the image pull policy is not valid
+     *
+     * @return null|ImagePullPolicy the image pull policy to be used, or null if none is set
      */
     protected function pullPolicy()
     {

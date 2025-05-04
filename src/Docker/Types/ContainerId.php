@@ -67,9 +67,9 @@ class ContainerId implements Stringable
      *
      * @param string $v the container ID
      *
-     * @return ContainerId the ContainerId object
-     *
      * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
+     *
+     * @return ContainerId the ContainerId object
      */
     public static function fromString($v)
     {
