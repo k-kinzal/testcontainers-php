@@ -13,7 +13,7 @@ interface ContainerInstance
     /**
      * Get the unique identifier for the container.
      *
-     * @return ContainerId The container ID.
+     * @return ContainerId the container ID
      */
     public function getContainerId();
 
@@ -21,7 +21,8 @@ interface ContainerInstance
      * Get the label of the container.
      *
      * @param string $label
-     * @return string|null
+     *
+     * @return null|string
      */
     public function getLabel($label);
 
@@ -35,59 +36,58 @@ interface ContainerInstance
     /**
      * Get the host address of the container.
      *
-     * @return string The host address of the container.
+     * @return string the host address of the container
      */
     public function getHost();
 
     /**
      * Get the exposed ports of the container.
      *
-     * @return int[] The exposed ports of the container.
+     * @return int[] the exposed ports of the container
      */
     public function getExposedPorts();
 
     /**
      * Get the host port mapped to the specified exposed port.
      *
-     * @param int $exposedPort The port exposed by the container.
-     * @return int|null The host port mapped to the specified exposed port, or null if no mapping exists.
+     * @param int $exposedPort the port exposed by the container
+     *
+     * @return null|int the host port mapped to the specified exposed port, or null if no mapping exists
      */
     public function getMappedPort($exposedPort);
 
     /**
      * Get the image pull policy of the container.
      *
-     * @return ImagePullPolicy|null The image pull policy, or null if not set.
+     * @return null|ImagePullPolicy the image pull policy, or null if not set
      */
     public function getImagePullPolicy();
 
     /**
      * Get the privileged mode status of the container.
      *
-     * @return bool True if the container is running in privileged mode, false otherwise.
+     * @return bool true if the container is running in privileged mode, false otherwise
      */
     public function getPrivilegedMode();
 
     /**
      * Retrieve the standard output from the container.
      *
-     * @return string The standard output from the container.
+     * @return string the standard output from the container
      */
     public function getOutput();
 
     /**
      * Retrieve the error output from the container.
      *
-     * @return string The error output from the container.
+     * @return string the error output from the container
      */
     public function getErrorOutput();
-
 
     /**
      * Set data associated with the container.
      *
-     * @param object $value The data to associate with the container.
-     * @return void
+     * @param object $value the data to associate with the container
      */
     public function setData($value);
 
@@ -95,8 +95,10 @@ interface ContainerInstance
      * Retrieve data associated with the container.
      *
      * @template T
-     * @param class-string<T> $class The class name of the data to retrieve.
-     * @return T The data associated with the specified class.
+     *
+     * @param class-string<T> $class the class name of the data to retrieve
+     *
+     * @return T the data associated with the specified class
      */
     public function getData($class);
 
@@ -104,22 +106,22 @@ interface ContainerInstance
      * Retrieve data associated with the container, if it exists.
      *
      * @template T
-     * @param class-string<T> $class The class name of the data to retrieve.
-     * @return null|T The data associated with the specified class.
+     *
+     * @param class-string<T> $class the class name of the data to retrieve
+     *
+     * @return null|T the data associated with the specified class
      */
     public function tryGetData($class);
 
     /**
      * Checks if the container is currently running.
      *
-     * @return bool True if the container is running, false otherwise.
+     * @return bool true if the container is running, false otherwise
      */
     public function isRunning();
 
     /**
      * Stops the container if it is running.
-     *
-     * @return void
      */
     public function stop();
 }

@@ -8,6 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class HostToIpTest extends TestCase
 {
     public function testHostToIp()
@@ -46,6 +50,6 @@ class HostToIpTest extends TestCase
     {
         $value = new HostToIp('docker.internal', '127.0.0.1');
 
-        $this->assertSame('docker.internal:127.0.0.1', (string)$value);
+        $this->assertSame('docker.internal:127.0.0.1', (string) $value);
     }
 }

@@ -14,16 +14,16 @@ use RuntimeException;
 class WaitingTimeoutException extends RuntimeException
 {
     /**
-     * @param int $timeout The timeout in seconds.
-     * @param string|null $message The exception message.
-     * @param int $code The exception code.
-     * @param Exception|null $previous The previous exception.
+     * @param int            $timeout  the timeout in seconds
+     * @param null|string    $message  the exception message
+     * @param int            $code     the exception code
+     * @param null|Exception $previous the previous exception
      */
     public function __construct($timeout, $message = null, $code = 0, $previous = null)
     {
         parent::__construct(
             sprintf(
-                "Waiting for container to be ready timed out after %d seconds: %s",
+                'Waiting for container to be ready timed out after %d seconds: %s',
                 $timeout,
                 $message
             ),

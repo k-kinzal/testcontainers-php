@@ -4,10 +4,14 @@ namespace Tests\Unit\Containers\WaitStrategy\PDO;
 
 use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class MySQLDSNTest extends DSNTestCase
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function resolveDSN()
     {
@@ -19,9 +23,10 @@ class MySQLDSNTest extends DSNTestCase
         $dbname = 'test';
         $dsn = (new MySQLDSN())
             ->withHost('localhost')
-            ->withDbname($dbname);
+            ->withDbname($dbname)
+        ;
 
-        $this->assertTrue(strpos($dsn->toString(), $dbname) !== false);
+        $this->assertTrue(false !== strpos($dsn->toString(), $dbname));
     }
 
     public function testWithCharset()
@@ -29,9 +34,10 @@ class MySQLDSNTest extends DSNTestCase
         $charset = 'utf8';
         $dsn = (new MySQLDSN())
             ->withHost('localhost')
-            ->withCharset($charset);
+            ->withCharset($charset)
+        ;
 
-        $this->assertTrue(strpos($dsn->toString(), $charset) !== false);
+        $this->assertTrue(false !== strpos($dsn->toString(), $charset));
     }
 
     public function testFullDSN()
@@ -40,7 +46,8 @@ class MySQLDSNTest extends DSNTestCase
             ->withHost('localhost')
             ->withPort(3306)
             ->withDbname('test')
-            ->withCharset('utf8');
+            ->withCharset('utf8')
+        ;
 
         $this->assertEquals('mysql:host=localhost;port=3306;dbname=test;charset=utf8;', $dsn->toString());
     }

@@ -5,6 +5,10 @@ namespace Tests\Unit\Docker\Command;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class BaseCommandTest extends TestCase
 {
     public function testGetHostFromDefault()
@@ -17,7 +21,7 @@ class BaseCommandTest extends TestCase
 
             $this->assertSame('unix:///var/run/docker.sock', $client->getHost());
         } finally {
-            putenv('DOCKER_HOST=' . $backup);
+            putenv('DOCKER_HOST='.$backup);
         }
     }
 
@@ -26,7 +30,8 @@ class BaseCommandTest extends TestCase
         $client = (new DockerClient())
             ->withGlobalOptions([
                 'host' => 'tcp://127.0.0.1:2375',
-            ]);
+            ])
+        ;
 
         $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
@@ -36,7 +41,8 @@ class BaseCommandTest extends TestCase
         $client = (new DockerClient())
             ->withEnv([
                 'DOCKER_HOST' => 'tcp://127.0.0.1:2375',
-            ]);
+            ])
+        ;
 
         $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
@@ -51,7 +57,7 @@ class BaseCommandTest extends TestCase
 
             $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
         } finally {
-            putenv('DOCKER_HOST=' . $backup);
+            putenv('DOCKER_HOST='.$backup);
         }
     }
 }

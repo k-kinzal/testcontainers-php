@@ -10,12 +10,13 @@ class StaticPortStrategy implements PortStrategy
 {
     /**
      * The port to return.
+     *
      * @var int
      */
     private $port;
 
     /**
-     * @param int $port The port to return.
+     * @param int $port the port to return
      */
     public function __construct($port)
     {
@@ -23,7 +24,7 @@ class StaticPortStrategy implements PortStrategy
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getPort()
     {
@@ -31,7 +32,7 @@ class StaticPortStrategy implements PortStrategy
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function conflictBehavior()
     {

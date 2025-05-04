@@ -9,6 +9,10 @@ use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\VolumeFrom;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class VolumeFromTest extends TestCase
 {
     public function testVolumeFrom()
@@ -41,7 +45,6 @@ class VolumeFromTest extends TestCase
 
         VolumeFrom::fromString('name:foo');
     }
-
 
     public function testFromArray()
     {

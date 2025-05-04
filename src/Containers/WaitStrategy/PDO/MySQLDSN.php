@@ -16,31 +16,38 @@ class MySQLDSN implements DSN, Stringable
     /**
      * The hostname for the DSN.
      *
-     * @var string|null
+     * @var null|string
      */
     private $host;
 
     /**
      * The port number for the DSN.
      *
-     * @var int|null
+     * @var null|int
      */
     private $port;
 
     /**
      * The name of the database.
      *
-     * @var string|null
+     * @var null|string
      */
     private $dbname;
-
 
     /**
      * The character set to use for the DSN.
      *
-     * @var string|null
+     * @var null|string
      */
     private $charset;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
 
     /**
      * {@inheritdoc}
@@ -81,7 +88,8 @@ class MySQLDSN implements DSN, Stringable
     /**
      * Set the database name for the DSN.
      *
-     * @param string $dbname The name of the database.
+     * @param string $dbname the name of the database
+     *
      * @return $this
      */
     public function withDbname($dbname)
@@ -94,7 +102,8 @@ class MySQLDSN implements DSN, Stringable
     /**
      * Set the character set for the DSN.
      *
-     * @param string $charset The character set to use.
+     * @param string $charset the character set to use
+     *
      * @return $this
      */
     public function withCharset($charset)
@@ -109,27 +118,20 @@ class MySQLDSN implements DSN, Stringable
      */
     public function toString()
     {
-        if ($this->host === null) {
+        if (null === $this->host) {
             throw new LogicException('Host is required');
         }
         $dsn = sprintf('mysql:host=%s;', $this->host);
-        if ($this->port !== null) {
-            $dsn .= 'port=' . $this->port . ';';
+        if (null !== $this->port) {
+            $dsn .= 'port='.$this->port.';';
         }
-        if ($this->dbname !== null) {
-            $dsn .= 'dbname=' . $this->dbname . ';';
+        if (null !== $this->dbname) {
+            $dsn .= 'dbname='.$this->dbname.';';
         }
-        if ($this->charset !== null) {
-            $dsn .= 'charset=' . $this->charset . ';';
+        if (null !== $this->charset) {
+            $dsn .= 'charset='.$this->charset.';';
         }
-        return $dsn;
-    }
 
-    /**
-     * @inheritDoc
-     */
-    public function __toString()
-    {
-        return $this->toString();
+        return $dsn;
     }
 }

@@ -5,12 +5,16 @@ namespace Tests\Unit\Docker\Command;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\Command\RunCommand;
 use Testcontainers\Docker\DockerClient;
+use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Docker\Output\DockerRunOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
-use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class RunCommandTest extends TestCase
 {
     public function testHasRunCommandTrait()
@@ -39,7 +43,7 @@ class RunCommandTest extends TestCase
 
         $this->assertInstanceOf(DockerRunWithDetachOutput::class, $output);
         $this->assertSame(0, $output->getExitCode());
-        /** @var DockerRunWithDetachOutput $output */
+        // @var DockerRunWithDetachOutput $output
         $this->assertNotEmpty($output->getContainerId());
     }
 
@@ -102,7 +106,7 @@ class RunCommandTest extends TestCase
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
         ]);
         $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
             'detach' => true,

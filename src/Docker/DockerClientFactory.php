@@ -28,14 +28,14 @@ class DockerClientFactory
      * It is set using the `config` method before the `create` method is called.
      *
      * @var array{
-     *      command?: string,
-     *      globalOptions?: array<string, string>,
-     *      cwd?: string,
-     *      env?: array<string, string>,
-     *      input?: mixed|null,
-     *      timeout?: int|float|null,
-     *      procOptions?: array<string, string>
-     *  }
+     *             command?: string,
+     *             globalOptions?: array<string, string>,
+     *             cwd?: string,
+     *             env?: array<string, string>,
+     *             input?: mixed|null,
+     *             timeout?: int|float|null,
+     *             procOptions?: array<string, string>
+     *             }
      */
     private static $config = [];
 
@@ -54,8 +54,7 @@ class DockerClientFactory
      *      input?: mixed|null,
      *      timeout?: int|float|null,
      *      procOptions?: array<string, string>
-     *  } $config The configuration options for the Docker client.
-     * @return void
+     *  } $config The configuration options for the Docker client
      */
     public static function config($config = [])
     {
@@ -77,8 +76,9 @@ class DockerClientFactory
      *     input?: mixed|null,
      *     timeout?: int|float|null,
      *     procOptions?: array<string, string>
-     * } $config The configuration options for the Docker client.
-     * @return DockerClient A new instance of DockerClient.
+     * } $config The configuration options for the Docker client
+     *
+     * @return DockerClient a new instance of DockerClient
      */
     public static function create($config = [])
     {

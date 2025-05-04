@@ -18,7 +18,7 @@ trait BuildCommand
      *
      * This method wraps the `docker build` command to build a Docker image from a specified Dockerfile.
      *
-     * @param string $path The path to the directory containing the Dockerfile.
+     * @param string $path the path to the directory containing the Dockerfile
      * @param array{
      *     addHost?: string[]|Stringable[]|null,
      *     allow?: string[]|Stringable[]|null,
@@ -55,14 +55,16 @@ trait BuildCommand
      *     tag?: string|Stringable|null,
      *     target?: string|Stringable|null,
      *     ulimit?: string|Stringable|null,
-     * } $options Additional options for the Docker command.
-     * @return DockerBuildOutput The output of the Docker build command.
+     * } $options Additional options for the Docker command
      *
-     * @throws DockerException If the Docker command fails for any other reason.
+     * @throws DockerException if the Docker command fails for any other reason
+     *
+     * @return DockerBuildOutput the output of the Docker build command
      */
     public function build($path, $options = [])
     {
         $process = $this->execute('build', null, [$path], $options);
+
         return new DockerBuildOutput($process);
     }
 

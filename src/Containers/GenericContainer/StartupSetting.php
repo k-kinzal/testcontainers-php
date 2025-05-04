@@ -36,30 +36,35 @@ trait StartupSetting
 {
     /**
      * Define the default startup timeout to be used for the container.
-     * @var int|null
+     *
+     * @var null|int
      */
     protected static $STARTUP_TIMEOUT;
 
     /**
-     * The startup timeout to be used for the container.
-     * @var int|null
-     */
-    private $startupTimeout;
-
-    /**
      * Define the default startup check strategy to be used for the container.
-     * @var string|null
+     *
+     * @var null|string
      */
     protected static $STARTUP_CHECK_STRATEGY;
 
     /**
+     * The startup timeout to be used for the container.
+     *
+     * @var null|int
+     */
+    private $startupTimeout;
+
+    /**
      * The startup check strategy to be used for the container.
-     * @var StartupCheckStrategy|null
+     *
+     * @var null|StartupCheckStrategy
      */
     private $startupCheckStrategy;
 
     /**
      * The startup check strategy provider.
+     *
      * @var StartupCheckStrategyProvider
      */
     private $startupCheckStrategyProvider;
@@ -67,7 +72,8 @@ trait StartupSetting
     /**
      * Set the duration of waiting time until the container is treated as started.
      *
-     * @param int $timeout The duration to wait.
+     * @param int $timeout the duration to wait
+     *
      * @return self
      */
     public function withStartupTimeout($timeout)
@@ -80,7 +86,8 @@ trait StartupSetting
     /**
      * Set the startup check strategy used for checking whether the container has started.
      *
-     * @param StartupCheckStrategy $strategy The startup check strategy to use.
+     * @param StartupCheckStrategy $strategy the startup check strategy to use
+     *
      * @return self
      */
     public function withStartupCheckStrategy($strategy)
@@ -93,13 +100,14 @@ trait StartupSetting
     /**
      * Retrieve the startup timeout for the container.
      *
-     * @return int|null
+     * @return null|int
      */
     protected function startupTimeout()
     {
         if (static::$STARTUP_TIMEOUT) {
             return static::$STARTUP_TIMEOUT;
         }
+
         return $this->startupTimeout;
     }
 
@@ -110,41 +118,43 @@ trait StartupSetting
      * If a specific startup check strategy is set, it will return that. Otherwise, it will
      * attempt to retrieve the default startup check strategy from the provider.
      *
-     * @param ContainerInstance $instance The container instance for which to get the startup check strategy.
-     * @return StartupCheckStrategy|null The startup check strategy to be used, or null if none is set.
+     * @param ContainerInstance $instance the container instance for which to get the startup check strategy
+     *
+     * @return null|StartupCheckStrategy the startup check strategy to be used, or null if none is set
      */
-    protected function startupCheckStrategy(/** @noinspection PhpUnusedParameterInspection */ $instance)
+    protected function startupCheckStrategy(/* @noinspection PhpUnusedParameterInspection */ $instance)
     {
-        if ($this->startupCheckStrategyProvider === null) {
+        if (null === $this->startupCheckStrategyProvider) {
             $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
             $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
         }
 
-        if (static::$STARTUP_CHECK_STRATEGY !== null) {
+        if (null !== static::$STARTUP_CHECK_STRATEGY) {
             $strategy = $this->startupCheckStrategyProvider->get(static::$STARTUP_CHECK_STRATEGY);
             if (!$strategy) {
-                throw new LogicException("Startup check strategy not found: " . static::$STARTUP_CHECK_STRATEGY);
+                throw new LogicException('Startup check strategy not found: '.static::$STARTUP_CHECK_STRATEGY);
             }
+
             return $strategy;
         }
         if ($this->startupCheckStrategy) {
             return $this->startupCheckStrategy;
         }
+
         return null;
     }
 
     /**
      * Register a startup check strategy.
      *
-     * @param StartupCheckStrategyProvider $provider The startup check strategy provider.
-     * @return void
+     * @param StartupCheckStrategyProvider $provider the startup check strategy provider
      */
     protected function registerStartupCheckStrategy($provider)
     {
         try {
             $provider->register('is_running', new IsRunningStartupCheckStrategy());
         } catch (AlreadyExistsStartupStrategyException $e) {
-            throw new LogicException("Startup check strategy with name is_running already exists.", 0, $e);
+            throw new LogicException('Startup check strategy with name is_running already exists.', 0, $e);
         }
     }
 }

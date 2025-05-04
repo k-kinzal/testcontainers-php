@@ -7,10 +7,14 @@ use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class LogMessageWaitStrategyTest extends WaitStrategyTestCase
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function resolveWaitStrategy()
     {
@@ -32,7 +36,8 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
             ]);
             $strategy = (new LogMessageWaitStrategy())
                 ->withPattern('\d{2}:\d{2}:\d{2}')
-                ->withTimeoutSeconds(5);
+                ->withTimeoutSeconds(5)
+            ;
             $strategy->waitUntilReady($instance);
         } finally {
             $client->stop($containerId);

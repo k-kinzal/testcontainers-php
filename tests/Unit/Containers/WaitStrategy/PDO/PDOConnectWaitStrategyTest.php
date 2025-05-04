@@ -9,15 +9,20 @@ use Testcontainers\Containers\WaitStrategy\PDO\SQLiteDSN;
 use Testcontainers\Docker\Types\ContainerId;
 use Tests\Unit\Containers\WaitStrategy\WaitStrategyTestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function resolveWaitStrategy()
     {
         return (new PDOConnectWaitStrategy())
-            ->withDsn(new SQLiteDSN());
+            ->withDsn(new SQLiteDSN())
+        ;
     }
 
     public function testWaitUntilReady()

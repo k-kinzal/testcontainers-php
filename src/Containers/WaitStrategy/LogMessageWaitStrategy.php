@@ -21,7 +21,6 @@ class LogMessageWaitStrategy implements WaitStrategy
      */
     private $pattern = '.*';
 
-
     /**
      * The timeout duration in seconds for waiting until the container instance is ready.
      *
@@ -39,7 +38,7 @@ class LogMessageWaitStrategy implements WaitStrategy
         $client = DockerClientFactory::create();
         $output = $client->withTimeout($this->timeout)->logs($containerId, ['follow' => true]);
         if (!($output instanceof DockerFollowLogsOutput)) {
-            throw new LogicException('Expected DockerFollowLogsOutput instance: `' . get_class($output) . '`');
+            throw new LogicException('Expected DockerFollowLogsOutput instance: `'.get_class($output).'`');
         }
         $iter = $output->getIterator();
         $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';
@@ -53,8 +52,9 @@ class LogMessageWaitStrategy implements WaitStrategy
     /**
      * Sets the pattern to be used for matching log messages.
      *
-     * @param string $pattern The regex pattern to match against log messages.
-     * @return $this The current instance for method chaining.
+     * @param string $pattern the regex pattern to match against log messages
+     *
+     * @return $this the current instance for method chaining
      */
     public function withPattern($pattern)
     {
@@ -66,8 +66,9 @@ class LogMessageWaitStrategy implements WaitStrategy
     /**
      * Sets the timeout duration for waiting until the container instance is ready.
      *
-     * @param int $seconds The number of seconds to wait before timing out.
-     * @return $this The current instance for method chaining.
+     * @param int $seconds the number of seconds to wait before timing out
+     *
+     * @return $this the current instance for method chaining
      */
     public function withTimeoutSeconds($seconds)
     {

@@ -17,7 +17,7 @@ trait NetworkCreateCommand
      *
      * This method wraps the `docker network create` command to create a new Docker network.
      *
-     * @param string $network The name of the Docker network to create.
+     * @param string $network the name of the Docker network to create
      * @param array{
      *     attachable?: bool|null,
      *     auxAddress?: string[]|Stringable[]|null,
@@ -35,8 +35,9 @@ trait NetworkCreateCommand
      *     opt?: array<string, string|Stringable>|null,
      *     scope?: string|Stringable|null,
      *     subnet?: string[]|Stringable[]|null,
-     * } $options Additional options for the Docker network create command.
-     * @return DockerNetworkCreateOutput The output of the Docker network create command.
+     * } $options Additional options for the Docker network create command
+     *
+     * @return DockerNetworkCreateOutput the output of the Docker network create command
      */
     public function networkCreate($network, $options = [])
     {

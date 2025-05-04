@@ -8,43 +8,62 @@ use Testcontainers\Docker\Exception\InvalidValueException;
 /**
  * Represents a container object returned by the Docker API.
  *
- * @property-read State $state The state of the container.
+ * @property State $state The state of the container.
  */
 class ContainerObject
 {
     /**
      * The state of the container.
+     *
      * @var State
      */
     private $state;
-
 
     private function __construct()
     {
     }
 
     /**
+     * Retrieve the value of a property.
+     *
+     * @param string $name the name of the property to retrieve
+     *
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (!property_exists($this, $name)) {
+            throw new LogicException('ContainerObject::'.$name.' does not exist');
+        }
+
+        return $this->$name;
+    }
+
+    /**
      * Create a ContainerObject from an array.
      *
-     * @param array $arr The array to create the ContainerObject from.
-     * @return self
+     * @param array $arr the array to create the ContainerObject from
      *
-     * @throws InvalidValueException If the array does not contain the expected properties.
+     * @throws InvalidValueException if the array does not contain the expected properties
+     *
+     * @return self
      */
     public static function fromArray($arr)
     {
         $object = new ContainerObject();
         $object->state = self::ensureStateFromArray($arr);
+
         return $object;
     }
 
     /**
      * Ensure that the State property is present and is an array.
      *
-     * @param array $arr The array to check.
-     * @return State The state of the container.
+     * @param array $arr the array to check
      *
-     * @throws InvalidValueException If the State property is missing or is not an array.
+     * @throws InvalidValueException if the State property is missing or is not an array
+     *
+     * @return State the state of the container
      */
     private static function ensureStateFromArray($arr)
     {
@@ -60,20 +79,7 @@ class ContainerObject
                 ['data' => $arr]
             );
         }
-        return State::fromArray($arr['State']);
-    }
 
-    /**
-     * Retrieve the value of a property.
-     *
-     * @param string $name The name of the property to retrieve.
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        if (!property_exists($this, $name)) {
-            throw new LogicException('ContainerObject::' . $name . ' does not exist');
-        }
-        return $this->$name;
+        return State::fromArray($arr['State']);
     }
 }

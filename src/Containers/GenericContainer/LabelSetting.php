@@ -28,12 +28,14 @@ trait LabelSetting
 {
     /**
      * Define the default labels to be used for the container.
-     * @var array<string, string>|null
+     *
+     * @var null|array<string, string>
      */
     protected static $LABELS;
 
     /**
      * The labels to be used for the container.
+     *
      * @var array<string, string>
      */
     private $labels = [];
@@ -41,8 +43,9 @@ trait LabelSetting
     /**
      * Add a label to the container.
      *
-     * @param string $key The name of the label.
-     * @param string $value The value of the label.
+     * @param string $key   the name of the label
+     * @param string $value the value of the label
+     *
      * @return self
      */
     public function withLabel($key, $value)
@@ -55,7 +58,8 @@ trait LabelSetting
     /**
      * Adds multiple labels to the container.
      *
-     * @param array<string, string> $labels An associative array where the key is the label name and the value is the label value.
+     * @param array<string, string> $labels an associative array where the key is the label name and the value is the label value
+     *
      * @return self
      */
     public function withLabels($labels)
@@ -82,6 +86,7 @@ trait LabelSetting
         if ($this->labels) {
             return $this->labels;
         }
+
         return [];
     }
 }

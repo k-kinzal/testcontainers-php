@@ -6,7 +6,7 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 
 /**
- * Docker in Docker container
+ * Docker in Docker container.
  */
 class DinD extends GenericContainer
 {
@@ -26,7 +26,7 @@ class DinD extends GenericContainer
      */
     protected static $COMMANDS = [
         'dockerd-entrypoint.sh',
-        '--tls=false'
+        '--tls=false',
     ];
 
     /**
@@ -37,7 +37,7 @@ class DinD extends GenericContainer
      * @var array<string, string>
      */
     protected static $ENVIRONMENTS = [
-        'DOCKER_TLS_CERTDIR' => ''
+        'DOCKER_TLS_CERTDIR' => '',
     ];
 
     /**
@@ -61,6 +61,7 @@ class DinD extends GenericContainer
     {
         return (new HttpWaitStrategy())
             ->withSchema('http')
-            ->withPath('/_ping');
+            ->withPath('/_ping')
+        ;
     }
 }

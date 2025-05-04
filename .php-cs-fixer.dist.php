@@ -12,4 +12,9 @@ return (new Config())
     ->setFinder($finder)
     ->setRiskyAllowed(true)
     ->setUsingCache(false)
+    ->setRules([
+        '@PSR2' => true,
+        '@PSR12' => true,
+        '@PhpCsFixer' => true,
+    ])
 ;

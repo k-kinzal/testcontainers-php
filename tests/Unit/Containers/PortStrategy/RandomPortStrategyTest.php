@@ -4,10 +4,14 @@ namespace Tests\Unit\Containers\PortStrategy;
 
 use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class RandomPortStrategyTest extends PortStrategyTestCase
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function resolvePortStrategy()
     {

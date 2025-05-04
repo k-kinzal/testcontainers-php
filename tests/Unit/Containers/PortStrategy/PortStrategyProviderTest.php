@@ -10,6 +10,10 @@ use Testcontainers\Containers\PortStrategy\ConflictBehavior;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class PortStrategyProviderTest extends TestCase
 {
     public function testRegister()

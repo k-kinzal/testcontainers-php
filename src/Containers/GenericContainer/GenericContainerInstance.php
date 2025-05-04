@@ -21,7 +21,7 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * The docker client.
      *
-     * @var DockerClient|null The docker client.
+     * @var null|DockerClient the docker client
      */
     private $client;
 
@@ -29,26 +29,26 @@ class GenericContainerInstance implements ContainerInstance
      * The container definition.
      *
      * @var array{
-     *     containerId: ContainerId,
-     *     labels?: array<string, string>|null,
-     *     ports?: array<int, int>,
-     *     pull?: ImagePullPolicy|null,
-     *     privileged?: bool,
-     * } The container definition.
+     *             containerId: ContainerId,
+     *             labels?: array<string, string>|null,
+     *             ports?: array<int, int>,
+     *             pull?: ImagePullPolicy|null,
+     *             privileged?: bool,
+     *             } The container definition
      */
     private $containerDef;
 
     /**
      * Indicates whether the container is running.
      *
-     * @var bool True if the container is running, false otherwise.
+     * @var bool true if the container is running, false otherwise
      */
     private $running = true;
 
     /**
      * The data associated with the container.
      *
-     * @var array<string, mixed> The data associated with the container.
+     * @var array<string, mixed> the data associated with the container
      */
     private $data = [];
 
@@ -59,7 +59,7 @@ class GenericContainerInstance implements ContainerInstance
      *     ports?: array<int, int>,
      *     pull?: ImagePullPolicy|null,
      *     privileged?: bool,
-     * } $containerDef The container definition.
+     * } $containerDef The container definition
      */
     public function __construct($containerDef)
     {
@@ -75,7 +75,6 @@ class GenericContainerInstance implements ContainerInstance
      * Sets the docker client.
      *
      * @param DockerClient $client
-     * @return void
      */
     public function setDockerClient($client)
     {
@@ -101,6 +100,7 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['labels'][$label])) {
             return null;
         }
+
         return $this->containerDef['labels'][$label];
     }
 
@@ -112,6 +112,7 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['labels'])) {
             return [];
         }
+
         return $this->containerDef['labels'];
     }
 
@@ -120,7 +121,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getHost()
     {
-        if ($this->tryGetData(Session::class) !== null) {
+        if (null !== $this->tryGetData(Session::class)) {
             return 'localhost';
         }
 
@@ -131,21 +132,23 @@ class GenericContainerInstance implements ContainerInstance
 
         $client = $this->client ?: DockerClientFactory::create();
         $host = $client->getHost();
-        if (strpos($host, 'unix:///') === 0) {
+        if (0 === strpos($host, 'unix:///')) {
             $host = str_replace('unix:///', 'unix://', $host);
         }
         $url = parse_url($host);
         if (!isset($url['scheme'])) {
-            throw new LogicException("Invalid URL: $host");
+            throw new LogicException("Invalid URL: {$host}");
         }
         if (!isset($url['host'])) {
-            throw new LogicException("Invalid URL: $host");
+            throw new LogicException("Invalid URL: {$host}");
         }
+
         switch ($url['scheme']) {
             case 'http':
             case 'https':
             case 'tcp':
                 return $url['host'];
+
             default:
                 return 'localhost';
         }
@@ -159,6 +162,7 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['ports'])) {
             return [];
         }
+
         return array_keys($this->containerDef['ports']);
     }
 
@@ -173,6 +177,7 @@ class GenericContainerInstance implements ContainerInstance
         if (!isset($this->containerDef['ports'][$exposedPort])) {
             return null;
         }
+
         return $this->containerDef['ports'][$exposedPort];
     }
 
@@ -199,6 +204,7 @@ class GenericContainerInstance implements ContainerInstance
     {
         $client = $this->client ?: DockerClientFactory::create();
         $output = $client->logs($this->containerDef['containerId']);
+
         return $output->getOutput();
     }
 
@@ -209,6 +215,7 @@ class GenericContainerInstance implements ContainerInstance
     {
         $client = $this->client ?: DockerClientFactory::create();
         $output = $client->logs($this->containerDef['containerId']);
+
         return $output->getErrorOutput();
     }
 
@@ -226,9 +233,10 @@ class GenericContainerInstance implements ContainerInstance
     public function getData($class)
     {
         $value = $this->data[$class];
-        if ($value === null) {
-            throw new LogicException("No data of type $class associated with the container");
+        if (null === $value) {
+            throw new LogicException("No data of type {$class} associated with the container");
         }
+
         return $value;
     }
 
@@ -239,9 +247,9 @@ class GenericContainerInstance implements ContainerInstance
     {
         if (isset($this->data[$class])) {
             return $this->data[$class];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -249,23 +257,28 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function isRunning()
     {
-        if ($this->running === false) {
+        if (false === $this->running) {
             return false;
         }
 
         try {
             $client = $this->client ?: DockerClientFactory::create();
             $output = $client->inspect($this->containerDef['containerId']);
+
             switch ($output->state->status) {
                 case 'running':
                     $this->running = true;
+
                     return true;
+
                 default:
                     $this->running = false;
+
                     return false;
             }
         } catch (NoSuchObjectException $e) {
             $this->running = false;
+
             return false;
         }
     }

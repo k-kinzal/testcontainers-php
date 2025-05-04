@@ -62,9 +62,17 @@ class NetworkMode implements Stringable
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
      * Creates a NetworkMode object with the host network mode.
      *
-     * @return self A NetworkMode object with the host network mode.
+     * @return self a NetworkMode object with the host network mode
      */
     public static function HOST()
     {
@@ -74,7 +82,7 @@ class NetworkMode implements Stringable
     /**
      * Creates a NetworkMode object with the bridge network mode.
      *
-     * @return self A NetworkMode object with the bridge network mode.
+     * @return self a NetworkMode object with the bridge network mode
      */
     public static function BRIDGE()
     {
@@ -84,7 +92,7 @@ class NetworkMode implements Stringable
     /**
      * Creates a NetworkMode object with the none network mode.
      *
-     * @return self A NetworkMode object with the none network mode.
+     * @return self a NetworkMode object with the none network mode
      */
     public static function NONE()
     {
@@ -94,8 +102,9 @@ class NetworkMode implements Stringable
     /**
      * Creates a NetworkMode object from a string.
      *
-     * @param string $s The network mode string.
-     * @return NetworkMode A NetworkMode object representing the given network mode.
+     * @param string $s the network mode string
+     *
+     * @return NetworkMode a NetworkMode object representing the given network mode
      */
     public static function fromString($s)
     {
@@ -105,18 +114,10 @@ class NetworkMode implements Stringable
     /**
      * Returns the network mode as a string.
      *
-     * @return string The network mode.
+     * @return string the network mode
      */
     public function toString()
     {
         return $this->mode;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

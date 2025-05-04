@@ -26,12 +26,14 @@ trait NetworkAliasSetting
 {
     /**
      * Define the default network aliases to be used for the container.
-     * @var string[]|null
+     *
+     * @var null|string[]
      */
     protected static $NETWORK_ALIASES;
 
     /**
      * The network aliases to be used for the container.
+     *
      * @var string[]
      */
     private $networkAliases = [];
@@ -39,7 +41,8 @@ trait NetworkAliasSetting
     /**
      * Set the network alias for this container, similar to the `--network-alias <my-service>` option on the Docker CLI.
      *
-     * @param string $alias The network alias to set.
+     * @param string $alias the network alias to set
+     *
      * @return self
      */
     public function withNetworkAlias($alias)
@@ -52,7 +55,8 @@ trait NetworkAliasSetting
     /**
      * Set the network aliases for this container, similar to the `--network-alias <my-service>` option on the Docker CLI.
      *
-     * @param string[] $aliases The network aliases to set.
+     * @param string[] $aliases the network aliases to set
+     *
      * @return self
      */
     public function withNetworkAliases($aliases)
@@ -75,6 +79,7 @@ trait NetworkAliasSetting
         if ($this->networkAliases) {
             return $this->networkAliases;
         }
+
         return [];
     }
 }

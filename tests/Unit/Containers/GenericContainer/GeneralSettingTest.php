@@ -9,6 +9,10 @@ use Testcontainers\Containers\GenericContainer\GeneralSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class GeneralSettingTest extends TestCase
 {
     public function testHasGeneralSettingTrait()
@@ -29,7 +33,8 @@ class GeneralSettingTest extends TestCase
     public function testStartWithCommand()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withCommand('pwd');
+            ->withCommand('pwd')
+        ;
         $instance = $container->start();
 
         $this->assertSame("/\n", $instance->getOutput());
@@ -39,7 +44,8 @@ class GeneralSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['echo', 'Hello, World!'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance = $container->start();
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());

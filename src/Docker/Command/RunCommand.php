@@ -3,12 +3,12 @@
 namespace Testcontainers\Docker\Command;
 
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
+use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
+use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Docker\Output\DockerRunOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
-use Testcontainers\Docker\Exception\DockerException;
-use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -23,9 +23,9 @@ trait RunCommand
      *
      * This method wraps the `docker run` command to create and run a new container from a specified Docker image.
      *
-     * @param string $image The name of the Docker image to use.
-     * @param string|null $command The command to run inside the container (optional).
-     * @param array $args The arguments for the command (optional).
+     * @param string      $image   the name of the Docker image to use
+     * @param null|string $command the command to run inside the container (optional)
+     * @param array       $args    the arguments for the command (optional)
      * @param array{
      *     addHost?: string[]|Stringable[]|null,
      *     detach?: bool|null,
@@ -41,14 +41,15 @@ trait RunCommand
      *     quiet?: bool|null,
      *     volumesFrom?: string[]|Stringable[]|null,
      *     workdir?: string|null,
-     * } $options Additional options for the Docker command.
-     * @return DockerRunOutput|DockerRunWithDetachOutput The output of the Docker run command. If the `detach` option is set to `true`, a `DockerRunWithDetachOutput` object is returned.
+     * } $options Additional options for the Docker command
      *
-     * @throws NoSuchContainerException If the specified container does not exist.
-     * @throws NoSuchObjectException If the specified object does not exist.
-     * @throws PortAlreadyAllocatedException If the specified port is already allocated.
-     * @throws BindAddressAlreadyUseException If the specified bind address is already in use.
-     * @throws DockerException If the Docker command fails.
+     * @throws NoSuchContainerException       if the specified container does not exist
+     * @throws NoSuchObjectException          if the specified object does not exist
+     * @throws PortAlreadyAllocatedException  if the specified port is already allocated
+     * @throws BindAddressAlreadyUseException if the specified bind address is already in use
+     * @throws DockerException                if the Docker command fails
+     *
+     * @return DockerRunOutput|DockerRunWithDetachOutput The output of the Docker run command. If the `detach` option is set to `true`, a `DockerRunWithDetachOutput` object is returned.
      */
     public function run($image, $command = null, $args = [], $options = [])
     {
@@ -58,11 +59,11 @@ trait RunCommand
             array_filter(array_merge([$image, $command], $args)),
             $options
         );
-        if (isset($options['detach']) && $options['detach'] === true) {
+        if (isset($options['detach']) && true === $options['detach']) {
             return new DockerRunWithDetachOutput($process);
-        } else {
-            return new DockerRunOutput($process);
         }
+
+        return new DockerRunOutput($process);
     }
 
     abstract protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true);

@@ -34,42 +34,49 @@ trait PortSetting
 {
     /**
      * Define the default ports to be exposed by the container.
-     * @var int[]|null
+     *
+     * @var null|int[]
      */
     protected static $EXPOSED_PORTS;
 
     /**
      * Define the default ports to be exposed by the container. Alias for `EXPOSED_PORTS`.
-     * @var int[]|null
+     *
+     * @var null|int[]
      */
     protected static $EXPOSE;
 
     /**
      * Define the default ports to be exposed by the container. Alias for `EXPOSED_PORTS`.
-     * @var int[]|null
+     *
+     * @var null|int[]
      */
     protected static $PORTS;
 
     /**
+     * Define the default port strategy to be used for the container.
+     *
+     * @var null|string
+     */
+    protected static $PORT_STRATEGY;
+
+    /**
      * The ports to be exposed by the container.
+     *
      * @var int[]
      */
     private $exposedPorts = [];
 
     /**
-     * Define the default port strategy to be used for the container.
-     * @var string|null
-     */
-    protected static $PORT_STRATEGY;
-
-    /**
      * The port strategy to be used for the container.
-     * @var PortStrategy|null
+     *
+     * @var null|PortStrategy
      */
     private $portStrategy;
 
     /**
      * The port strategy provider.
+     *
      * @var PortStrategyProvider
      */
     private $portStrategyProvider;
@@ -77,7 +84,8 @@ trait PortSetting
     /**
      * Set the port that this container listens on.
      *
-     * @param int|string $port The port to expose.
+     * @param int|string $port the port to expose
+     *
      * @return self
      */
     public function withExposedPort($port)
@@ -93,7 +101,8 @@ trait PortSetting
     /**
      * Set the port that this container listens on. Alias for `withExposedPort`.
      *
-     * @param int|string $port The port to expose.
+     * @param int|string $port the port to expose
+     *
      * @return self
      */
     public function withExpose($port)
@@ -104,7 +113,8 @@ trait PortSetting
     /**
      * Set the port that this container listens on. Alias for `withExposedPort`.
      *
-     * @param int|string $port The port to expose.
+     * @param int|string $port the port to expose
+     *
      * @return self
      */
     public function withPort($port)
@@ -115,7 +125,8 @@ trait PortSetting
     /**
      * Set the ports that this container listens on.
      *
-     * @param int[] $ports The ports to expose.
+     * @param int[] $ports the ports to expose
+     *
      * @return self
      */
     public function withExposedPorts($ports)
@@ -128,7 +139,8 @@ trait PortSetting
     /**
      * Set the ports that this container listens on. Alias for `withExposedPorts`.
      *
-     * @param int[] $ports The ports to expose.
+     * @param int[] $ports the ports to expose
+     *
      * @return self
      */
     public function withExposes($ports)
@@ -139,7 +151,8 @@ trait PortSetting
     /**
      * Set the ports that this container listens on. Alias for `withExposedPorts`.
      *
-     * @param int[] $ports The ports to expose.
+     * @param int[] $ports the ports to expose
+     *
      * @return self
      */
     public function withPorts($ports)
@@ -150,7 +163,8 @@ trait PortSetting
     /**
      * Set the port strategy used for determining the ports that the container listens on.
      *
-     * @param PortStrategy $strategy The port strategy to use.
+     * @param PortStrategy $strategy the port strategy to use
+     *
      * @return self
      */
     public function withPortStrategy($strategy)
@@ -169,7 +183,7 @@ trait PortSetting
      * 3. Static variable `$PORTS`
      * 4. Instance variable `$exposedPorts`
      *
-     * @return int[] The list of ports to be exposed.
+     * @return int[] the list of ports to be exposed
      */
     protected function exposedPorts()
     {
@@ -185,6 +199,7 @@ trait PortSetting
         if ($this->exposedPorts) {
             return $this->exposedPorts;
         }
+
         return [];
     }
 
@@ -195,19 +210,20 @@ trait PortSetting
      * If a specific port strategy is set, it will return that. Otherwise, it will
      * attempt to retrieve the default port strategy from the provider.
      *
-     * @return PortStrategy|null The port strategy to be used, or null if none is set.
+     * @return null|PortStrategy the port strategy to be used, or null if none is set
      */
     protected function portStrategy()
     {
-        if ($this->portStrategyProvider === null) {
+        if (null === $this->portStrategyProvider) {
             $this->portStrategyProvider = new PortStrategyProvider();
             $this->registerPortStrategy($this->portStrategyProvider);
         }
-        if (static::$PORT_STRATEGY !== null) {
+        if (null !== static::$PORT_STRATEGY) {
             $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
             if (!$strategy) {
-                throw new LogicException("Port strategy not found: " . static::$PORT_STRATEGY);
+                throw new LogicException('Port strategy not found: '.static::$PORT_STRATEGY);
             }
+
             return $strategy;
         }
         if ($this->portStrategy) {
@@ -225,7 +241,7 @@ trait PortSetting
     /**
      * Retrieve Map of ports to be exposed by the container.
      *
-     * @return array<int, int> Key-value pairs of container ports to host ports.
+     * @return array<int, int> key-value pairs of container ports to host ports
      */
     protected function ports()
     {
@@ -237,6 +253,7 @@ trait PortSetting
                 $hostPort = $strategy->getPort();
                 $ports[$containerPort] = $hostPort;
             }
+
             return $ports;
         }
 
@@ -246,15 +263,14 @@ trait PortSetting
     /**
      * Register a port strategy.
      *
-     * @param PortStrategyProvider $provider The port strategy provider.
-     * @return void
+     * @param PortStrategyProvider $provider the port strategy provider
      */
     protected function registerPortStrategy($provider)
     {
         try {
             $provider->register('random', new RandomPortStrategy());
         } catch (AlreadyExistsPortStrategyException $e) {
-            throw new LogicException("Port strategy already registered: random", 0, $e);
+            throw new LogicException('Port strategy already registered: random', 0, $e);
         }
     }
 }

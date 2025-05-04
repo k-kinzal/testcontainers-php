@@ -9,6 +9,10 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\WorkdirSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class WorkdirSettingTest extends TestCase
 {
     public function testHasWorkdirSettingTrait()
@@ -22,7 +26,8 @@ class WorkdirSettingTest extends TestCase
     {
         $container = (new WorkdirSettingWithStaticWorkdirContainer('alpine:latest'))
             ->withCommands(['pwd'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance = $container->start();
 
         $this->assertSame("/tmp\n", $instance->getOutput());
@@ -33,7 +38,8 @@ class WorkdirSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withWorkingDirectory('/tmp')
             ->withCommands(['pwd'])
-            ->withWaitStrategy(new LogMessageWaitStrategy());
+            ->withWaitStrategy(new LogMessageWaitStrategy())
+        ;
         $instance = $container->start();
 
         $this->assertSame("/tmp\n", $instance->getOutput());

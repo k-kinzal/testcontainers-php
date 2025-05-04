@@ -51,12 +51,20 @@ class ConflictBehavior implements Stringable
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
      * Creates a ConflictBehavior instance with the retry action.
      *
      * This method returns a new ConflictBehavior instance configured to retry
      * when a port conflict occurs.
      *
-     * @return self A ConflictBehavior instance with the retry action.
+     * @return self a ConflictBehavior instance with the retry action
      */
     public static function RETRY()
     {
@@ -69,7 +77,7 @@ class ConflictBehavior implements Stringable
      * This method returns a new ConflictBehavior instance configured to fail
      * when a port conflict occurs.
      *
-     * @return self A ConflictBehavior instance with the fail action.
+     * @return self a ConflictBehavior instance with the fail action
      */
     public static function FAIL()
     {
@@ -80,22 +88,24 @@ class ConflictBehavior implements Stringable
      * Creates a ConflictBehavior instance from a string.
      *
      * @param string $action The action to take on port conflict. Valid values are 'retry' or 'fail'.
-     * @return ConflictBehavior The ConflictBehavior instance corresponding to the action.
      *
-     * @throws InvalidFormatException If the action is invalid.
+     * @throws InvalidFormatException if the action is invalid
+     *
+     * @return ConflictBehavior the ConflictBehavior instance corresponding to the action
      */
     public static function fromString($action)
     {
         if (!in_array($action, [static::$RETRY, static::$FAIL])) {
             throw new InvalidFormatException($action, [static::$RETRY, static::$FAIL]);
         }
+
         return new self($action);
     }
 
     /**
      * Checks if the conflict behavior is set to retry.
      *
-     * @return bool True if the action is retry, false otherwise.
+     * @return bool true if the action is retry, false otherwise
      */
     public function isRetry()
     {
@@ -105,7 +115,7 @@ class ConflictBehavior implements Stringable
     /**
      * Checks if the conflict behavior is set to fail.
      *
-     * @return bool True if the action is fail, false otherwise.
+     * @return bool true if the action is fail, false otherwise
      */
     public function isFail()
     {
@@ -115,18 +125,10 @@ class ConflictBehavior implements Stringable
     /**
      * Converts the conflict behavior to a string representation.
      *
-     * @return string The string representation of the conflict behavior.
+     * @return string the string representation of the conflict behavior
      */
     public function toString()
     {
         return $this->action;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

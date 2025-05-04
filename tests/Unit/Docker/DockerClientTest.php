@@ -5,6 +5,10 @@ namespace Tests\Unit\Docker;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class DockerClientTest extends TestCase
 {
     public function testClone()

@@ -31,25 +31,27 @@ trait SSHPortForwardSetting
 {
     /**
      * Define the default SSH port forwarding to be used for the container.
-     * @var string|bool|null
+     *
+     * @var null|bool|string
      */
     protected static $SSH_PORT_FORWARD;
 
     /**
      * @var array{
-     *     sshUser?: string|null,
-     *     sshHost: string,
-     *     sshPort?: int|null,
-     * }|bool|null
+     *             sshUser?: string|null,
+     *             sshHost: string,
+     *             sshPort?: int|null,
+     *             }|bool|null
      */
     private $sshPortForward;
 
     /**
      * Set up SSH port forwarding to the remote host that starts the container.
      *
-     * @param string $sshHost The SSH host to forward to.
-     * @param int|null $sshPort The SSH port to forward to.
-     * @param string|null $sshUser The SSH user to use for the connection.
+     * @param string      $sshHost the SSH host to forward to
+     * @param null|int    $sshPort the SSH port to forward to
+     * @param null|string $sshUser the SSH user to use for the connection
+     *
      * @return $this
      */
     public function withSSHPortForward($sshHost, $sshPort = null, $sshUser = null)
@@ -67,39 +69,40 @@ trait SSHPortForwardSetting
      * Retrieve the SSH port forwarding to be used for the container.
      *
      * @return array{
-     *     sshUser?: string|null,
-     *     sshHost?: string|null,
-     *     sshPort?: int|null,
-     * }|null
+     *                sshUser?: string|null,
+     *                sshHost?: string|null,
+     *                sshPort?: int|null,
+     *                }|null
      */
     protected function sshPortForward()
     {
-        if (self::$SSH_PORT_FORWARD !== null) {
+        if (null !== self::$SSH_PORT_FORWARD) {
             if (is_bool(self::$SSH_PORT_FORWARD)) {
                 return self::$SSH_PORT_FORWARD ? [
                     'sshUser' => null,
                     'sshHost' => null,
                     'sshPort' => null,
                 ] : null;
-            } else {
-                return $this->parseSSHString(self::$SSH_PORT_FORWARD);
             }
+
+            return $this->parseSSHString(self::$SSH_PORT_FORWARD);
         }
-        if ($this->sshPortForward !== null) {
+        if (null !== $this->sshPortForward) {
             if (is_bool($this->sshPortForward)) {
                 return $this->sshPortForward ? [
                     'sshUser' => null,
                     'sshHost' => null,
                     'sshPort' => null,
                 ] : null;
-            } else {
-                return $this->sshPortForward;
             }
+
+            return $this->sshPortForward;
         }
         $env = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING();
-        if ($env !== null) {
+        if (null !== $env) {
             return $this->parseSSHString($env);
         }
+
         return null;
     }
 
@@ -107,20 +110,21 @@ trait SSHPortForwardSetting
      * Parse an SSH string into its components.
      * The string should be in the format `[user@]host[:port]`.
      *
-     * @param string $s The SSH string to parse.
+     * @param string $s the SSH string to parse
+     *
      * @return array{
-     *     sshUser?: string|null,
-     *     sshHost?: string|null,
-     *     sshPort?: int|null,
-     * }|null
+     *                sshUser?: string|null,
+     *                sshHost?: string|null,
+     *                sshPort?: int|null,
+     *                }|null
      */
     private function parseSSHString($s)
     {
         $parts = explode('@', $s, 2);
-        if (count($parts) === 2) {
+        if (2 === count($parts)) {
             $sshUser = $parts[0];
             $parts = explode(':', $parts[1], 2);
-            if (count($parts) === 2) {
+            if (2 === count($parts)) {
                 $sshHost = $parts[0];
                 $sshPort = (int) $parts[1];
             } else {
@@ -130,14 +134,15 @@ trait SSHPortForwardSetting
         } else {
             $sshUser = null;
             $parts = explode(':', $s, 2);
-            if (count($parts) === 2) {
+            if (2 === count($parts)) {
                 $sshHost = $parts[0];
-                $sshPort = (int)$parts[1];
+                $sshPort = (int) $parts[1];
             } else {
                 $sshHost = $s;
                 $sshPort = null;
             }
         }
+
         return [
             'sshUser' => $sshUser,
             'sshHost' => $sshHost,

@@ -9,6 +9,10 @@ use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class NetworkCreateCommandTest extends TestCase
 {
     public function testHasNetworkCreateCommandTrait()
@@ -24,12 +28,12 @@ class NetworkCreateCommandTest extends TestCase
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
         ]);
         $output = $client->networkCreate('test-network');
 
         $this->assertInstanceOf(DockerNetworkCreateOutput::class, $output);
         $this->assertSame(0, $output->getExitCode());
-        $this->assertTrue(preg_match('/^[0-9a-f]{64}/', $output->getNetworkId()) === 1);
+        $this->assertTrue(1 === preg_match('/^[0-9a-f]{64}/', $output->getNetworkId()));
     }
 }

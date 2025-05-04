@@ -13,6 +13,14 @@ use Testcontainers\Utility\Stringable;
 class SQLiteDSN implements DSN, Stringable
 {
     /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function withHost($host)
@@ -45,19 +53,11 @@ class SQLiteDSN implements DSN, Stringable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function toString()
     {
         // TODO: support file path
         return 'sqlite::memory:';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function __toString()
-    {
-        return $this->toString();
     }
 }

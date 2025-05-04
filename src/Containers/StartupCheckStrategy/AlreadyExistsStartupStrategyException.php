@@ -10,10 +10,10 @@ use Exception;
 class AlreadyExistsStartupStrategyException extends Exception
 {
     /**
-     * @param string $name The name of the startup strategy that already exists.
+     * @param string $name the name of the startup strategy that already exists
      */
     public function __construct($name)
     {
-        parent::__construct("Startup strategy with name $name already exists.");
+        parent::__construct("Startup strategy with name {$name} already exists.");
     }
 }

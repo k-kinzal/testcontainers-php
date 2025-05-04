@@ -9,6 +9,10 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PullPolicySetting;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class PullPolicySettingTest extends TestCase
 {
     public function testHasPullPolicySettingTrait()
@@ -32,7 +36,8 @@ class PullPolicySettingTest extends TestCase
     public function testStartWithImagePullPolicy()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withImagePullPolicy(ImagePullPolicy::MISSING());
+            ->withImagePullPolicy(ImagePullPolicy::MISSING())
+        ;
         $instance = $container->start();
 
         $pullPolicy = $instance->getImagePullPolicy();

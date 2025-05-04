@@ -8,6 +8,10 @@ use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerInspectOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class InspectCommandTest extends TestCase
 {
     public function testHasInspectCommandTrait()
@@ -36,7 +40,7 @@ class InspectCommandTest extends TestCase
             'restarting',
             'removing',
             'exited',
-            'dead'
+            'dead',
         ]);
         $this->assertSame(0, $output->state->exitCode);
     }

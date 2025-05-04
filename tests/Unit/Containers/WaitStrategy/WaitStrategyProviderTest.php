@@ -9,6 +9,10 @@ use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class WaitStrategyProviderTest extends TestCase
 {
     public function testRegister()

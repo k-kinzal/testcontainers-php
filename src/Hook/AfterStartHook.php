@@ -7,7 +7,7 @@ use Testcontainers\Containers\ContainerInstance;
 trait AfterStartHook
 {
     /**
-     * Hook executed after the container is started
+     * Hook executed after the container is started.
      *
      * @param ContainerInstance $instance
      */

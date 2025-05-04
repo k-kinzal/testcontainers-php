@@ -26,20 +26,23 @@ trait WorkdirSetting
 {
     /**
      * Define the default working directory to be used for the container.
-     * @var string|null
+     *
+     * @var null|string
      */
     protected static $WORKDIR;
 
     /**
      * The working directory to be used for the container.
-     * @var string|null
+     *
+     * @var null|string
      */
     private $workDir;
 
     /**
      * Set the working directory that the container should use on startup.
      *
-     * @param string $workDir The path to the working directory inside the container.
+     * @param string $workDir the path to the working directory inside the container
+     *
      * @return self
      */
     public function withWorkingDirectory($workDir)
@@ -52,7 +55,8 @@ trait WorkdirSetting
     /**
      * Set the working directory that the container should use on startup. Alias for `withWorkingDirectory`.
      *
-     * @param string $workDir The path to the working directory inside the container.
+     * @param string $workDir the path to the working directory inside the container
+     *
      * @return self
      */
     public function withWorkDir($workDir)
@@ -63,13 +67,14 @@ trait WorkdirSetting
     /**
      * Retrieve the working directory for the container.
      *
-     * @return string|null
+     * @return null|string
      */
     protected function workDir()
     {
         if (static::$WORKDIR) {
             return static::$WORKDIR;
         }
+
         return $this->workDir;
     }
 }

@@ -11,9 +11,10 @@ use Testcontainers\Containers\ContainerInstance;
 interface StartupCheckStrategy
 {
     /**
-     * Wait until the container startup is successful
+     * Wait until the container startup is successful.
      *
-     * @param ContainerInstance $instance The container instance to check.
+     * @param ContainerInstance $instance the container instance to check
+     *
      * @return bool
      */
     public function waitUntilStartupSuccessful($instance);

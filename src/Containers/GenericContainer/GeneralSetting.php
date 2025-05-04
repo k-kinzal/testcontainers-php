@@ -28,37 +28,43 @@ trait GeneralSetting
 {
     /**
      * Define the default image to be used for the container.
-     * @var string|null
+     *
+     * @var null|string
      */
     protected static $IMAGE;
 
     /**
+     * The commands to be executed in the container.
+     *
+     * @var null|string|string[]
+     */
+    protected static $COMMANDS;
+
+    /**
+     * Define the default name to be used for the container.
+     *
+     * @var null|string
+     */
+    protected static $NAME;
+
+    /**
      * The image to be used for the container.
+     *
      * @var string
      */
     private $image;
 
     /**
      * The commands to be executed in the container.
-     * @var null|string|string[]
-     */
-    protected static $COMMANDS;
-
-    /**
-     * The commands to be executed in the container.
+     *
      * @var string[]
      */
     private $commands = [];
 
     /**
-     * Define the default name to be used for the container.
-     * @var string|null
-     */
-    protected static $NAME;
-
-    /**
      * The name to be used for the container.
-     * @var string|null
+     *
+     * @var null|string
      */
     private $name;
 
@@ -85,7 +91,8 @@ trait GeneralSetting
     /**
      * Set the name for this container, similar to the `--name <name>` option on the Docker CLI.
      *
-     * @param string $name The name to set.
+     * @param string $name the name to set
+     *
      * @return self
      */
     public function withName($name)
@@ -112,7 +119,7 @@ trait GeneralSetting
      * If a specific command is set, it will return that. Otherwise, it will
      * attempt to retrieve the default command from the provider.
      *
-     * @return string|string[]|null
+     * @return null|string|string[]
      */
     protected function commands()
     {
@@ -122,13 +129,14 @@ trait GeneralSetting
         if ($this->commands) {
             return $this->commands;
         }
+
         return null;
     }
 
     /**
-     * Retrieve the command to be executed
+     * Retrieve the command to be executed.
      *
-     * @return string|null
+     * @return null|string
      */
     protected function command()
     {
@@ -139,11 +147,12 @@ trait GeneralSetting
         if (is_array($commands) && count($commands) > 0) {
             return $commands[0];
         }
+
         return null;
     }
 
     /**
-     * Retrieve the arguments to be passed to the command
+     * Retrieve the arguments to be passed to the command.
      *
      * @return string[]
      */
@@ -156,13 +165,14 @@ trait GeneralSetting
         if (is_array($commands) && count($commands) > 1) {
             return array_slice($commands, 1);
         }
+
         return [];
     }
 
     /**
      * Retrieve the name to be used for the container.
      *
-     * @return string|null
+     * @return null|string
      */
     protected function name()
     {
@@ -172,6 +182,7 @@ trait GeneralSetting
         if ($this->name) {
             return $this->name;
         }
+
         return null;
     }
 }

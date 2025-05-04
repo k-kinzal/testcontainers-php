@@ -10,6 +10,10 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\PortStrategy\StaticPortStrategy;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class GenericContainerTest extends TestCase
 {
     public function testStart()
@@ -28,7 +32,8 @@ class GenericContainerTest extends TestCase
         $container1 = (new GenericContainer('alpine:latest'))
             ->withExposedPort(80)
             ->withPortStrategy(new StaticPortStrategy(50000))
-            ->withCommands(['tail', '-f', '/dev/null']);
+            ->withCommands(['tail', '-f', '/dev/null'])
+        ;
 
         $instance1 = $container1->start();
 
@@ -37,7 +42,8 @@ class GenericContainerTest extends TestCase
 
         $container2 = (new GenericContainer('alpine:latest'))
             ->withExposedPort(80)
-            ->withPortStrategy(new StaticPortStrategy(50000));
+            ->withPortStrategy(new StaticPortStrategy(50000))
+        ;
 
         $container2->start();
     }
