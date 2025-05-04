@@ -3,7 +3,7 @@
 namespace Testcontainers\Containers\Types;
 
 use LogicException;
-use Testcontainers\Containers\BindMode;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Exceptions\InvalidFormatException;
 
 /**

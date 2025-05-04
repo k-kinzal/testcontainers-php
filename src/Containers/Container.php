@@ -4,6 +4,7 @@ namespace Testcontainers\Containers;
 
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;

@@ -5,7 +5,7 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\BindMode;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\MountSetting;
 use Testcontainers\Containers\Types\Mount;

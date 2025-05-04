@@ -338,7 +338,7 @@ $container = (new GenericContainer('nginx:latest'))
     ->withFileSystemBind(
         '/path/on/host',
         '/path/in/container',
-        \Testcontainers\Containers\BindMode::READ_ONLY()
+        \Testcontainers\Containers\Types\BindMode::READ_ONLY()
     )
     ->withVolumesFrom('other-container-name');
 

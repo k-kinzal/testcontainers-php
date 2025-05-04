@@ -3,7 +3,7 @@
 namespace Testcontainers\Containers\GenericContainer;
 
 use InvalidArgumentException;
-use Testcontainers\Containers\BindMode;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\Mount;
 use Testcontainers\Exceptions\InvalidFormatException;
 

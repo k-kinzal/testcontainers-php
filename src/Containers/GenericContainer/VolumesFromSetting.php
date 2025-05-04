@@ -2,7 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use Testcontainers\Containers\BindMode;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\Types\VolumeFrom;
 use Testcontainers\Exceptions\InvalidFormatException;

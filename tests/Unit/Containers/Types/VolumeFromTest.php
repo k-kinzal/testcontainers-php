@@ -5,7 +5,7 @@
 namespace Tests\Unit\Containers\Types;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Containers\BindMode;
+use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\VolumeFrom;
 use Testcontainers\Exceptions\InvalidFormatException;
 
