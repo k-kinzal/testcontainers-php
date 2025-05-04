@@ -39,6 +39,7 @@ class RunCommandTest extends TestCase
 
         $this->assertInstanceOf(DockerRunWithDetachOutput::class, $output);
         $this->assertSame(0, $output->getExitCode());
+        /** @var DockerRunWithDetachOutput $output */
         $this->assertNotEmpty($output->getContainerId());
     }
 

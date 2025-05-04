@@ -34,6 +34,9 @@ class StartupCheckStrategyProviderTest extends TestCase
         $provider = new StartupCheckStrategyProvider();
         $provider->register('is_running', new IsRunningStartupCheckStrategy());
 
-        $this->assertSame(IsRunningStartupCheckStrategy::class, get_class($provider->get('is_running')));
+        $strategy = $provider->get('is_running');
+
+        $this->assertNotNull($strategy);
+        $this->assertInstanceOf(IsRunningStartupCheckStrategy::class, $strategy);
     }
 }

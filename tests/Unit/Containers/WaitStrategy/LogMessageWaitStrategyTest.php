@@ -5,6 +5,7 @@ namespace Tests\Unit\Containers\WaitStrategy;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClient;
+use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 
 class LogMessageWaitStrategyTest extends WaitStrategyTestCase
 {
@@ -19,6 +20,7 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
     public function testWaitUntilReady()
     {
         $client = new DockerClient();
+        /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('jpetazzo/clock:latest', null, [], [
             'detach' => true,
         ]);

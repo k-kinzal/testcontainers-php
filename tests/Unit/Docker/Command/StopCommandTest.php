@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\Command\StopCommand;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
+use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Output\DockerStopOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
@@ -27,6 +28,7 @@ class StopCommandTest extends TestCase
         $client->withGlobalOptions([
             'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
         ]);
+        /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('alpine:latest', 'tail', ['-f', '/dev/null'], [
             'detach' => true,
         ]);

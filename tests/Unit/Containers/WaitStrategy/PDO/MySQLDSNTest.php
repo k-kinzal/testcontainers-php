@@ -17,7 +17,7 @@ class MySQLDSNTest extends DSNTestCase
     public function testWithDbname()
     {
         $dbname = 'test';
-        $dsn = $this->resolveDSN()
+        $dsn = (new MySQLDSN())
             ->withHost('localhost')
             ->withDbname($dbname);
 
@@ -27,7 +27,7 @@ class MySQLDSNTest extends DSNTestCase
     public function testWithCharset()
     {
         $charset = 'utf8';
-        $dsn = $this->resolveDSN()
+        $dsn = (new MySQLDSN())
             ->withHost('localhost')
             ->withCharset($charset);
 
@@ -36,7 +36,7 @@ class MySQLDSNTest extends DSNTestCase
 
     public function testFullDSN()
     {
-        $dsn = $this->resolveDSN()
+        $dsn = (new MySQLDSN())
             ->withHost('localhost')
             ->withPort(3306)
             ->withDbname('test')

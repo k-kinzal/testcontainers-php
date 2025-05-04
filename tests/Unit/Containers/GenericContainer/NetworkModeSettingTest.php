@@ -24,7 +24,7 @@ class NetworkModeSettingTest extends TestCase
             ->withCommands(['sh', '-c', 'ls /sys/class/net']);
         $instance = $container->start();
 
-        $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
+        $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 
     public function testStartWithNetworkMode()
@@ -34,7 +34,7 @@ class NetworkModeSettingTest extends TestCase
             ->withCommands(['sh', '-c', 'ls /sys/class/net']);
         $instance = $container->start();
 
-        $this->assertFalse(strpos($instance->getOutput(), 'eth0'));
+        $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 }
 

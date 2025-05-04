@@ -7,6 +7,7 @@ use Testcontainers\Docker\Command\LogsCommand;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Docker\Output\DockerLogsOutput;
+use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
@@ -27,6 +28,7 @@ class LogsCommandTest extends TestCase
         $client->withGlobalOptions([
             'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
         ]);
+        /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('jpetazzo/clock:latest', null, [], [
             'detach' => true,
         ]);
@@ -47,6 +49,7 @@ class LogsCommandTest extends TestCase
         $client->withGlobalOptions([
             'host' => 'tcp://' . $instance->getHost() . ':' . $instance->getMappedPort(2375),
         ]);
+        /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('jpetazzo/clock:latest', null, [], [
             'detach' => true,
         ]);
@@ -55,15 +58,16 @@ class LogsCommandTest extends TestCase
         $logsOutput = $client->logs($containerId, [
             'follow' => true,
         ]);
-        $iter = $logsOutput->getIterator();
 
+        $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
+        /** @var DockerFollowLogsOutput $logsOutput */
+        $iter = $logsOutput->getIterator();
         $lines = [];
         for ($i = 0; $i < 3; $i++) {
             $lines[] = $iter->current();
             $iter->next();
         }
 
-        $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);

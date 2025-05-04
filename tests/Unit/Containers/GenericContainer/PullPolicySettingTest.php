@@ -23,7 +23,10 @@ class PullPolicySettingTest extends TestCase
         $container = new PullPolicySettingWithStaticPullPolicyContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(ImagePullPolicy::$ALWAYS, $instance->getImagePullPolicy()->toString());
+        $pullPolicy = $instance->getImagePullPolicy();
+
+        $this->assertNotNull($pullPolicy);
+        $this->assertSame(ImagePullPolicy::$ALWAYS, $pullPolicy->toString());
     }
 
     public function testStartWithImagePullPolicy()
@@ -32,7 +35,10 @@ class PullPolicySettingTest extends TestCase
             ->withImagePullPolicy(ImagePullPolicy::MISSING());
         $instance = $container->start();
 
-        $this->assertSame(ImagePullPolicy::$MISSING, $instance->getImagePullPolicy()->toString());
+        $pullPolicy = $instance->getImagePullPolicy();
+
+        $this->assertNotNull($pullPolicy);
+        $this->assertSame(ImagePullPolicy::$MISSING, $pullPolicy->toString());
     }
 }
 

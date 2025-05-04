@@ -34,7 +34,7 @@ class DinD extends GenericContainer
      *
      * Note: TLS is disabled for performance and ease of use.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected static $ENVIRONMENTS = [
         'DOCKER_TLS_CERTDIR' => ''

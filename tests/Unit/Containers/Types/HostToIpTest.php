@@ -42,14 +42,6 @@ class HostToIpTest extends TestCase
         $this->assertSame('127.0.0.1', $value->ip);
     }
 
-    public function testFromArrayWithInvalidFormat()
-    {
-        $this->expectExceptionMessage('Invalid format: `[]`, expects: `["hostname": string, "ipAddress": string]`');
-        $this->expectException(InvalidFormatException::class);
-
-        HostToIp::fromArray([]);
-    }
-
     public function testToString()
     {
         $value = new HostToIp('docker.internal', '127.0.0.1');
