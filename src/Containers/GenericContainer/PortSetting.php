@@ -115,17 +115,11 @@ trait PortSetting
     /**
      * Set the ports that this container listens on.
      *
-     * @param array|int|string $ports The ports to expose. Can be a single port, a range of ports, or an array of ports.
+     * @param int[] $ports The ports to expose.
      * @return self
      */
     public function withExposedPorts($ports)
     {
-        if (is_int($ports)) {
-            $ports = [$ports];
-        }
-        if (is_string($ports)) {
-            $ports = [intval($ports)];
-        }
         $this->exposedPorts = $ports;
 
         return $this;
@@ -134,7 +128,7 @@ trait PortSetting
     /**
      * Set the ports that this container listens on. Alias for `withExposedPorts`.
      *
-     * @param array|int|string $ports The ports to expose. Can be a single port, a range of ports, or an array of ports.
+     * @param int[] $ports The ports to expose.
      * @return self
      */
     public function withExposes($ports)
@@ -145,7 +139,7 @@ trait PortSetting
     /**
      * Set the ports that this container listens on. Alias for `withExposedPorts`.
      *
-     * @param array|int|string $ports The ports to expose. Can be a single port, a range of ports, or an array of ports.
+     * @param int[] $ports The ports to expose.
      * @return self
      */
     public function withPorts($ports)
@@ -253,6 +247,7 @@ trait PortSetting
      * Register a port strategy.
      *
      * @param PortStrategyProvider $provider The port strategy provider.
+     * @return void
      */
     protected function registerPortStrategy($provider)
     {

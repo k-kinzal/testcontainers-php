@@ -44,7 +44,7 @@ interface Container
     /**
      * Set the ports that this container listens on.
      *
-     * @param array|int|string $ports The ports to expose. Can be a single port, a range of ports, or an array of ports.
+     * @param int[] $ports The ports to expose
      * @return self
      */
     public function withExposedPorts($ports);
