@@ -119,7 +119,7 @@ trait BaseCommand
      * executed by this client. These options can include flags and parameters that modify the behavior
      * of Docker commands.
      *
-     * @param array $options An associative array of Docker global options.
+     * @param array<string, string> $options An associative array of Docker global options.
      * @return self
      */
     public function withGlobalOptions($options)
@@ -153,7 +153,7 @@ trait BaseCommand
      * to the Docker process when executing commands. If not set, the current
      * environment variables of the PHP process will be used.
      *
-     * @param array $env An associative array of environment variables.
+     * @param array<string, string> $env An associative array of environment variables.
      * @return self
      */
     public function withEnv($env)
@@ -203,7 +203,7 @@ trait BaseCommand
      * using the `proc_open` function. Refer to the PHP documentation for `proc_open` for more details
      * on available options.
      *
-     * @param array $proc_options An associative array of options for `proc_open`.
+     * @param array<string, string> $proc_options An associative array of options for `proc_open`.
      * @return self
      */
     public function withProcOptions($proc_options)
