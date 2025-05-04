@@ -60,7 +60,7 @@ class Tunnel
 
     /**
      * The SSH options to use.
-     * @var array
+     * @var array<string, string>
      */
     protected $sshOptions = [];
 
@@ -136,7 +136,7 @@ class Tunnel
     /**
      * Set the SSH options to use.
      *
-     * @param array $sshOptions The SSH options to use.
+     * @param array<string, string> $sshOptions The SSH options to use.
      * @return self
      */
     public function withSshOptions($sshOptions)
