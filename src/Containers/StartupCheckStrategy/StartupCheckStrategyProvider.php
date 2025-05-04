@@ -9,6 +9,11 @@ namespace Testcontainers\Containers\StartupCheckStrategy;
  */
 class StartupCheckStrategyProvider
 {
+    /**
+     * An associative array that maps strategy names to their corresponding StartupCheckStrategy instances.
+     *
+     * @var array<string, StartupCheckStrategy> The array of registered startup check strategies.
+     */
     private $strategies = [];
 
     /**
@@ -18,6 +23,7 @@ class StartupCheckStrategyProvider
      *
      * @param string $name The name of the wait strategy to register.
      * @param StartupCheckStrategy $strategy The wait strategy to register.
+     * @return void
      *
      * @throws AlreadyExistsStartupStrategyException If a strategy with the same name already exists.
      */
