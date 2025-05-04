@@ -12,6 +12,11 @@ namespace Testcontainers;
  */
 class Environments
 {
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return string|null
+     */
     public static function __callStatic($name, $arguments)
     {
         $value = getenv($name);
