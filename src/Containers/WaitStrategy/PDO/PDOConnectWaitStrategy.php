@@ -83,6 +83,9 @@ class PDOConnectWaitStrategy implements WaitStrategy
                 throw new LogicException('PDOConnectWaitStrategy requires exactly one exposed port: ' . count($ports) . ' exposed');
             }
             $port = $instance->getMappedPort($ports[0]);
+            if ($port === null) {
+                throw new LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
+            }
             $dsn = $dsn->withPort($port);
         }
 
@@ -90,7 +93,11 @@ class PDOConnectWaitStrategy implements WaitStrategy
         $ex = null;
         while (1) {
             if (time() - $now > $this->timeout) {
-                $message = $dsn->toString() . ': ' . $ex->getMessage();
+                if ($ex === null) {
+                    $message = 'Timeout waiting for PDO connection';
+                } else {
+                    $message = $dsn->toString() . ': ' . $ex->getMessage();
+                }
                 throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
             }
             try {
