@@ -31,9 +31,6 @@ class HostToIp
      */
     public function __construct($host, $ip)
     {
-        assert(is_string($host));
-        assert(is_string($ip));
-
         $this->host = $host;
         $this->ip = $ip;
     }
@@ -63,17 +60,9 @@ class HostToIp
      *     ipAddress: string
      * } $v The host-to-IP mapping.
      * @return HostToIp The HostToIp object.
-     *
-     * @throws InvalidFormatException If the format is invalid.
      */
     public static function fromArray($v)
     {
-        if (!isset($v['hostname']) || !isset($v['ipAddress'])) {
-            throw new InvalidFormatException($v, '["hostname": string, "ipAddress": string]');
-        }
-        if (!is_string($v['hostname']) || !is_string($v['ipAddress'])) {
-            throw new InvalidFormatException($v, '["hostname": string, "ipAddress": string]');
-        }
         return new self($v['hostname'], $v['ipAddress']);
     }
 
