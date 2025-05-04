@@ -80,6 +80,9 @@ class HttpWaitStrategy implements WaitStrategy
      */
     private $timeout = 30;
 
+    /**
+     * @param null|HttpProbe $probe
+     */
     public function __construct($probe = null)
     {
         $this->probe = $probe ?: new HttpProbeGetHeaders();
