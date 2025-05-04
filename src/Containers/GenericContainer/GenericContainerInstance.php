@@ -138,9 +138,6 @@ class GenericContainerInstance implements ContainerInstance
 
         $client = $this->client ?: DockerClientFactory::create();
         $host = $client->getHost();
-        if ($host !== null) {
-            return 'localhost';
-        }
         $url = parse_url($host);
         switch ($url['scheme']) {
             case 'http':
