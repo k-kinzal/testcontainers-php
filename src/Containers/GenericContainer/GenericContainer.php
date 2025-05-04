@@ -49,7 +49,7 @@ class GenericContainer implements Container
      */
     public function __construct($image = null)
     {
-        if ($image === null || static::$IMAGE === null) {
+        if ($image === null && static::$IMAGE === null) {
             throw new InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
         }
 

@@ -372,20 +372,32 @@ trait BaseCommand
             }
             if (is_object($value) && method_exists($value, '__toString')) {
                 $result[] = "--$key";
-                $result[] = (string) $value;
+                $result[] = $this->expandEnv((string) $value);
                 continue;
             }
             if (is_array($value)) {
                 foreach ($value as $k => $v) {
                     $result[] = "--$key";
-                    if (is_string($v)) {
-                        $result[] = $k . '=' . $this->expandEnv($v);
-                    } elseif (is_scalar($v) && !is_bool($v)) {
-                        $result[] = $v;
-                    } elseif (is_object($v) && method_exists($v, '__toString')) {
-                        $result[] = (string) $v;
+                    if (is_string($k)) {
+                        if (is_string($v)) {
+                            $result[] = $k . '=' . $this->expandEnv($v);
+                        } elseif (is_scalar($v)) {
+                            $result[] = $k . '=' . $v;
+                        } elseif (is_object($v) && method_exists($v, '__toString')) {
+                            $result[] = $k . '=' . $this->expandEnv((string) $v);
+                        } else {
+                            throw new LogicException('Unsupported value type: `' . var_export($v, true) . '`');
+                        }
                     } else {
-                        throw new LogicException('Unsupported value type: `' . var_export($v, true) . '`');
+                        if (is_string($v)) {
+                            $result[] = $this->expandEnv($v);
+                        } elseif (is_scalar($v)) {
+                            $result[] = $v;
+                        } elseif (is_object($v) && method_exists($v, '__toString')) {
+                            $result[] = $this->expandEnv((string) $v);
+                        } else {
+                            throw new LogicException('Unsupported value type: `' . var_export($v, true) . '`');
+                        }
                     }
                 }
             }
