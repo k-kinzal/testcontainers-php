@@ -107,6 +107,7 @@ trait SSHPortForwardSetting
      * Parse an SSH string into its components.
      * The string should be in the format `[user@]host[:port]`.
      *
+     * @param string $s The SSH string to parse.
      * @return array{
      *     sshUser?: string|null,
      *     sshHost?: string|null,
