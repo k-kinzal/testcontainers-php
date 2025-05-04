@@ -5,6 +5,7 @@ namespace Testcontainers\Docker\Command;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Docker\Output\DockerLogsOutput;
 use Testcontainers\Docker\Types\ContainerId;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Logs command for Docker.
@@ -20,12 +21,12 @@ trait LogsCommand
      *
      * @param ContainerId $containerId The ID of the container to fetch logs from.
      * @param array{
-     *     details?: bool,
-     *     follow?: bool,
-     *     since?: string,
-     *     tail?: string,
-     *     timestamps?: bool,
-     *     until?: string,
+     *     details?: bool|null,
+     *     follow?: bool|null,
+     *     since?: string|Stringable|null,
+     *     tail?: string|Stringable|null,
+     *     timestamps?: bool|null,
+     *     until?: string|Stringable|null,
      * } $options Additional options for the Docker logs command.
      * @return DockerFollowLogsOutput|DockerLogsOutput The output containing the logs of the container.
      */

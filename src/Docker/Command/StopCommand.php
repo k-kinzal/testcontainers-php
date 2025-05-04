@@ -6,6 +6,7 @@ use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Output\DockerStopOutput;
 use Testcontainers\Docker\Types\ContainerId;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Stop command for Docker command.
@@ -21,8 +22,8 @@ trait StopCommand
      *
      * @param ContainerId|string|array $containerId The ID or an array of IDs of the container(s) to stop.
      * @param array{
-     *     signal?: string,
-     *     time?: int,
+     *     signal?: string|Stringable|null,
+     *     time?: int|null,
      * } $options Additional options for the Docker stop command.
      * @return DockerStopOutput The output of the Docker stop command, including the stopped container IDs.
      *

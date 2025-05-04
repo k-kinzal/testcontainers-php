@@ -275,7 +275,7 @@ trait BaseCommand
      *
      * @param string $command The command to execute.
      * @param string|null $subcommand The subcommand to execute (optional).
-     * @param array $args The arguments for the command (optional).
+     * @param string[] $args The arguments for the command (optional).
      * @param array<string, mixed> $options Additional options for the Docker command.
      * @param bool $wait Whether to wait for the command to finish executing.
      * @return Process The Symfony Process instance that was executed

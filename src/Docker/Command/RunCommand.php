@@ -29,8 +29,8 @@ trait RunCommand
      * @param array{
      *     addHost?: string[]|Stringable[]|null,
      *     detach?: bool|null,
-     *     env?: array<string, string>|null,
-     *     label?: array<string, string>|null,
+     *     env?: array<string, string|Stringable>|null,
+     *     label?: array<string, string|Stringable>|null,
      *     mount?: string[]|Stringable[]|null,
      *     name?: string|null,
      *     network?: string|Stringable|null,
