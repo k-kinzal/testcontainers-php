@@ -25,6 +25,7 @@ class PortStrategyProvider
      *
      * @param string $name The name of the port strategy to register.
      * @param PortStrategy $strategy The port strategy to register.
+     * @return void
      *
      * @throws AlreadyExistsPortStrategyException If a strategy with the same name already exists.
      */
