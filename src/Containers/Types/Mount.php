@@ -249,9 +249,7 @@ class Mount implements Stringable
     }
 
     /**
-     * Get the mount type.
-     *
-     * @return string The mount type.
+     * @inheritDoc
      */
     public function __toString()
     {

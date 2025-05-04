@@ -103,6 +103,9 @@ class BindMode implements Stringable
         return $this->mode;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __toString()
     {
         return $this->toString();

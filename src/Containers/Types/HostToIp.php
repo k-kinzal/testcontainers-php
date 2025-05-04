@@ -78,9 +78,7 @@ class HostToIp implements Stringable
     }
 
     /**
-     * Get the host name.
-     *
-     * @return string The host name.
+     * @inheritDoc
      */
     public function __toString()
     {

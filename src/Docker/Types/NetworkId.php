@@ -81,7 +81,7 @@ class NetworkId implements Stringable
     }
 
     /**
-     * @return string The network ID.
+     * @inheritDoc
      */
     public function __toString()
     {

@@ -53,6 +53,9 @@ class SQLiteDSN implements DSN, Stringable
         return 'sqlite::memory:';
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __toString()
     {
         return $this->toString();

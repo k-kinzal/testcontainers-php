@@ -125,6 +125,9 @@ class MySQLDSN implements DSN, Stringable
         return $dsn;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __toString()
     {
         return $this->toString();

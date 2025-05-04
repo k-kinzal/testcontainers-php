@@ -133,6 +133,9 @@ class ImagePullPolicy implements Stringable
         return $this->policy;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __toString()
     {
         return $this->toString();

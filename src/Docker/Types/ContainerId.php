@@ -83,7 +83,7 @@ class ContainerId implements Stringable
     }
 
     /**
-     * @return string The container ID.
+     * @inheritDoc
      */
     public function __toString()
     {

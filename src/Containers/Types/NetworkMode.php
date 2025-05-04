@@ -113,9 +113,7 @@ class NetworkMode implements Stringable
     }
 
     /**
-     * Returns the network mode as a string (alias for toString()).
-     *
-     * @return string The network mode.
+     * @inheritDoc
      */
     public function __toString()
     {

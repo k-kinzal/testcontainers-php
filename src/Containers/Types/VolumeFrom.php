@@ -76,6 +76,9 @@ class VolumeFrom implements Stringable
         return (string) $this;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __toString()
     {
         return $this->name . ':' . $this->mode->toString();
