@@ -5,10 +5,14 @@ namespace Testcontainers;
 /**
  * Convert a string to kebab-case.
  *
- * @param string $string
+ * @param string $str
  * @return string
  */
-function kebab($string)
+function kebab($str)
 {
-    return strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $string));
+    $s = preg_replace('/(?<!^)[A-Z]/', '-$0', $str);
+    if ($s === null) {
+        return $str;
+    }
+    return strtolower($s);
 }
