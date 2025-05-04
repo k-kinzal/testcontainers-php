@@ -84,7 +84,7 @@ trait MountSetting
             } else {
                 throw new InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
             }
-        } else if (is_string($hostPath)) {
+        } elseif (is_string($hostPath)) {
             $mount = Mount::fromArray([
                 'type' => 'bind',
                 'source' => $hostPath,

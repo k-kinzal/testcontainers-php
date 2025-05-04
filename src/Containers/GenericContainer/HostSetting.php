@@ -63,7 +63,10 @@ trait HostSetting
     /**
      * Add an extra host entry to be passed to the container.
      *
-     * @param HostToIp|string|array $hostname The hostname to add.
+     * @param HostToIp|string|array{
+     *      hostname: string,
+     *      ipAddress: string
+     *  } $hostname The hostname to add.
      * @param null|string $ipAddress The IP address associated with the hostname.
      * @return self
      *
