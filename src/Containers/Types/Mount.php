@@ -5,6 +5,7 @@ namespace Testcontainers\Containers\Types;
 use InvalidArgumentException;
 use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Represents a mount.
@@ -17,7 +18,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  * @property-read bool $nocopy Whether the mount should be created with a nocopy option.
  * @property-read array<string, string> $opt An array of key-value pairs that define options for the mount.
  */
-class Mount
+class Mount implements Stringable
 {
     /**
      * Mount type is “bind” or “volume”.

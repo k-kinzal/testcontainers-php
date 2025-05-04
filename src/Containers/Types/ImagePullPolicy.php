@@ -3,11 +3,12 @@
 namespace Testcontainers\Containers\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Defines the policy for determining when to pull a container image.
  */
-class ImagePullPolicy
+class ImagePullPolicy implements Stringable
 {
     /**
      * The policy to always pull the image.

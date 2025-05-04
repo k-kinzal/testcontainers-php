@@ -4,13 +4,14 @@ namespace Testcontainers\Docker\Types;
 
 use InvalidArgumentException;
 use LogicException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Represents a Docker network ID.
  *
  * A network ID is a 64-character hexadecimal string.
  */
-class NetworkId
+class NetworkId implements Stringable
 {
     /**
      * The ID of the Docker container.

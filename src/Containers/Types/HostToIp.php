@@ -4,6 +4,7 @@ namespace Testcontainers\Containers\Types;
 
 use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Represents a host-to-IP mapping.
@@ -11,7 +12,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  * @property-read string $host The host name.
  * @property-read string $ip The IP address.
  */
-class HostToIp
+class HostToIp implements Stringable
 {
     /**
      * The host name.

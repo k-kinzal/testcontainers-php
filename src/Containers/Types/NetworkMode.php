@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\Types;
 
+use Testcontainers\Utility\Stringable;
+
 /**
  * Represents a network mode for a container.
  *
@@ -9,7 +11,7 @@ namespace Testcontainers\Containers\Types;
  * convenient access to common network modes (`host`, `bridge`), as well as supporting
  * custom network modes.
  */
-class NetworkMode
+class NetworkMode implements Stringable
 {
     /**
      * Host network mode.

@@ -30,19 +30,19 @@ trait EnvSetting
 {
     /**
      * Define the default environment variables to be used for the container.
-     * @var array|null
+     * @var array<string, string>|null
      */
     protected static $ENVIRONMENTS;
 
     /**
      * Define the default environment variables to be used for the container. Alias for `ENVIRONMENTS`.
-     * @var array|null
+     * @var array<string, string>|null
      */
     protected static $ENV;
 
     /**
      * The environment variables to be used for the container.
-     * @var array
+     * @var array<string, string>
      */
     private $env = [];
 
@@ -80,7 +80,7 @@ trait EnvSetting
      * If specific environment variables are set, it will return those. Otherwise, it will
      * attempt to retrieve the default environment variables from the provider.
      *
-     * @return array The environment variables to be used for the container.
+     * @return array<string, string> The environment variables to be used for the container.
      */
     protected function env()
     {

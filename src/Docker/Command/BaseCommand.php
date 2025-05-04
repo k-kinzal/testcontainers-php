@@ -330,7 +330,7 @@ trait BaseCommand
     /**
      * Convert array to command line arguments
      *
-     * @param array $options command line options (key-value pairs)
+     * @param array<string, mixed> $options command line options (key-value pairs)
      * @return array
      */
     private function arrayToArgs($options)
@@ -350,7 +350,11 @@ trait BaseCommand
             }
             if (is_scalar($value)) {
                 $result[] = "--$key";
-                $result[] = $this->expandEnv($value);
+                if (is_string($value)) {
+                    $result[] = $this->expandEnv($value);
+                } else {
+                    $result[] = $value;
+                }
                 continue;
             }
             if (is_object($value) && method_exists($value, '__toString')) {
@@ -364,9 +368,9 @@ trait BaseCommand
                     if (is_string($k)) {
                         $result[] = $k . '=' . $this->expandEnv($v);
                     } elseif (is_scalar($v) && !is_bool($v)) {
-                        $result[] = $this->expandEnv($v);
+                        $result[] = $v;
                     } elseif (is_object($v) && method_exists($v, '__toString')) {
-                        $result[] = $this->expandEnv((string) $v);
+                        $result[] = (string) $v;
                     } else {
                         throw new LogicException('Unsupported value type: `' . var_export($v, true) . '`');
                     }

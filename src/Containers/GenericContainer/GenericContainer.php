@@ -2,9 +2,9 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use http\Exception\InvalidArgumentException;
 use LogicException;
 use RuntimeException;
+use InvalidArgumentException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
@@ -101,16 +101,16 @@ class GenericContainer implements Container
             'env' => $this->env(),
             'label' => $this->labels(),
             'mount' => $this->mounts(),
+            'name' => $this->name(),
             'network' => $this->networkMode(),
             'networkAlias' => $this->networkAliases(),
-            'volumesFrom' => $this->volumesFrom(),
             'publish' => array_map(function ($containerPort, $hostPort) {
                 return $hostPort . ':' . $containerPort;
             }, array_keys($ports), array_values($ports)),
             'pull' => $this->pullPolicy(),
-            'workdir' => $this->workDir(),
             'privileged' => $this->privileged(),
-            'name' => $this->name(),
+            'volumesFrom' => $this->volumesFrom(),
+            'workdir' => $this->workDir(),
         ];
         $timeout = $this->startupTimeout();
 
@@ -170,22 +170,24 @@ class GenericContainer implements Container
             $sshPortForward = $this->sshPortForward();
             if ($sshPortForward) {
                 $port = $instance->getMappedPort(array_keys($ports)[0]);
-                $remoteHost = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE();
-                if ($remoteHost === null) {
-                    $remoteHost = '127.0.0.1';
+                if ($port) {
+                    $remoteHost = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE();
+                    if ($remoteHost === null) {
+                        $remoteHost = '127.0.0.1';
+                    }
+                    $sshHost = isset($sshPortForward['sshHost']) ? $sshPortForward['sshHost'] : $instance->getHost();
+                    $sshUser = isset($sshPortForward['sshUser']) ? $sshPortForward['sshUser'] : null;
+                    $sshPort = isset($sshPortForward['sshPort']) ? $sshPortForward['sshPort'] : null;
+                    $tunnel = (new Tunnel($port, $remoteHost, $port, $sshHost));
+                    if ($sshUser) {
+                        $tunnel->withUser($sshUser);
+                    }
+                    if ($sshPort) {
+                        $tunnel->withSshPort($sshPort);
+                    }
+                    $session = $tunnel->open();
+                    $instance->setData($session);
                 }
-                $sshHost = isset($sshPortForward['sshHost']) ? $sshPortForward['sshHost'] : $instance->getHost();
-                $sshUser = isset($sshPortForward['sshUser']) ? $sshPortForward['sshUser'] : null;
-                $sshPort = isset($sshPortForward['sshPort']) ? $sshPortForward['sshPort'] : null;
-                $tunnel = (new Tunnel($port, $remoteHost, $port, $sshHost));
-                if ($sshUser) {
-                    $tunnel->withUser($sshUser);
-                }
-                if ($sshPort) {
-                    $tunnel->withSshPort($sshPort);
-                }
-                $session = $tunnel->open();
-                $instance->setData($session);
             }
         }
 

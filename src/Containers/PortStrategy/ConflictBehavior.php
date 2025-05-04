@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\PortStrategy;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Represents the behavior to take when a port conflict occurs.
@@ -10,7 +11,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  * This class defines the actions that can be taken when a port conflict is detected,
  * such as retrying the operation or failing immediately.
  */
-class ConflictBehavior
+class ConflictBehavior implements Stringable
 {
     /**
      * Retry action for conflict behavior.

@@ -9,6 +9,7 @@ use Testcontainers\Docker\Output\DockerRunOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Run command for Docker commands.
@@ -26,19 +27,20 @@ trait RunCommand
      * @param string|null $command The command to run inside the container (optional).
      * @param array $args The arguments for the command (optional).
      * @param array{
-     *     addHost?: string[],
-     *     detach?: bool,
-     *     env?: array<string, string>,
-     *     label?: string[],
-     *     mount?: string[],
-     *     network?: string,
-     *     networkAlias?: string[],
-     *     privileged?: bool,
-     *     publish?: string[],
-     *     pull?: string,
-     *     quiet?: true,
-     *     volumesFrom?: string[],
-     *     workdir?: string,
+     *     addHost?: string[]|Stringable[]|null,
+     *     detach?: bool|null,
+     *     env?: array<string, string>|null,
+     *     label?: array<string, string>|null,
+     *     mount?: string[]|Stringable[]|null,
+     *     name?: string|null,
+     *     network?: string|Stringable|null,
+     *     networkAlias?: string[]|null,
+     *     publish?: string[]|null,
+     *     pull?: string|Stringable|null,
+     *     privileged?: bool|null,
+     *     quiet?: bool|null,
+     *     volumesFrom?: string[]|Stringable[]|null,
+     *     workdir?: string|null,
      * } $options Additional options for the Docker command.
      * @return DockerRunOutput|DockerRunWithDetachOutput The output of the Docker run command. If the `detach` option is set to `true`, a `DockerRunWithDetachOutput` object is returned.
      *

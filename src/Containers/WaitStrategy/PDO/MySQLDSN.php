@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
 use LogicException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * MySQLDSN provides a way to define a MySQL Data Source Name (DSN).
@@ -10,7 +11,7 @@ use LogicException;
  *
  * @see https://www.php.net/manual/en/ref.pdo-mysql.connection.php
  */
-class MySQLDSN implements DSN
+class MySQLDSN implements DSN, Stringable
 {
     /**
      * The hostname for the DSN.

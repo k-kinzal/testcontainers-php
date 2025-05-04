@@ -3,8 +3,9 @@
 namespace Testcontainers\Containers\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
-class BindMode
+class BindMode implements Stringable
 {
     /**
      * The mode for read-only bind.

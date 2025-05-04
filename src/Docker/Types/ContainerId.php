@@ -4,6 +4,7 @@ namespace Testcontainers\Docker\Types;
 
 use InvalidArgumentException;
 use LogicException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Represents the ID of a Docker container.
@@ -12,7 +13,7 @@ use LogicException;
  * The container ID is a 64-character hexadecimal string that uniquely identifies
  * a Docker container on the host system.
  */
-class ContainerId
+class ContainerId implements Stringable
 {
     /**
      * The ID of the Docker container.

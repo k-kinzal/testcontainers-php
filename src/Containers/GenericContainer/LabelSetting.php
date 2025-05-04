@@ -72,7 +72,7 @@ trait LabelSetting
      * If specific labels are set, it will return those. Otherwise, it will
      * attempt to retrieve the default labels from the provider.
      *
-     * @return array<string, string>|null The labels to be used, or null if none are set.
+     * @return array<string, string> The labels to be used
      */
     protected function labels()
     {
@@ -82,6 +82,6 @@ trait LabelSetting
         if ($this->labels) {
             return $this->labels;
         }
-        return null;
+        return [];
     }
 }

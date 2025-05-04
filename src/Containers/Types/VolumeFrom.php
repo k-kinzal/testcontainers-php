@@ -4,6 +4,7 @@ namespace Testcontainers\Containers\Types;
 
 use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Stringable;
 
 /**
  * Represents a volume from.
@@ -11,7 +12,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  * @property-read string $name The name of the container to mount volumes from.
  * @property-read BindMode $mode The mode of the bind (e.g., read-only or read-write).
  */
-class VolumeFrom
+class VolumeFrom implements Stringable
 {
     /**
      * The name of the container to mount volumes from.

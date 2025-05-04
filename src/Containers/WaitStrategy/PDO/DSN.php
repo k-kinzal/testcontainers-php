@@ -43,6 +43,4 @@ interface DSN
      * @return string The string representation of the DSN.
      */
     public function toString();
-
-    public function __toString();
 }
