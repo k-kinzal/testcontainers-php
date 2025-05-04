@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use http\Exception\InvalidArgumentException;
 use LogicException;
 use RuntimeException;
 use Testcontainers\Containers\Container;
@@ -48,7 +49,9 @@ class GenericContainer implements Container
      */
     public function __construct($image = null)
     {
-        assert($image || static::$IMAGE);
+        if ($image === null || static::$IMAGE === null) {
+            throw new InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
+        }
 
         $this->image = $image ?: static::$IMAGE;
     }
