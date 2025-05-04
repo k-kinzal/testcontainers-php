@@ -2,7 +2,6 @@
 
 namespace Testcontainers;
 
-use LogicException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 
@@ -74,7 +73,7 @@ class Testcontainers
         } elseif ($containerClass instanceof Container) {
             $container = $containerClass;
         } else {
-            throw new LogicException('The container class must be a valid class name or an instance of `Container`');
+            throw new \LogicException('The container class must be a valid class name or an instance of `Container`');
         }
 
         if (method_exists($container, 'beforeStart')) {

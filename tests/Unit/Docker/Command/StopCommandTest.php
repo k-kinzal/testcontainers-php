@@ -13,6 +13,7 @@ use Tests\Images\DinD;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class StopCommandTest extends TestCase
@@ -32,6 +33,7 @@ class StopCommandTest extends TestCase
         $client->withGlobalOptions([
             'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
         ]);
+
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('alpine:latest', 'tail', ['-f', '/dev/null'], [
             'detach' => true,

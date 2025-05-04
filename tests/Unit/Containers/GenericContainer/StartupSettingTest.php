@@ -5,7 +5,6 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StartupSetting;
@@ -13,6 +12,7 @@ use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class StartupSettingTest extends TestCase
@@ -36,7 +36,7 @@ class StartupSettingTest extends TestCase
 
     public function testStaticStartupCheckStrategy()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('failed startup check: illegal state of container');
 
         $container = (new StartupSettingWithStaticStartupCheckStrategyContainer('alpine:latest'))
@@ -58,7 +58,7 @@ class StartupSettingTest extends TestCase
 
     public function testStartWithStartupCheckStrategy()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('failed startup check: illegal state of container');
 
         $container = (new GenericContainer('alpine:latest'))

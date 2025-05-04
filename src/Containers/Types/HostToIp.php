@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\Types;
 
-use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -38,9 +37,6 @@ class HostToIp implements Stringable
         $this->ip = $ip;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         return $this->host.':'.$this->ip;
@@ -56,10 +52,10 @@ class HostToIp implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new LogicException('HostToIp::'.$name.' does not exist');
+            throw new \LogicException('HostToIp::'.$name.' does not exist');
         }
 
-        return $this->$name;
+        return $this->{$name};
     }
 
     /**
@@ -67,9 +63,9 @@ class HostToIp implements Stringable
      *
      * @param string $v the host-to-IP mapping
      *
-     * @throws InvalidFormatException if the format is invalid
-     *
      * @return HostToIp the HostToIp object
+     *
+     * @throws InvalidFormatException if the format is invalid
      */
     public static function fromString($v)
     {

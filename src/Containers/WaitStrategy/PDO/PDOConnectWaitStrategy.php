@@ -2,9 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
-use LogicException;
 use PDO;
-use PDOException;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 
@@ -62,14 +60,12 @@ class PDOConnectWaitStrategy implements WaitStrategy
     private $retryInterval = 100;
 
     /**
-     * {@inheritDoc}
-     *
      * @throws WaitingTimeoutException if the timeout duration is exceeded
      */
     public function waitUntilReady($instance)
     {
         if (null === $this->dsn) {
-            throw new LogicException('The DSN for the PDO connection is not set');
+            throw new \LogicException('The DSN for the PDO connection is not set');
         }
 
         $dsn = clone $this->dsn;
@@ -80,11 +76,11 @@ class PDOConnectWaitStrategy implements WaitStrategy
         if (null === $dsn->getPort()) {
             $ports = $instance->getExposedPorts();
             if (1 !== count($ports)) {
-                throw new LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
+                throw new \LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
             }
             $port = $instance->getMappedPort($ports[0]);
             if (null === $port) {
-                throw new LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
+                throw new \LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
             }
             $dsn = $dsn->withPort($port);
         }
@@ -103,15 +99,15 @@ class PDOConnectWaitStrategy implements WaitStrategy
             }
 
             try {
-                $pdo = new PDO($dsn->toString(), $this->username, $this->password, [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_TIMEOUT => 1,
+                $pdo = new \PDO($dsn->toString(), $this->username, $this->password, [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                    \PDO::ATTR_TIMEOUT => 1,
                 ]);
                 $pdo->query('SELECT 1');
                 $pdo = null;
 
                 break;
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 $ex = $e;
             }
             usleep($this->retryInterval);

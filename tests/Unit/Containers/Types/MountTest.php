@@ -9,6 +9,7 @@ use Testcontainers\Containers\Types\Mount;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class MountTest extends TestCase

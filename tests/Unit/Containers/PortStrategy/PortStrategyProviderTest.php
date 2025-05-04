@@ -12,6 +12,7 @@ use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class PortStrategyProviderTest extends TestCase

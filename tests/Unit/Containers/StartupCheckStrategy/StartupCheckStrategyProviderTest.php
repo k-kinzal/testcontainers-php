@@ -11,6 +11,7 @@ use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class StartupCheckStrategyProviderTest extends TestCase

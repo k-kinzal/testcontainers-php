@@ -10,6 +10,7 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class InspectCommandTest extends TestCase
@@ -24,6 +25,7 @@ class InspectCommandTest extends TestCase
     public function testInspect()
     {
         $client = new DockerClient();
+
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
             'detach' => true,

@@ -2,8 +2,6 @@
 
 namespace Tests\Unit\Containers\WaitStrategy\PDO;
 
-use PDO;
-use PDOException;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\WaitStrategy\PDO\DSN;
 
@@ -41,8 +39,8 @@ abstract class DSNTestCase extends TestCase
         ;
 
         try {
-            new PDO($dsn->toString());
-        } catch (PDOException $e) {
+            new \PDO($dsn->toString());
+        } catch (\PDOException $e) {
             if ('could not find driver' === $e->getMessage()) {
                 throw $e;
             }

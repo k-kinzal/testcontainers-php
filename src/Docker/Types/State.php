@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Docker\Types;
 
-use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
 
 /**
@@ -27,9 +26,7 @@ class State
      */
     private $exitCode;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Retrieve the value of a property.
@@ -41,10 +38,10 @@ class State
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new LogicException('State::'.$name.' does not exist');
+            throw new \LogicException('State::'.$name.' does not exist');
         }
 
-        return $this->$name;
+        return $this->{$name};
     }
 
     /**
@@ -52,9 +49,9 @@ class State
      *
      * @param array $arr the array to create the State object from
      *
-     * @throws InvalidValueException if the array does not contain the expected properties
-     *
      * @return State
+     *
+     * @throws InvalidValueException if the array does not contain the expected properties
      */
     public static function fromArray($arr)
     {
@@ -70,9 +67,9 @@ class State
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'Status' property is missing, not a string, or not one of the expected values
-     *
      * @return string
+     *
+     * @throws InvalidValueException if the 'Status' property is missing, not a string, or not one of the expected values
      */
     public static function ensureStatusFromArray($arr)
     {
@@ -106,9 +103,9 @@ class State
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'ExitCode' property is missing or not an integer
-     *
      * @return int
+     *
+     * @throws InvalidValueException if the 'ExitCode' property is missing or not an integer
      */
     public static function ensureExitCodeFromArray($arr)
     {

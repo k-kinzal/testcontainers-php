@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Docker\Exception;
 
-use RuntimeException;
 use Symfony\Component\Process\Process;
 
 /**
@@ -13,7 +12,7 @@ use Symfony\Component\Process\Process;
  * detailed information about the command that was executed and the
  * exit code returned by the Docker process.
  */
-class DockerException extends RuntimeException
+class DockerException extends \RuntimeException
 {
     /**
      * @var Process

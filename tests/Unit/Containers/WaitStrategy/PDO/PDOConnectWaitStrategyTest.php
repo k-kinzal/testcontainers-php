@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Containers\WaitStrategy\PDO;
 
-use LogicException;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\WaitStrategy\PDO\PDOConnectWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\PDO\SQLiteDSN;
@@ -11,13 +10,11 @@ use Tests\Unit\Containers\WaitStrategy\WaitStrategyTestCase;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     public function resolveWaitStrategy()
     {
         return (new PDOConnectWaitStrategy())
@@ -39,7 +36,7 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 
     public function testWaitUntilReadyNotSetDSN()
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
 
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
@@ -51,7 +48,7 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 
     public function testWaitUntilReadyNotSetPort()
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
 
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),

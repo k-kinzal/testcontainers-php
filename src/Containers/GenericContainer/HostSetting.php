@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use InvalidArgumentException;
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Exceptions\InvalidFormatException;
 
@@ -69,9 +68,9 @@ trait HostSetting
      *  } $hostname The hostname to add
      * @param null|string $ipAddress the IP address associated with the hostname
      *
-     * @throws InvalidArgumentException if the arguments are invalid
-     *
      * @return self
+     *
+     * @throws \InvalidArgumentException if the arguments are invalid
      *
      * @see Container::withExtraHost()
      */
@@ -84,7 +83,7 @@ trait HostSetting
         } elseif (is_string($hostname) && is_string($ipAddress)) {
             $hostToIp = new HostToIp($hostname, $ipAddress);
         } else {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Invalid arguments: withExtraHost(`'.json_encode($hostname).'`, `'.json_encode($ipAddress).'`)'
             );
         }
@@ -102,9 +101,9 @@ trait HostSetting
      *      ipAddress: string
      *  }[] $extraHosts The extra hosts to add
      *
-     * @throws InvalidArgumentException if the arguments are invalid
-     *
      * @return self
+     *
+     * @throws \InvalidArgumentException if the arguments are invalid
      *
      * @see Container::withExtraHosts()
      */
@@ -121,9 +120,9 @@ trait HostSetting
     /**
      * Retrieve the extra hosts to be used for the container.
      *
-     * @throws InvalidFormatException if the format is invalid
-     *
      * @return HostToIp[]
+     *
+     * @throws InvalidFormatException if the format is invalid
      */
     protected function extraHosts()
     {

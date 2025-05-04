@@ -7,6 +7,7 @@ use Testcontainers\Docker\DockerClient;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class DockerClientTest extends TestCase

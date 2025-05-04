@@ -20,6 +20,7 @@ abstract class StartupCheckStrategyTestCase extends TestCase
         $strategy = $this->resolveStartupCheckStrategy();
 
         $client = new DockerClient();
+
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('alpine:latest', null, [], [
             'detach' => true,

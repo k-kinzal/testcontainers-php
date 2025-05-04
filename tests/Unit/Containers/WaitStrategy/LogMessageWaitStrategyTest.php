@@ -9,13 +9,11 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class LogMessageWaitStrategyTest extends WaitStrategyTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     public function resolveWaitStrategy()
     {
         return new LogMessageWaitStrategy();
@@ -24,6 +22,7 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
     public function testWaitUntilReady()
     {
         $client = new DockerClient();
+
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('jpetazzo/clock:latest', null, [], [
             'detach' => true,

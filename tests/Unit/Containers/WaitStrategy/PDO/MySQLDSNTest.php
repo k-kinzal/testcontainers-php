@@ -6,13 +6,11 @@ use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class MySQLDSNTest extends DSNTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     public function resolveDSN()
     {
         return new MySQLDSN();

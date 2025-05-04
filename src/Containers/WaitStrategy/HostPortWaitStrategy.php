@@ -39,9 +39,6 @@ class HostPortWaitStrategy implements WaitStrategy
         $this->probe = $probe ?: new PortProbeTcp();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function waitUntilReady($instance)
     {
         $now = time();

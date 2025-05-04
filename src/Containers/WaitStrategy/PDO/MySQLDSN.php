@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
-use LogicException;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -41,17 +40,11 @@ class MySQLDSN implements DSN, Stringable
      */
     private $charset;
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         return $this->toString();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withHost($host)
     {
         $this->host = $host;
@@ -59,17 +52,11 @@ class MySQLDSN implements DSN, Stringable
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHost()
     {
         return $this->host;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withPort($port)
     {
         $this->port = $port;
@@ -77,9 +64,6 @@ class MySQLDSN implements DSN, Stringable
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPort()
     {
         return $this->port;
@@ -113,13 +97,10 @@ class MySQLDSN implements DSN, Stringable
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toString()
     {
         if (null === $this->host) {
-            throw new LogicException('Host is required');
+            throw new \LogicException('Host is required');
         }
         $dsn = sprintf('mysql:host=%s;', $this->host);
         if (null !== $this->port) {

@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\Types;
 
-use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -38,9 +37,6 @@ class VolumeFrom implements Stringable
         $this->mode = $mode;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         return $this->name.':'.$this->mode->toString();
@@ -54,10 +50,10 @@ class VolumeFrom implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new LogicException('VolumeFrom::'.$name.' does not exist');
+            throw new \LogicException('VolumeFrom::'.$name.' does not exist');
         }
 
-        return $this->$name;
+        return $this->{$name};
     }
 
     /**
@@ -65,9 +61,9 @@ class VolumeFrom implements Stringable
      *
      * @param string $v the volume from string
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return VolumeFrom
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public static function fromString($v)
     {

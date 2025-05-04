@@ -11,6 +11,7 @@ use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class PortSettingTest extends TestCase

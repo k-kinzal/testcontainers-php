@@ -10,13 +10,11 @@ use Testcontainers\Docker\Types\ContainerId;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class HostPortWaitStrategyTest extends WaitStrategyTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     public function resolveWaitStrategy()
     {
         return new HostPortWaitStrategy();

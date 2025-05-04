@@ -12,49 +12,31 @@ use Testcontainers\Utility\Stringable;
  */
 class SQLiteDSN implements DSN, Stringable
 {
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         return $this->toString();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withHost($host)
     {
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHost()
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withPort($port)
     {
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPort()
     {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function toString()
     {
         // TODO: support file path

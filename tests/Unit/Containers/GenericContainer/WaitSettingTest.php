@@ -11,6 +11,7 @@ use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class WaitSettingTest extends TestCase

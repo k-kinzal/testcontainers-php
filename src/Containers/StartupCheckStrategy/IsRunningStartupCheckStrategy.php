@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\StartupCheckStrategy;
 
-use Exception;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 
@@ -18,9 +17,6 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     private $client;
 
-    /**
-     * {@inheritdoc}
-     */
     public function waitUntilStartupSuccessful($instance)
     {
         $client = $this->client ?: DockerClientFactory::create();
@@ -42,7 +38,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
                 }
                 usleep(0);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

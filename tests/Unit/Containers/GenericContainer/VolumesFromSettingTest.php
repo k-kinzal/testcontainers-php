@@ -15,6 +15,7 @@ use Tests\Images\DinD;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class VolumesFromSettingTest extends TestCase
@@ -48,6 +49,7 @@ class VolumesFromSettingTest extends TestCase
             ->withName('volumes-from-container')
             ->withFileSystemBind($path, $path, BindMode::READ_WRITE())
         ;
+
         /** @noinspection PhpUnusedLocalVariableInspection */
         $instance1 = $container->start();
 

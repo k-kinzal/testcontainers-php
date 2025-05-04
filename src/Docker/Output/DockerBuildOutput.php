@@ -8,6 +8,4 @@ namespace Testcontainers\Docker\Output;
  * This class extends DockerOutput to provide methods for retrieving the standard output,
  * error output, and exit code of the Docker `build` command.
  */
-class DockerBuildOutput extends DockerOutput
-{
-}
+class DockerBuildOutput extends DockerOutput {}

@@ -10,6 +10,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class ConflictBehaviorTest extends TestCase

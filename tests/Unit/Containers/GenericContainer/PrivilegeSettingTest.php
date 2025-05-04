@@ -10,6 +10,7 @@ use Testcontainers\Containers\GenericContainer\PrivilegeSetting;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class PrivilegeSettingTest extends TestCase

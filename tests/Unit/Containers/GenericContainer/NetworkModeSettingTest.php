@@ -11,6 +11,7 @@ use Testcontainers\Containers\Types\NetworkMode;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class NetworkModeSettingTest extends TestCase

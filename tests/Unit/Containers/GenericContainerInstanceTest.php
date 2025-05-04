@@ -17,6 +17,7 @@ use Tests\Images\DinD;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class GenericContainerInstanceTest extends TestCase
@@ -205,6 +206,4 @@ class GenericContainerInstanceTest extends TestCase
     }
 }
 
-class CustomData
-{
-}
+class CustomData {}

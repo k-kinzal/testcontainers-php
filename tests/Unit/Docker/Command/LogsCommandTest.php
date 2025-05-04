@@ -13,6 +13,7 @@ use Tests\Images\DinD;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class LogsCommandTest extends TestCase
@@ -32,6 +33,7 @@ class LogsCommandTest extends TestCase
         $client->withGlobalOptions([
             'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
         ]);
+
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('jpetazzo/clock:latest', null, [], [
             'detach' => true,
@@ -53,6 +55,7 @@ class LogsCommandTest extends TestCase
         $client->withGlobalOptions([
             'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
         ]);
+
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('jpetazzo/clock:latest', null, [], [
             'detach' => true,
@@ -64,6 +67,7 @@ class LogsCommandTest extends TestCase
         ]);
 
         $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
+
         /** @var DockerFollowLogsOutput $logsOutput */
         $iter = $logsOutput->getIterator();
         $lines = [];

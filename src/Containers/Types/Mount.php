@@ -2,8 +2,6 @@
 
 namespace Testcontainers\Containers\Types;
 
-use InvalidArgumentException;
-use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -89,9 +87,6 @@ class Mount implements Stringable
         $this->opt = $opt ?: [];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         $parts = [];
@@ -128,10 +123,10 @@ class Mount implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new LogicException('Mount::'.$name.' does not exist');
+            throw new \LogicException('Mount::'.$name.' does not exist');
         }
 
-        return $this->$name;
+        return $this->{$name};
     }
 
     /**
@@ -139,9 +134,9 @@ class Mount implements Stringable
      *
      * @param string $v the mount string
      *
-     * @throws InvalidFormatException if the format is invalid
-     *
      * @return Mount the Mount object
+     *
+     * @throws InvalidFormatException if the format is invalid
      */
     public static function fromString($v)
     {
@@ -186,9 +181,9 @@ class Mount implements Stringable
      *
      * @param string $v the mount string
      *
-     * @throws InvalidFormatException if the format is invalid
-     *
      * @return Mount the Mount object
+     *
+     * @throws InvalidFormatException if the format is invalid
      */
     public static function fromMountString($v)
     {
@@ -240,7 +235,7 @@ class Mount implements Stringable
 
                 case 'volume-opt':
                     // TODO: Implement volume-opt on Mount
-                    throw new LogicException('unimplemented');
+                    throw new \LogicException('unimplemented');
 
                 default:
                     throw new InvalidFormatException($subParts[0], ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath', 'readonly', 'ro', 'volume-nocopy', 'volume-opt']);
@@ -288,7 +283,7 @@ class Mount implements Stringable
             $destination = isset($v['target']) ? $v['target'] : null;
         }
         if (null === $destination) {
-            throw new InvalidArgumentException('Invalid mount configuration: destination is required');
+            throw new \InvalidArgumentException('Invalid mount configuration: destination is required');
         }
         $subpath = isset($v['subpath']) ? $v['subpath'] : null;
         $readonly = isset($v['readonly']) ? $v['readonly'] : false;

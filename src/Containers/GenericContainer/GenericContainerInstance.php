@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
@@ -81,17 +80,11 @@ class GenericContainerInstance implements ContainerInstance
         $this->client = $client;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContainerId()
     {
         return $this->containerDef['containerId'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLabel($label)
     {
         if (!isset($this->containerDef['labels'])) {
@@ -104,9 +97,6 @@ class GenericContainerInstance implements ContainerInstance
         return $this->containerDef['labels'][$label];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLabels()
     {
         if (!isset($this->containerDef['labels'])) {
@@ -116,9 +106,6 @@ class GenericContainerInstance implements ContainerInstance
         return $this->containerDef['labels'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getHost()
     {
         if (null !== $this->tryGetData(Session::class)) {
@@ -137,10 +124,10 @@ class GenericContainerInstance implements ContainerInstance
         }
         $url = parse_url($host);
         if (!isset($url['scheme'])) {
-            throw new LogicException("Invalid URL: {$host}");
+            throw new \LogicException("Invalid URL: {$host}");
         }
         if (!isset($url['host'])) {
-            throw new LogicException("Invalid URL: {$host}");
+            throw new \LogicException("Invalid URL: {$host}");
         }
 
         switch ($url['scheme']) {
@@ -154,9 +141,6 @@ class GenericContainerInstance implements ContainerInstance
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getExposedPorts()
     {
         if (!isset($this->containerDef['ports'])) {
@@ -166,9 +150,6 @@ class GenericContainerInstance implements ContainerInstance
         return array_keys($this->containerDef['ports']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMappedPort($exposedPort)
     {
         if (!isset($this->containerDef['ports'])) {
@@ -181,25 +162,16 @@ class GenericContainerInstance implements ContainerInstance
         return $this->containerDef['ports'][$exposedPort];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getImagePullPolicy()
     {
         return isset($this->containerDef['pull']) ? $this->containerDef['pull'] : null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPrivilegedMode()
     {
         return isset($this->containerDef['privileged']) ? $this->containerDef['privileged'] : false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOutput()
     {
         $client = $this->client ?: DockerClientFactory::create();
@@ -208,9 +180,6 @@ class GenericContainerInstance implements ContainerInstance
         return $output->getOutput();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getErrorOutput()
     {
         $client = $this->client ?: DockerClientFactory::create();
@@ -219,30 +188,21 @@ class GenericContainerInstance implements ContainerInstance
         return $output->getErrorOutput();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setData($value)
     {
         $this->data[get_class($value)] = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getData($class)
     {
         $value = $this->data[$class];
         if (null === $value) {
-            throw new LogicException("No data of type {$class} associated with the container");
+            throw new \LogicException("No data of type {$class} associated with the container");
         }
 
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function tryGetData($class)
     {
         if (isset($this->data[$class])) {
@@ -252,9 +212,6 @@ class GenericContainerInstance implements ContainerInstance
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isRunning()
     {
         if (false === $this->running) {
@@ -283,9 +240,6 @@ class GenericContainerInstance implements ContainerInstance
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function stop()
     {
         try {

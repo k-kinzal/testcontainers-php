@@ -68,9 +68,6 @@ trait GeneralSetting
      */
     private $name;
 
-    /**
-     * {@inheritdoc}
-     */
     public function withCommand($cmd)
     {
         $this->commands = [$cmd];
@@ -78,9 +75,6 @@ trait GeneralSetting
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withCommands($commandParts)
     {
         $this->commands = $commandParts;

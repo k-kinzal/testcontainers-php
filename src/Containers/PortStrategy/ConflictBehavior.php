@@ -50,9 +50,6 @@ class ConflictBehavior implements Stringable
         $this->action = $action;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         return $this->toString();
@@ -89,9 +86,9 @@ class ConflictBehavior implements Stringable
      *
      * @param string $action The action to take on port conflict. Valid values are 'retry' or 'fail'.
      *
-     * @throws InvalidFormatException if the action is invalid
-     *
      * @return ConflictBehavior the ConflictBehavior instance corresponding to the action
+     *
+     * @throws InvalidFormatException if the action is invalid
      */
     public static function fromString($action)
     {

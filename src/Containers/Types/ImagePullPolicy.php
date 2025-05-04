@@ -48,9 +48,6 @@ class ImagePullPolicy implements Stringable
         $this->policy = $policy;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         return $this->toString();
@@ -91,9 +88,9 @@ class ImagePullPolicy implements Stringable
      *
      * @param string $policy the string representation of the pull policy
      *
-     * @throws InvalidFormatException if the provided policy is not valid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the provided policy is not valid
      */
     public static function fromString($policy)
     {

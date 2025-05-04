@@ -12,6 +12,7 @@ use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class GenericContainerTest extends TestCase

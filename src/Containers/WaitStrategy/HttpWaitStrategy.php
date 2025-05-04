@@ -88,9 +88,6 @@ class HttpWaitStrategy implements WaitStrategy
         $this->probe = $probe ?: new HttpProbeGetHeaders();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function waitUntilReady($instance)
     {
         $now = time();

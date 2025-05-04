@@ -2,8 +2,6 @@
 
 namespace Testcontainers\Docker\Types;
 
-use InvalidArgumentException;
-use LogicException;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -23,20 +21,17 @@ class NetworkId implements Stringable
     /**
      * @param string $v
      *
-     * @throws InvalidArgumentException if the network ID is not a valid 64-character hexadecimal string
+     * @throws \InvalidArgumentException if the network ID is not a valid 64-character hexadecimal string
      */
     public function __construct($v)
     {
         if (!self::isValid($v)) {
-            throw new LogicException('Invalid network ID: `'.$v.'`');
+            throw new \LogicException('Invalid network ID: `'.$v.'`');
         }
 
         $this->data = $v;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         return $this->data;
@@ -70,14 +65,14 @@ class NetworkId implements Stringable
      *
      * @param string $v the network ID
      *
-     * @throws InvalidArgumentException if the network ID is not valid
-     *
      * @return NetworkId the NetworkId object
+     *
+     * @throws \InvalidArgumentException if the network ID is not valid
      */
     public static function fromString($v)
     {
         if (!self::isValid($v)) {
-            throw new InvalidArgumentException('Invalid network ID: `'.$v.'`');
+            throw new \InvalidArgumentException('Invalid network ID: `'.$v.'`');
         }
 
         return new self($v);

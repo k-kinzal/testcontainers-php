@@ -8,6 +8,7 @@ use Tests\Images\AlpineContainer;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class TestcontainersTest extends TestCase

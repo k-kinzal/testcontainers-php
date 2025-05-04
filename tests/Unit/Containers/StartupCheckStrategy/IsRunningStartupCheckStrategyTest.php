@@ -6,6 +6,7 @@ use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class IsRunningStartupCheckStrategyTest extends StartupCheckStrategyTestCase

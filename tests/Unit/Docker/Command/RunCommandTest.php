@@ -13,6 +13,7 @@ use Tests\Images\DinD;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class RunCommandTest extends TestCase

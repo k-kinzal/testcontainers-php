@@ -10,9 +10,6 @@ namespace Testcontainers\Containers\WaitStrategy;
  */
 class HttpProbeGetHeaders implements HttpProbe
 {
-    /**
-     * {@inheritDoc}
-     */
     public function available($endpoint, $responseCode = 200)
     {
         $headers = @get_headers($endpoint);

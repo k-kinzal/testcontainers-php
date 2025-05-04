@@ -26,10 +26,10 @@ trait StopCommand
      *     time?: int|null,
      * } $options Additional options for the Docker stop command
      *
+     * @return DockerStopOutput the output of the Docker stop command, including the stopped container IDs
+     *
      * @throws NoSuchContainerException if the specified container does not exist
      * @throws DockerException          if the Docker command fails for any other reason
-     *
-     * @return DockerStopOutput the output of the Docker stop command, including the stopped container IDs
      */
     public function stop($containerId, $options = [])
     {

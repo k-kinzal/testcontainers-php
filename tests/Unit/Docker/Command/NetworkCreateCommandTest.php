@@ -11,6 +11,7 @@ use Tests\Images\DinD;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class NetworkCreateCommandTest extends TestCase

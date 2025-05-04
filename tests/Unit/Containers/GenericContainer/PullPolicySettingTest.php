@@ -11,6 +11,7 @@ use Testcontainers\Containers\Types\ImagePullPolicy;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class PullPolicySettingTest extends TestCase

@@ -14,6 +14,7 @@ use Tests\Images\DinD;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class NetworkAliasSettingTest extends TestCase

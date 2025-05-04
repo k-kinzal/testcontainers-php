@@ -2,9 +2,6 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use InvalidArgumentException;
-use LogicException;
-use RuntimeException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
@@ -50,7 +47,7 @@ class GenericContainer implements Container
     public function __construct($image = null)
     {
         if (null === $image && null === static::$IMAGE) {
-            throw new InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
+            throw new \InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
         }
 
         $this->image = $image ?: static::$IMAGE;
@@ -71,8 +68,6 @@ class GenericContainer implements Container
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws InvalidFormatException if the provided mode is not valid
      * @throws DockerException        if the Docker command fails
      */
@@ -111,8 +106,8 @@ class GenericContainer implements Container
             } else {
                 $output = $client->run($image, $command, $args, $options);
             }
-            if (!($output instanceof DockerRunWithDetachOutput)) {
-                throw new LogicException('Expected DockerRunWithDetachOutput');
+            if (!$output instanceof DockerRunWithDetachOutput) {
+                throw new \LogicException('Expected DockerRunWithDetachOutput');
             }
         } catch (PortAlreadyAllocatedException $e) {
             if (null === $portStrategy) {
@@ -126,7 +121,7 @@ class GenericContainer implements Container
                 throw $e;
             }
 
-            throw new LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
+            throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
         } catch (BindAddressAlreadyUseException $e) {
             if (null === $portStrategy) {
                 throw $e;
@@ -139,7 +134,7 @@ class GenericContainer implements Container
                 throw $e;
             }
 
-            throw new LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
+            throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
         }
 
         $containerDef = [
@@ -155,7 +150,7 @@ class GenericContainer implements Container
         $startupCheckStrategy = $this->startupCheckStrategy($instance);
         if ($startupCheckStrategy) {
             if (false === $startupCheckStrategy->waitUntilStartupSuccessful($instance)) {
-                throw new RuntimeException('failed startup check: illegal state of container');
+                throw new \RuntimeException('failed startup check: illegal state of container');
             }
         }
 

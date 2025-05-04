@@ -35,7 +35,7 @@ trait VolumesFromSetting
     /**
      * Define the default volumes to be used for the container.
      *
-     * @var array{name: string, mode?: string}[]|string[]|null
+     * @var null|array{name: string, mode?: string}[]|string[]
      */
     protected static $VOLUMES_FROM;
 
@@ -67,9 +67,9 @@ trait VolumesFromSetting
      * This method returns an array of volumes, where each volume is an associative array
      * containing the container name and bind mode.
      *
-     * @throws InvalidFormatException if the volume format is invalid
-     *
      * @return VolumeFrom[] the volumes to be used for the container
+     *
+     * @throws InvalidFormatException if the volume format is invalid
      */
     protected function volumesFrom()
     {

@@ -7,6 +7,7 @@ use Testcontainers\Containers\Types\NetworkMode;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class NetworkModeTest extends TestCase

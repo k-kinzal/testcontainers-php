@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Docker\Output;
 
-use LogicException;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\ContainerObject;
@@ -32,7 +31,7 @@ class DockerInspectOutput extends DockerOutput
         try {
             $this->object = $this->deserialize($process->getOutput());
         } catch (InvalidValueException $e) {
-            throw new LogicException('Failed to deserialize Docker inspect output', 0, $e);
+            throw new \LogicException('Failed to deserialize Docker inspect output', 0, $e);
         }
     }
 
@@ -46,10 +45,10 @@ class DockerInspectOutput extends DockerOutput
     public function __get($name)
     {
         if (!property_exists($this->object, $name)) {
-            throw new LogicException("Property {$name} does not exist");
+            throw new \LogicException("Property {$name} does not exist");
         }
 
-        return $this->object->$name;
+        return $this->object->{$name};
     }
 
     /**
@@ -57,9 +56,9 @@ class DockerInspectOutput extends DockerOutput
      *
      * @param string $s the output of the `docker inspect` command
      *
-     * @throws InvalidValueException if the output could not be parsed
-     *
      * @return ContainerObject the object representation of the container
+     *
+     * @throws InvalidValueException if the output could not be parsed
      */
     private function deserialize($s)
     {

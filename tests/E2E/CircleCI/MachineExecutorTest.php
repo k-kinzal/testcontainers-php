@@ -2,7 +2,6 @@
 
 namespace Tests\E2E\CircleCI;
 
-use PDO;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
@@ -11,6 +10,7 @@ use Testcontainers\Testcontainers;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class MachineExecutorTest extends TestCase
@@ -35,7 +35,7 @@ class MachineExecutorTest extends TestCase
                 )
         );
 
-        $pdo = new PDO('mysql:host=127.0.0.1;port='.$instance->getMappedPort(3306), 'root', 'test');
+        $pdo = new \PDO('mysql:host=127.0.0.1;port='.$instance->getMappedPort(3306), 'root', 'test');
         $result = $pdo->query('SELECT 1')->fetchColumn();
 
         $this->assertSame(1, $result);

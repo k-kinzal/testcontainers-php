@@ -38,9 +38,6 @@ class BindMode implements Stringable
         $this->mode = $mode;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function __toString()
     {
         return $this->toString();
@@ -71,9 +68,9 @@ class BindMode implements Stringable
      *
      * @param string $mode the string representation of the bind mode
      *
-     * @throws InvalidFormatException if the provided mode is not valid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the provided mode is not valid
      */
     public static function fromString($mode)
     {

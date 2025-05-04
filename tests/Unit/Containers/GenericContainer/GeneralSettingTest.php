@@ -11,6 +11,7 @@ use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class GeneralSettingTest extends TestCase

@@ -10,6 +10,7 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class EnvSettingTest extends TestCase

@@ -9,13 +9,11 @@ use Testcontainers\Docker\Types\ContainerId;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class HttpWaitStrategyTest extends WaitStrategyTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     public function resolveWaitStrategy()
     {
         return new HttpWaitStrategy();

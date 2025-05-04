@@ -54,9 +54,6 @@ class DinD extends GenericContainer
      */
     protected static $PRIVILEGED = true;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function waitStrategy($instance)
     {
         return (new HttpWaitStrategy())

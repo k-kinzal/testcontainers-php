@@ -2,7 +2,6 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
@@ -88,7 +87,7 @@ trait WaitSetting
         if (null !== static::$WAIT_STRATEGY) {
             $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
             if (!$strategy) {
-                throw new LogicException('Wait strategy not found: '.static::$WAIT_STRATEGY);
+                throw new \LogicException('Wait strategy not found: '.static::$WAIT_STRATEGY);
             }
 
             return $strategy;
@@ -112,7 +111,7 @@ trait WaitSetting
             $provider->register('http', new HttpWaitStrategy());
             $provider->register('log', new LogMessageWaitStrategy());
         } catch (AlreadyExistsWaitStrategyException $e) {
-            throw new LogicException('Wait strategy already exists', 0, $e);
+            throw new \LogicException('Wait strategy already exists', 0, $e);
         }
     }
 }
