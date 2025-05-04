@@ -137,6 +137,7 @@ trait StartupSetting
      * Register a startup check strategy.
      *
      * @param StartupCheckStrategyProvider $provider The startup check strategy provider.
+     * @return void
      */
     protected function registerStartupCheckStrategy($provider)
     {
