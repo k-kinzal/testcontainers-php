@@ -25,6 +25,7 @@ class WaitStrategyProvider
      *
      * @param string $name The name of the wait strategy to register.
      * @param WaitStrategy $strategy The wait strategy to register.
+     * @return void
      *
      * @throws AlreadyExistsWaitStrategyException If a strategy with the same name already exists.
      */
