@@ -136,9 +136,6 @@ class Mount
     public static function fromMountString($v)
     {
         $parts = explode(',', $v);
-        if (count($parts) < 1) {
-            throw new InvalidFormatException($v, 'type=<type>[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
-        }
         $type = 'bind';
         $source = null;
         $destination = null;
@@ -179,7 +176,7 @@ class Mount
             }
         }
 
-        if (!isset($destination) || !is_string($destination)) {
+        if ($destination === null) {
             throw new InvalidFormatException($v, 'type=<type>[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
         }
 
