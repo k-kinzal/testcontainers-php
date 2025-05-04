@@ -7,6 +7,7 @@ use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Containers\Types\ImagePullPolicy;
+use Testcontainers\Containers\Types\NetworkMode;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 
 /**
@@ -122,7 +123,7 @@ interface Container
     /**
      * Set the network mode for this container, similar to the `--net <name>` option on the Docker CLI.
      *
-     * @param string $networkMode The network mode, e.g., 'host', 'bridge', 'none', or the name of an existing named network.
+     * @param NetworkMode $networkMode The network mode, e.g., 'host', 'bridge', 'none', or the name of an existing named network.
      * @return self
      */
     public function withNetworkMode($networkMode);
