@@ -36,7 +36,9 @@ trait BaseCommand
      *
      * These options are applied to all Docker commands executed by this client.
      *
-     * @var array<string, string>
+     * @var array{
+     *     host?: string|string[],
+     * }
      */
     private $options = [];
 
@@ -213,6 +215,12 @@ trait BaseCommand
         return $this;
     }
 
+    /**
+     * Set the logger instance.
+     *
+     * @param LoggerInterface $logger
+     * @return $this
+     */
     public function withLogger($logger)
     {
         $this->logger = $logger;
@@ -220,6 +228,11 @@ trait BaseCommand
         return $this;
     }
 
+    /**
+     * Get the logger instance.
+     *
+     * @return LoggerInterface
+     */
     protected function logger()
     {
         if ($this->logger === null) {
@@ -263,7 +276,7 @@ trait BaseCommand
      * @param string $command The command to execute.
      * @param string|null $subcommand The subcommand to execute (optional).
      * @param array $args The arguments for the command (optional).
-     * @param array $options Additional options for the Docker command.
+     * @param array<string, mixed> $options Additional options for the Docker command.
      * @param bool $wait Whether to wait for the command to finish executing.
      * @return Process The Symfony Process instance that was executed
      *
@@ -365,7 +378,7 @@ trait BaseCommand
             if (is_array($value)) {
                 foreach ($value as $k => $v) {
                     $result[] = "--$key";
-                    if (is_string($k)) {
+                    if (is_string($v)) {
                         $result[] = $k . '=' . $this->expandEnv($v);
                     } elseif (is_scalar($v) && !is_bool($v)) {
                         $result[] = $v;
