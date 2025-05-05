@@ -1,12 +1,9 @@
 <?php
 
-namespace Testcontainers\Containers\WaitStrategy;
+namespace Testcontainers\Containers\StartupCheckStrategy;
 
 /**
- * Exception thrown when waiting for a container to be ready times out.
- *
- * This exception is used to indicate that the specified timeout duration
- * has been exceeded while waiting for the container to be ready.
+ * WaitingTimeoutException is thrown when a container fails to start within the specified timeout period.
  */
 class WaitingTimeoutException extends \RuntimeException
 {
