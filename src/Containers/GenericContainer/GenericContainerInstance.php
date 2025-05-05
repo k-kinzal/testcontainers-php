@@ -242,6 +242,9 @@ class GenericContainerInstance implements ContainerInstance
 
     public function stop()
     {
+        if (!$this->isRunning()) {
+            return;
+        }
         try {
             $client = $this->client ?: DockerClientFactory::create();
             $client->stop($this->containerDef['containerId']);
