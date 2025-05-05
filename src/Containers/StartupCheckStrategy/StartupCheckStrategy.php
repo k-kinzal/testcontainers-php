@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\StartupCheckStrategy;
 
+use Psr\Log\LoggerInterface;
 use Testcontainers\Containers\ContainerInstance;
 
 /**
@@ -18,4 +19,12 @@ interface StartupCheckStrategy
      * @return bool
      */
     public function waitUntilStartupSuccessful($instance);
+
+    /**
+     * Set Logger instance.
+     *
+     * @param LoggerInterface $logger the logger instance
+     * @return self
+     */
+    public function withLogger($logger);
 }

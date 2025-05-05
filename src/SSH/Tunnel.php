@@ -4,12 +4,15 @@ namespace Testcontainers\SSH;
 
 use Symfony\Component\Process\Process;
 use Testcontainers\SSH\Exceptions\TunnelException;
+use Testcontainers\Utility\WithLogger;
 
 /**
  * A tunnel for forwarding connections over SSH.
  */
 class Tunnel
 {
+    use WithLogger;
+
     /**
      * The local port to bind to.
      *
@@ -213,6 +216,16 @@ class Tunnel
             $commandParts[] = '-o';
             $commandParts[] = $option.'='.$value;
         }
+        $this->logger()->debug(implode(' ', $commandParts), [
+            'sshHost' => $this->sshHost,
+            'sshPort' => $this->sshPort,
+            'remoteHost' => $this->remoteHost,
+            'remotePort' => $this->remotePort,
+            'localPort' => $this->localPort,
+            'localBindAddress' => $this->localBindAddress,
+            'identityFile' => $this->identityFile,
+            'sshOptions' => $this->sshOptions,
+        ]);
         $process = new Process($commandParts);
         $process->start();
 

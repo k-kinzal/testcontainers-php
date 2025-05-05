@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Utility\WithLogger;
+
 /**
  * HttpWaitStrategy waits until a specified HTTP endpoint is reachable.
  *
@@ -10,6 +13,8 @@ namespace Testcontainers\Containers\WaitStrategy;
  */
 class HttpWaitStrategy implements WaitStrategy
 {
+    use WithLogger;
+
     /**
      * The HTTP probe used to check the availability of the endpoint.
      *
@@ -86,29 +91,6 @@ class HttpWaitStrategy implements WaitStrategy
     public function __construct($probe = null)
     {
         $this->probe = $probe ?: new HttpProbeGetHeaders();
-    }
-
-    public function waitUntilReady($instance)
-    {
-        $now = time();
-        $endpoint = $this->endpoint;
-        if (null === $endpoint) {
-            $schema = $this->schema ?: 'http';
-            $host = $this->host ?: $instance->getHost();
-            $port = $this->port ?: $instance->getMappedPort($instance->getExposedPorts()[0]);
-            $path = $this->path ?: '/';
-            $endpoint = sprintf('%s://%s:%s%s', $schema, $host, $port, $path);
-        }
-
-        while (1) {
-            if (time() - $now > $this->timeout) {
-                throw new WaitingTimeoutException($this->timeout);
-            }
-            if ($this->probe->available($endpoint, $this->expectedResponseCode)) {
-                break;
-            }
-            usleep(100);
-        }
     }
 
     /**
@@ -207,5 +189,40 @@ class HttpWaitStrategy implements WaitStrategy
         $this->timeout = $seconds;
 
         return $this;
+    }
+
+    /**
+     * Waits until the container instance is ready.
+     *
+     * @param ContainerInstance $instance the container instance to check
+     */
+    public function waitUntilReady($instance)
+    {
+        $now = time();
+        $endpoint = $this->endpoint;
+        if (null === $endpoint) {
+            $schema = $this->schema ?: 'http';
+            $host = $this->host ?: $instance->getHost();
+            $port = $this->port ?: $instance->getMappedPort($instance->getExposedPorts()[0]);
+            $path = $this->path ?: '/';
+            $endpoint = sprintf('%s://%s:%s%s', $schema, $host, $port, $path);
+        }
+
+        $this->logger()->debug(sprintf(
+            'Waiting for http available: endpoint=%s, expect=%d, timeout=%d',
+            $endpoint,
+            $this->expectedResponseCode,
+            $this->timeout
+        ));
+
+        while (1) {
+            if (time() - $now > $this->timeout) {
+                throw new WaitingTimeoutException($this->timeout);
+            }
+            if ($this->probe->available($endpoint, $this->expectedResponseCode)) {
+                break;
+            }
+            usleep(100);
+        }
     }
 }

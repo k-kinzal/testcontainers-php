@@ -3,6 +3,9 @@
 namespace Tests\E2E\CircleCI;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\StreamOutput;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 use Testcontainers\Containers\WaitStrategy\PDO\PDOConnectWaitStrategy;
@@ -21,6 +24,9 @@ class DockerExecutorTest extends TestCase
             $this->markTestSkipped('This test is only for CircleCI (docker executor)');
         }
 
+        $output = new StreamOutput(STDERR, OutputInterface::VERBOSITY_DEBUG);
+        $logger = new ConsoleLogger($output);
+
         $instance = Testcontainers::run(
             (new GenericContainer('mysql:8'))
                 ->withExposedPort(3306)
@@ -34,6 +40,7 @@ class DockerExecutorTest extends TestCase
                         ->withPassword('test')
                 )
                 ->withSSHPortForward('remote-docker')
+                ->withLogger($logger)
         );
 
         $pdo = new \PDO('mysql:host=127.0.0.1;port='.$instance->getMappedPort(3306), 'root', 'test');

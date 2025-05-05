@@ -2,10 +2,10 @@
 
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
-use PDO;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
+use Testcontainers\Utility\WithLogger;
 
 /**
  * PDOConnectWaitStrategy ensures that a PDO connection is established before proceeding.
@@ -15,6 +15,8 @@ use Testcontainers\Containers\WaitStrategy\WaitStrategy;
  */
 class PDOConnectWaitStrategy implements WaitStrategy
 {
+    use WithLogger;
+
     /**
      * The DSN (Data Source Name) for the PDO connection.
      *
@@ -59,65 +61,6 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * @var int the retry interval in microseconds
      */
     private $retryInterval = 100;
-
-    /**
-     * Waits until the container instance is ready.
-     *
-     * @param ContainerInstance $instance the container instance to check
-     *
-     * @throws WaitingTimeoutException if the timeout duration is exceeded
-     */
-    public function waitUntilReady($instance)
-    {
-        if (null === $this->dsn) {
-            throw new \LogicException('The DSN for the PDO connection is not set');
-        }
-
-        $dsn = clone $this->dsn;
-        if (null === $dsn->getHost()) {
-            $host = str_replace('localhost', '127.0.0.1', $instance->getHost());
-            $dsn = $dsn->withHost($host);
-        }
-        if (null === $dsn->getPort()) {
-            $ports = $instance->getExposedPorts();
-            if (1 !== count($ports)) {
-                throw new \LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
-            }
-            $port = $instance->getMappedPort($ports[0]);
-            if (null === $port) {
-                throw new \LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
-            }
-            $dsn = $dsn->withPort($port);
-        }
-
-        $now = time();
-        $ex = null;
-        while (1) {
-            if (time() - $now > $this->timeout) {
-                if (null === $ex) {
-                    $message = 'Timeout waiting for PDO connection';
-                } else {
-                    $message = $dsn->toString().': '.$ex->getMessage();
-                }
-
-                throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
-            }
-
-            try {
-                $pdo = new \PDO($dsn->toString(), $this->username, $this->password, [
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                    \PDO::ATTR_TIMEOUT => 1,
-                ]);
-                $pdo->query('SELECT 1');
-                $pdo = null;
-
-                break;
-            } catch (\PDOException $e) {
-                $ex = $e;
-            }
-            usleep($this->retryInterval);
-        }
-    }
 
     /**
      * Specify the DSN (Data Source Name) for the PDO connection.
@@ -200,5 +143,73 @@ class PDOConnectWaitStrategy implements WaitStrategy
         $this->retryInterval = $interval;
 
         return $this;
+    }
+
+    /**
+     * Waits until the container instance is ready.
+     *
+     * @param ContainerInstance $instance the container instance to check
+     *
+     * @throws WaitingTimeoutException if the timeout duration is exceeded
+     */
+    public function waitUntilReady($instance)
+    {
+        if (null === $this->dsn) {
+            throw new \LogicException('The DSN for the PDO connection is not set');
+        }
+
+        $dsn = clone $this->dsn;
+        if (null === $dsn->getHost()) {
+            $host = str_replace('localhost', '127.0.0.1', $instance->getHost());
+            $dsn = $dsn->withHost($host);
+        }
+        if (null === $dsn->getPort()) {
+            $ports = $instance->getExposedPorts();
+            if (1 !== count($ports)) {
+                throw new \LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
+            }
+            $port = $instance->getMappedPort($ports[0]);
+            if (null === $port) {
+                throw new \LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
+            }
+            $dsn = $dsn->withPort($port);
+        }
+
+        $now = time();
+        $ex = null;
+        while (1) {
+            if (time() - $now > $this->timeout) {
+                if (null === $ex) {
+                    $message = 'Timeout waiting for PDO connection';
+                } else {
+                    $message = $dsn->toString().': '.$ex->getMessage();
+                }
+                throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
+            }
+
+            try {
+                $this->logger()->debug(sprintf(
+                    'Trying to connect to PDO: dsn=%s, username=%s, passowrd=%s',
+                    $dsn->toString(),
+                    $this->username,
+                    $this->password
+                ));
+                $pdo = new \PDO($dsn->toString(), $this->username, $this->password, [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                    \PDO::ATTR_TIMEOUT => 1,
+                ]);
+                $this->logger()->debug('Pinging PDO connection');
+                $pdo->query('SELECT 1');
+                $pdo = null;
+
+                break;
+            } catch (\PDOException $e) {
+                $this->logger()->debug(sprintf('Unable to connect to PDO: %s', $e->getMessage()), [
+                    'exception' => $e,
+                ]);
+                $ex = $e;
+            }
+            usleep($this->retryInterval);
+        }
     }
 }
