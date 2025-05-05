@@ -175,10 +175,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
             $dsn = $dsn->withPort($port);
         }
 
+        $defaultSocketTimeout = ini_get('default_socket_timeout');
+        ini_set('default_socket_timeout', 1);
+
         $now = time();
         $ex = null;
         while (1) {
             if (time() - $now > $this->timeout) {
+                ini_set('default_socket_timeout', $defaultSocketTimeout);
                 if (null === $ex) {
                     $message = 'Timeout waiting for PDO connection';
                 } else {
@@ -189,7 +193,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
 
             try {
                 $this->logger()->debug(sprintf(
-                    'Trying to connect to PDO: dsn=%s, username=%s, passowrd=%s',
+                    'Trying to connect to PDO: dsn=%s, username=%s, password=%s',
                     $dsn->toString(),
                     $this->username,
                     $this->password
@@ -211,5 +215,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
             }
             usleep($this->retryInterval);
         }
+
+        ini_set('default_socket_timeout', $defaultSocketTimeout);
     }
 }
