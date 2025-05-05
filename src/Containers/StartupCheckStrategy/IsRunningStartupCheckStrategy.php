@@ -31,7 +31,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
     /**
      * The interval in microseconds to wait before retrying the check.
      *
-     * @var int the interval in seconds
+     * @var int the interval in microseconds
      */
     private $retryInterval = 0;
 
