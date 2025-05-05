@@ -12,6 +12,7 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Environments;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\SSH\Tunnel;
+use Testcontainers\Utility\WithLogger;
 
 /**
  * GenericContainer is a generic implementation of docker container.
@@ -33,6 +34,7 @@ class GenericContainer implements Container
     use VolumesFromSetting;
     use WaitSetting;
     use WorkdirSetting;
+    use WithLogger;
 
     /**
      * The Docker client.
@@ -68,6 +70,16 @@ class GenericContainer implements Container
     }
 
     /**
+     * Get the Docker client.
+     *
+     * @return DockerClient
+     */
+    protected function client()
+    {
+        return $this->client ?: DockerClientFactory::create();
+    }
+
+    /**
      * @throws InvalidFormatException if the provided mode is not valid
      * @throws DockerException        if the Docker command fails
      */
@@ -100,11 +112,12 @@ class GenericContainer implements Container
         ];
         $timeout = $this->startupTimeout();
 
+        $this->logger()->debug('Starting container');
         try {
             if (null !== $timeout) {
-                $output = $client->withTimeout($timeout)->run($image, $command, $args, $options);
+                $output = $client->withLogger($this->logger())->withTimeout($timeout)->run($image, $command, $args, $options);
             } else {
-                $output = $client->run($image, $command, $args, $options);
+                $output = $client->withLogger($this->logger())->run($image, $command, $args, $options);
             }
             if (!$output instanceof DockerRunWithDetachOutput) {
                 throw new \LogicException('Expected DockerRunWithDetachOutput');
@@ -115,6 +128,9 @@ class GenericContainer implements Container
             }
             $behavior = $portStrategy->conflictBehavior();
             if ($behavior->isRetry()) {
+                $this->logger()->debug('Port already allocated, retrying: ' . $e->getMessage(), [
+                    'exception' => $e,
+                ]);
                 return $this->start();
             }
             if ($behavior->isFail()) {
@@ -128,6 +144,9 @@ class GenericContainer implements Container
             }
             $behavior = $portStrategy->conflictBehavior();
             if ($behavior->isRetry()) {
+                $this->logger()->debug('Bind address already in use, retrying: ' . $e->getMessage(), [
+                    'exception' => $e,
+                ]);
                 return $this->start();
             }
             if ($behavior->isFail()) {
@@ -136,6 +155,10 @@ class GenericContainer implements Container
 
             throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
         }
+
+        $this->logger()->debug('Container started', [
+            'containerId' => $output->getContainerId(),
+        ]);
 
         $containerDef = [
             'containerId' => $output->getContainerId(),
@@ -149,9 +172,13 @@ class GenericContainer implements Container
 
         $startupCheckStrategy = $this->startupCheckStrategy($instance);
         if ($startupCheckStrategy) {
-            if (false === $startupCheckStrategy->waitUntilStartupSuccessful($instance)) {
+            $this->logger()->debug('Waiting for container to start', [
+                'strategy' => $startupCheckStrategy,
+            ]);
+            if (false === $startupCheckStrategy->withLogger($this->logger())->waitUntilStartupSuccessful($instance)) {
                 throw new \RuntimeException('failed startup check: illegal state of container');
             }
+            $this->logger()->debug('Container started successfully');
         }
 
         if (count($ports) > 0) {
@@ -173,27 +200,26 @@ class GenericContainer implements Container
                     if ($sshPort) {
                         $tunnel->withSshPort($sshPort);
                     }
+                    $this->logger()->debug('Opening SSH tunnel');
                     $session = $tunnel->open();
                     $instance->setData($session);
+                    $this->logger()->debug('SSH tunnel opened', [
+                        'session' => $session,
+                    ]);
                 }
             }
         }
 
         $waitStrategy = $this->waitStrategy($instance);
         if ($waitStrategy) {
-            $waitStrategy->waitUntilReady($instance);
+            $this->logger()->debug('Waiting for container to be ready', [
+                'strategy' => $waitStrategy,
+            ]);
+            $waitStrategy->withLogger($this->logger())->waitUntilReady($instance);
         }
 
-        return $instance;
-    }
+        $this->logger()->debug('Container is ready');
 
-    /**
-     * Get the Docker client.
-     *
-     * @return DockerClient
-     */
-    protected function client()
-    {
-        return $this->client ?: DockerClientFactory::create();
+        return $instance;
     }
 }

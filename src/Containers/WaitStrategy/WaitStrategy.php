@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Psr\Log\LoggerInterface;
 use Testcontainers\Containers\ContainerInstance;
 
 /**
@@ -16,4 +17,12 @@ interface WaitStrategy
      * @param ContainerInstance $instance the container instance to check
      */
     public function waitUntilReady($instance);
+
+    /**
+     * Set Logger instance.
+     *
+     * @param LoggerInterface $logger the logger instance
+     * @return self
+     */
+    public function withLogger($logger);
 }

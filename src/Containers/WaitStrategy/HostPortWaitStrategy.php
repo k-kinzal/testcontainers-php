@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Utility\WithLogger;
+
 /**
  * HostPortWaitStrategy waits until the specified ports on the container instance are available.
  *
@@ -9,6 +12,8 @@ namespace Testcontainers\Containers\WaitStrategy;
  */
 class HostPortWaitStrategy implements WaitStrategy
 {
+    use WithLogger;
+
     /**
      * The port probe used to check the availability of ports.
      *
@@ -39,34 +44,6 @@ class HostPortWaitStrategy implements WaitStrategy
         $this->probe = $probe ?: new PortProbeTcp();
     }
 
-    public function waitUntilReady($instance)
-    {
-        $now = time();
-
-        $host = $instance->getHost();
-        $mappedPorts = [];
-        foreach ($instance->getExposedPorts() as $port) {
-            $p = $instance->getMappedPort($port);
-            if (null === $p) {
-                continue;
-            }
-            $mappedPorts[] = $p;
-        }
-
-        $ports = array_merge($this->ports, $mappedPorts);
-        foreach ($ports as $port) {
-            while (1) {
-                if (time() - $now > $this->timeout) {
-                    throw new WaitingTimeoutException($this->timeout);
-                }
-                if ($this->probe->available($host, $port)) {
-                    break;
-                }
-                usleep(0);
-            }
-        }
-    }
-
     /**
      * Sets the ports to be checked for readiness.
      *
@@ -93,5 +70,44 @@ class HostPortWaitStrategy implements WaitStrategy
         $this->timeout = $seconds;
 
         return $this;
+    }
+
+    /**
+     * Waits until the container instance is ready.
+     *
+     * @param ContainerInstance $instance the container instance to check
+     */
+    public function waitUntilReady($instance)
+    {
+        $now = time();
+
+        $host = $instance->getHost();
+        $mappedPorts = [];
+        foreach ($instance->getExposedPorts() as $port) {
+            $p = $instance->getMappedPort($port);
+            if (null === $p) {
+                continue;
+            }
+            $mappedPorts[] = $p;
+        }
+
+        $ports = array_merge($this->ports, $mappedPorts);
+        foreach ($ports as $port) {
+            $this->logger()->debug(sprintf(
+                'Waiting for port available: host=%s:%d, timeout=%d',
+                $host,
+                $port,
+                $this->timeout
+            ));
+            while (1) {
+                if (time() - $now > $this->timeout) {
+                    throw new WaitingTimeoutException($this->timeout);
+                }
+                if ($this->probe->available($host, $port)) {
+                    break;
+                }
+                usleep(0);
+            }
+        }
     }
 }

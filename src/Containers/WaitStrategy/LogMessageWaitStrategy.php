@@ -2,8 +2,10 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
+use Testcontainers\Utility\WithLogger;
 
 /**
  * LogMessageWaitStrategy waits until a specified log message is found in the container logs.
@@ -13,6 +15,8 @@ use Testcontainers\Docker\Output\DockerFollowLogsOutput;
  */
 class LogMessageWaitStrategy implements WaitStrategy
 {
+    use WithLogger;
+
     /**
      * The regex pattern used to match log messages.
      *
@@ -26,24 +30,6 @@ class LogMessageWaitStrategy implements WaitStrategy
      * @var int
      */
     private $timeout = 30;
-
-    public function waitUntilReady($instance)
-    {
-        $containerId = $instance->getContainerId();
-
-        $client = DockerClientFactory::create();
-        $output = $client->withTimeout($this->timeout)->logs($containerId, ['follow' => true]);
-        if (!$output instanceof DockerFollowLogsOutput) {
-            throw new \LogicException('Expected DockerFollowLogsOutput instance: `'.get_class($output).'`');
-        }
-        $iter = $output->getIterator();
-        $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';
-        foreach ($iter as $line) {
-            if (preg_match($pattern, trim($line))) {
-                return;
-            }
-        }
-    }
 
     /**
      * Sets the pattern to be used for matching log messages.
@@ -71,5 +57,30 @@ class LogMessageWaitStrategy implements WaitStrategy
         $this->timeout = $seconds;
 
         return $this;
+    }
+
+    /**
+     * Waits until the container instance is ready.
+     *
+     * @param ContainerInstance $instance the container instance to check
+     */
+    public function waitUntilReady($instance)
+    {
+        $containerId = $instance->getContainerId();
+
+        $client = DockerClientFactory::create();
+        $output = $client->withTimeout($this->timeout)->logs($containerId, ['follow' => true]);
+        if (!$output instanceof DockerFollowLogsOutput) {
+            throw new \LogicException('Expected DockerFollowLogsOutput instance: `'.get_class($output).'`');
+        }
+        $iter = $output->getIterator();
+        $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';
+        $this->logger()->debug('Waiting for log message: pattern='.$pattern);
+        foreach ($iter as $line) {
+            $this->logger()->debug(trim($line));
+            if (preg_match($pattern, trim($line))) {
+                return;
+            }
+        }
     }
 }
