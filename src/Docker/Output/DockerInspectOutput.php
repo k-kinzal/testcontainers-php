@@ -31,7 +31,12 @@ class DockerInspectOutput extends DockerOutput
         try {
             $this->object = $this->deserialize($process->getOutput());
         } catch (InvalidValueException $e) {
-            throw new \LogicException('Failed to deserialize Docker inspect output', 0, $e);
+            $this->object = ContainerObject::fromArray([
+                'State' => [
+                    'Status' => 'dead',
+                    'ExitCode' => 255,
+                ],
+            ]);
         }
     }
 
