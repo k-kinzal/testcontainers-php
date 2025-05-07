@@ -21,6 +21,6 @@ class PortAlreadyAllocatedException extends DockerException
     public static function match($output)
     {
         return false !== strpos($output, 'Error response from daemon:')
-            && false !== strpos($output, 'port is already allocated.');
+            && false !== strpos($output, 'port is already allocated');
     }
 }

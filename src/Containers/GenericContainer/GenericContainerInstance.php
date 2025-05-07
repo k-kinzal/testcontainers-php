@@ -67,7 +67,9 @@ class GenericContainerInstance implements ContainerInstance
 
     public function __destruct()
     {
-        $this->stop();
+        if ($this->running) {
+            $this->stop();
+        }
     }
 
     /**
@@ -242,9 +244,6 @@ class GenericContainerInstance implements ContainerInstance
 
     public function stop()
     {
-        if (!$this->isRunning()) {
-            return;
-        }
         try {
             $client = $this->client ?: DockerClientFactory::create();
             $client->stop($this->containerDef['containerId']);
