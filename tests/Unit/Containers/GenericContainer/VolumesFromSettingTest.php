@@ -13,11 +13,6 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class VolumesFromSettingTest extends TestCase
 {
     public function testHasVolumesFromSettingTrait()

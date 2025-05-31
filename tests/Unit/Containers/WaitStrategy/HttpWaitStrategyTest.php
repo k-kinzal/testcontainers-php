@@ -7,11 +7,6 @@ use Testcontainers\Containers\WaitStrategy\HttpProbe;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 use Testcontainers\Docker\Types\ContainerId;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class HttpWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()

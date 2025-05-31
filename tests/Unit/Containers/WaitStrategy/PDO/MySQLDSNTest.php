@@ -4,11 +4,6 @@ namespace Tests\Unit\Containers\WaitStrategy\PDO;
 
 use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class MySQLDSNTest extends DSNTestCase
 {
     public function resolveDSN()

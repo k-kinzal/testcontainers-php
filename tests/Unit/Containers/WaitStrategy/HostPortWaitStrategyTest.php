@@ -8,11 +8,6 @@ use Testcontainers\Containers\WaitStrategy\PortProbe;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Docker\Types\ContainerId;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class HostPortWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()

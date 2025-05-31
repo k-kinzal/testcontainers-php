@@ -8,11 +8,6 @@ use Testcontainers\Containers\WaitStrategy\PDO\SQLiteDSN;
 use Testcontainers\Docker\Types\ContainerId;
 use Tests\Unit\Containers\WaitStrategy\WaitStrategyTestCase;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()

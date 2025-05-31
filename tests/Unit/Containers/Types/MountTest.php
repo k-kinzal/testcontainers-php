@@ -7,11 +7,6 @@ namespace Tests\Unit\Containers\Types;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\Mount;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class MountTest extends TestCase
 {
     public function testMount()

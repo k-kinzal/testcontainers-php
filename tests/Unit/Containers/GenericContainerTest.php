@@ -10,11 +10,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\PortStrategy\StaticPortStrategy;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class GenericContainerTest extends TestCase
 {
     public function testStart()

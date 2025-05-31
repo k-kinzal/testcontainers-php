@@ -9,11 +9,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PortSetting;
 use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class PortSettingTest extends TestCase
 {
     public function testHasPortSettingTrait()

@@ -5,11 +5,6 @@ namespace Tests\Unit\Docker\Command;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class BaseCommandTest extends TestCase
 {
     public function testGetHostFromDefault()

@@ -8,11 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class ImagePullPolicyTest extends TestCase
 {
     public function testImagePullPolicyAlways()
