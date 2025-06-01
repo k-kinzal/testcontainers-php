@@ -189,3 +189,7 @@ composer.lock
 
 # VSCode
 .vscode/
+
+# Copilot
+.github/copilot-instructions.md
+.task/
