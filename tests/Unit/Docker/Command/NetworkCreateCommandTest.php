@@ -9,11 +9,6 @@ use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class NetworkCreateCommandTest extends TestCase
 {
     public function testHasNetworkCreateCommandTrait()

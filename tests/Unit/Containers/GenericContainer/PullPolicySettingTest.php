@@ -9,11 +9,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PullPolicySetting;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class PullPolicySettingTest extends TestCase
 {
     public function testHasPullPolicySettingTrait()

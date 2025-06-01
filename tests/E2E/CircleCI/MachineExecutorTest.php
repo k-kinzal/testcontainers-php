@@ -11,11 +11,6 @@ use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 use Testcontainers\Containers\WaitStrategy\PDO\PDOConnectWaitStrategy;
 use Testcontainers\Testcontainers;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class MachineExecutorTest extends TestCase
 {
     public function test()

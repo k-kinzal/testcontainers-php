@@ -9,11 +9,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\NetworkModeSetting;
 use Testcontainers\Containers\Types\NetworkMode;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class NetworkModeSettingTest extends TestCase
 {
     public function testHasNetworkModeSettingTrait()

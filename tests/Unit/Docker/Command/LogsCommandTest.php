@@ -11,11 +11,6 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class LogsCommandTest extends TestCase
 {
     public function testHasLogsCommandTrait()

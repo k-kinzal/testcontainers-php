@@ -15,11 +15,6 @@ use Testcontainers\SSH\Session;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class GenericContainerInstanceTest extends TestCase
 {
     public function testGetContainerId()

@@ -7,11 +7,6 @@ use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class LogMessageWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()

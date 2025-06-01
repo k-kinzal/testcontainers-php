@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.7/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         backupGlobals="false"
+         colors="true"
+         executionOrder="random"
+         processIsolation="false"
+         stopOnFailure="true"
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false">
+
+  <testsuites>
+    <testsuite name="unit">
+      <directory>tests/Unit</directory>
+    </testsuite>
+    <testsuite name="e2e">
+      <directory>tests/E2E</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist>
+      <directory suffix=".php">src/</directory>
+    </whitelist>
+  </filter>
+
+  <php>
+    <ini name="error_reporting" value="-1"/>
+  </php>
+
+</phpunit>

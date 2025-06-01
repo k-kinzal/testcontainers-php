@@ -12,11 +12,6 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class NetworkAliasSettingTest extends TestCase
 {
     public function testHasNetworkAliasSettingTrait()

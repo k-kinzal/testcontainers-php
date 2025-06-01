@@ -10,11 +10,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StartupSetting;
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class StartupSettingTest extends TestCase
 {
     public function testHasStartupSettingTrait()

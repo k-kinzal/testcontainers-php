@@ -6,11 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Testcontainers;
 use Tests\Images\AlpineContainer;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class TestcontainersTest extends TestCase
 {
     public function testWithContainerClassString()

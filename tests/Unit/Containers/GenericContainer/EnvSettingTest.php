@@ -8,11 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\EnvSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 class EnvSettingTest extends TestCase
 {
     public function testHasEnvSettingTrait()
