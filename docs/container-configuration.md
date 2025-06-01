@@ -516,7 +516,7 @@ Startup settings control how the container's startup process is handled.
 
 | Strategy | Description | Use Case |
 |----------|-------------|----------|
-| `IsRunningStartupCheckStrategy` | Waits until the container is in the "running" state or has exited with a zero exit code | When you need to ensure the container has started successfully before proceeding |
+| `IsRunningStartupCheckStrategy` | Waits until the container is in the "running" state or has exited with a zero exit code. This strategy can be configured with a timeout and retry interval. | When you need to ensure the container has started successfully before proceeding. |
 
 The `IsRunningStartupCheckStrategy` continuously checks the container's state and returns:
 - `true` if the container is in the "running" state
@@ -530,7 +530,7 @@ The `IsRunningStartupCheckStrategy` continuously checks the container's state an
 class MyContainer extends GenericContainer
 {
     protected static $STARTUP_TIMEOUT = 60; // seconds
-    protected static $STARTUP_CHECK_STRATEGY = 'is_running';
+    protected static $STARTUP_CHECK_STRATEGY = 'is_running'; // This will use IsRunningStartupCheckStrategy with default timeout and retry interval
 }
 
 // Method Override
@@ -543,15 +543,19 @@ class MyContainer extends GenericContainer
     
     protected function startupCheckStrategy()
     {
-        return new \Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy();
+        return (new \Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy())
+            ->withTimeoutSeconds(30) // Optionally set a timeout for the check (default: 30 seconds)
+            ->withRetryInterval(100000); // Optionally set a retry interval in microseconds (default: 0)
     }
 }
 
 // Fluent API
 $container = (new GenericContainer('nginx:latest'))
-    ->withStartupTimeout(60)
+    ->withStartupTimeout(60) // Timeout for the container to start
     ->withStartupCheckStrategy(
-        new \Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy()
+        (new \Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy())
+            ->withTimeoutSeconds(30) // Timeout for the startup check strategy itself
+            ->withRetryInterval(100000) // Retry interval for the startup check strategy in microseconds
     );
 ```
 
@@ -686,6 +690,47 @@ $container = (new GenericContainer('nginx:latest'))
 This setting is particularly useful when you need to access container ports from your local machine, but Docker is running on a remote host. When SSH port forwarding is enabled, testcontainers-php will automatically set up an SSH tunnel for each exposed port, allowing you to access the container's services as if they were running locally.
 
 > **Note**: SSH port forwarding can also be configured using the `TESTCONTAINERS_SSH_FEEDFORWARDING` environment variable. See the [Environments](environments.md) documentation for more information.
+
+### Logging Settings
+
+testcontainers-php supports PSR-3 compatible logging, allowing you to gain insights into the library's internal operations and troubleshoot issues more effectively. Many core components, including `GenericContainer`, various wait strategies, and startup check strategies, utilize the `WithLogger` trait and provide a `withLogger()` method to inject your logger instance.
+
+By configuring a logger, you can receive detailed information about container lifecycle events, strategy executions, and potential errors.
+
+#### Example: Using a Logger with a Container and Wait Strategy
+
+```php
+use Psr\\Log\\AbstractLogger;
+use Testcontainers\\GenericContainer;
+use Testcontainers\\Containers\\WaitStrategy\\HttpWaitStrategy;
+
+// Implement a simple PSR-3 logger (e.g., for demonstration)
+class MyLogger extends AbstractLogger
+{
+    public function log($level, $message, array $context = [])
+    {
+        echo sprintf("[%s] %s %s\\n", $level, $message, json_encode($context));
+    }
+}
+
+$logger = new MyLogger();
+
+$container = (new GenericContainer('nginx:latest'))
+    ->withLogger($logger) // Set logger for the container itself
+    ->withExposedPorts([80])
+    ->withWaitStrategy(
+        (new HttpWaitStrategy())
+            ->withLogger($logger) // Set logger for the wait strategy
+            ->withPort(80)
+            ->withPath('/')
+            ->withExpectedResponseCode(200)
+            ->withTimeoutSeconds(10)
+    );
+
+// When Testcontainers::run($container) is called, both the container and its strategy will use the provided logger.
+```
+
+This allows you to centralize logging from different parts of testcontainers-php into your application's logging system.
 
 ## Docker Client Configuration
 

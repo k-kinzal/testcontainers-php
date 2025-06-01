@@ -119,6 +119,8 @@ When using the Docker Executor with Remote Docker, you need to set the following
 - `TESTCONTAINERS_SSH_FEEDFORWARDING`: Enables SSH port forwarding
 - `TESTCONTAINERS_HOST_OVERRIDE`: Makes container ports accessible via localhost
 
+For more details on `TESTCONTAINERS_SSH_FEEDFORWARDING` and related configurations, see the [Environments](environments.md) and [Container Configuration](container-configuration.md#ssh-port-forward-settings) documentation.
+
 If you need to explicitly configure SSH port forwarding in your test code, you can use `withSSHPortForward`:
 
 ```php
