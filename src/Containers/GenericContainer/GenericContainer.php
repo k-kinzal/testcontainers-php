@@ -37,6 +37,11 @@ class GenericContainer implements Container
     use WithLogger;
 
     /**
+     * Maximum number of retry attempts for port conflicts.
+     */
+    private const MAX_RETRY_ATTEMPTS = 3;
+
+    /**
      * The Docker client.
      *
      * @var null|DockerClient
@@ -83,7 +88,7 @@ class GenericContainer implements Container
      * @throws InvalidFormatException if the provided mode is not valid
      * @throws DockerException        if the Docker command fails
      */
-    public function start()
+    public function start($retryCount = 0)
     {
         $client = $this->client();
 
@@ -128,10 +133,20 @@ class GenericContainer implements Container
             }
             $behavior = $portStrategy->conflictBehavior();
             if ($behavior->isRetry()) {
+                if ($retryCount >= self::MAX_RETRY_ATTEMPTS) {
+                    $this->logger()->error('Maximum retry attempts reached for port allocation', [
+                        'retryCount' => $retryCount,
+                        'maxRetries' => self::MAX_RETRY_ATTEMPTS,
+                        'exception' => $e,
+                    ]);
+                    throw $e;
+                }
                 $this->logger()->debug('Port already allocated, retrying: ' . $e->getMessage(), [
                     'exception' => $e,
+                    'retryCount' => $retryCount + 1,
+                    'maxRetries' => self::MAX_RETRY_ATTEMPTS,
                 ]);
-                return $this->start();
+                return $this->start($retryCount + 1);
             }
             if ($behavior->isFail()) {
                 throw $e;
@@ -144,10 +159,20 @@ class GenericContainer implements Container
             }
             $behavior = $portStrategy->conflictBehavior();
             if ($behavior->isRetry()) {
+                if ($retryCount >= self::MAX_RETRY_ATTEMPTS) {
+                    $this->logger()->error('Maximum retry attempts reached for bind address', [
+                        'retryCount' => $retryCount,
+                        'maxRetries' => self::MAX_RETRY_ATTEMPTS,
+                        'exception' => $e,
+                    ]);
+                    throw $e;
+                }
                 $this->logger()->debug('Bind address already in use, retrying: ' . $e->getMessage(), [
                     'exception' => $e,
+                    'retryCount' => $retryCount + 1,
+                    'maxRetries' => self::MAX_RETRY_ATTEMPTS,
                 ]);
-                return $this->start();
+                return $this->start($retryCount + 1);
             }
             if ($behavior->isFail()) {
                 throw $e;
