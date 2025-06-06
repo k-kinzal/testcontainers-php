@@ -36,7 +36,6 @@ class GenericContainer implements Container
     use WorkdirSetting;
     use WithLogger;
 
-
     /**
      * The Docker client.
      *
