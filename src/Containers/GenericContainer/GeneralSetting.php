@@ -6,7 +6,7 @@ namespace Testcontainers\Containers\GenericContainer;
  * GeneralSetting is a trait that provides the ability to set general container options.
  *
  * Two formats are supported:
- * 1. static variable `$IMAGE`, `$NAME`, and `$MAX_RETRY_ATTEMPTS`:
+ * 1. static variable `$IMAGE` and `$NAME`:
  *
  * <code>
  * class YourContainer extends GenericContainer
@@ -14,17 +14,14 @@ namespace Testcontainers\Containers\GenericContainer;
  *     protected static $IMAGE = 'image';
  *
  *     protected static $NAME = 'your-container';
- *
- *     protected static $MAX_RETRY_ATTEMPTS = 5;
  * }
  * </code>
  *
- * 2. method `withName` and `withMaxRetryAttempts`:
+ * 2. method `withName`:
  *
  * <code>
  * $container = (new YourContainer('image'))
- *     ->withName('your-container')
- *     ->withMaxRetryAttempts(5);
+ *     ->withName('your-container');
  * </code>
  */
 trait GeneralSetting
@@ -50,12 +47,6 @@ trait GeneralSetting
      */
     protected static $NAME;
 
-    /**
-     * Define the default number of retry attempts for port conflicts.
-     *
-     * @var null|int
-     */
-    protected static $MAX_RETRY_ATTEMPTS;
 
     /**
      * The image to be used for the container.
@@ -78,12 +69,6 @@ trait GeneralSetting
      */
     private $name;
 
-    /**
-     * The number of retry attempts for port conflicts.
-     *
-     * @var null|int
-     */
-    private $maxRetryAttempts;
 
     public function withCommand($cmd)
     {
@@ -113,19 +98,6 @@ trait GeneralSetting
         return $this;
     }
 
-    /**
-     * Set the maximum number of retry attempts for port conflicts.
-     *
-     * @param int $maxRetryAttempts the maximum number of retry attempts
-     *
-     * @return self
-     */
-    public function withMaxRetryAttempts($maxRetryAttempts)
-    {
-        $this->maxRetryAttempts = $maxRetryAttempts;
-
-        return $this;
-    }
 
     /**
      * Retrieve the image to be used for the container.
@@ -211,20 +183,4 @@ trait GeneralSetting
         return null;
     }
 
-    /**
-     * Retrieve the maximum number of retry attempts for port conflicts.
-     *
-     * @return int
-     */
-    protected function maxRetryAttempts()
-    {
-        if (static::$MAX_RETRY_ATTEMPTS) {
-            return static::$MAX_RETRY_ATTEMPTS;
-        }
-        if ($this->maxRetryAttempts) {
-            return $this->maxRetryAttempts;
-        }
-
-        return 3; // Default value
-    }
 }

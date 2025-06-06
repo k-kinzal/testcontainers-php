@@ -115,7 +115,7 @@ class GenericContainer implements Container
 
         $this->logger()->debug('Starting container');
         
-        $maxRetryAttempts = $this->maxRetryAttempts();
+        $maxRetryAttempts = $this->startupConflictRetryAttempts();
         $retryCount = 0;
         while ($retryCount <= $maxRetryAttempts) {
             try {
