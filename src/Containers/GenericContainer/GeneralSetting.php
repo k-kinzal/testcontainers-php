@@ -47,7 +47,6 @@ trait GeneralSetting
      */
     protected static $NAME;
 
-
     /**
      * The image to be used for the container.
      *
@@ -68,7 +67,6 @@ trait GeneralSetting
      * @var null|string
      */
     private $name;
-
 
     public function withCommand($cmd)
     {
@@ -97,7 +95,6 @@ trait GeneralSetting
 
         return $this;
     }
-
 
     /**
      * Retrieve the image to be used for the container.
@@ -182,5 +179,4 @@ trait GeneralSetting
 
         return null;
     }
-
 }

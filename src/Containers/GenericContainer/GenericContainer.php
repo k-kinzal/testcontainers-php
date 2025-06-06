@@ -113,7 +113,7 @@ class GenericContainer implements Container
         $timeout = $this->startupTimeout();
 
         $this->logger()->debug('Starting container');
-        
+
         $maxRetryAttempts = $this->startupConflictRetryAttempts();
         $retryCount = 0;
         while ($retryCount <= $maxRetryAttempts) {
