@@ -195,7 +195,7 @@ trait StartupSetting
      */
     protected function startupConflictRetryAttempts()
     {
-        if (static::$STARTUP_CONFLICT_RETRY_ATTEMPTS) {
+        if (static::$STARTUP_CONFLICT_RETRY_ATTEMPTS !== null) {
             return static::$STARTUP_CONFLICT_RETRY_ATTEMPTS;
         }
         if ($this->startupConflictRetryAttempts) {

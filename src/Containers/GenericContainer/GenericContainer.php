@@ -116,7 +116,7 @@ class GenericContainer implements Container
 
         $maxRetryAttempts = $this->startupConflictRetryAttempts();
         $retryCount = 0;
-        while ($retryCount <= $maxRetryAttempts) {
+        while ($retryCount < $maxRetryAttempts) {
             try {
                 if (null !== $timeout) {
                     $output = $client->withLogger($this->logger())->withTimeout($timeout)->run($image, $command, $args, $options);
