@@ -3,7 +3,7 @@
 namespace Testcontainers\Containers\GenericContainer;
 
 /**
- * GeneralSetting is a trait that provides the ability to set the name for a container.
+ * GeneralSetting is a trait that provides the ability to set general container options.
  *
  * Two formats are supported:
  * 1. static variable `$IMAGE` and `$NAME`:

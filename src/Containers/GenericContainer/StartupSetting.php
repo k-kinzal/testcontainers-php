@@ -12,7 +12,7 @@ use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
  * StartupSetting is a trait that provides the ability to set the startup timeout and check strategy for a container.
  *
  * Two formats are supported:
- * 1. static variable `$STARTUP_TIMEOUT` and `$STARTUP_CHECK_STRATEGY`:
+ * 1. static variable `$STARTUP_TIMEOUT`, `$STARTUP_CHECK_STRATEGY`, and `$STARTUP_CONFLICT_RETRY_ATTEMPTS`:
  *
  * <code>
  * class YourContainer extends GenericContainer
@@ -20,19 +20,29 @@ use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
  *     protected static $STARTUP_TIMEOUT = 30;
  *
  *     protected static $STARTUP_CHECK_STRATEGY = 'is_running';
+ *
+ *     protected static $STARTUP_CONFLICT_RETRY_ATTEMPTS = 5;
  * }
  * </code>
  *
- * 2. method `withStartupTimeout` and `withStartupCheckStrategy`:
+ * 2. method `withStartupTimeout`, `withStartupCheckStrategy`, and `withStartupConflictRetries`:
  *
  * <code>
  * $container = (new YourContainer('image'))
  *     ->withStartupTimeout(30)
- *     ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy());
+ *     ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
+ *     ->withStartupConflictRetries(5);
  * </code>
+ *
+ * Default startup conflict retry attempts: 3
  */
 trait StartupSetting
 {
+    /**
+     * Default number of retry attempts for startup conflicts (port/bind address conflicts).
+     */
+    private static $DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS = 3;
+
     /**
      * Define the default startup timeout to be used for the container.
      *
@@ -48,6 +58,13 @@ trait StartupSetting
     protected static $STARTUP_CHECK_STRATEGY;
 
     /**
+     * Define the default number of retry attempts for startup conflicts (port/bind address conflicts).
+     *
+     * @var null|int
+     */
+    protected static $STARTUP_CONFLICT_RETRY_ATTEMPTS;
+
+    /**
      * The startup timeout to be used for the container.
      *
      * @var null|int
@@ -60,6 +77,13 @@ trait StartupSetting
      * @var null|StartupCheckStrategy
      */
     private $startupCheckStrategy;
+
+    /**
+     * The number of retry attempts for startup conflicts (port/bind address conflicts).
+     *
+     * @var null|int
+     */
+    private $startupConflictRetryAttempts;
 
     /**
      * The startup check strategy provider.
@@ -92,6 +116,20 @@ trait StartupSetting
     public function withStartupCheckStrategy($strategy)
     {
         $this->startupCheckStrategy = $strategy;
+
+        return $this;
+    }
+
+    /**
+     * Set the maximum number of retry attempts for startup conflicts (port/bind address conflicts).
+     *
+     * @param int $retryAttempts the maximum number of retry attempts
+     *
+     * @return self
+     */
+    public function withStartupConflictRetries($retryAttempts)
+    {
+        $this->startupConflictRetryAttempts = $retryAttempts;
 
         return $this;
     }
@@ -155,5 +193,22 @@ trait StartupSetting
         } catch (AlreadyExistsStartupStrategyException $e) {
             throw new \LogicException('Startup check strategy with name is_running already exists.', 0, $e);
         }
+    }
+
+    /**
+     * Retrieve the maximum number of retry attempts for startup conflicts (port/bind address conflicts).
+     *
+     * @return int
+     */
+    protected function startupConflictRetryAttempts()
+    {
+        if (static::$STARTUP_CONFLICT_RETRY_ATTEMPTS !== null) {
+            return static::$STARTUP_CONFLICT_RETRY_ATTEMPTS;
+        }
+        if ($this->startupConflictRetryAttempts !== null) {
+            return $this->startupConflictRetryAttempts;
+        }
+
+        return self::$DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS;
     }
 }

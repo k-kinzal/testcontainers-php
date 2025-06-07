@@ -103,7 +103,7 @@ class GenericContainer implements Container
             'network' => $this->networkMode(),
             'networkAlias' => $this->networkAliases(),
             'publish' => array_map(function ($containerPort, $hostPort) {
-                return $hostPort.':'.$containerPort;
+                return $hostPort . ':' . $containerPort;
             }, array_keys($ports), array_values($ports)),
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
@@ -113,47 +113,75 @@ class GenericContainer implements Container
         $timeout = $this->startupTimeout();
 
         $this->logger()->debug('Starting container');
-        try {
-            if (null !== $timeout) {
-                $output = $client->withLogger($this->logger())->withTimeout($timeout)->run($image, $command, $args, $options);
-            } else {
-                $output = $client->withLogger($this->logger())->run($image, $command, $args, $options);
-            }
-            if (!$output instanceof DockerRunWithDetachOutput) {
-                throw new \LogicException('Expected DockerRunWithDetachOutput');
-            }
-        } catch (PortAlreadyAllocatedException $e) {
-            if (null === $portStrategy) {
-                throw $e;
-            }
-            $behavior = $portStrategy->conflictBehavior();
-            if ($behavior->isRetry()) {
-                $this->logger()->debug('Port already allocated, retrying: ' . $e->getMessage(), [
-                    'exception' => $e,
-                ]);
-                return $this->start();
-            }
-            if ($behavior->isFail()) {
-                throw $e;
-            }
 
-            throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
-        } catch (BindAddressAlreadyUseException $e) {
-            if (null === $portStrategy) {
-                throw $e;
-            }
-            $behavior = $portStrategy->conflictBehavior();
-            if ($behavior->isRetry()) {
-                $this->logger()->debug('Bind address already in use, retrying: ' . $e->getMessage(), [
-                    'exception' => $e,
-                ]);
-                return $this->start();
-            }
-            if ($behavior->isFail()) {
-                throw $e;
-            }
+        $maxRetryAttempts = $this->startupConflictRetryAttempts();
+        $retryCount = 0;
+        while ($retryCount < $maxRetryAttempts) {
+            try {
+                if (null !== $timeout) {
+                    $output = $client->withLogger($this->logger())->withTimeout($timeout)->run($image, $command, $args, $options);
+                } else {
+                    $output = $client->withLogger($this->logger())->run($image, $command, $args, $options);
+                }
+                if (!$output instanceof DockerRunWithDetachOutput) {
+                    throw new \LogicException('Expected DockerRunWithDetachOutput');
+                }
+                break; // Success, exit the retry loop
+            } catch (PortAlreadyAllocatedException $e) {
+                if (null === $portStrategy) {
+                    throw $e;
+                }
+                $behavior = $portStrategy->conflictBehavior();
+                if ($behavior->isRetry()) {
+                    if ($retryCount >= $maxRetryAttempts) {
+                        $this->logger()->error('Maximum retry attempts reached for port allocation', [
+                            'retryCount' => $retryCount,
+                            'maxRetries' => $maxRetryAttempts,
+                            'exception' => $e,
+                        ]);
+                        throw $e;
+                    }
+                    $this->logger()->debug('Port already allocated, retrying: ' . $e->getMessage(), [
+                        'exception' => $e,
+                        'retryCount' => $retryCount + 1,
+                        'maxRetries' => $maxRetryAttempts,
+                    ]);
+                    $retryCount++;
+                    continue; // Retry the loop
+                }
+                if ($behavior->isFail()) {
+                    throw $e;
+                }
 
-            throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
+                throw new \LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
+            } catch (BindAddressAlreadyUseException $e) {
+                if (null === $portStrategy) {
+                    throw $e;
+                }
+                $behavior = $portStrategy->conflictBehavior();
+                if ($behavior->isRetry()) {
+                    if ($retryCount >= $maxRetryAttempts) {
+                        $this->logger()->error('Maximum retry attempts reached for bind address', [
+                            'retryCount' => $retryCount,
+                            'maxRetries' => $maxRetryAttempts,
+                            'exception' => $e,
+                        ]);
+                        throw $e;
+                    }
+                    $this->logger()->debug('Bind address already in use, retrying: ' . $e->getMessage(), [
+                        'exception' => $e,
+                        'retryCount' => $retryCount + 1,
+                        'maxRetries' => $maxRetryAttempts,
+                    ]);
+                    $retryCount++;
+                    continue; // Retry the loop
+                }
+                if ($behavior->isFail()) {
+                    throw $e;
+                }
+
+                throw new \LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
+            }
         }
 
         $this->logger()->debug('Container started', [
