@@ -41,7 +41,7 @@ trait StartupSetting
     /**
      * Default number of retry attempts for startup conflicts (port/bind address conflicts).
      */
-    const DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS = 3;
+    private static $DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS = 3;
 
     /**
      * Define the default startup timeout to be used for the container.
@@ -209,6 +209,6 @@ trait StartupSetting
             return $this->startupConflictRetryAttempts;
         }
 
-        return self::DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS;
+        return self::$DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS;
     }
 }
