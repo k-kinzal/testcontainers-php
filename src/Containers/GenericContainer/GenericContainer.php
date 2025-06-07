@@ -103,7 +103,7 @@ class GenericContainer implements Container
             'network' => $this->networkMode(),
             'networkAlias' => $this->networkAliases(),
             'publish' => array_map(function ($containerPort, $hostPort) {
-                return $hostPort.':'.$containerPort;
+                return $hostPort . ':' . $containerPort;
             }, array_keys($ports), array_values($ports)),
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
@@ -153,7 +153,7 @@ class GenericContainer implements Container
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
+                throw new \LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
             } catch (BindAddressAlreadyUseException $e) {
                 if (null === $portStrategy) {
                     throw $e;
@@ -180,7 +180,7 @@ class GenericContainer implements Container
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
+                throw new \LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
             }
         }
 
