@@ -33,9 +33,16 @@ use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
  *     ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
  *     ->withStartupConflictRetries(5);
  * </code>
+ *
+ * Default startup conflict retry attempts: 3
  */
 trait StartupSetting
 {
+    /**
+     * Default number of retry attempts for startup conflicts (port/bind address conflicts).
+     */
+    const DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS = 3;
+
     /**
      * Define the default startup timeout to be used for the container.
      *
@@ -202,6 +209,6 @@ trait StartupSetting
             return $this->startupConflictRetryAttempts;
         }
 
-        return 3; // Default value
+        return self::DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS;
     }
 }
