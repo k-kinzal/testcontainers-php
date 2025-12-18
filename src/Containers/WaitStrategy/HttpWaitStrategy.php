@@ -219,6 +219,9 @@ class HttpWaitStrategy implements WaitStrategy
             if (time() - $now > $this->timeout) {
                 throw new WaitingTimeoutException($this->timeout);
             }
+            if (!$instance->isRunning()) {
+                throw new ContainerStoppedException('Container stopped while waiting for HTTP endpoint');
+            }
             if ($this->probe->available($endpoint, $this->expectedResponseCode)) {
                 break;
             }

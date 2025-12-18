@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Utility\WithLogger;
@@ -189,6 +190,9 @@ class PDOConnectWaitStrategy implements WaitStrategy
                     $message = $dsn->toString().': '.$ex->getMessage();
                 }
                 throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
+            }
+            if (!$instance->isRunning()) {
+                throw new ContainerStoppedException('Container stopped while waiting for PDO connection');
             }
 
             try {

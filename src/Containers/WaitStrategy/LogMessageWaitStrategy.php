@@ -82,5 +82,7 @@ class LogMessageWaitStrategy implements WaitStrategy
                 return;
             }
         }
+
+        throw new ContainerStoppedException('Container stopped while waiting for log message');
     }
 }
