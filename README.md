@@ -4,13 +4,13 @@
 [![CircleCI](https://circleci.com/gh/k-kinzal/testcontainers-php.svg?style=shield)](https://circleci.com/gh/k-kinzal/testcontainers-php)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A PHP implementation of [Testcontainers](https://testcontainers.com/) that supports PHP versions from 5.6 to 8.3, including EOL versions. This library enables you to use Docker containers for your integration tests with minimal dependencies.
+A PHP implementation of [Testcontainers](https://testcontainers.com/) that supports PHP versions from 5.6 to 8.5, including EOL versions. This library enables you to use Docker containers for your integration tests with minimal dependencies.
 
 If you are using a supported PHP version, consider using the official [testcontainers/testcontainers](https://packagist.org/packages/testcontainers/testcontainers) instead.
 
 ## Features
 
-- Supports PHP 5.6 to 8.3 (including EOL versions)
+- Supports PHP 5.6 to 8.5 (including EOL versions)
 - Minimal dependencies for easy integration
 - Complete container lifecycle management
 - Various configuration options for containers
