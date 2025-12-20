@@ -11,6 +11,11 @@ use Testcontainers\Docker\Output\DockerStopOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class StopCommandTest extends TestCase
 {
     public function testHasStopCommandTrait()
@@ -27,7 +32,7 @@ class StopCommandTest extends TestCase
         $client = new DockerClient();
         $client->withGlobalOptions([
             'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
-            'config' => __ROOT__ . '/config.json',
+            'config' => __ROOT__.'/config.json',
         ]);
 
         /** @var DockerRunWithDetachOutput $output */

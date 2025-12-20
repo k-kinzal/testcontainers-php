@@ -19,6 +19,7 @@ trait WithLogger
      * Set Logger instance.
      *
      * @param LoggerInterface $logger the logger instance
+     *
      * @return self
      */
     public function withLogger($logger)

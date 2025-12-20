@@ -9,6 +9,11 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\WaitSetting;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class WaitSettingTest extends TestCase
 {
     public function testHasWaitSettingTrait()

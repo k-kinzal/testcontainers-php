@@ -19,22 +19,22 @@ trait NetworkCreateCommand
      *
      * @param string $network the name of the Docker network to create
      * @param array{
-     *     attachable?: bool|null,
-     *     auxAddress?: string[]|Stringable[]|null,
-     *     configFrom?: string|Stringable|null,
-     *     configOnly?: bool|null,
-     *     driver?: string|Stringable|null,
-     *     gateway?: string|Stringable|null,
-     *     ingress?: bool|null,
-     *     internal?: bool|null,
-     *     ipRange?: string[]|Stringable[]|null,
-     *     ipamDriver?: string|Stringable|null,
-     *     ipamOpt?: array<string, string|Stringable>|null,
-     *     ipv6?: bool|null,
-     *     label?: string[]|Stringable[]|null,
-     *     opt?: array<string, string|Stringable>|null,
-     *     scope?: string|Stringable|null,
-     *     subnet?: string[]|Stringable[]|null,
+     *     attachable?: null|bool,
+     *     auxAddress?: null|string[]|Stringable[],
+     *     configFrom?: null|string|Stringable,
+     *     configOnly?: null|bool,
+     *     driver?: null|string|Stringable,
+     *     gateway?: null|string|Stringable,
+     *     ingress?: null|bool,
+     *     internal?: null|bool,
+     *     ipRange?: null|string[]|Stringable[],
+     *     ipamDriver?: null|string|Stringable,
+     *     ipamOpt?: null|array<string, string|Stringable>,
+     *     ipv6?: null|bool,
+     *     label?: null|string[]|Stringable[],
+     *     opt?: null|array<string, string|Stringable>,
+     *     scope?: null|string|Stringable,
+     *     subnet?: null|string[]|Stringable[],
      * } $options Additional options for the Docker network create command
      *
      * @return DockerNetworkCreateOutput the output of the Docker network create command

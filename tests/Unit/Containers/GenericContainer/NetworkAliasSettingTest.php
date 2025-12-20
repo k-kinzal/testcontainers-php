@@ -12,6 +12,11 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class NetworkAliasSettingTest extends TestCase
 {
     public function testHasNetworkAliasSettingTrait()
@@ -28,7 +33,7 @@ class NetworkAliasSettingTest extends TestCase
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
-                'config' => __ROOT__ . '/config.json',
+                'config' => __ROOT__.'/config.json',
             ],
         ]);
         $network = NetworkMode::fromString(md5(uniqid()));
@@ -51,7 +56,7 @@ class NetworkAliasSettingTest extends TestCase
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
-                'config' => __ROOT__ . '/config.json',
+                'config' => __ROOT__.'/config.json',
             ],
         ]);
         $network = NetworkMode::fromString(md5(uniqid()));
@@ -75,7 +80,7 @@ class NetworkAliasSettingTest extends TestCase
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
-                'config' => __ROOT__ . '/config.json',
+                'config' => __ROOT__.'/config.json',
             ],
         ]);
         $network = NetworkMode::fromString(md5(uniqid()));

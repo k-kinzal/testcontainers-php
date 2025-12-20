@@ -111,7 +111,7 @@ class Testcontainers
      */
     private static function registerOnceShutdownHandler()
     {
-        if (false === self::$setOnceShutdownHandler) {
+        if (self::$setOnceShutdownHandler === false) {
             register_shutdown_function(function () {
                 self::stop();
             });

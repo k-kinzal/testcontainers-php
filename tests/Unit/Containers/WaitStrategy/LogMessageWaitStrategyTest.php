@@ -7,6 +7,11 @@ use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class LogMessageWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()

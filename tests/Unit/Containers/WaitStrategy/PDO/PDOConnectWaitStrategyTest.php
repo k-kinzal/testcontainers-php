@@ -10,6 +10,11 @@ use Testcontainers\Containers\WaitStrategy\PDO\SQLiteDSN;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Tests\Unit\Containers\WaitStrategy\WaitStrategyTestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()

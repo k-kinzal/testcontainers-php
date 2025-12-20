@@ -48,7 +48,7 @@ class GenericContainer implements Container
      */
     public function __construct($image = null)
     {
-        if (null === $image && null === static::$IMAGE) {
+        if ($image === null && static::$IMAGE === null) {
             throw new \InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
         }
 
@@ -67,16 +67,6 @@ class GenericContainer implements Container
         $this->client = $client;
 
         return $this;
-    }
-
-    /**
-     * Get the Docker client.
-     *
-     * @return DockerClient
-     */
-    protected function client()
-    {
-        return $this->client ?: DockerClientFactory::create();
     }
 
     /**
@@ -103,7 +93,7 @@ class GenericContainer implements Container
             'network' => $this->networkMode(),
             'networkAlias' => $this->networkAliases(),
             'publish' => array_map(function ($containerPort, $hostPort) {
-                return $hostPort . ':' . $containerPort;
+                return $hostPort.':'.$containerPort;
             }, array_keys($ports), array_values($ports)),
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
@@ -118,7 +108,7 @@ class GenericContainer implements Container
         $retryCount = 0;
         while ($retryCount < $maxRetryAttempts) {
             try {
-                if (null !== $timeout) {
+                if ($timeout !== null) {
                     $output = $client->withLogger($this->logger())->withTimeout($timeout)->run($image, $command, $args, $options);
                 } else {
                     $output = $client->withLogger($this->logger())->run($image, $command, $args, $options);
@@ -126,9 +116,10 @@ class GenericContainer implements Container
                 if (!$output instanceof DockerRunWithDetachOutput) {
                     throw new \LogicException('Expected DockerRunWithDetachOutput');
                 }
+
                 break; // Success, exit the retry loop
             } catch (PortAlreadyAllocatedException $e) {
-                if (null === $portStrategy) {
+                if ($portStrategy === null) {
                     throw $e;
                 }
                 $behavior = $portStrategy->conflictBehavior();
@@ -139,23 +130,25 @@ class GenericContainer implements Container
                             'maxRetries' => $maxRetryAttempts,
                             'exception' => $e,
                         ]);
+
                         throw $e;
                     }
-                    $this->logger()->debug('Port already allocated, retrying: ' . $e->getMessage(), [
+                    $this->logger()->debug('Port already allocated, retrying: '.$e->getMessage(), [
                         'exception' => $e,
                         'retryCount' => $retryCount + 1,
                         'maxRetries' => $maxRetryAttempts,
                     ]);
-                    $retryCount++;
+                    ++$retryCount;
+
                     continue; // Retry the loop
                 }
                 if ($behavior->isFail()) {
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
+                throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
             } catch (BindAddressAlreadyUseException $e) {
-                if (null === $portStrategy) {
+                if ($portStrategy === null) {
                     throw $e;
                 }
                 $behavior = $portStrategy->conflictBehavior();
@@ -166,21 +159,23 @@ class GenericContainer implements Container
                             'maxRetries' => $maxRetryAttempts,
                             'exception' => $e,
                         ]);
+
                         throw $e;
                     }
-                    $this->logger()->debug('Bind address already in use, retrying: ' . $e->getMessage(), [
+                    $this->logger()->debug('Bind address already in use, retrying: '.$e->getMessage(), [
                         'exception' => $e,
                         'retryCount' => $retryCount + 1,
                         'maxRetries' => $maxRetryAttempts,
                     ]);
-                    $retryCount++;
+                    ++$retryCount;
+
                     continue; // Retry the loop
                 }
                 if ($behavior->isFail()) {
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `' . $behavior . '`', 0, $e);
+                throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
             }
         }
 
@@ -203,7 +198,7 @@ class GenericContainer implements Container
             $this->logger()->debug('Waiting for container to start', [
                 'strategy' => $startupCheckStrategy,
             ]);
-            if (false === $startupCheckStrategy->withLogger($this->logger())->waitUntilStartupSuccessful($instance)) {
+            if ($startupCheckStrategy->withLogger($this->logger())->waitUntilStartupSuccessful($instance) === false) {
                 throw new \RuntimeException('failed startup check: illegal state of container');
             }
             $this->logger()->debug('Container started successfully');
@@ -215,7 +210,7 @@ class GenericContainer implements Container
                 $port = $instance->getMappedPort(array_keys($ports)[0]);
                 if ($port) {
                     $remoteHost = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE();
-                    if (null === $remoteHost) {
+                    if ($remoteHost === null) {
                         $remoteHost = '127.0.0.1';
                     }
                     $sshHost = isset($sshPortForward['sshHost']) ? $sshPortForward['sshHost'] : $instance->getHost();
@@ -249,5 +244,15 @@ class GenericContainer implements Container
         $this->logger()->debug('Container is ready');
 
         return $instance;
+    }
+
+    /**
+     * Get the Docker client.
+     *
+     * @return DockerClient
+     */
+    protected function client()
+    {
+        return $this->client ?: DockerClientFactory::create();
     }
 }

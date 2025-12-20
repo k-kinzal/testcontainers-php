@@ -105,16 +105,18 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
 
                     case 'exited':
                     case 'dead':
-                        return 0 === $output->state->exitCode;
+                        return $output->state->exitCode === 0;
 
                     default:
-                        $this->logger()->debug('Container is not running yet. Current status: ' . $output->state->status);
+                        $this->logger()->debug('Container is not running yet. Current status: '.$output->state->status);
+
                         break;
                 }
                 usleep($this->retryInterval);
             }
         } catch (\Exception $e) {
-            $this->logger()->debug('Error while checking container status: ' . $e->getMessage());
+            $this->logger()->debug('Error while checking container status: '.$e->getMessage());
+
             return false;
         }
     }

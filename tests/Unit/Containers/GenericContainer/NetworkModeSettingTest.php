@@ -9,6 +9,11 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\NetworkModeSetting;
 use Testcontainers\Containers\Types\NetworkMode;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class NetworkModeSettingTest extends TestCase
 {
     public function testHasNetworkModeSettingTrait()
@@ -25,7 +30,7 @@ class NetworkModeSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertTrue(false === strpos($instance->getOutput(), 'eth0'));
+        $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 
     public function testStartWithNetworkMode()
@@ -36,7 +41,7 @@ class NetworkModeSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertTrue(false === strpos($instance->getOutput(), 'eth0'));
+        $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 }
 

@@ -8,6 +8,11 @@ use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerInspectOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class InspectCommandTest extends TestCase
 {
     public function testHasInspectCommandTrait()

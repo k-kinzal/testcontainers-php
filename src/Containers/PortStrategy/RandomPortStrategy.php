@@ -11,7 +11,7 @@ class RandomPortStrategy implements PortStrategy
     {
         for ($i = 0; $i < 65535 - 49152; ++$i) {
             $port = mt_rand(49152, 65535);
-            if (false === @fsockopen('localhost', $port)) {
+            if (@fsockopen('localhost', $port) === false) {
                 return $port;
             }
         }

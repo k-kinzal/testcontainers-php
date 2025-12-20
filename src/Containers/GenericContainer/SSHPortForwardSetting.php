@@ -37,11 +37,11 @@ trait SSHPortForwardSetting
     protected static $SSH_PORT_FORWARD;
 
     /**
-     * @var array{
-     *             sshUser?: string|null,
-     *             sshHost: string,
-     *             sshPort?: int|null,
-     *             }|bool|null
+     * @var null|array{
+     *                  sshUser?: null|string,
+     *                  sshHost: string,
+     *                  sshPort?: null|int,
+     *                  }|bool
      */
     private $sshPortForward;
 
@@ -68,15 +68,15 @@ trait SSHPortForwardSetting
     /**
      * Retrieve the SSH port forwarding to be used for the container.
      *
-     * @return array{
-     *                sshUser?: string|null,
-     *                sshHost?: string|null,
-     *                sshPort?: int|null,
-     *                }|null
+     * @return null|array{
+     *                     sshUser?: null|string,
+     *                     sshHost?: null|string,
+     *                     sshPort?: null|int,
+     *                     }
      */
     protected function sshPortForward()
     {
-        if (null !== self::$SSH_PORT_FORWARD) {
+        if (self::$SSH_PORT_FORWARD !== null) {
             if (is_bool(self::$SSH_PORT_FORWARD)) {
                 return self::$SSH_PORT_FORWARD ? [
                     'sshUser' => null,
@@ -87,7 +87,7 @@ trait SSHPortForwardSetting
 
             return $this->parseSSHString(self::$SSH_PORT_FORWARD);
         }
-        if (null !== $this->sshPortForward) {
+        if ($this->sshPortForward !== null) {
             if (is_bool($this->sshPortForward)) {
                 return $this->sshPortForward ? [
                     'sshUser' => null,
@@ -99,7 +99,7 @@ trait SSHPortForwardSetting
             return $this->sshPortForward;
         }
         $env = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING();
-        if (null !== $env) {
+        if ($env !== null) {
             return $this->parseSSHString($env);
         }
 
@@ -112,19 +112,19 @@ trait SSHPortForwardSetting
      *
      * @param string $s the SSH string to parse
      *
-     * @return array{
-     *                sshUser?: string|null,
-     *                sshHost?: string|null,
-     *                sshPort?: int|null,
-     *                }|null
+     * @return null|array{
+     *                     sshUser?: null|string,
+     *                     sshHost?: null|string,
+     *                     sshPort?: null|int,
+     *                     }
      */
     private function parseSSHString($s)
     {
         $parts = explode('@', $s, 2);
-        if (2 === count($parts)) {
+        if (count($parts) === 2) {
             $sshUser = $parts[0];
             $parts = explode(':', $parts[1], 2);
-            if (2 === count($parts)) {
+            if (count($parts) === 2) {
                 $sshHost = $parts[0];
                 $sshPort = (int) $parts[1];
             } else {
@@ -134,7 +134,7 @@ trait SSHPortForwardSetting
         } else {
             $sshUser = null;
             $parts = explode(':', $s, 2);
-            if (2 === count($parts)) {
+            if (count($parts) === 2) {
                 $sshHost = $parts[0];
                 $sshPort = (int) $parts[1];
             } else {

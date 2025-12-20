@@ -155,24 +155,24 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function waitUntilReady($instance)
     {
-        if (null === $this->dsn) {
+        if ($this->dsn === null) {
             throw new \LogicException('The DSN for the PDO connection is not set');
         }
 
         $dsn = clone $this->dsn;
 
         if ($dsn->requiresHostPort()) {
-            if (null === $dsn->getHost()) {
+            if ($dsn->getHost() === null) {
                 $host = str_replace('localhost', '127.0.0.1', $instance->getHost());
                 $dsn = $dsn->withHost($host);
             }
-            if (null === $dsn->getPort()) {
+            if ($dsn->getPort() === null) {
                 $ports = $instance->getExposedPorts();
-                if (1 !== count($ports)) {
+                if (count($ports) !== 1) {
                     throw new \LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
                 }
                 $port = $instance->getMappedPort($ports[0]);
-                if (null === $port) {
+                if ($port === null) {
                     throw new \LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
                 }
                 $dsn = $dsn->withPort($port);
@@ -187,11 +187,12 @@ class PDOConnectWaitStrategy implements WaitStrategy
         while (1) {
             if (time() - $now > $this->timeout) {
                 ini_set('default_socket_timeout', $defaultSocketTimeout);
-                if (null === $ex) {
+                if ($ex === null) {
                     $message = 'Timeout waiting for PDO connection';
                 } else {
                     $message = $dsn->toString().': '.$ex->getMessage();
                 }
+
                 throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
             }
             if (!$instance->isRunning()) {

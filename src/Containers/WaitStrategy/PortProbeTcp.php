@@ -10,7 +10,7 @@ class PortProbeTcp implements PortProbe
     public function available($host, $port)
     {
         $fp = @fsockopen($host, $port);
-        if (false === $fp) {
+        if ($fp === false) {
             return false;
         }
         fclose($fp);

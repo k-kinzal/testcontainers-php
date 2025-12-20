@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PrivilegeSetting;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class PrivilegeSettingTest extends TestCase
 {
     public function testHasPrivilegeSettingTrait()

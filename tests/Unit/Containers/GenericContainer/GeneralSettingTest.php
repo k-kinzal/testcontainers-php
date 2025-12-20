@@ -9,6 +9,11 @@ use Testcontainers\Containers\GenericContainer\GeneralSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class GeneralSettingTest extends TestCase
 {
     public function testHasGeneralSettingTrait()

@@ -11,7 +11,6 @@ use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Environments;
-
 use function Testcontainers\kebab;
 
 /**
@@ -59,7 +58,7 @@ trait BaseCommand
      *
      * @var null|array<string, string> an associative array of environment variables or null if not set
      */
-    private $env = null;
+    private $env;
 
     /**
      * The input for Docker commands.
@@ -283,13 +282,13 @@ trait BaseCommand
             if (empty($env)) {
                 $v = getenv($m[1]);
 
-                return false !== $v ? $v : $m[0];
+                return $v !== false ? $v : $m[0];
             }
 
             return isset($env[$m[1]]) ? $env[$m[1]] : $m[0];
         }, $s);
 
-        return null !== $expanded ? $expanded : $s;
+        return $expanded !== null ? $expanded : $s;
     }
 
     /**
@@ -299,7 +298,7 @@ trait BaseCommand
      */
     protected function logger()
     {
-        if (null === $this->logger) {
+        if ($this->logger === null) {
             return new NullLogger();
         }
 
@@ -393,13 +392,13 @@ trait BaseCommand
         $result = [];
         foreach ($options as $key => $value) {
             $key = kebab($key);
-            if (null === $value) {
+            if ($value === null) {
                 continue;
             }
-            if (false === $value) {
+            if ($value === false) {
                 continue;
             }
-            if (true === $value) {
+            if ($value === true) {
                 $result[] = "--{$key}";
 
                 continue;

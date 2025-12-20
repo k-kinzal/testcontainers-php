@@ -77,6 +77,7 @@ class LogMessageWaitStrategy implements WaitStrategy
         $iter = $output->getIterator();
         $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';
         $this->logger()->debug('Waiting for log message: pattern='.$pattern);
+
         try {
             foreach ($iter as $line) {
                 $this->logger()->debug(trim($line));

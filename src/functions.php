@@ -12,7 +12,7 @@ namespace Testcontainers;
 function kebab($str)
 {
     $s = preg_replace('/(?<!^)[A-Z]/', '-$0', $str);
-    if (null === $s) {
+    if ($s === null) {
         return $str;
     }
 

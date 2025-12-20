@@ -11,11 +11,16 @@ use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 use Testcontainers\Containers\WaitStrategy\PDO\PDOConnectWaitStrategy;
 use Testcontainers\Testcontainers;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class DockerExecutorTest extends TestCase
 {
     public function test()
     {
-        if ('true' !== getenv('CIRCLECI') || false === getenv('DOCKER_HOST')) {
+        if (getenv('CIRCLECI') !== 'true' || getenv('DOCKER_HOST') === false) {
             $this->markTestSkipped('This test is only for CircleCI (docker executor)');
         }
 

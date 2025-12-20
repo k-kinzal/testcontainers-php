@@ -67,7 +67,7 @@ trait MountSetting
      *     ro?: bool,
      *     nocopy?: bool,
      *     opt?: array<string, string>
-     * }|string|Mount $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
+     * }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
      *
@@ -77,7 +77,7 @@ trait MountSetting
      */
     public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
-        if (null === $containerPath || null === $mode) {
+        if ($containerPath === null || $mode === null) {
             if (is_string($hostPath)) {
                 $mount = Mount::fromString($hostPath);
             } elseif (is_array($hostPath)) {
@@ -118,7 +118,7 @@ trait MountSetting
      *      ro?: bool,
      *      nocopy?: bool,
      *      opt?: array<string, string>
-     *  }[]|string[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -149,7 +149,7 @@ trait MountSetting
      *      ro?: bool,
      *      nocopy?: bool,
      *      opt?: array<string, string>
-     *  }|string|Mount $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
+     *  }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
      *
@@ -177,7 +177,7 @@ trait MountSetting
      *      ro?: bool,
      *      nocopy?: bool,
      *      opt?: array<string, string>
-     *  }[]|string[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -203,7 +203,7 @@ trait MountSetting
      *      ro?: bool,
      *      nocopy?: bool,
      *      opt?: array<string, string>
-     *  }|string|Mount $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
+     *  }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
      *
@@ -231,7 +231,7 @@ trait MountSetting
      *      ro?: bool,
      *      nocopy?: bool,
      *      opt?: array<string, string>
-     *  }[]|string[]|Mount[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      *
      * @throws InvalidFormatException if the mount format is invalid
      *

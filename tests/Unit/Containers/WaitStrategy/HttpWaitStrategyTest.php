@@ -7,6 +7,11 @@ use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class HttpWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()

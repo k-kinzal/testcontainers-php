@@ -68,13 +68,13 @@ class DockerInspectOutput extends DockerOutput
     private function deserialize($s)
     {
         $output = json_decode($s, true);
-        if (null === $output) {
+        if ($output === null) {
             throw new InvalidValueException('Docker inspect output is not valid JSON', ['output' => $s]);
         }
         if (!is_array($output)) {
             throw new InvalidValueException('Docker inspect output is not an array', ['output' => $s]);
         }
-        if (0 === count($output)) {
+        if (count($output) === 0) {
             throw new InvalidValueException('Docker inspect output is an empty array', ['output' => $s]);
         }
         if (!is_array($output[0])) {

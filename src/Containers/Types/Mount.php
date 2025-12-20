@@ -90,14 +90,14 @@ class Mount implements Stringable
     public function __toString()
     {
         $parts = [];
-        if (null !== $this->type) {
+        if ($this->type !== null) {
             $parts[] = 'type='.$this->type;
         }
-        if (null !== $this->source) {
+        if ($this->source !== null) {
             $parts[] = 'source='.$this->source;
         }
         $parts[] = 'destination='.$this->destination;
-        if (null !== $this->subpath) {
+        if ($this->subpath !== null) {
             $parts[] = 'volume-subpath='.$this->subpath;
         }
         if ($this->readonly) {
@@ -140,7 +140,7 @@ class Mount implements Stringable
      */
     public static function fromString($v)
     {
-        if (strpos($v, ':') > 0 || false === strpos($v, '=')) {
+        if (strpos($v, ':') > 0 || strpos($v, '=') === false) {
             return self::fromVolumeString($v);
         }
 
@@ -161,7 +161,7 @@ class Mount implements Stringable
         $source = null;
         $subpath = null;
         $readonly = false;
-        if (1 === count($parts)) {
+        if (count($parts) === 1) {
             $destination = $parts[0];
         } else {
             $source = $parts[0];
@@ -169,7 +169,7 @@ class Mount implements Stringable
             if (isset($parts[2])) {
                 // readonly or volume-nocopy is not working.
                 // See: https://docs.docker.com/engine/storage/volumes/#options-for---volume
-                $readonly = 'ro' === $parts[2];
+                $readonly = $parts[2] === 'ro';
             }
         }
 
@@ -242,7 +242,7 @@ class Mount implements Stringable
             }
         }
 
-        if (null === $destination) {
+        if ($destination === null) {
             throw new InvalidFormatException($v, 'type=<type>[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
         }
 
@@ -272,22 +272,22 @@ class Mount implements Stringable
     {
         $type = isset($v['type']) ? $v['type'] : null;
         $source = isset($v['source']) ? $v['source'] : null;
-        if (null === $source) {
+        if ($source === null) {
             $source = isset($v['src']) ? $v['src'] : null;
         }
         $destination = isset($v['destination']) ? $v['destination'] : null;
-        if (null === $destination) {
+        if ($destination === null) {
             $destination = isset($v['dst']) ? $v['dst'] : null;
         }
-        if (null === $destination) {
+        if ($destination === null) {
             $destination = isset($v['target']) ? $v['target'] : null;
         }
-        if (null === $destination) {
+        if ($destination === null) {
             throw new \InvalidArgumentException('Invalid mount configuration: destination is required');
         }
         $subpath = isset($v['subpath']) ? $v['subpath'] : null;
         $readonly = isset($v['readonly']) ? $v['readonly'] : false;
-        if (false === $readonly) {
+        if ($readonly === false) {
             $readonly = isset($v['ro']) ? $v['ro'] : false;
         }
         $nocopy = isset($v['nocopy']) ? $v['nocopy'] : false;

@@ -29,9 +29,9 @@ class GenericContainerInstance implements ContainerInstance
      *
      * @var array{
      *             containerId: ContainerId,
-     *             labels?: array<string, string>|null,
+     *             labels?: null|array<string, string>,
      *             ports?: array<int, int>,
-     *             pull?: ImagePullPolicy|null,
+     *             pull?: null|ImagePullPolicy,
      *             privileged?: bool,
      *             } The container definition
      */
@@ -54,9 +54,9 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * @param array{
      *     containerId: ContainerId,
-     *     labels?: array<string, string>|null,
+     *     labels?: null|array<string, string>,
      *     ports?: array<int, int>,
-     *     pull?: ImagePullPolicy|null,
+     *     pull?: null|ImagePullPolicy,
      *     privileged?: bool,
      * } $containerDef The container definition
      */
@@ -110,7 +110,7 @@ class GenericContainerInstance implements ContainerInstance
 
     public function getHost()
     {
-        if (null !== $this->tryGetData(Session::class)) {
+        if ($this->tryGetData(Session::class) !== null) {
             return 'localhost';
         }
 
@@ -121,7 +121,7 @@ class GenericContainerInstance implements ContainerInstance
 
         $client = $this->client ?: DockerClientFactory::create();
         $host = $client->getHost();
-        if (0 === strpos($host, 'unix:///')) {
+        if (strpos($host, 'unix:///') === 0) {
             $host = str_replace('unix:///', 'unix://', $host);
         }
         $url = parse_url($host);
@@ -198,7 +198,7 @@ class GenericContainerInstance implements ContainerInstance
     public function getData($class)
     {
         $value = $this->data[$class];
-        if (null === $value) {
+        if ($value === null) {
             throw new \LogicException("No data of type {$class} associated with the container");
         }
 
@@ -216,7 +216,7 @@ class GenericContainerInstance implements ContainerInstance
 
     public function isRunning()
     {
-        if (false === $this->running) {
+        if ($this->running === false) {
             return false;
         }
 

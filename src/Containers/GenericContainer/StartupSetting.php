@@ -39,11 +39,6 @@ use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 trait StartupSetting
 {
     /**
-     * Default number of retry attempts for startup conflicts (port/bind address conflicts).
-     */
-    private static $DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS = 3;
-
-    /**
      * Define the default startup timeout to be used for the container.
      *
      * @var null|int
@@ -63,6 +58,11 @@ trait StartupSetting
      * @var null|int
      */
     protected static $STARTUP_CONFLICT_RETRY_ATTEMPTS;
+
+    /**
+     * Default number of retry attempts for startup conflicts (port/bind address conflicts).
+     */
+    private static $DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS = 3;
 
     /**
      * The startup timeout to be used for the container.
@@ -161,12 +161,12 @@ trait StartupSetting
      */
     protected function startupCheckStrategy(/* @noinspection PhpUnusedParameterInspection */ $instance)
     {
-        if (null === $this->startupCheckStrategyProvider) {
+        if ($this->startupCheckStrategyProvider === null) {
             $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
             $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
         }
 
-        if (null !== static::$STARTUP_CHECK_STRATEGY) {
+        if (static::$STARTUP_CHECK_STRATEGY !== null) {
             $strategy = $this->startupCheckStrategyProvider->get(static::$STARTUP_CHECK_STRATEGY);
             if (!$strategy) {
                 throw new \LogicException('Startup check strategy not found: '.static::$STARTUP_CHECK_STRATEGY);

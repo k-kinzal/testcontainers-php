@@ -70,7 +70,7 @@ class HostToIp implements Stringable
     public static function fromString($v)
     {
         $parts = explode(':', $v);
-        if (2 !== count($parts)) {
+        if (count($parts) !== 2) {
             throw new InvalidFormatException($v, 'host:ip');
         }
 
