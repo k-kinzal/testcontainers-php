@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
@@ -76,11 +77,15 @@ class LogMessageWaitStrategy implements WaitStrategy
         $iter = $output->getIterator();
         $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';
         $this->logger()->debug('Waiting for log message: pattern='.$pattern);
-        foreach ($iter as $line) {
-            $this->logger()->debug(trim($line));
-            if (preg_match($pattern, trim($line))) {
-                return;
+        try {
+            foreach ($iter as $line) {
+                $this->logger()->debug(trim($line));
+                if (preg_match($pattern, trim($line))) {
+                    return;
+                }
             }
+        } catch (ProcessTimedOutException $e) {
+            throw new WaitingTimeoutException($this->timeout);
         }
 
         throw new ContainerStoppedException('Container stopped while waiting for log message');

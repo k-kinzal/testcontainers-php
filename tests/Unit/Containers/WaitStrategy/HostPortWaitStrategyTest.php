@@ -31,12 +31,13 @@ class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(WaitingTimeoutException::class);
 
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "sleep 10"');
-        $container->withExposedPort(8080);
+        $container->withCommands(['sh', '-c', 'sleep 10']);
         $instance = $container->start();
 
+        // Use withPorts to check a port that nothing is listening on
         $strategy = new HostPortWaitStrategy();
-        $strategy->withTimeout(1);
+        $strategy->withPorts([59999]);
+        $strategy->withTimeoutSeconds(1);
         $strategy->waitUntilReady($instance);
     }
 
@@ -45,11 +46,12 @@ class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(ContainerStoppedException::class);
 
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "sleep 1; exit 0"');
-        $container->withExposedPort(8080);
+        $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
         $instance = $container->start();
 
+        // Use withPorts to check a port that nothing is listening on
         $strategy = new HostPortWaitStrategy();
+        $strategy->withPorts([59999]);
         $strategy->waitUntilReady($instance);
     }
 }

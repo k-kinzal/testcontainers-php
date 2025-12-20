@@ -17,11 +17,11 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "while true; do echo \"Ready\"; sleep 1; done"');
+        $container->withCommands(['sh', '-c', 'while true; do echo "Ready"; sleep 1; done']);
         $instance = $container->start();
 
         $strategy = new LogMessageWaitStrategy();
-        $strategy->withPattern('/Ready/');
+        $strategy->withPattern('Ready');
         $strategy->waitUntilReady($instance);
 
         $this->assertTrue(true);
@@ -32,12 +32,12 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(WaitingTimeoutException::class);
 
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "while true; do echo \"Not Ready\"; sleep 1; done"');
+        $container->withCommands(['sh', '-c', 'while true; do echo "Not Ready"; sleep 1; done']);
         $instance = $container->start();
 
         $strategy = new LogMessageWaitStrategy();
-        $strategy->withPattern('/Ready/');
-        $strategy->withTimeout(1);
+        $strategy->withPattern('^Ready$');
+        $strategy->withTimeoutSeconds(1);
         $strategy->waitUntilReady($instance);
     }
 
@@ -47,11 +47,11 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $this->expectExceptionMessage('Container stopped while waiting for log message');
 
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "echo \"Wrong message\"; exit 0"');
+        $container->withCommands(['sh', '-c', 'echo "Wrong message"; exit 0']);
         $instance = $container->start();
 
         $strategy = new LogMessageWaitStrategy();
-        $strategy->withPattern('/Right message/');
+        $strategy->withPattern('Right message');
 
         $strategy->waitUntilReady($instance);
     }

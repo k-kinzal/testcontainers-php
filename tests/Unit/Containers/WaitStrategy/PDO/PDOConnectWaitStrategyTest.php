@@ -14,16 +14,16 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()
     {
-        return new PDOConnectWaitStrategy(new SQLiteDSN(), 3306);
+        return (new PDOConnectWaitStrategy())->withDsn(new SQLiteDSN());
     }
 
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "sleep 10"');
+        $container->withCommands(['sh', '-c', 'sleep 10']);
         $instance = $container->start();
 
-        $strategy = new PDOConnectWaitStrategy(new SQLiteDSN(), 3306);
+        $strategy = (new PDOConnectWaitStrategy())->withDsn(new SQLiteDSN());
         $strategy->waitUntilReady($instance);
 
         $this->assertTrue(true);
@@ -34,11 +34,12 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(WaitingTimeoutException::class);
 
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "sleep 10"');
+        $container->withCommands(['sh', '-c', 'sleep 10']);
+        $container->withExposedPort(3306);
         $instance = $container->start();
 
-        $strategy = new PDOConnectWaitStrategy(new MySQLDSN('test'), 3306);
-        $strategy->withTimeout(1);
+        $strategy = (new PDOConnectWaitStrategy())->withDsn(new MySQLDSN('test'));
+        $strategy->withTimeoutSeconds(1);
         $strategy->waitUntilReady($instance);
     }
 
@@ -47,10 +48,11 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(ContainerStoppedException::class);
 
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "sleep 1; exit 0"');
+        $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
+        $container->withExposedPort(3306);
         $instance = $container->start();
 
-        $strategy = new PDOConnectWaitStrategy(new SQLiteDSN(), 3306);
+        $strategy = (new PDOConnectWaitStrategy())->withDsn(new MySQLDSN('test'));
         $strategy->waitUntilReady($instance);
     }
 }

@@ -45,4 +45,11 @@ interface DSN
      * @return string the string representation of the DSN
      */
     public function toString();
+
+    /**
+     * Check if this DSN requires host and port resolution.
+     *
+     * @return bool true if the DSN requires host/port, false otherwise (e.g., SQLite :memory:)
+     */
+    public function requiresHostPort();
 }

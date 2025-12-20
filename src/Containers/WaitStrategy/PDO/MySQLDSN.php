@@ -115,4 +115,9 @@ class MySQLDSN implements DSN, Stringable
 
         return $dsn;
     }
+
+    public function requiresHostPort()
+    {
+        return true;
+    }
 }

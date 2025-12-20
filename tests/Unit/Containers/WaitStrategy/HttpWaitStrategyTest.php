@@ -31,12 +31,12 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(WaitingTimeoutException::class);
 
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "sleep 10"');
+        $container->withCommands(['sh', '-c', 'sleep 10']);
         $container->withExposedPort(80);
         $instance = $container->start();
 
         $strategy = new HttpWaitStrategy();
-        $strategy->withTimeout(1);
+        $strategy->withTimeoutSeconds(1);
         $strategy->waitUntilReady($instance);
     }
 
@@ -45,7 +45,7 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(ContainerStoppedException::class);
 
         $container = new GenericContainer('alpine:latest');
-        $container->withCommand('sh -c "sleep 1; exit 0"');
+        $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
         $container->withExposedPort(80);
         $instance = $container->start();
 
