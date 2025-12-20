@@ -9,6 +9,11 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\HostSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class HostSettingTest extends TestCase
 {
     public function testHasHostSettingTrait()

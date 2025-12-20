@@ -9,6 +9,11 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\LabelSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class LabelSettingTest extends TestCase
 {
     public function testHasLabelSettingTrait()

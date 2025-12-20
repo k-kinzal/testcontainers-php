@@ -12,6 +12,11 @@ use Testcontainers\Containers\Types\Mount;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClientFactory;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class MountSettingTest extends TestCase
 {
     public function testHasMountSettingTrait()

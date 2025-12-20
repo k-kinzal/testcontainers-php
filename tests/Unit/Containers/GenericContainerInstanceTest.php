@@ -15,6 +15,11 @@ use Testcontainers\SSH\Session;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class GenericContainerInstanceTest extends TestCase
 {
     public function testGetContainerId()
@@ -65,7 +70,7 @@ class GenericContainerInstanceTest extends TestCase
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
-                'config' => __ROOT__ . '/config.json',
+                'config' => __ROOT__.'/config.json',
             ],
         ]);
 
@@ -83,7 +88,7 @@ class GenericContainerInstanceTest extends TestCase
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
-                'config' => __ROOT__ . '/config.json',
+                'config' => __ROOT__.'/config.json',
             ],
         ]);
 

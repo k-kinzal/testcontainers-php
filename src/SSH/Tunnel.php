@@ -242,7 +242,7 @@ class Tunnel
 
                 throw new TunnelException('Failed to start SSH tunnel: '.implode(' ', $commandParts).': '.$lastLine);
             }
-            if (false !== strpos($process->getErrorOutput(), 'Connection established.')) {
+            if (strpos($process->getErrorOutput(), 'Connection established.') !== false) {
                 break;
             }
             usleep(100);

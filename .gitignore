@@ -117,6 +117,10 @@ fabric.properties
 /app/phpunit.xml
 /phpunit.xml
 
+### PhpCsFixer ###
+.php-cs-fixer.cache
+.php_cs.cache
+
 # Build data
 /build/
 

@@ -27,20 +27,20 @@ trait RunCommand
      * @param null|string $command the command to run inside the container (optional)
      * @param array       $args    the arguments for the command (optional)
      * @param array{
-     *     addHost?: string[]|Stringable[]|null,
-     *     detach?: bool|null,
-     *     env?: array<string, string|Stringable>|null,
-     *     label?: array<string, string|Stringable>|null,
-     *     mount?: string[]|Stringable[]|null,
-     *     name?: string|null,
-     *     network?: string|Stringable|null,
-     *     networkAlias?: string[]|null,
-     *     publish?: string[]|null,
-     *     pull?: string|Stringable|null,
-     *     privileged?: bool|null,
-     *     quiet?: bool|null,
-     *     volumesFrom?: string[]|Stringable[]|null,
-     *     workdir?: string|null,
+     *     addHost?: null|string[]|Stringable[],
+     *     detach?: null|bool,
+     *     env?: null|array<string, string|Stringable>,
+     *     label?: null|array<string, string|Stringable>,
+     *     mount?: null|string[]|Stringable[],
+     *     name?: null|string,
+     *     network?: null|string|Stringable,
+     *     networkAlias?: null|string[],
+     *     publish?: null|string[],
+     *     pull?: null|string|Stringable,
+     *     privileged?: null|bool,
+     *     quiet?: null|bool,
+     *     volumesFrom?: null|string[]|Stringable[],
+     *     workdir?: null|string,
      * } $options Additional options for the Docker command
      *
      * @throws NoSuchContainerException       if the specified container does not exist
@@ -59,7 +59,7 @@ trait RunCommand
             array_filter(array_merge([$image, $command], $args)),
             $options
         );
-        if (isset($options['detach']) && true === $options['detach']) {
+        if (isset($options['detach']) && $options['detach'] === true) {
             return new DockerRunWithDetachOutput($process);
         }
 

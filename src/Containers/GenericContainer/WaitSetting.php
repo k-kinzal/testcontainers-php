@@ -80,11 +80,11 @@ trait WaitSetting
      */
     protected function waitStrategy(/* @noinspection PhpUnusedParameterInspection */ $instance)
     {
-        if (null === $this->waitStrategyProvider) {
+        if ($this->waitStrategyProvider === null) {
             $this->waitStrategyProvider = new WaitStrategyProvider();
             $this->registerWaitStrategy($this->waitStrategyProvider);
         }
-        if (null !== static::$WAIT_STRATEGY) {
+        if (static::$WAIT_STRATEGY !== null) {
             $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
             if (!$strategy) {
                 throw new \LogicException('Wait strategy not found: '.static::$WAIT_STRATEGY);

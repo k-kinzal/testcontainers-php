@@ -54,8 +54,8 @@ class ContainerId implements Stringable
         if (!is_string($v)) {
             return false;
         }
-        if (1 !== preg_match('/^[a-f0-9]{12}$/', $v)
-            && 1 !== preg_match('/^[a-f0-9]{64}$/', $v)) {
+        if (preg_match('/^[a-f0-9]{12}$/', $v) !== 1
+            && preg_match('/^[a-f0-9]{64}$/', $v) !== 1) {
             return false;
         }
 

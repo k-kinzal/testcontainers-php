@@ -213,11 +213,11 @@ trait PortSetting
      */
     protected function portStrategy()
     {
-        if (null === $this->portStrategyProvider) {
+        if ($this->portStrategyProvider === null) {
             $this->portStrategyProvider = new PortStrategyProvider();
             $this->registerPortStrategy($this->portStrategyProvider);
         }
-        if (null !== static::$PORT_STRATEGY) {
+        if (static::$PORT_STRATEGY !== null) {
             $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
             if (!$strategy) {
                 throw new \LogicException('Port strategy not found: '.static::$PORT_STRATEGY);

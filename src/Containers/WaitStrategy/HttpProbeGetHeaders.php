@@ -13,7 +13,7 @@ class HttpProbeGetHeaders implements HttpProbe
     public function available($endpoint, $responseCode = 200)
     {
         $headers = @get_headers($endpoint);
-        if (false === $headers) {
+        if ($headers === false) {
             return false;
         }
         if (!isset($headers[0])) {

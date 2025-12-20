@@ -67,7 +67,7 @@ class VolumeFrom implements Stringable
      */
     public static function fromString($v)
     {
-        if (false === strpos($v, ':')) {
+        if (strpos($v, ':') === false) {
             return new VolumeFrom($v, BindMode::READ_WRITE());
         }
         $parts = explode(':', $v);

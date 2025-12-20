@@ -11,6 +11,11 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class LogsCommandTest extends TestCase
 {
     public function testHasLogsCommandTrait()
@@ -27,7 +32,7 @@ class LogsCommandTest extends TestCase
         $client = new DockerClient();
         $client->withGlobalOptions([
             'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
-            'config' => __ROOT__ . '/config.json',
+            'config' => __ROOT__.'/config.json',
         ]);
 
         /** @var DockerRunWithDetachOutput $output */
@@ -50,7 +55,7 @@ class LogsCommandTest extends TestCase
         $client = new DockerClient();
         $client->withGlobalOptions([
             'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
-            'config' => __ROOT__ . '/config.json',
+            'config' => __ROOT__.'/config.json',
         ]);
 
         /** @var DockerRunWithDetachOutput $output */
@@ -73,8 +78,8 @@ class LogsCommandTest extends TestCase
             $iter->next();
         }
 
-        $this->assertTrue(1 === preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]));
-        $this->assertTrue(1 === preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]));
-        $this->assertTrue(1 === preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]));
+        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
+        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
+        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);
     }
 }

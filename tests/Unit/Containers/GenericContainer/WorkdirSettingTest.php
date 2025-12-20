@@ -9,6 +9,11 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\WorkdirSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class WorkdirSettingTest extends TestCase
 {
     public function testHasWorkdirSettingTrait()

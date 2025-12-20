@@ -20,7 +20,7 @@ class BindAddressAlreadyUseException extends DockerException
      */
     public static function match($output)
     {
-        return false !== strpos($output, 'Error response from daemon:')
-            && false !== strpos($output, 'bind: address already in use.');
+        return strpos($output, 'Error response from daemon:') !== false
+            && strpos($output, 'bind: address already in use.') !== false;
     }
 }

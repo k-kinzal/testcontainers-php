@@ -123,10 +123,10 @@ interface Container
     /**
      * Add multiple extra host entries to be passed to the container.
      *
-     * @param hostToIp[]|string[]|array{
+     * @param array{
      *      hostname: string,
      *      ipAddress: string
-     *  }[] $extraHosts The extra hosts to add
+     *  }[]|HostToIp[]|string[] $extraHosts The extra hosts to add
      *
      * @return self
      */

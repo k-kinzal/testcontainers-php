@@ -200,7 +200,7 @@ class HttpWaitStrategy implements WaitStrategy
     {
         $now = time();
         $endpoint = $this->endpoint;
-        if (null === $endpoint) {
+        if ($endpoint === null) {
             $schema = $this->schema ?: 'http';
             $host = $this->host ?: $instance->getHost();
             $port = $this->port ?: $instance->getMappedPort($instance->getExposedPorts()[0]);

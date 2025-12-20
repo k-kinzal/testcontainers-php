@@ -4,6 +4,11 @@ namespace Tests\Unit\Containers\PortStrategy;
 
 use Testcontainers\Containers\PortStrategy\StaticPortStrategy;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class StaticPortStrategyTest extends PortStrategyTestCase
 {
     public function resolvePortStrategy()

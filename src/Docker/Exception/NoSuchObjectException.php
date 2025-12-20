@@ -13,6 +13,6 @@ class NoSuchObjectException extends DockerException
      */
     public static function match($output)
     {
-        return 0 === strpos($output, 'Error: No such object: ');
+        return strpos($output, 'Error: No such object: ') === 0;
     }
 }

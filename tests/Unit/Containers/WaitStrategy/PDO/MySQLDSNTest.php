@@ -4,6 +4,11 @@ namespace Tests\Unit\Containers\WaitStrategy\PDO;
 
 use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class MySQLDSNTest extends DSNTestCase
 {
     public function resolveDSN()
@@ -19,7 +24,7 @@ class MySQLDSNTest extends DSNTestCase
             ->withDbname($dbname)
         ;
 
-        $this->assertTrue(false !== strpos($dsn->toString(), $dbname));
+        $this->assertTrue(strpos($dsn->toString(), $dbname) !== false);
     }
 
     public function testWithCharset()
@@ -30,7 +35,7 @@ class MySQLDSNTest extends DSNTestCase
             ->withCharset($charset)
         ;
 
-        $this->assertTrue(false !== strpos($dsn->toString(), $charset));
+        $this->assertTrue(strpos($dsn->toString(), $charset) !== false);
     }
 
     public function testFullDSN()

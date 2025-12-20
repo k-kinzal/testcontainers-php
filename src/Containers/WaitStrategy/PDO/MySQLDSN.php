@@ -99,17 +99,17 @@ class MySQLDSN implements DSN, Stringable
 
     public function toString()
     {
-        if (null === $this->host) {
+        if ($this->host === null) {
             throw new \LogicException('Host is required');
         }
         $dsn = sprintf('mysql:host=%s;', $this->host);
-        if (null !== $this->port) {
+        if ($this->port !== null) {
             $dsn .= 'port='.$this->port.';';
         }
-        if (null !== $this->dbname) {
+        if ($this->dbname !== null) {
             $dsn .= 'dbname='.$this->dbname.';';
         }
-        if (null !== $this->charset) {
+        if ($this->charset !== null) {
             $dsn .= 'charset='.$this->charset.';';
         }
 

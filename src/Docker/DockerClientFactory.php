@@ -32,8 +32,8 @@ class DockerClientFactory
      *             globalOptions?: array<string, string>,
      *             cwd?: string,
      *             env?: array<string, string>,
-     *             input?: mixed|null,
-     *             timeout?: int|float|null,
+     *             input?: null|mixed,
+     *             timeout?: null|float|int,
      *             procOptions?: array<string, string>
      *             }
      */
@@ -51,8 +51,8 @@ class DockerClientFactory
      *      globalOptions?: array<string, string>,
      *      cwd?: string,
      *      env?: array<string, string>,
-     *      input?: mixed|null,
-     *      timeout?: int|float|null,
+     *      input?: null|mixed,
+     *      timeout?: null|float|int,
      *      procOptions?: array<string, string>
      *  } $config The configuration options for the Docker client
      */
@@ -73,8 +73,8 @@ class DockerClientFactory
      *     globalOptions?: array<string, string>,
      *     cwd?: string,
      *     env?: array<string, string>,
-     *     input?: mixed|null,
-     *     timeout?: int|float|null,
+     *     input?: null|mixed,
+     *     timeout?: null|float|int,
      *     procOptions?: array<string, string>
      * } $config The configuration options for the Docker client
      *

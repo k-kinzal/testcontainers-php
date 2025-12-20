@@ -20,6 +20,6 @@ class NoSuchContainerException extends DockerException
      */
     public static function match($output)
     {
-        return 0 === strpos($output, 'Error response from daemon: No such container: ');
+        return strpos($output, 'Error response from daemon: No such container: ') === 0;
     }
 }

@@ -21,12 +21,12 @@ trait LogsCommand
      *
      * @param ContainerId $containerId the ID of the container to fetch logs from
      * @param array{
-     *     details?: bool|null,
-     *     follow?: bool|null,
-     *     since?: string|Stringable|null,
-     *     tail?: string|Stringable|null,
-     *     timestamps?: bool|null,
-     *     until?: string|Stringable|null,
+     *     details?: null|bool,
+     *     follow?: null|bool,
+     *     since?: null|string|Stringable,
+     *     tail?: null|string|Stringable,
+     *     timestamps?: null|bool,
+     *     until?: null|string|Stringable,
      * } $options Additional options for the Docker logs command
      *
      * @return DockerFollowLogsOutput|DockerLogsOutput the output containing the logs of the container
@@ -34,9 +34,9 @@ trait LogsCommand
     public function logs($containerId, $options = [])
     {
         $follow = isset($options['follow']) ? $options['follow'] : false;
-        $process = $this->execute('logs', null, [(string) $containerId], $options, false === $follow);
+        $process = $this->execute('logs', null, [(string) $containerId], $options, $follow === false);
 
-        if (true === $follow) {
+        if ($follow === true) {
             return new DockerFollowLogsOutput($process);
         }
 

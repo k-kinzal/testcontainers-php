@@ -85,7 +85,7 @@ class HostPortWaitStrategy implements WaitStrategy
         $mappedPorts = [];
         foreach ($instance->getExposedPorts() as $port) {
             $p = $instance->getMappedPort($port);
-            if (null === $p) {
+            if ($p === null) {
                 continue;
             }
             $mappedPorts[] = $p;
