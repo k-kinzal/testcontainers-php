@@ -559,6 +559,45 @@ $container = (new GenericContainer('nginx:latest'))
     );
 ```
 
+### Reuse Mode Settings
+
+Reuse mode settings control how testcontainers-php handles containers when the same container class is run multiple times.
+
+| Static Property | Method | Description |
+|-----------------|--------|-------------|
+| `$REUSE_MODE` | `reuseMode()` | Reuse mode for the container. This determines how testcontainers-php behaves when a container with the same class is already running. |
+
+#### Available Reuse Modes
+
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| `ADD` | Always start a new container (default) | When you need independent container instances for each test |
+| `RESTART` | Stop existing container and start a new one | When you want a fresh container but only one instance at a time |
+| `REUSE` | Reuse existing container if it's still running | When you want to speed up tests by reusing containers across test runs |
+
+#### Example
+
+```php
+// Static Property
+class MyContainer extends GenericContainer
+{
+    protected static $REUSE_MODE = 'reuse';
+}
+
+// Method Override
+class MyContainer extends GenericContainer
+{
+    protected function reuseMode()
+    {
+        return \Testcontainers\Containers\ReuseMode::REUSE();
+    }
+}
+
+// Fluent API
+$container = (new GenericContainer('nginx:latest'))
+    ->withReuseMode(\Testcontainers\Containers\ReuseMode::REUSE());
+```
+
 ### Wait Settings
 
 Wait settings control how testcontainers-php waits for the container to be ready for use.
