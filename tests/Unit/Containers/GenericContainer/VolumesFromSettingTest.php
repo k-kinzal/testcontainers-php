@@ -36,6 +36,7 @@ class VolumesFromSettingTest extends TestCase
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'config' => __ROOT__ . '/config.json',
             ],
         ]);
 

@@ -25,6 +25,7 @@ class NetworkCreateCommandTest extends TestCase
         $client = new DockerClient();
         $client->withGlobalOptions([
             'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'config' => __ROOT__ . '/config.json',
         ]);
         $output = $client->networkCreate('test-network');
 

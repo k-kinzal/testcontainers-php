@@ -65,6 +65,7 @@ class GenericContainerInstanceTest extends TestCase
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'config' => __ROOT__ . '/config.json',
             ],
         ]);
 
@@ -82,6 +83,7 @@ class GenericContainerInstanceTest extends TestCase
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'config' => __ROOT__ . '/config.json',
             ],
         ]);
 

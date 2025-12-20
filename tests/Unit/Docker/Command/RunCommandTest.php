@@ -103,6 +103,7 @@ class RunCommandTest extends TestCase
         $client = new DockerClient();
         $client->withGlobalOptions([
             'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'config' => __ROOT__ . '/config.json',
         ]);
         $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
             'detach' => true,
