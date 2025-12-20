@@ -42,9 +42,9 @@ use Testcontainers\Containers\ContainerInstance;
 class Testcontainers
 {
     /**
-     * List of started containers.
+     * Map of started containers by identifier.
      *
-     * @var ContainerInstance[]
+     * @var array<string, ContainerInstance>
      */
     private static $instances = [];
 
@@ -76,12 +76,26 @@ class Testcontainers
             throw new \LogicException('The container class must be a valid class name or an instance of `Container`');
         }
 
+        $identifier = is_string($containerClass)
+            ? $containerClass
+            : spl_object_hash($containerClass);
+        $reuseMode = $container->reuseMode();
+
+        if ($reuseMode->isReuse() && isset(self::$instances[$identifier])) {
+            if (self::$instances[$identifier]->isRunning()) {
+                return self::$instances[$identifier];
+            }
+        }
+        if ($reuseMode->isRestart() && isset(self::$instances[$identifier])) {
+            self::$instances[$identifier]->stop();
+        }
+
         if (method_exists($container, 'beforeStart')) {
             $container->beforeStart();
         }
 
         $instance = $container->start();
-        self::$instances[] = $instance;
+        self::$instances[$identifier] = $instance;
 
         self::registerOnceShutdownHandler();
 

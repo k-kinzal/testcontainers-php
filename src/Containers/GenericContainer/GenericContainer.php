@@ -29,6 +29,7 @@ class GenericContainer implements Container
     use PortSetting;
     use PrivilegeSetting;
     use PullPolicySetting;
+    use ReuseModeSetting;
     use SSHPortForwardSetting;
     use StartupSetting;
     use VolumesFromSetting;

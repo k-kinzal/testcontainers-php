@@ -214,6 +214,22 @@ interface Container
     public function withWaitStrategy($waitStrategy);
 
     /**
+     * Set the reuse mode for the container.
+     *
+     * @param ReuseMode $reuseMode the reuse mode to use
+     *
+     * @return self
+     */
+    public function withReuseMode($reuseMode);
+
+    /**
+     * Retrieve the reuse mode for the container.
+     *
+     * @return ReuseMode
+     */
+    public function reuseMode();
+
+    /**
      * Starts the container.
      *
      * This method initializes and starts the container, returning an instance of `ContainerInstance`.
