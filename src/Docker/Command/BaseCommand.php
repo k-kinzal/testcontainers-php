@@ -57,9 +57,9 @@ trait BaseCommand
      * These variables are passed to the Docker process when executing commands.
      * If set to null, the current environment variables of the PHP process are used.
      *
-     * @var array<string, string> an associative array of environment variables or null if not set
+     * @var null|array<string, string> an associative array of environment variables or null if not set
      */
-    private $env = [];
+    private $env = null;
 
     /**
      * The input for Docker commands.
@@ -277,7 +277,7 @@ trait BaseCommand
      */
     public function expandEnv($s)
     {
-        $env = $this->env;
+        $env = $this->env ? $this->env : [];
 
         $expanded = preg_replace_callback('/\$\{([a-zA-Z_][a-zA-Z0-9_]*)}/', function ($m) use ($env) {
             if (empty($env)) {
