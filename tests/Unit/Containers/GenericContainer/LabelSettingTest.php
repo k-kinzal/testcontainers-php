@@ -32,6 +32,7 @@ class LabelSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withLabel('KEY1', 'VALUE1')
             ->withLabel('KEY2', 'VALUE2')
+            ->withCommands(['echo', 'labels'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();
@@ -44,6 +45,7 @@ class LabelSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
+            ->withCommands(['echo', 'labels'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();

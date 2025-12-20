@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Utility\WithLogger;
@@ -159,20 +160,23 @@ class PDOConnectWaitStrategy implements WaitStrategy
         }
 
         $dsn = clone $this->dsn;
-        if (null === $dsn->getHost()) {
-            $host = str_replace('localhost', '127.0.0.1', $instance->getHost());
-            $dsn = $dsn->withHost($host);
-        }
-        if (null === $dsn->getPort()) {
-            $ports = $instance->getExposedPorts();
-            if (1 !== count($ports)) {
-                throw new \LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
+
+        if ($dsn->requiresHostPort()) {
+            if (null === $dsn->getHost()) {
+                $host = str_replace('localhost', '127.0.0.1', $instance->getHost());
+                $dsn = $dsn->withHost($host);
             }
-            $port = $instance->getMappedPort($ports[0]);
-            if (null === $port) {
-                throw new \LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
+            if (null === $dsn->getPort()) {
+                $ports = $instance->getExposedPorts();
+                if (1 !== count($ports)) {
+                    throw new \LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
+                }
+                $port = $instance->getMappedPort($ports[0]);
+                if (null === $port) {
+                    throw new \LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
+                }
+                $dsn = $dsn->withPort($port);
             }
-            $dsn = $dsn->withPort($port);
         }
 
         $defaultSocketTimeout = ini_get('default_socket_timeout');
@@ -189,6 +193,9 @@ class PDOConnectWaitStrategy implements WaitStrategy
                     $message = $dsn->toString().': '.$ex->getMessage();
                 }
                 throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
+            }
+            if (!$instance->isRunning()) {
+                throw new ContainerStoppedException('Container stopped while waiting for PDO connection');
             }
 
             try {

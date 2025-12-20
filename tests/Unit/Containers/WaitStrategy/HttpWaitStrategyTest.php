@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Containers\WaitStrategy;
 
-use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
-use Testcontainers\Containers\WaitStrategy\HttpProbe;
+use Testcontainers\Containers\GenericContainer\GenericContainer;
+use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
-use Testcontainers\Docker\Types\ContainerId;
+use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 
 class HttpWaitStrategyTest extends WaitStrategyTestCase
 {
@@ -16,17 +16,40 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
 
     public function testWaitUntilReady()
     {
-        $instance = new GenericContainerInstance([
-            'containerId' => new ContainerId('8188d93d8a27'),
-            'ports' => [80 => 8239],
-        ]);
-        $probe = $this->createMock(HttpProbe::class);
-        $probe->method('available')
-            ->willReturnOnConsecutiveCalls(false, false, true)
-        ;
-        $strategy = new HttpWaitStrategy($probe);
+        $container = new GenericContainer('nginx:alpine');
+        $container->withExposedPort(80);
+        $instance = $container->start();
+
+        $strategy = new HttpWaitStrategy();
         $strategy->waitUntilReady($instance);
 
         $this->assertTrue(true);
+    }
+
+    public function testWaitUntilReadyThrowsWaitingTimeoutException()
+    {
+        $this->expectException(WaitingTimeoutException::class);
+
+        $container = new GenericContainer('alpine:latest');
+        $container->withCommands(['sh', '-c', 'sleep 10']);
+        $container->withExposedPort(80);
+        $instance = $container->start();
+
+        $strategy = new HttpWaitStrategy();
+        $strategy->withTimeoutSeconds(1);
+        $strategy->waitUntilReady($instance);
+    }
+
+    public function testWaitUntilReadyThrowsContainerStoppedException()
+    {
+        $this->expectException(ContainerStoppedException::class);
+
+        $container = new GenericContainer('alpine:latest');
+        $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
+        $container->withExposedPort(80);
+        $instance = $container->start();
+
+        $strategy = new HttpWaitStrategy();
+        $strategy->waitUntilReady($instance);
     }
 }

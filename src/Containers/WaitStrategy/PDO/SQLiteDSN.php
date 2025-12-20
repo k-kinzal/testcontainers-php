@@ -42,4 +42,9 @@ class SQLiteDSN implements DSN, Stringable
         // TODO: support file path
         return 'sqlite::memory:';
     }
+
+    public function requiresHostPort()
+    {
+        return false;
+    }
 }
