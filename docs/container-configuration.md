@@ -598,6 +598,37 @@ $container = (new GenericContainer('nginx:latest'))
     ->withReuseMode(\Testcontainers\Containers\ReuseMode::REUSE());
 ```
 
+### Auto Remove On Exit Settings
+
+Auto remove on exit settings control whether the container is automatically removed by Docker when it exits.
+
+| Static Property | Method | Description |
+|-----------------|--------|-------------|
+| `$AUTO_REMOVE_ON_EXIT` | `autoRemoveOnExit()` | When enabled, Docker automatically removes the container when it exits. This is equivalent to the `--rm` flag on the Docker CLI. Useful for preventing disk space from being consumed by stopped containers. Note that when enabled, you cannot retrieve container logs after the container has stopped, which may make debugging more difficult. |
+
+#### Example
+
+```php
+// Static Property
+class MyContainer extends GenericContainer
+{
+    protected static $AUTO_REMOVE_ON_EXIT = true;
+}
+
+// Method Override
+class MyContainer extends GenericContainer
+{
+    protected function autoRemoveOnExit()
+    {
+        return true;
+    }
+}
+
+// Fluent API
+$container = (new GenericContainer('nginx:latest'))
+    ->withAutoRemoveOnExit(true);
+```
+
 ### Wait Settings
 
 Wait settings control how testcontainers-php waits for the container to be ready for use.
