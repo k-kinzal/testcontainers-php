@@ -10,7 +10,24 @@ jobs:
       matrix:
         php-version: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Cache Docker images
+        uses: actions/cache@v4
+        with:
+          path: /tmp/docker-images
+          key: docker-images-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yaml') }}
+          restore-keys: |
+            docker-images-${{ runner.os }}-
+
+      - name: Load cached Docker images
+        run: |
+          if [ -d /tmp/docker-images ]; then
+            for image in /tmp/docker-images/*.tar; do
+              [ -f "$image" ] && docker load -i "$image" || true
+            done
+          fi
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
@@ -21,3 +38,12 @@ jobs:
         run: composer lint
       - name: Run tests
         run: composer test
+
+      - name: Save Docker images to cache
+        if: always()
+        run: |
+          mkdir -p /tmp/docker-images
+          docker images --format '{{.Repository}}:{{.Tag}}' | grep -v '<none>' | while read image; do
+            safe_name=$(echo "$image" | tr ':/' '_')
+            docker save "$image" -o "/tmp/docker-images/${safe_name}.tar" 2>/dev/null || true
+          done
