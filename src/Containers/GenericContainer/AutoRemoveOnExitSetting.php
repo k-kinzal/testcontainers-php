@@ -56,9 +56,8 @@ trait AutoRemoveOnExitSetting
     /**
      * Retrieve whether to automatically remove the container when it exits.
      *
-     * This method returns whether the container should be automatically removed when it exits.
-     * If a specific auto-remove on exit mode is set, it will return that. Otherwise, it will
-     * attempt to retrieve the default auto-remove on exit mode from the provider.
+     * If the static property is set to true, it takes precedence. Otherwise,
+     * the instance property set via withAutoRemoveOnExit() is used.
      *
      * @return bool true if the container should be automatically removed on exit, false otherwise
      */
