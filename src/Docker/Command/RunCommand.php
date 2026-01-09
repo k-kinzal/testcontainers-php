@@ -39,6 +39,7 @@ trait RunCommand
      *     pull?: null|string|Stringable,
      *     privileged?: null|bool,
      *     quiet?: null|bool,
+     *     rm?: null|bool,
      *     volumesFrom?: null|string[]|Stringable[],
      *     workdir?: null|string,
      * } $options Additional options for the Docker command

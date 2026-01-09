@@ -230,6 +230,16 @@ interface Container
     public function reuseMode();
 
     /**
+     * Set whether to automatically remove the container when it exits.
+     * Similar to the `--rm` option on the Docker CLI.
+     *
+     * @param bool $autoRemoveOnExit whether to automatically remove the container on exit
+     *
+     * @return self
+     */
+    public function withAutoRemoveOnExit($autoRemoveOnExit);
+
+    /**
      * Starts the container.
      *
      * This method initializes and starts the container, returning an instance of `ContainerInstance`.

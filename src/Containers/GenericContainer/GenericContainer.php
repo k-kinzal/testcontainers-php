@@ -19,6 +19,7 @@ use Testcontainers\Utility\WithLogger;
  */
 class GenericContainer implements Container
 {
+    use AutoRemoveOnExitSetting;
     use EnvSetting;
     use GeneralSetting;
     use HostSetting;
@@ -98,6 +99,7 @@ class GenericContainer implements Container
             }, array_keys($ports), array_values($ports)),
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
+            'rm' => $this->autoRemoveOnExit(),
             'volumesFrom' => $this->volumesFrom(),
             'workdir' => $this->workDir(),
         ];
