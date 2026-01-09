@@ -64,7 +64,7 @@ trait AutoRemoveOnExitSetting
      */
     protected function autoRemoveOnExit()
     {
-        if (static::$AUTO_REMOVE_ON_EXIT !== null) {
+        if (static::$AUTO_REMOVE_ON_EXIT) {
             return static::$AUTO_REMOVE_ON_EXIT;
         }
 
