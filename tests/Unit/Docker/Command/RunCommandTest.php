@@ -76,7 +76,7 @@ class RunCommandTest extends TestCase
     {
         $client = new DockerClient();
         $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
-            'publish' => ['38621:80', '38622:443'],
+            'label' => ['test.label1=value1', 'test.label2=value2'],
         ]);
 
         $this->assertInstanceOf(DockerRunOutput::class, $output);
