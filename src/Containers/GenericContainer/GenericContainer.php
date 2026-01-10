@@ -80,7 +80,6 @@ class GenericContainer implements Container
         $client = $this->client();
 
         $portStrategy = $this->portStrategy();
-        $ports = $this->ports();
 
         $image = $this->image();
         $command = $this->command();
@@ -94,9 +93,7 @@ class GenericContainer implements Container
             'name' => $this->name(),
             'network' => $this->networkMode(),
             'networkAlias' => $this->networkAliases(),
-            'publish' => array_map(function ($containerPort, $hostPort) {
-                return $hostPort.':'.$containerPort;
-            }, array_keys($ports), array_values($ports)),
+            'publish' => [],
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
             'rm' => $this->autoRemoveOnExit(),
@@ -109,7 +106,13 @@ class GenericContainer implements Container
 
         $maxRetryAttempts = $this->startupConflictRetryAttempts();
         $retryCount = 0;
+        $ports = [];
         while ($retryCount < $maxRetryAttempts) {
+            $ports = $this->ports();
+            $options['publish'] = array_map(function ($containerPort, $hostPort) {
+                return $hostPort.':'.$containerPort;
+            }, array_keys($ports), array_values($ports));
+
             try {
                 if ($timeout !== null) {
                     $output = $client->withLogger($this->logger())->withTimeout($timeout)->run($image, $command, $args, $options);
@@ -127,6 +130,7 @@ class GenericContainer implements Container
                 }
                 $behavior = $portStrategy->conflictBehavior();
                 if ($behavior->isRetry()) {
+                    ++$retryCount;
                     if ($retryCount >= $maxRetryAttempts) {
                         $this->logger()->error('Maximum retry attempts reached for port allocation', [
                             'retryCount' => $retryCount,
@@ -138,10 +142,9 @@ class GenericContainer implements Container
                     }
                     $this->logger()->debug('Port already allocated, retrying: '.$e->getMessage(), [
                         'exception' => $e,
-                        'retryCount' => $retryCount + 1,
+                        'retryCount' => $retryCount,
                         'maxRetries' => $maxRetryAttempts,
                     ]);
-                    ++$retryCount;
 
                     continue; // Retry the loop
                 }
@@ -156,6 +159,7 @@ class GenericContainer implements Container
                 }
                 $behavior = $portStrategy->conflictBehavior();
                 if ($behavior->isRetry()) {
+                    ++$retryCount;
                     if ($retryCount >= $maxRetryAttempts) {
                         $this->logger()->error('Maximum retry attempts reached for bind address', [
                             'retryCount' => $retryCount,
@@ -167,10 +171,9 @@ class GenericContainer implements Container
                     }
                     $this->logger()->debug('Bind address already in use, retrying: '.$e->getMessage(), [
                         'exception' => $e,
-                        'retryCount' => $retryCount + 1,
+                        'retryCount' => $retryCount,
                         'maxRetries' => $maxRetryAttempts,
                     ]);
-                    ++$retryCount;
 
                     continue; // Retry the loop
                 }
