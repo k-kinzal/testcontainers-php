@@ -5,6 +5,7 @@ namespace Testcontainers;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Lifecycle\ShutdownHandler;
 
 /**
  * Class Testcontainers.
@@ -50,13 +51,6 @@ class Testcontainers
     private static $instances = [];
 
     /**
-     * Flag to ensure that the shutdown handler is set only once.
-     *
-     * @var bool
-     */
-    private static $setOnceShutdownHandler = false;
-
-    /**
      * Flag to ensure cleanup runs only once per process.
      *
      * @var bool
@@ -98,7 +92,7 @@ class Testcontainers
             self::$instances[$identifier]->stop();
         }
 
-        self::registerOnceShutdownHandler();
+        ShutdownHandler::register([self::class, 'stop']);
 
         if (!self::$cleanupDone) {
             self::cleanup();
@@ -208,30 +202,4 @@ class Testcontainers
         return trim($result) === '1';
     }
 
-    /**
-     * Stop all started containers when the script ends.
-     */
-    private static function registerOnceShutdownHandler()
-    {
-        if (self::$setOnceShutdownHandler === false) {
-            register_shutdown_function(function () {
-                self::stop();
-            });
-
-            // Register signal handlers for graceful cleanup on SIGTERM/SIGINT
-            if (function_exists('pcntl_signal') && function_exists('pcntl_async_signals')) {
-                pcntl_async_signals(true);
-                pcntl_signal(SIGTERM, function () {
-                    self::stop();
-                    exit(128 + SIGTERM);
-                });
-                pcntl_signal(SIGINT, function () {
-                    self::stop();
-                    exit(128 + SIGINT);
-                });
-            }
-
-            self::$setOnceShutdownHandler = true;
-        }
-    }
 }
