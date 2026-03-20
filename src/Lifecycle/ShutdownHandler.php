@@ -15,6 +15,13 @@ class ShutdownHandler
     protected static $registered = false;
 
     /**
+     * Whether the callback has already been called.
+     *
+     * @var bool
+     */
+    protected static $called = false;
+
+    /**
      * Register a callback to be executed once on shutdown and on SIGTERM/SIGINT.
      *
      * @param callable $callback
@@ -26,17 +33,39 @@ class ShutdownHandler
         }
 
         register_shutdown_function(function () use ($callback) {
-            $callback();
+            if (self::$called) {
+                return;
+            }
+            self::$called = true;
+            try {
+                $callback();
+            } catch (\Exception $e) {
+                // best-effort
+            }
         });
 
         if (function_exists('pcntl_signal') && function_exists('pcntl_async_signals')) {
             pcntl_async_signals(true);
             pcntl_signal(SIGTERM, function () use ($callback) {
-                $callback();
+                if (!self::$called) {
+                    self::$called = true;
+                    try {
+                        $callback();
+                    } catch (\Exception $e) {
+                        // best-effort
+                    }
+                }
                 exit(128 + SIGTERM);
             });
             pcntl_signal(SIGINT, function () use ($callback) {
-                $callback();
+                if (!self::$called) {
+                    self::$called = true;
+                    try {
+                        $callback();
+                    } catch (\Exception $e) {
+                        // best-effort
+                    }
+                }
                 exit(128 + SIGINT);
             });
         }

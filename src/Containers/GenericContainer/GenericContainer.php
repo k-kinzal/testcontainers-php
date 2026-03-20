@@ -101,7 +101,7 @@ class GenericContainer implements Container
             'addHost' => $this->extraHosts(),
             'detach' => true,
             'env' => $this->env(),
-            'label' => array_merge($tcLabels, $this->labels()),
+            'label' => array_merge($this->labels(), $tcLabels),
             'mount' => $this->mounts(),
             'name' => $this->name(),
             'network' => $this->networkMode(),

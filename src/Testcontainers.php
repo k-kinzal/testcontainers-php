@@ -123,14 +123,22 @@ class Testcontainers
      */
     public static function stop()
     {
-        foreach (self::$instances as $instance) {
+        $errors = [];
+        $stopped = [];
+        foreach (self::$instances as $key => $instance) {
             try {
                 $instance->stop();
+                $stopped[] = $key;
             } catch (\Exception $e) {
-                // Continue stopping remaining containers even if one fails
+                $errors[$key] = $e;
             }
         }
-        self::$instances = [];
+        foreach ($stopped as $key) {
+            unset(self::$instances[$key]);
+        }
+        if (!empty($errors)) {
+            throw new \Testcontainers\Exceptions\ContainerStopException($errors);
+        }
     }
 
 }

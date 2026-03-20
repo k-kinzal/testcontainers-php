@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Output\DockerPsOutput;
 use Testcontainers\Docker\Types\ContainerListItem;
 use Testcontainers\Lifecycle\ContainerReaper;
@@ -128,6 +129,18 @@ class ContainerReaperTest extends TestCase
 
         $reaper = new TestableContainerReaper($client);
         $reaper->setDeadPids([99999]);
+
+        // Should not throw
+        $reaper->execute();
+        $this->assertTrue(true);
+    }
+
+    public function testBestEffortOnInvalidValueException()
+    {
+        $client = $this->createMock(DockerClient::class);
+        $client->method('ps')->willThrowException(new InvalidValueException('parse failure'));
+
+        $reaper = new TestableContainerReaper($client);
 
         // Should not throw
         $reaper->execute();

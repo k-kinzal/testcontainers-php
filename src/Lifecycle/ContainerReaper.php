@@ -4,6 +4,7 @@ namespace Testcontainers\Lifecycle;
 
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\InvalidValueException;
 
 /**
  * Detects and stops orphaned containers whose owning process has died.
@@ -67,6 +68,8 @@ class ContainerReaper
             }
         } catch (DockerException $e) {
             // Best-effort; don't fail the test run
+        } catch (InvalidValueException $e) {
+            // Best-effort; docker ps output parse failure
         }
     }
 

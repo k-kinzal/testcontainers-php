@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\ReuseMode;
+use Testcontainers\Exceptions\ContainerStopException;
 use Testcontainers\Testcontainers;
 use Tests\Images\AlpineContainer;
 
@@ -113,7 +114,7 @@ class TestcontainersTest extends TestCase
         }
     }
 
-    public function testStopContinuesWhenInstanceThrows()
+    public function testStopRemovesSucceededAndKeepsFailed()
     {
         $throwingInstance = $this->createMock(ContainerInstance::class);
         $throwingInstance->method('stop')->willThrowException(new \RuntimeException('stop failed'));
@@ -121,15 +122,44 @@ class TestcontainersTest extends TestCase
         $normalInstance = $this->createMock(ContainerInstance::class);
         $normalInstance->expects($this->once())->method('stop');
 
-        // Use reflection to inject mock instances into Testcontainers::$instances
         $ref = new \ReflectionClass(Testcontainers::class);
         $prop = $ref->getProperty('instances');
         $prop->setValue(null, ['throwing' => $throwingInstance, 'normal' => $normalInstance]);
 
-        // stop() should not throw and should call stop() on both instances
+        try {
+            Testcontainers::stop();
+            $this->fail('Expected ContainerStopException');
+        } catch (ContainerStopException $e) {
+            $errors = $e->getErrors();
+            $this->assertCount(1, $errors);
+            $this->assertArrayHasKey('throwing', $errors);
+            $this->assertSame('stop failed', $errors['throwing']->getMessage());
+        }
+
+        // Failed instance remains, succeeded instance is removed
+        $remaining = $prop->getValue();
+        $this->assertCount(1, $remaining);
+        $this->assertArrayHasKey('throwing', $remaining);
+        $this->assertArrayNotHasKey('normal', $remaining);
+
+        // Clean up for other tests
+        $prop->setValue(null, []);
+    }
+
+    public function testStopAllSuccessNoException()
+    {
+        $instance1 = $this->createMock(ContainerInstance::class);
+        $instance1->expects($this->once())->method('stop');
+
+        $instance2 = $this->createMock(ContainerInstance::class);
+        $instance2->expects($this->once())->method('stop');
+
+        $ref = new \ReflectionClass(Testcontainers::class);
+        $prop = $ref->getProperty('instances');
+        $prop->setValue(null, ['a' => $instance1, 'b' => $instance2]);
+
         Testcontainers::stop();
 
-        // Verify $instances is cleared
         $this->assertSame([], $prop->getValue());
     }
 }
