@@ -6,6 +6,7 @@ use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Types\ContainerId;
@@ -248,7 +249,9 @@ class GenericContainerInstance implements ContainerInstance
             $client = $this->client ?: DockerClientFactory::create();
             $client->stop($this->containerDef['containerId']);
         } catch (NoSuchContainerException $e) {
-            // Do nothing
+            // Container already gone -- expected
+        } catch (DockerException $e) {
+            // Best-effort cleanup -- container may already be stopped or unreachable
         }
         $this->running = false;
     }
