@@ -5,6 +5,7 @@ namespace Testcontainers\Containers\GenericContainer;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
+use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 
@@ -207,6 +208,12 @@ trait StartupSetting
             $provider->register('is_running', new IsRunningStartupCheckStrategy());
         } catch (AlreadyExistsStartupStrategyException $e) {
             throw new \LogicException('Startup check strategy with name is_running already exists.', 0, $e);
+        }
+
+        try {
+            $provider->register('one_shot', new OneShotStartupCheckStrategy());
+        } catch (AlreadyExistsStartupStrategyException $e) {
+            throw new \LogicException('Startup check strategy with name one_shot already exists.', 0, $e);
         }
     }
 

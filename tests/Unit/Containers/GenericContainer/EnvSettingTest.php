@@ -7,7 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\EnvSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
-use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
+use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 
 /**
  * @internal
@@ -38,7 +38,7 @@ class EnvSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
+            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withEnv('ENV1', 'value1')
             ->withEnv('ENV2', 'value2')
             ->withCommands(['printenv', 'ENV1', 'ENV2'])
@@ -52,7 +52,7 @@ class EnvSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
+            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withEnvs([
                 'ENV1' => 'value1',
                 'ENV2' => 'value2',
@@ -72,5 +72,5 @@ class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
         'ENV2' => 'value2',
     ];
 
-    protected static $STARTUP_CHECK_STRATEGY = 'is_running';
+    protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
