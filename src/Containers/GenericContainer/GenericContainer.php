@@ -199,52 +199,69 @@ class GenericContainer implements Container
         $instance = new GenericContainerInstance($containerDef);
         $instance->setDockerClient($client);
 
-        $startupCheckStrategy = $this->startupCheckStrategy($instance);
-        if ($startupCheckStrategy) {
-            $this->logger()->debug('Waiting for container to start', [
-                'strategy' => $startupCheckStrategy,
-            ]);
-            if ($startupCheckStrategy->withLogger($this->logger())->waitUntilStartupSuccessful($instance) === false) {
-                throw new \RuntimeException('failed startup check: illegal state of container');
+        try {
+            $startupCheckStrategy = $this->startupCheckStrategy($instance);
+            if ($startupCheckStrategy) {
+                $this->logger()->debug('Waiting for container to start', [
+                    'strategy' => $startupCheckStrategy,
+                ]);
+                if ($startupCheckStrategy->withLogger($this->logger())->waitUntilStartupSuccessful($instance) === false) {
+                    throw new \RuntimeException('failed startup check: illegal state of container');
+                }
+                $this->logger()->debug('Container started successfully');
             }
-            $this->logger()->debug('Container started successfully');
-        }
 
-        if (count($ports) > 0) {
-            $sshPortForward = $this->sshPortForward();
-            if ($sshPortForward) {
-                $port = $instance->getMappedPort(array_keys($ports)[0]);
-                if ($port) {
-                    $remoteHost = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE();
-                    if ($remoteHost === null) {
-                        $remoteHost = '127.0.0.1';
+            if (count($ports) > 0) {
+                $sshPortForward = $this->sshPortForward();
+                if ($sshPortForward) {
+                    $port = $instance->getMappedPort(array_keys($ports)[0]);
+                    if ($port) {
+                        $remoteHost = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE();
+                        if ($remoteHost === null) {
+                            $remoteHost = '127.0.0.1';
+                        }
+                        $sshHost = isset($sshPortForward['sshHost']) ? $sshPortForward['sshHost'] : $instance->getHost();
+                        $sshUser = isset($sshPortForward['sshUser']) ? $sshPortForward['sshUser'] : null;
+                        $sshPort = isset($sshPortForward['sshPort']) ? $sshPortForward['sshPort'] : null;
+                        $tunnel = (new Tunnel($port, $remoteHost, $port, $sshHost));
+                        if ($sshUser) {
+                            $tunnel->withUser($sshUser);
+                        }
+                        if ($sshPort) {
+                            $tunnel->withSshPort($sshPort);
+                        }
+                        $this->logger()->debug('Opening SSH tunnel');
+                        $session = $tunnel->open();
+                        $instance->setData($session);
+                        $this->logger()->debug('SSH tunnel opened', [
+                            'session' => $session,
+                        ]);
                     }
-                    $sshHost = isset($sshPortForward['sshHost']) ? $sshPortForward['sshHost'] : $instance->getHost();
-                    $sshUser = isset($sshPortForward['sshUser']) ? $sshPortForward['sshUser'] : null;
-                    $sshPort = isset($sshPortForward['sshPort']) ? $sshPortForward['sshPort'] : null;
-                    $tunnel = (new Tunnel($port, $remoteHost, $port, $sshHost));
-                    if ($sshUser) {
-                        $tunnel->withUser($sshUser);
-                    }
-                    if ($sshPort) {
-                        $tunnel->withSshPort($sshPort);
-                    }
-                    $this->logger()->debug('Opening SSH tunnel');
-                    $session = $tunnel->open();
-                    $instance->setData($session);
-                    $this->logger()->debug('SSH tunnel opened', [
-                        'session' => $session,
-                    ]);
                 }
             }
-        }
 
-        $waitStrategy = $this->waitStrategy($instance);
-        if ($waitStrategy) {
-            $this->logger()->debug('Waiting for container to be ready', [
-                'strategy' => $waitStrategy,
+            $waitStrategy = $this->waitStrategy($instance);
+            if ($waitStrategy) {
+                $this->logger()->debug('Waiting for container to be ready', [
+                    'strategy' => $waitStrategy,
+                ]);
+                $waitStrategy->withLogger($this->logger())->waitUntilReady($instance);
+            }
+        } catch (\Exception $e) {
+            $this->logger()->debug('Container startup failed, stopping container', [
+                'containerId' => $output->getContainerId(),
+                'exception' => $e,
             ]);
-            $waitStrategy->withLogger($this->logger())->waitUntilReady($instance);
+
+            try {
+                $instance->stop();
+            } catch (\Exception $stopException) {
+                $this->logger()->debug('Failed to stop container during cleanup', [
+                    'exception' => $stopException,
+                ]);
+            }
+
+            throw $e;
         }
 
         $this->logger()->debug('Container is ready');
