@@ -57,13 +57,6 @@ class Testcontainers
     private static $setOnceShutdownHandler = false;
 
     /**
-     * Unique session ID for the current PHP process.
-     *
-     * @var null|string
-     */
-    private static $sessionId;
-
-    /**
      * Flag to ensure cleanup runs only once per process.
      *
      * @var bool
@@ -141,24 +134,6 @@ class Testcontainers
             }
         }
         self::$instances = [];
-    }
-
-    /**
-     * Get the unique session ID for the current PHP process.
-     *
-     * @return string
-     */
-    public static function getSessionId()
-    {
-        if (self::$sessionId === null) {
-            if (function_exists('random_bytes')) {
-                self::$sessionId = bin2hex(random_bytes(16));
-            } else {
-                self::$sessionId = md5(uniqid('', true).getmypid().microtime(true));
-            }
-        }
-
-        return self::$sessionId;
     }
 
     /**

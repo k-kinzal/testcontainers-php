@@ -12,7 +12,6 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Environments;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\SSH\Tunnel;
-use Testcontainers\Testcontainers;
 use Testcontainers\Utility\WithLogger;
 
 /**
@@ -38,6 +37,13 @@ class GenericContainer implements Container
     use WaitSetting;
     use WorkdirSetting;
     use WithLogger;
+
+    /**
+     * Unique session ID for the current PHP process.
+     *
+     * @var null|string
+     */
+    protected static $sessionId;
 
     /**
      * The Docker client.
@@ -87,7 +93,7 @@ class GenericContainer implements Container
         $args = $this->args();
         $tcLabels = [
             'org.testcontainers' => 'true',
-            'org.testcontainers.session-id' => Testcontainers::getSessionId(),
+            'org.testcontainers.session-id' => self::generateSessionId(),
             'org.testcontainers.pid' => (string) getmypid(),
         ];
         $options = [
@@ -283,5 +289,23 @@ class GenericContainer implements Container
     protected function client()
     {
         return $this->client ?: DockerClientFactory::create();
+    }
+
+    /**
+     * Generate a unique session ID for the current PHP process.
+     *
+     * @return string
+     */
+    protected static function generateSessionId()
+    {
+        if (self::$sessionId === null) {
+            if (function_exists('random_bytes')) {
+                self::$sessionId = bin2hex(random_bytes(16));
+            } else {
+                self::$sessionId = md5(uniqid('', true) . getmypid() . microtime(true));
+            }
+        }
+
+        return self::$sessionId;
     }
 }
