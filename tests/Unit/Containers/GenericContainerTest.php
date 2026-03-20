@@ -63,7 +63,7 @@ class GenericContainerTest extends TestCase
             $this->fail('Expected WaitingTimeoutException');
         } catch (WaitingTimeoutException $e) {
             // Expected -- container should have been stopped and removed (--rm)
-            $this->assertStringContainsString('timed out', $e->getMessage());
+            $this->assertTrue(strpos($e->getMessage(), 'timed out') !== false);
         }
     }
 }
