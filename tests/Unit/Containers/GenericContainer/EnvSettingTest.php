@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\EnvSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
+use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
 
 /**
  * @internal
@@ -37,6 +38,7 @@ class EnvSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
+            ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
             ->withEnv('ENV1', 'value1')
             ->withEnv('ENV2', 'value2')
             ->withCommands(['printenv', 'ENV1', 'ENV2'])
@@ -50,6 +52,7 @@ class EnvSettingTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
+            ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
             ->withEnvs([
                 'ENV1' => 'value1',
                 'ENV2' => 'value2',
@@ -68,4 +71,6 @@ class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
         'ENV1' => 'value1',
         'ENV2' => 'value2',
     ];
+
+    protected static $STARTUP_CHECK_STRATEGY = 'is_running';
 }

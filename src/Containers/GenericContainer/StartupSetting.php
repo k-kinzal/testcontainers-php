@@ -171,11 +171,26 @@ trait StartupSetting
             if (!$strategy) {
                 throw new \LogicException('Startup check strategy not found: '.static::$STARTUP_CHECK_STRATEGY);
             }
+            $timeout = $this->startupTimeout();
+            if ($timeout !== null) {
+                $strategy->withTimeoutSeconds($timeout);
+            }
 
             return $strategy;
         }
         if ($this->startupCheckStrategy) {
-            return $this->startupCheckStrategy;
+            $strategy = $this->startupCheckStrategy;
+            $timeout = $this->startupTimeout();
+            if ($timeout !== null) {
+                $strategy->withTimeoutSeconds($timeout);
+            }
+
+            return $strategy;
+        }
+
+        $timeout = $this->startupTimeout();
+        if ($timeout !== null) {
+            return (new IsRunningStartupCheckStrategy())->withTimeoutSeconds($timeout);
         }
 
         return null;

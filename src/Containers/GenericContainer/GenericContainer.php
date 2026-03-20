@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\GenericContainer;
 
 use Testcontainers\Containers\Container;
+use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
@@ -113,8 +114,6 @@ class GenericContainer implements Container
             'volumesFrom' => $this->volumesFrom(),
             'workdir' => $this->workDir(),
         ];
-        $timeout = $this->startupTimeout();
-
         $this->logger()->debug('Starting container');
 
         $maxRetryAttempts = $this->startupConflictRetryAttempts();
@@ -127,11 +126,7 @@ class GenericContainer implements Container
             }, array_keys($ports), array_values($ports));
 
             try {
-                if ($timeout !== null) {
-                    $output = $client->withLogger($this->logger())->withTimeout($timeout)->run($image, $command, $args, $options);
-                } else {
-                    $output = $client->withLogger($this->logger())->run($image, $command, $args, $options);
-                }
+                $output = $client->withLogger($this->logger())->run($image, $command, $args, $options);
                 if (!$output instanceof DockerRunWithDetachOutput) {
                     throw new \LogicException('Expected DockerRunWithDetachOutput');
                 }
@@ -219,7 +214,7 @@ class GenericContainer implements Container
                     'strategy' => $startupCheckStrategy,
                 ]);
                 if ($startupCheckStrategy->withLogger($this->logger())->waitUntilStartupSuccessful($instance) === false) {
-                    throw new \RuntimeException('failed startup check: illegal state of container');
+                    throw new StartupCheckFailedException();
                 }
                 $this->logger()->debug('Container started successfully');
             }

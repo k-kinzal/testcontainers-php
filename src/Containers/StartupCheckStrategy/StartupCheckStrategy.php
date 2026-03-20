@@ -21,6 +21,15 @@ interface StartupCheckStrategy
     public function waitUntilStartupSuccessful($instance);
 
     /**
+     * Set the timeout duration in seconds for the startup check.
+     *
+     * @param int $seconds the number of seconds to wait before timing out
+     *
+     * @return self
+     */
+    public function withTimeoutSeconds($seconds);
+
+    /**
      * Set Logger instance.
      *
      * @param LoggerInterface $logger the logger instance
