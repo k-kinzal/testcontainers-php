@@ -3,6 +3,7 @@
 namespace Testcontainers\Lifecycle;
 
 use Testcontainers\Docker\DockerClient;
+use Testcontainers\Docker\Exception\DockerException;
 
 /**
  * Detects and stops orphaned containers whose owning process has died.
@@ -53,11 +54,11 @@ class ContainerReaper
 
                 try {
                     $this->client->stop($container->id);
-                } catch (\Exception $e) {
+                } catch (DockerException $e) {
                     // Container may already be stopped
                 }
             }
-        } catch (\Exception $e) {
+        } catch (DockerException $e) {
             // Best-effort; don't fail the test run
         }
     }
