@@ -250,6 +250,20 @@ class Testcontainers
             register_shutdown_function(function () {
                 self::stop();
             });
+
+            // Register signal handlers for graceful cleanup on SIGTERM/SIGINT
+            if (function_exists('pcntl_signal') && function_exists('pcntl_async_signals')) {
+                pcntl_async_signals(true);
+                pcntl_signal(SIGTERM, function () {
+                    self::stop();
+                    exit(128 + SIGTERM);
+                });
+                pcntl_signal(SIGINT, function () {
+                    self::stop();
+                    exit(128 + SIGINT);
+                });
+            }
+
             self::$setOnceShutdownHandler = true;
         }
     }
