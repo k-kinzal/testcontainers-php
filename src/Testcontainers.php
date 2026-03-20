@@ -193,17 +193,12 @@ class Testcontainers
                     continue;
                 }
 
-                // Owning process is dead -- container is orphaned, stop and remove
+                // Owning process is dead -- container is orphaned, stop it.
+                // Removal is left to Docker's --rm flag or explicit user action.
                 try {
                     $client->stop($container->id);
                 } catch (\Exception $e) {
                     // Container may already be stopped
-                }
-
-                try {
-                    $client->rm($container->id, ['force' => true]);
-                } catch (\Exception $e) {
-                    // Best effort
                 }
             }
         } catch (\Exception $e) {
