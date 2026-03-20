@@ -25,6 +25,7 @@ class EnvSettingTest extends TestCase
     public function testStaticEnvironments()
     {
         $container = (new EnvSettingWithStaticEnvironmentsContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['printenv', 'ENV1', 'ENV2'])
         ;
         $instance = $container->start();
@@ -35,6 +36,7 @@ class EnvSettingTest extends TestCase
     public function testStartWithEnv()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withEnv('ENV1', 'value1')
             ->withEnv('ENV2', 'value2')
             ->withCommands(['printenv', 'ENV1', 'ENV2'])
@@ -47,6 +49,7 @@ class EnvSettingTest extends TestCase
     public function testStartWithEnvs()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withEnvs([
                 'ENV1' => 'value1',
                 'ENV2' => 'value2',

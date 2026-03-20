@@ -36,7 +36,7 @@ trait AutoRemoveOnExitSetting
      *
      * @var bool
      */
-    private $autoRemoveOnExit = false;
+    private $autoRemoveOnExit = true;
 
     /**
      * Set whether to automatically remove the container when it exits.
@@ -63,7 +63,7 @@ trait AutoRemoveOnExitSetting
      */
     protected function autoRemoveOnExit()
     {
-        if (static::$AUTO_REMOVE_ON_EXIT) {
+        if (static::$AUTO_REMOVE_ON_EXIT !== null) {
             return static::$AUTO_REMOVE_ON_EXIT;
         }
 

@@ -153,6 +153,7 @@ class GenericContainerInstanceTest extends TestCase
     public function testGetOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['echo', 'Hello, World!'])
         ;
         $instance = $container->start();
@@ -167,6 +168,7 @@ class GenericContainerInstanceTest extends TestCase
     public function testGetErrorOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['ls', '/not-exist-dir'])
         ;
         $instance = $container->start();

@@ -34,6 +34,7 @@ class GeneralSettingTest extends TestCase
     public function testStartWithCommand()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommand('pwd')
         ;
         $instance = $container->start();
@@ -44,6 +45,7 @@ class GeneralSettingTest extends TestCase
     public function testStartWithCommands()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['echo', 'Hello, World!'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
@@ -55,5 +57,7 @@ class GeneralSettingTest extends TestCase
 
 class GeneralSettingWithStaticCommandsContainer extends GenericContainer
 {
+    protected static $AUTO_REMOVE_ON_EXIT = false;
+
     protected static $COMMANDS = ['echo', 'Hello, World!'];
 }

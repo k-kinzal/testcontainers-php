@@ -70,6 +70,7 @@ class MountSettingTest extends TestCase
         file_put_contents($tmpdir.'/to', 'Hello, World!');
 
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withFileSystemBind("{$tmpdir}/to", '/container/path/to', BindMode::READ_ONLY())
             ->withCommands(['cat', '/container/path/to'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
@@ -85,6 +86,7 @@ class MountSettingTest extends TestCase
         file_put_contents($tmpdir.'/to', 'Hello, World!');
 
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withFileSystemBinds([
                 "{$tmpdir}/to:/container/path/to:ro",
             ])
@@ -102,6 +104,7 @@ class MountSettingTest extends TestCase
         file_put_contents($tmpdir.'/to', 'Hello, World!');
 
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withVolume("{$tmpdir}/to:/container/path/to:ro")
             ->withCommands(['cat', '/container/path/to'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
@@ -117,6 +120,7 @@ class MountSettingTest extends TestCase
         file_put_contents($tmpdir.'/to', 'Hello, World!');
 
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withVolumes([
                 [
                     'type' => 'bind',
@@ -139,6 +143,7 @@ class MountSettingTest extends TestCase
         file_put_contents($tmpdir.'/to', 'Hello, World!');
 
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withMount([
                 'type' => 'bind',
                 'source' => "{$tmpdir}/to",
@@ -159,6 +164,7 @@ class MountSettingTest extends TestCase
         file_put_contents($tmpdir.'/to', 'Hello, World!');
 
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withMounts([
                 Mount::fromString("{$tmpdir}/to:/container/path/to:ro"),
             ])
@@ -173,6 +179,8 @@ class MountSettingTest extends TestCase
 
 class MountSettingWithMountsContainer extends GenericContainer
 {
+    protected static $AUTO_REMOVE_ON_EXIT = false;
+
     public static $MOUNTS = [
         'type=bind,source=${HOST_DIR},target=/container/path,readonly',
     ];
@@ -180,6 +188,8 @@ class MountSettingWithMountsContainer extends GenericContainer
 
 class MountSettingWithVolumesContainer extends GenericContainer
 {
+    protected static $AUTO_REMOVE_ON_EXIT = false;
+
     public static $VOLUMES = [
         '${HOST_DIR}:/container/path:ro',
     ];

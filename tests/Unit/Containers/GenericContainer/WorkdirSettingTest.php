@@ -26,6 +26,7 @@ class WorkdirSettingTest extends TestCase
     public function testStaticWorkdir()
     {
         $container = (new WorkdirSettingWithStaticWorkdirContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['pwd'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
@@ -37,6 +38,7 @@ class WorkdirSettingTest extends TestCase
     public function testStartWithWorkingDirectory()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withWorkingDirectory('/tmp')
             ->withCommands(['pwd'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
