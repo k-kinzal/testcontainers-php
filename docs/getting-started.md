@@ -82,13 +82,17 @@ testcontainers-php manages the complete lifecycle of Docker containers for your 
    - If defined, wait strategies ensure services inside the container are ready
    - If defined, `afterStart()` hooks are executed after startup
    - A `ContainerInstance` object is returned for interacting with the running container
+   - If any startup check or wait strategy fails, the container is automatically stopped before the exception is thrown
 
 4. **Container Usage**: During your test, you can interact with the container through the returned instance.
 
 5. **Container Shutdown**: Containers are automatically stopped in several ways:
    - When `Testcontainers::stop()` is explicitly called
    - When the PHP script ends (via a registered shutdown handler)
+   - When a SIGTERM or SIGINT signal is received (e.g. Ctrl+C)
    - When the `ContainerInstance` object is destroyed (via the destructor)
+
+6. **Orphaned Container Cleanup**: When `Testcontainers::run()` is called, testcontainers-php automatically detects and stops orphaned containers left behind by previously crashed or killed processes. Containers are identified by the `org.testcontainers` label and matched to their owning process via the `org.testcontainers.pid` label. Containers whose owning process is no longer alive are stopped. This cleanup is best-effort and safe for concurrent use — containers owned by other running processes are never touched.
 
 You don't need to explicitly call `Testcontainers::stop()` in most cases, as testcontainers-php handles cleanup automatically. However, you might want to stop containers explicitly in scenarios like:
 

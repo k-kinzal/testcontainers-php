@@ -600,19 +600,19 @@ $container = (new GenericContainer('nginx:latest'))
 
 ### Auto Remove On Exit Settings
 
-Auto remove on exit settings control whether the container is automatically removed by Docker when it exits.
+Auto remove on exit settings control whether the container is automatically removed by Docker when it exits. **The default value is `true`**, which is equivalent to the `--rm` flag on the Docker CLI. This prevents disk space from being consumed by stopped containers.
 
 | Static Property | Method | Description |
 |-----------------|--------|-------------|
-| `$AUTO_REMOVE_ON_EXIT` | `autoRemoveOnExit()` | When enabled, Docker automatically removes the container when it exits. This is equivalent to the `--rm` flag on the Docker CLI. Useful for preventing disk space from being consumed by stopped containers. Note that when enabled, you cannot retrieve container logs after the container has stopped, which may make debugging more difficult. |
+| `$AUTO_REMOVE_ON_EXIT` | `autoRemoveOnExit()` | When enabled (default: `true`), Docker automatically removes the container when it exits. This is equivalent to the `--rm` flag on the Docker CLI. Useful for preventing disk space from being consumed by stopped containers. Note that when enabled, you cannot retrieve container logs after the container has stopped, which may make debugging more difficult. |
 
 #### Example
 
 ```php
-// Static Property
+// Disable auto-remove (e.g. for debugging — allows inspecting stopped containers and their logs)
 class MyContainer extends GenericContainer
 {
-    protected static $AUTO_REMOVE_ON_EXIT = true;
+    protected static $AUTO_REMOVE_ON_EXIT = false;
 }
 
 // Method Override
@@ -620,13 +620,13 @@ class MyContainer extends GenericContainer
 {
     protected function autoRemoveOnExit()
     {
-        return true;
+        return false;
     }
 }
 
 // Fluent API
 $container = (new GenericContainer('nginx:latest'))
-    ->withAutoRemoveOnExit(true);
+    ->withAutoRemoveOnExit(false);
 ```
 
 ### Wait Settings
