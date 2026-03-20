@@ -95,6 +95,7 @@ class GenericContainer implements Container
             'org.testcontainers' => 'true',
             'org.testcontainers.session-id' => self::generateSessionId(),
             'org.testcontainers.pid' => (string) getmypid(),
+            'org.testcontainers.host' => (string) gethostname(),
         ];
         $options = [
             'addHost' => $this->extraHosts(),

@@ -41,7 +41,14 @@ class ContainerReaper
             ]);
 
             $currentPid = getmypid();
+            $currentHost = (string) gethostname();
             foreach ($output->getContainers() as $container) {
+                $containerHost = $container->getLabel('org.testcontainers.host');
+
+                if ($containerHost === null || $containerHost !== $currentHost) {
+                    continue;
+                }
+
                 $pid = $container->getLabel('org.testcontainers.pid');
 
                 if ($pid !== null && (int) $pid === $currentPid) {

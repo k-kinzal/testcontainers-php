@@ -211,7 +211,7 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertFalse($instance->isRunning());
     }
 
-    public function testStopSwallowsDockerException()
+    public function testStopThrowsDockerException()
     {
         $process = $this->createMock(Process::class);
         $process->method('getCommandLine')->willReturn('docker stop test');
@@ -226,10 +226,29 @@ class GenericContainerInstanceTest extends TestCase
         ]);
         $instance->setDockerClient($client);
 
-        // Should not throw -- DockerException is caught
+        $this->expectException(DockerException::class);
         $instance->stop();
+    }
 
-        $this->assertFalse($instance->isRunning());
+    public function testDestructorSwallowsDockerException()
+    {
+        $process = $this->createMock(Process::class);
+        $process->method('getCommandLine')->willReturn('docker stop test');
+        $process->method('getExitCode')->willReturn(1);
+        $process->method('getErrorOutput')->willReturn('connection refused');
+
+        $client = $this->createMock(DockerClient::class);
+        $client->method('stop')->willThrowException(new DockerException($process));
+
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($client);
+
+        // Should not throw -- destructor catches all exceptions
+        unset($instance);
+
+        $this->assertTrue(true);
     }
 }
 

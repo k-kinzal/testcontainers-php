@@ -6,7 +6,6 @@ use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
-use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Types\ContainerId;
@@ -69,7 +68,11 @@ class GenericContainerInstance implements ContainerInstance
     public function __destruct()
     {
         if ($this->running) {
-            $this->stop();
+            try {
+                $this->stop();
+            } catch (\Exception $e) {
+                // Destructors must not throw
+            }
         }
     }
 
@@ -250,8 +253,6 @@ class GenericContainerInstance implements ContainerInstance
             $client->stop($this->containerDef['containerId']);
         } catch (NoSuchContainerException $e) {
             // Container already gone -- expected
-        } catch (DockerException $e) {
-            // Best-effort cleanup -- container may already be stopped or unreachable
         }
         $this->running = false;
     }
