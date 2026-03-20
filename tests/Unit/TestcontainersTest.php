@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\ReuseMode;
 use Testcontainers\Testcontainers;
@@ -110,6 +111,26 @@ class TestcontainersTest extends TestCase
         } finally {
             Testcontainers::stop();
         }
+    }
+
+    public function testStopContinuesWhenInstanceThrows()
+    {
+        $throwingInstance = $this->createMock(ContainerInstance::class);
+        $throwingInstance->method('stop')->willThrowException(new \RuntimeException('stop failed'));
+
+        $normalInstance = $this->createMock(ContainerInstance::class);
+        $normalInstance->expects($this->once())->method('stop');
+
+        // Use reflection to inject mock instances into Testcontainers::$instances
+        $ref = new \ReflectionClass(Testcontainers::class);
+        $prop = $ref->getProperty('instances');
+        $prop->setValue(null, ['throwing' => $throwingInstance, 'normal' => $normalInstance]);
+
+        // stop() should not throw and should call stop() on both instances
+        Testcontainers::stop();
+
+        // Verify $instances is cleared
+        $this->assertSame([], $prop->getValue());
     }
 }
 

@@ -115,7 +115,11 @@ class Testcontainers
     public static function stop()
     {
         foreach (self::$instances as $instance) {
-            $instance->stop();
+            try {
+                $instance->stop();
+            } catch (\Exception $e) {
+                // Continue stopping remaining containers even if one fails
+            }
         }
         self::$instances = [];
     }
