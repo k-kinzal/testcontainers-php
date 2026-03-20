@@ -15,10 +15,17 @@ trait PsCommand
     /**
      * List Docker containers.
      *
+     * This method wraps the `docker ps` command to list containers.
+     * Output is always parsed as JSON via `--format json`.
+     *
      * @param array{
      *     all?: null|bool,
      *     filter?: null|string[],
-     *     format?: null|string,
+     *     last?: null|int,
+     *     latest?: null|bool,
+     *     noTrunc?: null|bool,
+     *     quiet?: null|bool,
+     *     size?: null|bool,
      * } $options Additional options for the Docker ps command
      *
      * @throws DockerException if the Docker command fails
@@ -27,11 +34,12 @@ trait PsCommand
      */
     public function ps($options = [])
     {
-        if (!isset($options['format'])) {
-            $options['format'] = '{{.ID}}\t{{.Labels}}';
-        }
-        if (!isset($options['all'])) {
-            $options['all'] = true;
+        // Force JSON format for structured parsing
+        $options['format'] = 'json';
+
+        // Use --no-trunc to get full container IDs
+        if (!isset($options['noTrunc'])) {
+            $options['noTrunc'] = true;
         }
 
         $process = $this->execute(

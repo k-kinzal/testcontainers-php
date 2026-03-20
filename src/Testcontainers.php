@@ -177,14 +177,11 @@ class Testcontainers
             $output = $client->ps([
                 'all' => true,
                 'filter' => ['label=org.testcontainers=true'],
-                'format' => '{{.ID}}\t{{.Labels}}',
             ]);
 
             $currentPid = getmypid();
             foreach ($output->getContainers() as $container) {
-                $pid = isset($container['labels']['org.testcontainers.pid'])
-                    ? $container['labels']['org.testcontainers.pid']
-                    : null;
+                $pid = $container->getLabel('org.testcontainers.pid');
 
                 // Skip containers owned by the current process
                 if ($pid !== null && (int) $pid === $currentPid) {
@@ -198,13 +195,13 @@ class Testcontainers
 
                 // Owning process is dead -- container is orphaned, stop and remove
                 try {
-                    $client->stop($container['id']);
+                    $client->stop($container->id);
                 } catch (\Exception $e) {
                     // Container may already be stopped
                 }
 
                 try {
-                    $client->rm($container['id'], ['force' => true]);
+                    $client->rm($container->id, ['force' => true]);
                 } catch (\Exception $e) {
                     // Best effort
                 }

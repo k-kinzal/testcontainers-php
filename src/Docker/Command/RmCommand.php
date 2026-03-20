@@ -4,9 +4,8 @@ namespace Testcontainers\Docker\Command;
 
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
-use Testcontainers\Docker\Output\DockerOutput;
+use Testcontainers\Docker\Output\DockerRmOutput;
 use Testcontainers\Docker\Types\ContainerId;
-use Testcontainers\Utility\Stringable;
 
 /**
  * Rm command for Docker command.
@@ -18,15 +17,19 @@ trait RmCommand
     /**
      * Remove one or more Docker containers.
      *
+     * This method wraps the `docker rm` command to remove the specified container(s).
+     *
      * @param array|ContainerId|string $containerId the ID or an array of IDs of the container(s) to remove
      * @param array{
      *     force?: null|bool,
+     *     link?: null|bool,
+     *     volumes?: null|bool,
      * } $options Additional options for the Docker rm command
      *
      * @throws NoSuchContainerException if the specified container does not exist
      * @throws DockerException          if the Docker command fails for any other reason
      *
-     * @return DockerOutput the output of the Docker rm command
+     * @return DockerRmOutput the output of the Docker rm command, including the removed container IDs
      */
     public function rm($containerId, $options = [])
     {
@@ -43,7 +46,7 @@ trait RmCommand
             $options
         );
 
-        return new DockerOutput($process);
+        return new DockerRmOutput($process);
     }
 
     abstract protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true);
