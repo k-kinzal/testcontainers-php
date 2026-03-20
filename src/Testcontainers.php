@@ -49,14 +49,14 @@ class Testcontainers
      *
      * @var array<string, ContainerInstance>
      */
-    private static $instances = [];
+    protected static $instances = [];
 
     /**
      * Flag to ensure cleanup runs only once per process.
      *
      * @var bool
      */
-    private static $cleanupDone = false;
+    protected static $cleanupDone = false;
 
     /**
      * Run a container.
