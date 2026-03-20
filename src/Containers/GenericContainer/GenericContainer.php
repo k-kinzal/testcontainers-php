@@ -12,6 +12,7 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Environments;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\SSH\Tunnel;
+use Testcontainers\Testcontainers;
 use Testcontainers\Utility\WithLogger;
 
 /**
@@ -84,11 +85,16 @@ class GenericContainer implements Container
         $image = $this->image();
         $command = $this->command();
         $args = $this->args();
+        $tcLabels = [
+            'org.testcontainers' => 'true',
+            'org.testcontainers.session-id' => Testcontainers::getSessionId(),
+            'org.testcontainers.pid' => (string) getmypid(),
+        ];
         $options = [
             'addHost' => $this->extraHosts(),
             'detach' => true,
             'env' => $this->env(),
-            'label' => $this->labels(),
+            'label' => array_merge($tcLabels, $this->labels()),
             'mount' => $this->mounts(),
             'name' => $this->name(),
             'network' => $this->networkMode(),

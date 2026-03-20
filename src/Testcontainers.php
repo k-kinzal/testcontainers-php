@@ -4,6 +4,7 @@ namespace Testcontainers;
 
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Docker\DockerClientFactory;
 
 /**
  * Class Testcontainers.
@@ -56,6 +57,20 @@ class Testcontainers
     private static $setOnceShutdownHandler = false;
 
     /**
+     * Unique session ID for the current PHP process.
+     *
+     * @var null|string
+     */
+    private static $sessionId;
+
+    /**
+     * Flag to ensure cleanup runs only once per process.
+     *
+     * @var bool
+     */
+    private static $cleanupDone = false;
+
+    /**
      * Run a container.
      *
      *　This method initializes and starts a container of the specified class.
@@ -92,6 +107,10 @@ class Testcontainers
 
         self::registerOnceShutdownHandler();
 
+        if (!self::$cleanupDone) {
+            self::cleanup();
+        }
+
         if (method_exists($container, 'beforeStart')) {
             $container->beforeStart();
         }
@@ -122,6 +141,104 @@ class Testcontainers
             }
         }
         self::$instances = [];
+    }
+
+    /**
+     * Get the unique session ID for the current PHP process.
+     *
+     * @return string
+     */
+    public static function getSessionId()
+    {
+        if (self::$sessionId === null) {
+            if (function_exists('random_bytes')) {
+                self::$sessionId = bin2hex(random_bytes(16));
+            } else {
+                self::$sessionId = md5(uniqid('', true).getmypid().microtime(true));
+            }
+        }
+
+        return self::$sessionId;
+    }
+
+    /**
+     * Clean up orphaned containers from crashed processes.
+     *
+     * This method finds all containers labeled with `org.testcontainers=true`,
+     * checks if the owning process (stored in `org.testcontainers.pid` label) is still alive,
+     * and removes containers whose owning process has died.
+     *
+     * Safe for concurrent use: containers owned by other running processes are never touched.
+     */
+    public static function cleanup()
+    {
+        try {
+            $client = DockerClientFactory::create();
+            $output = $client->ps([
+                'all' => true,
+                'filter' => ['label=org.testcontainers=true'],
+                'format' => '{{.ID}}\t{{.Labels}}',
+            ]);
+
+            $currentPid = getmypid();
+            foreach ($output->getContainers() as $container) {
+                $pid = isset($container['labels']['org.testcontainers.pid'])
+                    ? $container['labels']['org.testcontainers.pid']
+                    : null;
+
+                // Skip containers owned by the current process
+                if ($pid !== null && (int) $pid === $currentPid) {
+                    continue;
+                }
+
+                // Skip containers whose owning process is still alive
+                if ($pid !== null && self::isProcessAlive((int) $pid)) {
+                    continue;
+                }
+
+                // Owning process is dead -- container is orphaned, stop and remove
+                try {
+                    $client->stop($container['id']);
+                } catch (\Exception $e) {
+                    // Container may already be stopped
+                }
+
+                try {
+                    $client->rm($container['id'], ['force' => true]);
+                } catch (\Exception $e) {
+                    // Best effort
+                }
+            }
+        } catch (\Exception $e) {
+            // Cleanup is best-effort; don't fail the test run
+        }
+
+        self::$cleanupDone = true;
+    }
+
+    /**
+     * Check if a process with the given PID is still alive.
+     *
+     * @param int $pid the process ID to check
+     *
+     * @return bool true if the process is alive, false otherwise
+     */
+    private static function isProcessAlive($pid)
+    {
+        if (function_exists('posix_kill')) {
+            // Signal 0 checks process existence without actually sending a signal
+            return @posix_kill($pid, 0);
+        }
+
+        // Linux: check /proc filesystem
+        if (file_exists("/proc/{$pid}/status")) {
+            return true;
+        }
+
+        // macOS/Unix fallback
+        $result = @shell_exec("kill -0 {$pid} 2>/dev/null && echo 1 || echo 0");
+
+        return trim($result) === '1';
     }
 
     /**
