@@ -90,14 +90,14 @@ class Testcontainers
             self::$instances[$identifier]->stop();
         }
 
+        self::registerOnceShutdownHandler();
+
         if (method_exists($container, 'beforeStart')) {
             $container->beforeStart();
         }
 
         $instance = $container->start();
         self::$instances[$identifier] = $instance;
-
-        self::registerOnceShutdownHandler();
 
         if (method_exists($container, 'afterStart')) {
             $container->afterStart($instance);
