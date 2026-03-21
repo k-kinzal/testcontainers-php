@@ -4,6 +4,7 @@ namespace Tests\Unit\Containers\WaitStrategy;
 
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
+use Testcontainers\Containers\WaitStrategy\LogMessageFailedException;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 
@@ -58,6 +59,22 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy = new LogMessageWaitStrategy();
         $strategy->withPattern('Right message');
 
+        $strategy->waitUntilReady($instance);
+    }
+
+    public function testWaitUntilReadyThrowsLogMessageFailedException()
+    {
+        $this->expectException(LogMessageFailedException::class);
+        $this->expectExceptionMessage('Container log matched failure pattern');
+
+        $container = new GenericContainer('alpine:latest');
+        $container->withCommands(['sh', '-c', 'echo "[ERROR] something failed"; sleep 10']);
+        $instance = $container->start();
+
+        $strategy = new LogMessageWaitStrategy();
+        $strategy->withPattern('Ready');
+        $strategy->withFailurePattern('\\[ERROR\\]');
+        $strategy->withTimeoutSeconds(5);
         $strategy->waitUntilReady($instance);
     }
 }
