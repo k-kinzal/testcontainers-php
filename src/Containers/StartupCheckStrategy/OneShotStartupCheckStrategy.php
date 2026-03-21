@@ -35,7 +35,7 @@ class OneShotStartupCheckStrategy implements StartupCheckStrategy
      *
      * @var int the interval in microseconds
      */
-    private $retryInterval = 0;
+    private $retryInterval = 100000;
 
     /**
      * Sets the docker client.

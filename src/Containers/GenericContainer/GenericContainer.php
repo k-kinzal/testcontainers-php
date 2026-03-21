@@ -126,7 +126,16 @@ class GenericContainer implements Container
             }, array_keys($ports), array_values($ports));
 
             try {
-                $output = $client->withLogger($this->logger())->run($image, $command, $args, $options);
+                $startupTimeout = $this->startupTimeout();
+                $runClient = $client->withLogger($this->logger());
+                if ($startupTimeout !== null) {
+                    $originalTimeout = $runClient->getTimeout();
+                    $runClient->withTimeout($startupTimeout);
+                }
+                $output = $runClient->run($image, $command, $args, $options);
+                if ($startupTimeout !== null) {
+                    $runClient->withTimeout($originalTimeout);
+                }
                 if (!$output instanceof DockerRunWithDetachOutput) {
                     throw new \LogicException('Expected DockerRunWithDetachOutput');
                 }

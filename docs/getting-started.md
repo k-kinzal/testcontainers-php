@@ -89,10 +89,10 @@ testcontainers-php manages the complete lifecycle of Docker containers for your 
 5. **Container Shutdown**: Containers are automatically stopped in several ways:
    - When `Testcontainers::stop()` is explicitly called
    - When the PHP script ends (via a registered shutdown handler)
-   - When a SIGTERM or SIGINT signal is received (e.g. Ctrl+C)
+   - When a SIGTERM or SIGINT signal is received (e.g. Ctrl+C) — requires the `pcntl` extension and PHP 7.1+ (`pcntl_async_signals`)
    - When the `ContainerInstance` object is destroyed (via the destructor)
 
-6. **Orphaned Container Cleanup**: When `Testcontainers::run()` is called, testcontainers-php automatically detects and stops orphaned containers left behind by previously crashed or killed processes. Containers are identified by the `org.testcontainers` label and matched to their owning process via the `org.testcontainers.pid` label. Containers whose owning process is no longer alive are stopped. This cleanup is best-effort and safe for concurrent use — containers owned by other running processes are never touched.
+6. **Orphaned Container Cleanup**: When `Testcontainers::run()` is called, testcontainers-php automatically detects and stops orphaned containers left behind by previously crashed or killed processes. Containers are identified by the `org.testcontainers` label and a matching `org.testcontainers.host` label. The `org.testcontainers.pid` label is used to match containers to their owning process — containers whose owning process is no longer alive are stopped. Containers without a PID label are skipped. This cleanup is best-effort and safe for concurrent use — containers owned by other running processes are never touched.
 
 You don't need to explicitly call `Testcontainers::stop()` in most cases, as testcontainers-php handles cleanup automatically. However, you might want to stop containers explicitly in scenarios like:
 

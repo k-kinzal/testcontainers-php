@@ -633,7 +633,7 @@ $container = (new GenericContainer('nginx:latest'))
 
 ### Auto Remove On Exit Settings
 
-Auto remove on exit settings control whether the container is automatically removed by Docker when it exits. **The default value is `false`** (auto-remove disabled). When set to `true`, it is equivalent to the `--rm` flag on the Docker CLI, preventing disk space from being consumed by stopped containers.
+Auto remove on exit settings control whether the container is automatically removed by Docker when it exits. **The default value is `false`** (auto-remove disabled), meaning stopped containers remain on disk until explicitly removed. Setting this to `true` is equivalent to passing the `--rm` flag to the Docker CLI, which automatically removes the container (and its filesystem) when it exits.
 
 | Static Property | Method | Description |
 |-----------------|--------|-------------|
