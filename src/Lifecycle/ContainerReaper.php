@@ -52,11 +52,15 @@ class ContainerReaper
 
                 $pid = $container->getLabel('org.testcontainers.pid');
 
-                if ($pid !== null && (int) $pid === $currentPid) {
+                if ($pid === null || $pid === '') {
                     continue;
                 }
 
-                if ($pid !== null && $this->isProcessAlive((int) $pid)) {
+                if ((int) $pid === $currentPid) {
+                    continue;
+                }
+
+                if ($this->isProcessAlive((int) $pid)) {
                     continue;
                 }
 
@@ -90,7 +94,15 @@ class ContainerReaper
             return true;
         }
 
+        if (!function_exists('shell_exec')) {
+            return true;
+        }
+
         $result = @shell_exec("kill -0 {$pid} 2>/dev/null && echo 1 || echo 0");
+
+        if ($result === null) {
+            return true;
+        }
 
         return trim($result) === '1';
     }

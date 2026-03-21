@@ -114,6 +114,8 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
                 }
                 usleep($this->retryInterval);
             }
+        } catch (WaitingTimeoutException $e) {
+            throw $e;
         } catch (\Exception $e) {
             $this->logger()->debug('Error while checking container status: '.$e->getMessage());
 

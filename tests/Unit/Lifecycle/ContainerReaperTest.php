@@ -94,6 +94,35 @@ class ContainerReaperTest extends TestCase
         $reaper->execute();
     }
 
+    public function testSkipsContainerWithNoPidLabel()
+    {
+        $container = $this->makeContainer([
+            'org.testcontainers.host' => (string) gethostname(),
+        ]);
+
+        $client = $this->createMock(DockerClient::class);
+        $client->method('ps')->willReturn($this->makePsOutput([$container]));
+        $client->expects($this->never())->method('stop');
+
+        $reaper = new TestableContainerReaper($client);
+        $reaper->execute();
+    }
+
+    public function testSkipsContainerWithEmptyPidLabel()
+    {
+        $container = $this->makeContainer([
+            'org.testcontainers.host' => (string) gethostname(),
+            'org.testcontainers.pid' => '',
+        ]);
+
+        $client = $this->createMock(DockerClient::class);
+        $client->method('ps')->willReturn($this->makePsOutput([$container]));
+        $client->expects($this->never())->method('stop');
+
+        $reaper = new TestableContainerReaper($client);
+        $reaper->execute();
+    }
+
     public function testBestEffortOnPsException()
     {
         $process = $this->createMock(Process::class);
