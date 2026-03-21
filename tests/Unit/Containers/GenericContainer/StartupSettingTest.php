@@ -5,10 +5,10 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StartupSetting;
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
+use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 
 /**
  * @internal
@@ -26,18 +26,17 @@ class StartupSettingTest extends TestCase
 
     public function testStaticStartupTimeout()
     {
-        $this->expectException(ProcessTimedOutException::class);
+        $this->expectException(StartupCheckFailedException::class);
 
         $container = (new StartupSettingWithStaticStartupTimeoutContainer('alpine:latest'))
-            ->withCommands(['sleep', '5'])
+            ->withCommands(['sh', '-c', 'exit 1'])
         ;
         $container->start();
     }
 
     public function testStaticStartupCheckStrategy()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('failed startup check: illegal state of container');
+        $this->expectException(StartupCheckFailedException::class);
 
         $container = (new StartupSettingWithStaticStartupCheckStrategyContainer('alpine:latest'))
             ->withCommands(['sh', '-c', 'exit 1'])
@@ -47,19 +46,18 @@ class StartupSettingTest extends TestCase
 
     public function testStartWithStartupTimeout()
     {
-        $this->expectException(ProcessTimedOutException::class);
+        $this->expectException(StartupCheckFailedException::class);
 
         $container = (new GenericContainer('alpine:latest'))
             ->withStartupTimeout(1)
-            ->withCommands(['sleep', '5'])
+            ->withCommands(['sh', '-c', 'exit 1'])
         ;
         $container->start();
     }
 
     public function testStartWithStartupCheckStrategy()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('failed startup check: illegal state of container');
+        $this->expectException(StartupCheckFailedException::class);
 
         $container = (new GenericContainer('alpine:latest'))
             ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())

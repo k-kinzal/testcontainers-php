@@ -8,9 +8,11 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Utility\WithLogger;
 
 /**
- * StartupCheckStrategy that waits until a container is running.
+ * StartupCheckStrategy that waits until a container has exited with code 0.
+ *
+ * Useful for one-shot containers that run a command and exit (e.g. echo, printenv).
  */
-class IsRunningStartupCheckStrategy implements StartupCheckStrategy
+class OneShotStartupCheckStrategy implements StartupCheckStrategy
 {
     use WithLogger;
 
@@ -33,7 +35,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      *
      * @var int the interval in microseconds
      */
-    private $retryInterval = 0;
+    private $retryInterval = 100000;
 
     /**
      * Sets the docker client.
@@ -78,7 +80,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
     }
 
     /**
-     * Wait until the container startup is successful.
+     * Wait until the container has exited successfully.
      *
      * @param ContainerInstance $instance the container instance to check
      *
@@ -91,7 +93,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
         $client = $this->client ?: DockerClientFactory::create();
 
         try {
-            $this->logger()->debug('Waiting for container to be running...');
+            $this->logger()->debug('Waiting for one-shot container to exit...');
             while (true) {
                 if (time() - $now > $this->timeout) {
                     throw new WaitingTimeoutException($this->timeout);
@@ -101,14 +103,17 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
 
                 switch ($output->state->status) {
                     case 'running':
-                        return true;
+                    case 'created':
+                        $this->logger()->debug('Container is still running. Waiting for exit...');
+
+                        break;
 
                     case 'exited':
                     case 'dead':
                         return $output->state->exitCode === 0;
 
                     default:
-                        $this->logger()->debug('Container is not running yet. Current status: '.$output->state->status);
+                        $this->logger()->debug('Container status: '.$output->state->status);
 
                         break;
                 }

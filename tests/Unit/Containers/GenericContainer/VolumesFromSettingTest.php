@@ -56,6 +56,7 @@ class VolumesFromSettingTest extends TestCase
 
         $container = (new VolumesFromSettingWithStaticVolumesFromContainer('alpine:latest'))
             ->withDockerClient($client)
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['cat', $path])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
@@ -73,11 +74,13 @@ class VolumesFromSettingTest extends TestCase
         $path = $meta['uri'];
 
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withFileSystemBind($path, '/tmp/test', BindMode::READ_WRITE())
         ;
         $instance1 = $container->start();
 
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withVolumesFrom($instance1, BindMode::READ_ONLY())
             ->withCommands(['cat', '/tmp/test'])
             ->withWaitStrategy(new LogMessageWaitStrategy())

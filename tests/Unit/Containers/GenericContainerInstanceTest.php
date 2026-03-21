@@ -9,7 +9,9 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\Types\ImagePullPolicy;
+use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\SSH\Session;
 use Testcontainers\Testcontainers;
@@ -151,6 +153,7 @@ class GenericContainerInstanceTest extends TestCase
     public function testGetOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['echo', 'Hello, World!'])
         ;
         $instance = $container->start();
@@ -165,6 +168,7 @@ class GenericContainerInstanceTest extends TestCase
     public function testGetErrorOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['ls', '/not-exist-dir'])
         ;
         $instance = $container->start();
@@ -205,6 +209,46 @@ class GenericContainerInstanceTest extends TestCase
         $instance->stop();
 
         $this->assertFalse($instance->isRunning());
+    }
+
+    public function testStopThrowsDockerException()
+    {
+        $process = $this->createMock(Process::class);
+        $process->method('getCommandLine')->willReturn('docker stop test');
+        $process->method('getExitCode')->willReturn(1);
+        $process->method('getErrorOutput')->willReturn('connection refused');
+
+        $client = $this->createMock(DockerClient::class);
+        $client->method('stop')->willThrowException(new DockerException($process));
+
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($client);
+
+        $this->expectException(DockerException::class);
+        $instance->stop();
+    }
+
+    public function testDestructorSwallowsDockerException()
+    {
+        $process = $this->createMock(Process::class);
+        $process->method('getCommandLine')->willReturn('docker stop test');
+        $process->method('getExitCode')->willReturn(1);
+        $process->method('getErrorOutput')->willReturn('connection refused');
+
+        $client = $this->createMock(DockerClient::class);
+        $client->method('stop')->willThrowException(new DockerException($process));
+
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($client);
+
+        // Should not throw -- destructor catches all exceptions
+        unset($instance);
+
+        $this->assertTrue(true);
     }
 }
 

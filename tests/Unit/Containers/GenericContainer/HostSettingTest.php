@@ -26,6 +26,7 @@ class HostSettingTest extends TestCase
     public function testStaticExtraHosts()
     {
         $container = (new HostSettingWithExtraHostsContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['sh', '-c', 'ping -c 1 example.com'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
@@ -37,6 +38,7 @@ class HostSettingTest extends TestCase
     public function testStaticHosts()
     {
         $container = (new HostSettingWithHostsContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['sh', '-c', 'ping -c 1 example.org'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
@@ -48,6 +50,7 @@ class HostSettingTest extends TestCase
     public function testStartWithExtraHost()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withExtraHost('example.com', '127.0.0.1')
             ->withCommands(['sh', '-c', 'ping -c 1 example.com'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
@@ -70,6 +73,7 @@ class HostSettingTest extends TestCase
     public function testStartWithExtraHosts()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withExtraHosts([
                 ['hostname' => 'example.com', 'ipAddress' => '127.0.0.1'],
                 ['hostname' => 'example.org', 'ipAddress' => '127.0.0.1'],

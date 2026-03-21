@@ -36,6 +36,7 @@ class NetworkModeSettingTest extends TestCase
     public function testStartWithNetworkMode()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withNetworkMode(NetworkMode::NONE())
             ->withCommands(['sh', '-c', 'ls /sys/class/net'])
         ;
@@ -47,5 +48,7 @@ class NetworkModeSettingTest extends TestCase
 
 class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
 {
+    protected static $AUTO_REMOVE_ON_EXIT = false;
+
     protected static $NETWORK_MODE = 'none';
 }

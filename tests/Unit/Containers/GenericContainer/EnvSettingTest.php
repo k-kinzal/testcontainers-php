@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\EnvSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
+use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 
 /**
  * @internal
@@ -25,6 +26,7 @@ class EnvSettingTest extends TestCase
     public function testStaticEnvironments()
     {
         $container = (new EnvSettingWithStaticEnvironmentsContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['printenv', 'ENV1', 'ENV2'])
         ;
         $instance = $container->start();
@@ -35,6 +37,8 @@ class EnvSettingTest extends TestCase
     public function testStartWithEnv()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
+            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withEnv('ENV1', 'value1')
             ->withEnv('ENV2', 'value2')
             ->withCommands(['printenv', 'ENV1', 'ENV2'])
@@ -47,6 +51,8 @@ class EnvSettingTest extends TestCase
     public function testStartWithEnvs()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
+            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withEnvs([
                 'ENV1' => 'value1',
                 'ENV2' => 'value2',
@@ -65,4 +71,6 @@ class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
         'ENV1' => 'value1',
         'ENV2' => 'value2',
     ];
+
+    protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }

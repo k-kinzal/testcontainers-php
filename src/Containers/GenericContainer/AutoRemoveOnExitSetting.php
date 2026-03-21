@@ -56,14 +56,14 @@ trait AutoRemoveOnExitSetting
     /**
      * Retrieve whether to automatically remove the container when it exits.
      *
-     * If the static property is set to true, it takes precedence. Otherwise,
+     * If the static property is set (non-null), it takes precedence. Otherwise,
      * the instance property set via withAutoRemoveOnExit() is used.
      *
      * @return bool true if the container should be automatically removed on exit, false otherwise
      */
     protected function autoRemoveOnExit()
     {
-        if (static::$AUTO_REMOVE_ON_EXIT) {
+        if (static::$AUTO_REMOVE_ON_EXIT !== null) {
             return static::$AUTO_REMOVE_ON_EXIT;
         }
 

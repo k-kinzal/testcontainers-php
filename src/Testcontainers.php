@@ -4,6 +4,9 @@ namespace Testcontainers;
 
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Lifecycle\ContainerReaper;
+use Testcontainers\Lifecycle\ShutdownHandler;
 
 /**
  * Class Testcontainers.
@@ -49,11 +52,11 @@ class Testcontainers
     private static $instances = [];
 
     /**
-     * Flag to ensure that the shutdown handler is set only once.
+     * Flag to ensure cleanup runs only once per process.
      *
      * @var bool
      */
-    private static $setOnceShutdownHandler = false;
+    private static $cleanupDone = false;
 
     /**
      * Run a container.
@@ -90,14 +93,20 @@ class Testcontainers
             self::$instances[$identifier]->stop();
         }
 
+        ShutdownHandler::register([self::class, 'stop']);
+
+        if (!self::$cleanupDone) {
+            $reaper = new ContainerReaper(DockerClientFactory::create());
+            $reaper->execute();
+            self::$cleanupDone = true;
+        }
+
         if (method_exists($container, 'beforeStart')) {
             $container->beforeStart();
         }
 
         $instance = $container->start();
         self::$instances[$identifier] = $instance;
-
-        self::registerOnceShutdownHandler();
 
         if (method_exists($container, 'afterStart')) {
             $container->afterStart($instance);
@@ -114,22 +123,22 @@ class Testcontainers
      */
     public static function stop()
     {
-        foreach (self::$instances as $instance) {
-            $instance->stop();
+        $errors = [];
+        $stopped = [];
+        foreach (self::$instances as $key => $instance) {
+            try {
+                $instance->stop();
+                $stopped[] = $key;
+            } catch (\Exception $e) {
+                $errors[$key] = $e;
+            }
         }
-        self::$instances = [];
+        foreach ($stopped as $key) {
+            unset(self::$instances[$key]);
+        }
+        if (!empty($errors)) {
+            throw new \Testcontainers\Exceptions\ContainerStopException($errors);
+        }
     }
 
-    /**
-     * Stop all started containers when the script ends.
-     */
-    private static function registerOnceShutdownHandler()
-    {
-        if (self::$setOnceShutdownHandler === false) {
-            register_shutdown_function(function () {
-                self::stop();
-            });
-            self::$setOnceShutdownHandler = true;
-        }
-    }
 }

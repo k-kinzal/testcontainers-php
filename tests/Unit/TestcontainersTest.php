@@ -111,6 +111,7 @@ class TestcontainersTest extends TestCase
             Testcontainers::stop();
         }
     }
+
 }
 
 class AlpineContainerWithAddMode extends GenericContainer

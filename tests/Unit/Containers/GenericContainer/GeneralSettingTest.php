@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GeneralSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
+use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 
 /**
@@ -34,6 +35,8 @@ class GeneralSettingTest extends TestCase
     public function testStartWithCommand()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
+            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withCommand('pwd')
         ;
         $instance = $container->start();
@@ -44,6 +47,7 @@ class GeneralSettingTest extends TestCase
     public function testStartWithCommands()
     {
         $container = (new GenericContainer('alpine:latest'))
+            ->withAutoRemoveOnExit(false)
             ->withCommands(['echo', 'Hello, World!'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
@@ -55,5 +59,9 @@ class GeneralSettingTest extends TestCase
 
 class GeneralSettingWithStaticCommandsContainer extends GenericContainer
 {
+    protected static $AUTO_REMOVE_ON_EXIT = false;
+
     protected static $COMMANDS = ['echo', 'Hello, World!'];
+
+    protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }

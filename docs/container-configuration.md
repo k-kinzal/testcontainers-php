@@ -516,12 +516,19 @@ Startup settings control how the container's startup process is handled.
 
 | Strategy | Description | Use Case |
 |----------|-------------|----------|
-| `IsRunningStartupCheckStrategy` | Waits until the container is in the "running" state or has exited with a zero exit code. This strategy can be configured with a timeout and retry interval. | When you need to ensure the container has started successfully before proceeding. |
+| `IsRunningStartupCheckStrategy` | Waits until the container is in the "running" state or has exited with a zero exit code. This strategy can be configured with a timeout and retry interval. | Long-running containers (web servers, databases) that stay running and serve requests. |
+| `OneShotStartupCheckStrategy` | Waits until the container has **exited** with a zero exit code. Keeps waiting while the container is in "running" or "created" state. | Short-lived containers that run a command and exit (e.g. `echo`, `printenv`). Use this when you need to read the container's output after the command has finished. |
 
 The `IsRunningStartupCheckStrategy` continuously checks the container's state and returns:
 - `true` if the container is in the "running" state
 - `true` if the container has exited with a zero exit code (indicating successful completion)
 - `false` otherwise
+
+The `OneShotStartupCheckStrategy` continuously checks the container's state and returns:
+- keeps waiting if the container is in the "running" or "created" state
+- `true` if the container has exited with a zero exit code
+- `false` if the container has exited with a non-zero exit code or is "dead"
+- throws `WaitingTimeoutException` if the timeout is exceeded
 
 #### Example
 
@@ -540,7 +547,7 @@ class MyContainer extends GenericContainer
     {
         return 60; // seconds
     }
-    
+
     protected function startupCheckStrategy()
     {
         return (new \Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy())
@@ -557,6 +564,32 @@ $container = (new GenericContainer('nginx:latest'))
             ->withTimeoutSeconds(30) // Timeout for the startup check strategy itself
             ->withRetryInterval(100000) // Retry interval for the startup check strategy in microseconds
     );
+```
+
+#### Example: One-Shot Container
+
+For containers that run a command and exit, use `OneShotStartupCheckStrategy` to wait until the command completes:
+
+```php
+// Static Property
+class MyOneShotContainer extends GenericContainer
+{
+    protected static $COMMANDS = ['echo', 'Hello, World!'];
+    protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
+    protected static $AUTO_REMOVE_ON_EXIT = false;
+}
+
+// Fluent API
+$container = (new GenericContainer('alpine:latest'))
+    ->withAutoRemoveOnExit(false)
+    ->withStartupCheckStrategy(
+        new \Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy()
+    )
+    ->withCommands(['printenv', 'MY_VAR']);
+
+$instance = $container->start();
+// The container has already exited — output is ready to read
+$output = $instance->getOutput();
 ```
 
 ### Reuse Mode Settings
@@ -600,19 +633,19 @@ $container = (new GenericContainer('nginx:latest'))
 
 ### Auto Remove On Exit Settings
 
-Auto remove on exit settings control whether the container is automatically removed by Docker when it exits.
+Auto remove on exit settings control whether the container is automatically removed by Docker when it exits. **The default value is `false`** (auto-remove disabled), meaning stopped containers remain on disk until explicitly removed. Setting this to `true` is equivalent to passing the `--rm` flag to the Docker CLI, which automatically removes the container (and its filesystem) when it exits.
 
 | Static Property | Method | Description |
 |-----------------|--------|-------------|
-| `$AUTO_REMOVE_ON_EXIT` | `autoRemoveOnExit()` | When enabled, Docker automatically removes the container when it exits. This is equivalent to the `--rm` flag on the Docker CLI. Useful for preventing disk space from being consumed by stopped containers. Note that when enabled, you cannot retrieve container logs after the container has stopped, which may make debugging more difficult. |
+| `$AUTO_REMOVE_ON_EXIT` | `autoRemoveOnExit()` | Controls whether Docker automatically removes the container when it exits (default: `false`). When set to `true`, equivalent to `--rm` on the Docker CLI. Useful for preventing disk space from being consumed by stopped containers. Note that when enabled, you cannot retrieve container logs after the container has stopped, which may make debugging more difficult. |
 
 #### Example
 
 ```php
-// Static Property
+// Disable auto-remove (e.g. for debugging — allows inspecting stopped containers and their logs)
 class MyContainer extends GenericContainer
 {
-    protected static $AUTO_REMOVE_ON_EXIT = true;
+    protected static $AUTO_REMOVE_ON_EXIT = false;
 }
 
 // Method Override
@@ -620,13 +653,13 @@ class MyContainer extends GenericContainer
 {
     protected function autoRemoveOnExit()
     {
-        return true;
+        return false;
     }
 }
 
 // Fluent API
 $container = (new GenericContainer('nginx:latest'))
-    ->withAutoRemoveOnExit(true);
+    ->withAutoRemoveOnExit(false);
 ```
 
 ### Wait Settings

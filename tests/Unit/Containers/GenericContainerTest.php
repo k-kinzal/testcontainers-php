@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\PortStrategy\StaticPortStrategy;
+use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 
 /**
@@ -47,5 +48,35 @@ class GenericContainerTest extends TestCase
         ;
 
         $container2->start();
+    }
+
+    public function testStartStopsContainerOnWaitStrategyFailure()
+    {
+        $container = (new GenericContainer('alpine:latest'))
+            ->withCommands(['tail', '-f', '/dev/null'])
+            ->withWaitStrategy(new FailingWaitStrategy())
+            ->withAutoRemoveOnExit(true)
+        ;
+
+        try {
+            $container->start();
+            $this->fail('Expected WaitingTimeoutException');
+        } catch (WaitingTimeoutException $e) {
+            // Expected -- container should have been stopped and removed (--rm)
+            $this->assertTrue(strpos($e->getMessage(), 'timed out') !== false);
+        }
+    }
+}
+
+/**
+ * A wait strategy that always throws WaitingTimeoutException for testing.
+ */
+class FailingWaitStrategy implements \Testcontainers\Containers\WaitStrategy\WaitStrategy
+{
+    use \Testcontainers\Utility\WithLogger;
+
+    public function waitUntilReady($instance)
+    {
+        throw new WaitingTimeoutException(0, 'intentional failure for testing');
     }
 }

@@ -186,6 +186,16 @@ trait BaseCommand
     }
 
     /**
+     * Get the current timeout for Docker commands.
+     *
+     * @return null|float|int the timeout in seconds, or null if no timeout is set
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
+    }
+
+    /**
      * Set the timeout for Docker commands.
      *
      * This method allows you to specify the maximum time in seconds that a Docker command is allowed to run.
