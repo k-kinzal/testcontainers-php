@@ -26,6 +26,16 @@ class LogMessageWaitStrategy implements WaitStrategy
     private $pattern = '.*';
 
     /**
+     * The regex pattern used to detect failure log messages.
+     *
+     * When set, if a log line matches this pattern, the strategy immediately
+     * throws a LogMessageFailedException instead of waiting until timeout.
+     *
+     * @var null|string
+     */
+    private $failurePattern;
+
+    /**
      * The timeout duration in seconds for waiting until the container instance is ready.
      *
      * @var int
@@ -42,6 +52,23 @@ class LogMessageWaitStrategy implements WaitStrategy
     public function withPattern($pattern)
     {
         $this->pattern = $pattern;
+
+        return $this;
+    }
+
+    /**
+     * Sets the failure pattern to detect error log messages.
+     *
+     * When a log line matches this pattern, the strategy immediately throws
+     * a LogMessageFailedException instead of waiting until timeout.
+     *
+     * @param string $pattern the regex pattern to match against log messages
+     *
+     * @return $this the current instance for method chaining
+     */
+    public function withFailurePattern($pattern)
+    {
+        $this->failurePattern = $pattern;
 
         return $this;
     }
@@ -78,9 +105,18 @@ class LogMessageWaitStrategy implements WaitStrategy
         $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';
         $this->logger()->debug('Waiting for log message: pattern='.$pattern);
 
+        $failurePattern = null;
+        if ($this->failurePattern !== null) {
+            $failurePattern = '/'.str_replace('/', '\/', $this->failurePattern).'/';
+            $this->logger()->debug('Failure pattern='.$failurePattern);
+        }
+
         try {
             foreach ($iter as $line) {
                 $this->logger()->debug(trim($line));
+                if ($failurePattern !== null && preg_match($failurePattern, trim($line))) {
+                    throw new LogMessageFailedException(trim($line));
+                }
                 if (preg_match($pattern, trim($line))) {
                     return;
                 }
