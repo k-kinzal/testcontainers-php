@@ -11,6 +11,8 @@ use Testcontainers\Utility\ConsoleLogger;
  * @internal
  *
  * @coversNothing
+ *
+ * @requires PHP 8.0
  */
 class ConsoleLoggerTest extends TestCase
 {
