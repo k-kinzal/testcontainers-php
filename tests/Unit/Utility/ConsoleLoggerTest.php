@@ -11,8 +11,6 @@ use Testcontainers\Utility\ConsoleLogger;
  * @internal
  *
  * @coversNothing
- *
- * @requires PHP 8.0
  */
 class ConsoleLoggerTest extends TestCase
 {
@@ -31,7 +29,7 @@ class ConsoleLoggerTest extends TestCase
         $logger->debug('hello world');
 
         $output = $this->readStream($stream);
-        $this->assertMatchesRegularExpression('/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[DEBUG\] hello world$/', trim($output));
+        $this->assertTrue(preg_match('/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[DEBUG\] hello world$/', trim($output)) === 1);
     }
 
     public function testMessageWithContext()
@@ -39,10 +37,10 @@ class ConsoleLoggerTest extends TestCase
         $stream = $this->createStream();
         $logger = new ConsoleLogger($stream);
 
-        $logger->info('User logged in', ['name' => 'Alice']);
+        $logger->info('User logged in', array('name' => 'Alice'));
 
         $output = $this->readStream($stream);
-        $this->assertStringContainsString('[INFO] User logged in {"name":"Alice"}', $output);
+        $this->assertTrue(strpos($output, '[INFO] User logged in {"name":"Alice"}') !== false);
     }
 
     public function testEmptyContextOmitsJson()
@@ -54,7 +52,7 @@ class ConsoleLoggerTest extends TestCase
 
         $output = trim($this->readStream($stream));
         $this->assertStringEndsWith('something happened', $output);
-        $this->assertStringNotContainsString('{}', $output);
+        $this->assertTrue(strpos($output, '{}') === false);
     }
 
     public function testPlaceholderInterpolation()
@@ -62,10 +60,10 @@ class ConsoleLoggerTest extends TestCase
         $stream = $this->createStream();
         $logger = new ConsoleLogger($stream);
 
-        $logger->debug('Connecting to {host}:{port}', ['host' => 'localhost', 'port' => 3306]);
+        $logger->debug('Connecting to {host}:{port}', array('host' => 'localhost', 'port' => 3306));
 
         $output = $this->readStream($stream);
-        $this->assertStringContainsString('Connecting to localhost:3306', $output);
+        $this->assertTrue(strpos($output, 'Connecting to localhost:3306') !== false);
     }
 
     public function testMinLevelFiltering()
@@ -78,8 +76,8 @@ class ConsoleLoggerTest extends TestCase
         $logger->warning('visible');
 
         $output = $this->readStream($stream);
-        $this->assertStringNotContainsString('hidden', $output);
-        $this->assertStringContainsString('[WARNING] visible', $output);
+        $this->assertTrue(strpos($output, 'hidden') === false);
+        $this->assertTrue(strpos($output, '[WARNING] visible') !== false);
     }
 
     public function testAllLevelsOutputWhenDebug()
@@ -97,14 +95,14 @@ class ConsoleLoggerTest extends TestCase
         $logger->debug('msg');
 
         $output = $this->readStream($stream);
-        $this->assertStringContainsString('[EMERGENCY]', $output);
-        $this->assertStringContainsString('[ALERT]', $output);
-        $this->assertStringContainsString('[CRITICAL]', $output);
-        $this->assertStringContainsString('[ERROR]', $output);
-        $this->assertStringContainsString('[WARNING]', $output);
-        $this->assertStringContainsString('[NOTICE]', $output);
-        $this->assertStringContainsString('[INFO]', $output);
-        $this->assertStringContainsString('[DEBUG]', $output);
+        $this->assertTrue(strpos($output, '[EMERGENCY]') !== false);
+        $this->assertTrue(strpos($output, '[ALERT]') !== false);
+        $this->assertTrue(strpos($output, '[CRITICAL]') !== false);
+        $this->assertTrue(strpos($output, '[ERROR]') !== false);
+        $this->assertTrue(strpos($output, '[WARNING]') !== false);
+        $this->assertTrue(strpos($output, '[NOTICE]') !== false);
+        $this->assertTrue(strpos($output, '[INFO]') !== false);
+        $this->assertTrue(strpos($output, '[DEBUG]') !== false);
     }
 
     public function testLevelDisplayedUppercase()
@@ -115,7 +113,7 @@ class ConsoleLoggerTest extends TestCase
         $logger->error('fail');
 
         $output = $this->readStream($stream);
-        $this->assertStringContainsString('[ERROR]', $output);
+        $this->assertTrue(strpos($output, '[ERROR]') !== false);
     }
 
     public function testContextWithNonStringableValues()
@@ -123,15 +121,15 @@ class ConsoleLoggerTest extends TestCase
         $stream = $this->createStream();
         $logger = new ConsoleLogger($stream);
 
-        $logger->error('Failed', [
+        $logger->error('Failed', array(
             'exception' => new \RuntimeException('test'),
-            'nested' => ['a' => 1],
+            'nested' => array('a' => 1),
             'null_val' => null,
-        ]);
+        ));
 
         $output = $this->readStream($stream);
-        $this->assertStringContainsString('[ERROR] Failed', $output);
-        $this->assertStringContainsString('"nested":{"a":1}', $output);
+        $this->assertTrue(strpos($output, '[ERROR] Failed') !== false);
+        $this->assertTrue(strpos($output, '"nested":{"a":1}') !== false);
     }
 
     /**

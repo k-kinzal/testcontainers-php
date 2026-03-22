@@ -8,10 +8,11 @@ $finder = Finder::create()->in([
     __DIR__.'/tests',
 ]);
 
-// ConsoleLogger requires PHP 8.0+ (uses string|\Stringable union type from psr/log 3.x)
+// ConsoleLogger has version-specific files with incompatible syntax
 if (PHP_VERSION_ID < 80000) {
-    $finder->notPath('Utility/ConsoleLogger.php');
-    $finder->notPath('Utility/ConsoleLoggerTest.php');
+    $finder->notPath('Utility/ConsoleLogger/ConsoleLogger80.php');
+} else {
+    $finder->notPath('Utility/ConsoleLogger/ConsoleLogger56.php');
 }
 
 return (new Config())
