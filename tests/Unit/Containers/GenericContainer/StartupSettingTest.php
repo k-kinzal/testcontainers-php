@@ -7,7 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StartupSetting;
-use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
+use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 
 /**
@@ -60,7 +60,7 @@ class StartupSettingTest extends TestCase
         $this->expectException(StartupCheckFailedException::class);
 
         $container = (new GenericContainer('alpine:latest'))
-            ->withStartupCheckStrategy(new IsRunningStartupCheckStrategy())
+            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withCommands(['sh', '-c', 'exit 1'])
         ;
         $container->start();
@@ -74,5 +74,5 @@ class StartupSettingWithStaticStartupTimeoutContainer extends GenericContainer
 
 class StartupSettingWithStaticStartupCheckStrategyContainer extends GenericContainer
 {
-    protected static $STARTUP_CHECK_STRATEGY = 'is_running';
+    protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
