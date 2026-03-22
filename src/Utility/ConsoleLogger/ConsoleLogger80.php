@@ -3,6 +3,7 @@
 namespace Testcontainers\Utility;
 
 use Psr\Log\AbstractLogger;
+use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
 
 /**
@@ -56,6 +57,10 @@ class ConsoleLogger extends AbstractLogger
             $this->stream = fopen('php://stderr', 'w');
         }
 
+        if (!isset(self::$LOG_LEVELS[$minLevel])) {
+            throw new InvalidArgumentException(sprintf('Invalid minimum log level: "%s"', $minLevel));
+        }
+
         $this->minLevel = $minLevel;
     }
 
@@ -69,7 +74,7 @@ class ConsoleLogger extends AbstractLogger
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         if (!isset(self::$LOG_LEVELS[$level])) {
-            return;
+            throw new InvalidArgumentException(sprintf('Invalid log level: "%s"', $level));
         }
 
         if (self::$LOG_LEVELS[$level] < self::$LOG_LEVELS[$this->minLevel]) {

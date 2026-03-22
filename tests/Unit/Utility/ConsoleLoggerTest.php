@@ -3,6 +3,7 @@
 namespace Tests\Unit\Utility;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Testcontainers\Utility\ConsoleLogger;
@@ -130,6 +131,21 @@ class ConsoleLoggerTest extends TestCase
         $output = $this->readStream($stream);
         $this->assertTrue(strpos($output, '[ERROR] Failed') !== false);
         $this->assertTrue(strpos($output, '"nested":{"a":1}') !== false);
+    }
+
+    public function testInvalidMinLevelThrowsException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new ConsoleLogger($this->createStream(), 'invalid');
+    }
+
+    public function testInvalidLogLevelThrowsException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $logger = new ConsoleLogger($this->createStream());
+        $logger->log('invalid', 'message');
     }
 
     /**
