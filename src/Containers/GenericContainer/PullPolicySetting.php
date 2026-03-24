@@ -80,7 +80,7 @@ trait PullPolicySetting
      */
     protected function pullPolicy()
     {
-        if (static::$PULL_POLICY) {
+        if (static::$PULL_POLICY !== null) {
             return ImagePullPolicy::fromString(static::$PULL_POLICY);
         }
 

@@ -73,7 +73,7 @@ trait NetworkAliasSetting
      */
     protected function networkAliases()
     {
-        if (static::$NETWORK_ALIASES) {
+        if (static::$NETWORK_ALIASES !== null) {
             return static::$NETWORK_ALIASES;
         }
         if ($this->networkAliases) {
