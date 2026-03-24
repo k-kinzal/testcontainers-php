@@ -59,7 +59,7 @@ trait EntrypointSetting
      */
     protected function entrypoint()
     {
-        if (static::$ENTRYPOINT) {
+        if (static::$ENTRYPOINT !== null) {
             return static::$ENTRYPOINT;
         }
 

@@ -117,7 +117,7 @@ trait GeneralSetting
      */
     protected function commands()
     {
-        if (static::$COMMANDS) {
+        if (static::$COMMANDS !== null) {
             return static::$COMMANDS;
         }
         if ($this->commands) {
@@ -170,10 +170,10 @@ trait GeneralSetting
      */
     protected function name()
     {
-        if (static::$NAME) {
+        if (static::$NAME !== null) {
             return static::$NAME;
         }
-        if ($this->name) {
+        if ($this->name !== null) {
             return $this->name;
         }
 
