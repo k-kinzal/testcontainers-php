@@ -33,6 +33,8 @@ class GenericContainerInstance implements ContainerInstance
      *             ports?: array<int, int>,
      *             pull?: null|ImagePullPolicy,
      *             privileged?: bool,
+     *             stopTimeout?: null|int,
+     *             stopSignal?: null|string,
      *             } The container definition
      */
     private $containerDef;
@@ -58,6 +60,8 @@ class GenericContainerInstance implements ContainerInstance
      *     ports?: array<int, int>,
      *     pull?: null|ImagePullPolicy,
      *     privileged?: bool,
+     *     stopTimeout?: null|int,
+     *     stopSignal?: null|string,
      * } $containerDef The container definition
      */
     public function __construct($containerDef)
@@ -246,11 +250,28 @@ class GenericContainerInstance implements ContainerInstance
         }
     }
 
+    public function getStopTimeout()
+    {
+        return isset($this->containerDef['stopTimeout']) ? $this->containerDef['stopTimeout'] : null;
+    }
+
+    public function getStopSignal()
+    {
+        return isset($this->containerDef['stopSignal']) ? $this->containerDef['stopSignal'] : null;
+    }
+
     public function stop()
     {
         try {
             $client = $this->client ?: DockerClientFactory::create();
-            $client->stop($this->containerDef['containerId']);
+            $options = [];
+            if (isset($this->containerDef['stopTimeout'])) {
+                $options['timeout'] = $this->containerDef['stopTimeout'];
+            }
+            if (isset($this->containerDef['stopSignal'])) {
+                $options['signal'] = $this->containerDef['stopSignal'];
+            }
+            $client->stop($this->containerDef['containerId'], $options);
         } catch (NoSuchContainerException $e) {
             // Container already gone -- expected
         }

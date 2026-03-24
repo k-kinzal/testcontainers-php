@@ -56,7 +56,7 @@ class ContainerReaperTest extends TestCase
 
         $client = $this->createMock(DockerClient::class);
         $client->method('ps')->willReturn($this->makePsOutput([$container]));
-        $client->expects($this->once())->method('stop');
+        $client->expects($this->once())->method('stop')->with('abc123', ['timeout' => 0]);
 
         $reaper = new TestableContainerReaper($client);
         $reaper->setDeadPids([99999]);

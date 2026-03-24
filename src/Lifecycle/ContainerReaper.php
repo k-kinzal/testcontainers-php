@@ -65,7 +65,7 @@ class ContainerReaper
                 }
 
                 try {
-                    $this->client->stop($container->id);
+                    $this->client->stop($container->id, ['timeout' => 0]);
                 } catch (DockerException $e) {
                     // Container may already be stopped
                 }
