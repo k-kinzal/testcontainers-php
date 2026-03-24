@@ -812,6 +812,69 @@ $container = (new GenericContainer('nginx:latest'))
 //     ->withWorkDir('/app');
 ```
 
+### User Settings
+
+User settings allow you to override the default user specified in the Docker image. This is useful when a pre-built Docker image defines a specific user for production, but you want to run the container as a different user during testing.
+
+| Static Property | Method | Description |
+|-----------------|--------|-------------|
+| `$USER` | `user()` | The user to run the container as. This overrides the `USER` directive in the Dockerfile. You can specify a username (e.g., `root`, `nobody`) or a UID:GID pair (e.g., `1000:1000`). Similar to the `--user` option on the Docker CLI. |
+
+#### Example
+
+```php
+// Static Property
+class MyContainer extends GenericContainer
+{
+    protected static $USER = 'nobody';
+}
+
+// Method Override
+class MyContainer extends GenericContainer
+{
+    protected function user()
+    {
+        return 'nobody';
+    }
+}
+
+// Fluent API
+$container = (new GenericContainer('nginx:latest'))
+    ->withUser('nobody');
+```
+
+### Entrypoint Settings
+
+Entrypoint settings allow you to override the default entrypoint specified in the Docker image. This is useful when a pre-built Docker image defines a specific entrypoint for production, but you want to use a different entrypoint during testing (e.g., replacing a custom entrypoint script with a simple shell).
+
+| Static Property | Method | Description |
+|-----------------|--------|-------------|
+| `$ENTRYPOINT` | `entrypoint()` | The entrypoint for the container. This overrides the `ENTRYPOINT` directive in the Dockerfile. Useful when you want to bypass the default entrypoint of an image and run a different command or script. Similar to the `--entrypoint` option on the Docker CLI. |
+
+#### Example
+
+```php
+// Static Property
+class MyContainer extends GenericContainer
+{
+    protected static $ENTRYPOINT = '/bin/sh';
+}
+
+// Method Override
+class MyContainer extends GenericContainer
+{
+    protected function entrypoint()
+    {
+        return '/bin/sh';
+    }
+}
+
+// Fluent API
+$container = (new GenericContainer('mysql:8.0'))
+    ->withEntrypoint('/bin/sh')
+    ->withCommands(['-c', 'echo "skipping default entrypoint"']);
+```
+
 ### SSH Port Forward Settings
 
 SSH Port Forward settings control how testcontainers-php sets up SSH port forwarding to the remote host that starts the container.

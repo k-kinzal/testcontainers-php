@@ -263,6 +263,25 @@ interface Container
     public function withStopSignal($signal);
 
     /**
+     * Set the user that the container should run as, similar to the `--user <user>` option on the Docker CLI.
+     *
+     * @param string $user the user to run the container as (e.g., 'root', 'nobody', '1000:1000')
+     *
+     * @return self
+     */
+    public function withUser($user);
+
+    /**
+     * Set the entrypoint for the container, overriding the default entrypoint defined in the Docker image.
+     * Similar to the `--entrypoint <entrypoint>` option on the Docker CLI.
+     *
+     * @param string $entrypoint the entrypoint to use (e.g., '/bin/sh', '/usr/local/bin/custom-entrypoint.sh')
+     *
+     * @return self
+     */
+    public function withEntrypoint($entrypoint);
+
+    /**
      * Starts the container.
      *
      * This method initializes and starts the container, returning an instance of `ContainerInstance`.

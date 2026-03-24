@@ -21,6 +21,7 @@ use Testcontainers\Utility\WithLogger;
 class GenericContainer implements Container
 {
     use AutoRemoveOnExitSetting;
+    use EntrypointSetting;
     use EnvSetting;
     use GeneralSetting;
     use HostSetting;
@@ -36,6 +37,7 @@ class GenericContainer implements Container
     use StartupSetting;
     use StopSignalSetting;
     use StopTimeoutSetting;
+    use UserSetting;
     use VolumesFromSetting;
     use WaitSetting;
     use WorkdirSetting;
@@ -103,6 +105,7 @@ class GenericContainer implements Container
         $options = [
             'addHost' => $this->extraHosts(),
             'detach' => true,
+            'entrypoint' => $this->entrypoint(),
             'env' => $this->env(),
             'label' => array_merge($this->labels(), $tcLabels),
             'mount' => $this->mounts(),
@@ -113,6 +116,7 @@ class GenericContainer implements Container
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
             'rm' => $this->autoRemoveOnExit(),
+            'user' => $this->user(),
             'volumesFrom' => $this->volumesFrom(),
             'workdir' => $this->workDir(),
         ];
