@@ -59,7 +59,7 @@ trait UserSetting
      */
     protected function user()
     {
-        if (static::$USER) {
+        if (static::$USER !== null) {
             return static::$USER;
         }
 

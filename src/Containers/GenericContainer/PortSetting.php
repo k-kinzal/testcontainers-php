@@ -186,13 +186,13 @@ trait PortSetting
      */
     protected function exposedPorts()
     {
-        if (static::$EXPOSED_PORTS) {
+        if (static::$EXPOSED_PORTS !== null) {
             return static::$EXPOSED_PORTS;
         }
-        if (static::$EXPOSE) {
+        if (static::$EXPOSE !== null) {
             return static::$EXPOSE;
         }
-        if (static::$PORTS) {
+        if (static::$PORTS !== null) {
             return static::$PORTS;
         }
         if ($this->exposedPorts) {

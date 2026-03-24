@@ -71,7 +71,7 @@ trait WorkdirSetting
      */
     protected function workDir()
     {
-        if (static::$WORKDIR) {
+        if (static::$WORKDIR !== null) {
             return static::$WORKDIR;
         }
 

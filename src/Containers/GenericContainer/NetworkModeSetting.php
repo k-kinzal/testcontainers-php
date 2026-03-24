@@ -61,7 +61,7 @@ trait NetworkModeSetting
      */
     protected function networkMode()
     {
-        if (static::$NETWORK_MODE) {
+        if (static::$NETWORK_MODE !== null) {
             return NetworkMode::fromString(static::$NETWORK_MODE);
         }
         if ($this->networkMode) {

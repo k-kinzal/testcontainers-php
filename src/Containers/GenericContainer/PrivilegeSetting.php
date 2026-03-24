@@ -63,7 +63,7 @@ trait PrivilegeSetting
      */
     protected function privileged()
     {
-        if (static::$PRIVILEGED) {
+        if (static::$PRIVILEGED !== null) {
             return static::$PRIVILEGED;
         }
 
