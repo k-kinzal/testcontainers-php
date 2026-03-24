@@ -9,6 +9,7 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Environments;
 use Testcontainers\Exceptions\InvalidFormatException;
@@ -205,6 +206,8 @@ class GenericContainer implements Container
                 }
 
                 throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
+            } catch (ProcessTimedOutException $e) {
+                throw new StartupCheckFailedException('container startup timed out', 0, $e);
             }
         }
 
