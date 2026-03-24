@@ -592,6 +592,65 @@ $instance = $container->start();
 $output = $instance->getOutput();
 ```
 
+### Stop Settings
+
+Stop settings control how the container is stopped when `stop()` is called or the container instance is destroyed.
+
+By default, `docker stop` sends SIGTERM and waits 10 seconds for the container to exit gracefully before sending SIGKILL. You can customize this behavior with the stop timeout and stop signal settings.
+
+**How `docker stop` works:**
+
+1. Send the stop signal (default: SIGTERM) to the container
+2. Wait for the stop timeout (default: 10 seconds)
+3. If the container is still running, send SIGKILL to force termination
+
+| Static Property | Method | Description |
+|-----------------|--------|-------------|
+| `$STOP_TIMEOUT` | `stopTimeout()` | Stop timeout in seconds. This is the number of seconds to wait after sending the stop signal before Docker sends SIGKILL. A value of `0` means Docker will send SIGTERM and immediately follow with SIGKILL. Default is `null` (uses Docker's default of 10 seconds). |
+| `$STOP_SIGNAL` | `stopSignal()` | Stop signal name. This is the signal sent to the container's main process when stopping. For example, `'KILL'` sends SIGKILL for immediate termination. Default is `null` (uses Docker's default of SIGTERM). **Note:** The `--signal` option requires Docker 23.0+ (API 1.42+). |
+
+#### Available Signals
+
+| Signal | Number | Description |
+|--------|--------|-------------|
+| `KILL` (SIGKILL) | 9 | Immediate forced termination. Cannot be caught or ignored by the process. Most reliable way to stop a container instantly. |
+| `TERM` (SIGTERM) | 15 | Graceful shutdown request (default). Allows the process to perform cleanup before exiting. |
+| `INT` (SIGINT) | 2 | Interrupt signal, equivalent to pressing Ctrl+C. |
+| `QUIT` (SIGQUIT) | 3 | Quit signal with core dump. Useful for debugging. |
+| `HUP` (SIGHUP) | 1 | Hangup signal. Often used to trigger configuration reload. |
+| `USR1` (SIGUSR1) | 10 | User-defined signal 1. Application-specific behavior. |
+| `USR2` (SIGUSR2) | 12 | User-defined signal 2. Application-specific behavior. |
+
+#### Example
+
+```php
+// Static Property
+class MyContainer extends GenericContainer
+{
+    protected static $STOP_SIGNAL = 'KILL';
+    protected static $STOP_TIMEOUT = 0;
+}
+
+// Method Override
+class MyContainer extends GenericContainer
+{
+    protected function stopSignal()
+    {
+        return 'KILL';
+    }
+
+    protected function stopTimeout()
+    {
+        return 0;
+    }
+}
+
+// Fluent API
+$container = (new GenericContainer('mysql:8'))
+    ->withStopSignal('KILL')
+    ->withStopTimeout(0);
+```
+
 ### Reuse Mode Settings
 
 Reuse mode settings control how testcontainers-php handles containers when the same container class is run multiple times.

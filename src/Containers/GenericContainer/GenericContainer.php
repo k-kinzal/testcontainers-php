@@ -35,6 +35,8 @@ class GenericContainer implements Container
     use ReuseModeSetting;
     use SSHPortForwardSetting;
     use StartupSetting;
+    use StopSignalSetting;
+    use StopTimeoutSetting;
     use UserSetting;
     use VolumesFromSetting;
     use WaitSetting;
@@ -216,6 +218,8 @@ class GenericContainer implements Container
             'ports' => $ports,
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
+            'stopTimeout' => $this->stopTimeout(),
+            'stopSignal' => $this->stopSignal(),
         ];
         $instance = new GenericContainerInstance($containerDef);
         $instance->setDockerClient($client);

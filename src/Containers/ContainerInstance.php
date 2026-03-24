@@ -114,6 +114,20 @@ interface ContainerInstance
     public function tryGetData($class);
 
     /**
+     * Get the stop timeout of the container.
+     *
+     * @return null|int the stop timeout in seconds, or null if using Docker default
+     */
+    public function getStopTimeout();
+
+    /**
+     * Get the stop signal of the container.
+     *
+     * @return null|string the stop signal name, or null if using Docker default (SIGTERM)
+     */
+    public function getStopSignal();
+
+    /**
      * Checks if the container is currently running.
      *
      * @return bool true if the container is running, false otherwise

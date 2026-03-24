@@ -23,7 +23,7 @@ trait StopCommand
      * @param array|ContainerId|string $containerId the ID or an array of IDs of the container(s) to stop
      * @param array{
      *     signal?: null|string|Stringable,
-     *     time?: null|int,
+     *     timeout?: null|int,
      * } $options Additional options for the Docker stop command
      *
      * @throws NoSuchContainerException if the specified container does not exist

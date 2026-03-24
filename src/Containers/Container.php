@@ -240,6 +240,29 @@ interface Container
     public function withAutoRemoveOnExit($autoRemoveOnExit);
 
     /**
+     * Set the timeout in seconds for stopping the container.
+     * Equivalent to `docker stop --time <seconds>`.
+     * A value of 0 will send SIGTERM and immediately follow with SIGKILL.
+     *
+     * @param int $seconds the stop timeout in seconds
+     *
+     * @return self
+     */
+    public function withStopTimeout($seconds);
+
+    /**
+     * Set the signal to send when stopping the container.
+     * Equivalent to `docker stop --signal <signal>`.
+     *
+     * Note: The `--signal` option requires Docker 23.0+ (API 1.42+).
+     *
+     * @param string $signal the signal name (e.g. 'KILL', 'TERM', 'INT')
+     *
+     * @return self
+     */
+    public function withStopSignal($signal);
+
+    /**
      * Set the user that the container should run as, similar to the `--user <user>` option on the Docker CLI.
      *
      * @param string $user the user to run the container as (e.g., 'root', 'nobody', '1000:1000')
