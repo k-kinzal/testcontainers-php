@@ -29,6 +29,6 @@ class VersionCommandTest extends TestCase
         $this->assertInstanceOf(DockerVersionOutput::class, $output);
         $this->assertSame(0, $output->getExitCode());
         $this->assertNotNull($output->getClientVersion());
-        $this->assertMatchesRegularExpression('/^\d+\.\d+/', $output->getClientVersion());
+        $this->assertTrue(preg_match('/^\d+\.\d+/', $output->getClientVersion()) === 1);
     }
 }
