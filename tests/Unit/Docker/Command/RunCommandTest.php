@@ -5,7 +5,7 @@ namespace Tests\Unit\Docker\Command;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\Command\RunCommand;
 use Testcontainers\Docker\DockerClient;
-use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+use Testcontainers\Docker\Exception\PortConflictException;
 use Testcontainers\Docker\Output\DockerRunOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Testcontainers;
@@ -101,7 +101,7 @@ class RunCommandTest extends TestCase
 
     public function testRunWithPortConflict()
     {
-        $this->expectException(PortAlreadyAllocatedException::class);
+        $this->expectException(PortConflictException::class);
 
         $instance = Testcontainers::run(DinD::class);
 

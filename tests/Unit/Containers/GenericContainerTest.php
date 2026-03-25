@@ -9,7 +9,7 @@ use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\PortStrategy\StaticPortStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
-use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
+use Testcontainers\Docker\Exception\PortConflictException;
 
 /**
  * @internal
@@ -29,7 +29,7 @@ class GenericContainerTest extends TestCase
 
     public function testContainerFailsOnPortConflictWithStaticPortStrategy()
     {
-        $this->expectException(PortAlreadyAllocatedException::class);
+        $this->expectException(PortConflictException::class);
 
         $container1 = (new GenericContainer('alpine:latest'))
             ->withExposedPort(80)
