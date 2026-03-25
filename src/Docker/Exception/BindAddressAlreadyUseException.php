@@ -9,7 +9,7 @@ namespace Testcontainers\Docker\Exception;
  * has failed because the address is already in use. It extends the DockerException
  * class to provide additional context specific to address binding conflicts.
  */
-class BindAddressAlreadyUseException extends DockerException
+class BindAddressAlreadyUseException extends PortConflictException
 {
     /**
      * Checks if the given output matches the "bind address already in use" error message.
