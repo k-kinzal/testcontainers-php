@@ -142,7 +142,7 @@ trait StartupSetting
      */
     protected function startupTimeout()
     {
-        if (static::$STARTUP_TIMEOUT) {
+        if (static::$STARTUP_TIMEOUT !== null) {
             return static::$STARTUP_TIMEOUT;
         }
 
