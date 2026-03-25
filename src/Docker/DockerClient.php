@@ -11,6 +11,7 @@ use Testcontainers\Docker\Command\PsCommand;
 use Testcontainers\Docker\Command\RmCommand;
 use Testcontainers\Docker\Command\RunCommand;
 use Testcontainers\Docker\Command\StopCommand;
+use Testcontainers\Docker\Command\VersionCommand;
 
 /**
  * A client for interacting with Docker.
@@ -29,4 +30,5 @@ class DockerClient
     use RmCommand;
     use RunCommand;
     use StopCommand;
+    use VersionCommand;
 }
