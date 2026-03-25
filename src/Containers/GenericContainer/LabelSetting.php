@@ -80,7 +80,7 @@ trait LabelSetting
      */
     protected function labels()
     {
-        if (static::$LABELS) {
+        if (static::$LABELS !== null) {
             return static::$LABELS;
         }
         if ($this->labels) {

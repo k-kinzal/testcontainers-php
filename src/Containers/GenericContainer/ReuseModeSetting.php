@@ -61,7 +61,7 @@ trait ReuseModeSetting
      */
     public function reuseMode()
     {
-        if (static::$REUSE_MODE) {
+        if (static::$REUSE_MODE !== null) {
             return ReuseMode::fromString(static::$REUSE_MODE);
         }
         if ($this->reuseMode) {

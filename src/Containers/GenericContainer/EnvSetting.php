@@ -89,10 +89,10 @@ trait EnvSetting
      */
     protected function env()
     {
-        if (static::$ENVIRONMENTS) {
+        if (static::$ENVIRONMENTS !== null) {
             return static::$ENVIRONMENTS;
         }
-        if (static::$ENV) {
+        if (static::$ENV !== null) {
             return static::$ENV;
         }
         if ($this->env) {
