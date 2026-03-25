@@ -606,8 +606,19 @@ By default, `docker stop` sends SIGTERM and waits 10 seconds for the container t
 
 | Static Property | Method | Description |
 |-----------------|--------|-------------|
-| `$STOP_TIMEOUT` | `stopTimeout()` | Stop timeout in seconds. This is the number of seconds to wait after sending the stop signal before Docker sends SIGKILL. A value of `0` means Docker will send SIGTERM and immediately follow with SIGKILL. Default is `null` (uses Docker's default of 10 seconds). |
+| `$STOP_TIMEOUT` | `stopTimeout()` | Stop timeout in seconds. This is the number of seconds to wait after sending the stop signal before Docker sends SIGKILL. A value of `0` means Docker will send SIGTERM and immediately follow with SIGKILL. Default is `null` (uses Docker's default of 10 seconds). The underlying Docker CLI flag (`--time` or `--timeout`) is automatically selected based on the Docker client version (see below). |
 | `$STOP_SIGNAL` | `stopSignal()` | Stop signal name. This is the signal sent to the container's main process when stopping. For example, `'KILL'` sends SIGKILL for immediate termination. Default is `null` (uses Docker's default of SIGTERM). **Note:** The `--signal` option requires Docker 23.0+ (API 1.42+). |
+
+#### Docker Version Compatibility
+
+In Docker v28.0, the `--time` flag on `docker stop` was renamed to `--timeout`. testcontainers-php automatically detects the Docker client version and uses the appropriate flag:
+
+| Docker Version | Flag |
+|----------------|------|
+| < 28.0 | `--time` |
+| >= 28.0 | `--timeout` |
+
+The version is detected once per client instance via `docker version` and cached. If version detection fails, `--time` is used as a safe fallback.
 
 #### Available Signals
 

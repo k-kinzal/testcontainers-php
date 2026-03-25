@@ -16,13 +16,31 @@ use Testcontainers\Utility\Stringable;
 trait StopCommand
 {
     /**
+     * Cached stop timeout option key.
+     *
+     * Determined by the Docker client version:
+     * - Docker >= 28.0: 'timeout' (maps to --timeout)
+     * - Docker < 28.0: 'time' (maps to --time)
+     *
+     * @var null|string
+     */
+    private $stopTimeoutOption;
+
+    /**
      * Stop one or more running Docker containers.
      *
      * This method wraps the `docker stop` command to send a stop signal to the specified container(s) to gracefully stop them.
      *
+     * The timeout option key is automatically resolved based on the Docker client version:
+     * - Docker >= 28.0 uses `--timeout` (renamed from `--time` in v28.0)
+     * - Docker < 28.0 uses `--time`
+     *
+     * Both `time` and `timeout` are accepted as option keys and normalized internally.
+     *
      * @param array|ContainerId|string $containerId the ID or an array of IDs of the container(s) to stop
      * @param array{
      *     signal?: null|string|Stringable,
+     *     time?: null|int,
      *     timeout?: null|int,
      * } $options Additional options for the Docker stop command
      *
@@ -39,6 +57,21 @@ trait StopCommand
             $containerIds = [(string) $containerId];
         }
 
+        // Normalize timeout option key based on Docker client version
+        $timeoutValue = isset($options['timeout']) ? $options['timeout'] : (isset($options['time']) ? $options['time'] : null);
+        unset($options['timeout'], $options['time']);
+        if ($timeoutValue !== null) {
+            if ($this->stopTimeoutOption === null) {
+                try {
+                    $clientVersion = $this->version()->getClientVersion();
+                    $this->stopTimeoutOption = ($clientVersion !== null && version_compare($clientVersion, '28.0', '>=')) ? 'timeout' : 'time';
+                } catch (\Exception $e) {
+                    $this->stopTimeoutOption = 'time';
+                }
+            }
+            $options[$this->stopTimeoutOption] = $timeoutValue;
+        }
+
         $process = $this->execute(
             'stop',
             null,
@@ -50,4 +83,9 @@ trait StopCommand
     }
 
     abstract protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true);
+
+    /**
+     * @return \Testcontainers\Docker\Output\DockerVersionOutput
+     */
+    abstract public function version();
 }
