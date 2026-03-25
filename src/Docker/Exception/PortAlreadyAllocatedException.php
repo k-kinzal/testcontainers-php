@@ -6,7 +6,7 @@ namespace Testcontainers\Docker\Exception;
  * Exception thrown when a port is already allocated by another process.
  *
  * This exception is used to indicate that an attempt to allocate a port
- * has failed because the port is already in use. It extends the DockerException
+ * has failed because the port is already in use. It extends the PortConflictException
  * class to provide additional context specific to port allocation conflicts.
  */
 class PortAlreadyAllocatedException extends PortConflictException
