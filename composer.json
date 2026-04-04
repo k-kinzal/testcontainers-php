@@ -33,13 +33,10 @@
         "phpunit/phpunit": "5.7.27 || 6.5.14 || 7.5.20 || 8.5.52 || 9.6.34 || 10.5.63 || 11.5.55 || 12.5.16 || 13.1.0",
         "friendsofphp/php-cs-fixer": "2.19.3 || 3.3.0 || 3.4.0 || 3.66.0 || 3.94.2"
     },
+    "config": {
+        "allow-plugins": false
+    },
     "scripts": {
-        "post-install-cmd": [
-            "composer dump-autoload"
-        ],
-        "post-update-cmd": [
-            "composer dump-autoload"
-        ],
         "format": "php-cs-fixer fix",
         "lint:php-cs-fixer": "php-cs-fixer fix --dry-run",
         "lint": [
