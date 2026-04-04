@@ -37,7 +37,12 @@ jobs:
           php-version: ${{ matrix.php-version }}
           coverage: none
           ini-values: opcache.enable_cli=1
+
+      - name: Use Composer lock for PHP ${{ matrix.php-version }}
+        run: cp composer-${{ matrix.php-version }}.lock composer.lock
+
       - uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # v3.2.1
+
       - name: Run lint
         run: composer lint
       - name: Run tests

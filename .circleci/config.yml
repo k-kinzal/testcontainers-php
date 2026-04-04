@@ -11,11 +11,14 @@ jobs:
           version: docker24
       - restore_cache:
           keys:
-            - v2-dependencies-docker-{{ checksum "composer.lock" }}
-            - v2-dependencies-docker-
+            - v3-dependencies-docker-php8.3-{{ checksum "composer-8.3.lock" }}
+            - v3-dependencies-docker-php8.3-
+      - run:
+          name: Use Composer lock for PHP 8.3
+          command: cp composer-8.3.lock composer.lock
       - run: composer install -n --prefer-dist
       - save_cache:
-          key: v2-dependencies-docker-{{ checksum "composer.lock" }}
+          key: v3-dependencies-docker-php8.3-{{ checksum "composer-8.3.lock" }}
           paths:
             - ./vendor
       - run: composer e2e
@@ -49,11 +52,14 @@ jobs:
             rm -f composer-setup.php
       - restore_cache:
           keys:
-            - v3-dependencies-machine-{{ checksum "composer.lock" }}
-            - v3-dependencies-machine-
+            - v4-dependencies-machine-php8.3-{{ checksum "composer-8.3.lock" }}
+            - v4-dependencies-machine-php8.3-
+      - run:
+          name: Use Composer lock for PHP 8.3
+          command: cp composer-8.3.lock composer.lock
       - run: composer install -n --prefer-dist
       - save_cache:
-          key: v3-dependencies-machine-{{ checksum "composer.lock" }}
+          key: v4-dependencies-machine-php8.3-{{ checksum "composer-8.3.lock" }}
           paths:
             - ./vendor
       - run: composer e2e
