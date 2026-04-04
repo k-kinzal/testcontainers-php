@@ -16,10 +16,10 @@ jobs:
       matrix:
         php-version: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Cache Docker images
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: /tmp/docker-images
           key: docker-images-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yaml') }}
@@ -45,7 +45,7 @@ jobs:
         run: cp composer-${{ matrix.php-version }}.lock composer.lock
 
       - name: Composer install
-        uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # v3.2.1
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # v4.0.0
 
       - name: Run lint
         run: composer lint
