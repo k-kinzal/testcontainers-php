@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Composer is intentionally not configured here.
+  #
+  # GitHub's dependency graph and Dependabot recognize the standard
+  # composer.json / composer.lock pair, while this repository maintains
+  # composer-<php>.lock files per runtime to support PHP 5.6 - 8.5,
+  # including EOL versions.
+  #
+  # Managing only the root composer.lock would be incomplete and could open
+  # update PRs that do not reflect the full compatibility matrix.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
