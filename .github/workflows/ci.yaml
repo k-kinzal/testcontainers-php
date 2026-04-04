@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5]
+        php-version: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Cache Docker images
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: /tmp/docker-images
           key: docker-images-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yaml') }}
@@ -27,16 +27,22 @@ jobs:
         run: |
           if [ -d /tmp/docker-images ]; then
             for image in /tmp/docker-images/*.tar; do
-              [ -f "$image" ] && docker load -i "$image" || true
+              [ -f "$image" ] || continue
+              docker load -i "$image" || true
             done
           fi
 
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
           ini-values: opcache.enable_cli=1
-      - uses: ramsey/composer-install@v3
+
+      - name: Use Composer lock for PHP ${{ matrix.php-version }}
+        run: cp composer-${{ matrix.php-version }}.lock composer.lock
+
+      - uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # v3.2.1
+
       - name: Run lint
         run: composer lint
       - name: Run tests
@@ -46,7 +52,7 @@ jobs:
         if: always()
         run: |
           mkdir -p /tmp/docker-images
-          docker images --format '{{.Repository}}:{{.Tag}}' | grep -v '<none>' | while read image; do
+          docker images --format '{{.Repository}}:{{.Tag}}' | grep -v '<none>' | while IFS= read -r image; do
             safe_name=$(echo "$image" | tr ':/' '_')
             docker save "$image" -o "/tmp/docker-images/${safe_name}.tar" 2>/dev/null || true
           done

@@ -3,45 +3,63 @@ version: 2.1
 jobs:
   docker_executor:
     docker:
-      - image: cimg/php:8.3
+      - image: cimg/php:8.3@sha256:7c040a872b2a298d603e4873b9b907fac8768e9cf4238edf865f482f821fd6eb
+    resource_class: medium
     steps:
-      - run: env
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: docker24
       - restore_cache:
           keys:
-            - v1-dependencies-docker-{{ checksum "composer.json" }}
-            - v1-dependencies-docker-
+            - v3-dependencies-docker-php8.3-{{ checksum "composer-8.3.lock" }}
+            - v3-dependencies-docker-php8.3-
+      - run:
+          name: Use Composer lock for PHP 8.3
+          command: cp composer-8.3.lock composer.lock
       - run: composer install -n --prefer-dist
       - save_cache:
-          key: v1-dependencies-docker-{{ checksum "composer.json" }}
+          key: v3-dependencies-docker-php8.3-{{ checksum "composer-8.3.lock" }}
           paths:
             - ./vendor
       - run: composer e2e
   machine_executor:
-    machine: true
+    machine:
+      image: ubuntu-2404:2025.09.1
+    resource_class: medium
     steps:
-      - run: env
-      - run:
-          name: Update packages and install PHP dependencies
-          command: |
-            sudo apt-get install ca-certificates software-properties-common
-            sudo add-apt-repository -y ppa:ondrej/php
-            sudo apt-get update
-            sudo apt-get install -y php8.3 php8.3-dom php8.3-mbstring php8.3-xml php8.3-xmlwriter php8.3-pdo php8.3-mysql
-      - run:
-          name: Install Composer
-          command: |
-            curl -sS https://getcomposer.org/installer | php
-            sudo mv composer.phar /usr/local/bin/composer
       - checkout
+      - run:
+          name: Install PHP dependencies from Ubuntu repositories
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends \
+              php8.3-cli \
+              php8.3-mbstring \
+              php8.3-xml \
+              php8.3-mysql
+      - run:
+          name: Install Composer with signature verification
+          command: |
+            EXPECTED_CHECKSUM="$(curl -fsSL https://composer.github.io/installer.sig)"
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
+              echo 'ERROR: Invalid Composer installer checksum' >&2
+              rm -f composer-setup.php
+              exit 1
+            fi
+            sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+            rm -f composer-setup.php
       - restore_cache:
           keys:
-            - v2-dependencies-machine-{{ checksum "composer.json" }}
-            - v2-dependencies-machine-
+            - v4-dependencies-machine-php8.3-{{ checksum "composer-8.3.lock" }}
+            - v4-dependencies-machine-php8.3-
+      - run:
+          name: Use Composer lock for PHP 8.3
+          command: cp composer-8.3.lock composer.lock
       - run: composer install -n --prefer-dist
       - save_cache:
-          key: v2-dependencies-machine-{{ checksum "composer.json" }}
+          key: v4-dependencies-machine-php8.3-{{ checksum "composer-8.3.lock" }}
           paths:
             - ./vendor
       - run: composer e2e
