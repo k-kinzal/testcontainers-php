@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<psalm
+    autoloader="vendor/autoload.php"
+    allowStringToStandInForClass="false"
+    disableVarParsing="false"
+    docblockPropertyTypesSealProperties="true"
+    ensureArrayIntOffsetsExist="true"
+    ensureArrayStringOffsetsExist="true"
+    ensureOverrideAttribute="false"
+    errorLevel="1"
+    findUnusedBaselineEntry="false"
+    findUnusedCode="false"
+    phpVersion="5.6"
+    rememberPropertyAssignmentsAfterCall="false"
+    reportMixedIssues="true"
+    resolveFromConfigFile="true"
+    sealAllMethods="true"
+    sealAllProperties="true"
+    strictBinaryOperands="true"
+    useDocblockPropertyTypes="true"
+    useDocblockTypes="true"
+    usePhpDocMethodsWithoutMagicCall="false"
+    usePhpDocPropertiesWithoutMagicCall="false"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+>
+    <projectFiles>
+        <directory name="src" />
+        <ignoreFiles>
+            <file name="src/Utility/ConsoleLogger/ConsoleLogger80.php" />
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <ClassMustBeFinal errorLevel="suppress" />
+    </issueHandlers>
+</psalm>
