@@ -263,6 +263,8 @@ trait PortSetting
      * Register a port strategy.
      *
      * @param PortStrategyProvider $provider the port strategy provider
+     *
+     * @return void
      */
     protected function registerPortStrategy($provider)
     {

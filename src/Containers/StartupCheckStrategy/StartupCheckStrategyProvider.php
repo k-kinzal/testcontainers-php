@@ -24,6 +24,8 @@ class StartupCheckStrategyProvider
      * @param string               $name     the name of the wait strategy to register
      * @param StartupCheckStrategy $strategy the wait strategy to register
      *
+     * @return void
+     *
      * @throws AlreadyExistsStartupStrategyException if a strategy with the same name already exists
      */
     public function register($name, $strategy)

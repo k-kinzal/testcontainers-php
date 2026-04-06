@@ -88,6 +88,8 @@ interface ContainerInstance
      * Set data associated with the container.
      *
      * @param object $value the data to associate with the container
+     *
+     * @return void
      */
     public function setData($value);
 
@@ -136,6 +138,8 @@ interface ContainerInstance
 
     /**
      * Stops the container if it is running.
+     *
+     * @return void
      */
     public function stop();
 }

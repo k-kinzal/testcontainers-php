@@ -32,6 +32,8 @@ class ContainerReaper
      * and stops containers whose owning process has died.
      *
      * Safe for concurrent use: containers owned by other running processes are never touched.
+     *
+     * @return void
      */
     public function execute()
     {

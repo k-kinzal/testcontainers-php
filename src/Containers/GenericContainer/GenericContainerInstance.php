@@ -84,6 +84,8 @@ class GenericContainerInstance implements ContainerInstance
      * Sets the docker client.
      *
      * @param DockerClient $client
+     *
+     * @return void
      */
     public function setDockerClient($client)
     {
@@ -198,6 +200,9 @@ class GenericContainerInstance implements ContainerInstance
         return $output->getErrorOutput();
     }
 
+    /**
+     * @return void
+     */
     public function setData($value)
     {
         $this->data[get_class($value)] = $value;
@@ -260,6 +265,9 @@ class GenericContainerInstance implements ContainerInstance
         return isset($this->containerDef['stopSignal']) ? $this->containerDef['stopSignal'] : null;
     }
 
+    /**
+     * @return void
+     */
     public function stop()
     {
         try {

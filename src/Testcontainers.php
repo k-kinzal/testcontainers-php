@@ -120,6 +120,8 @@ class Testcontainers
      *
      * This method stops all containers that were started using the `run` method.
      * It iterates over the list of started containers and calls the `stop` method on each instance.
+     *
+     * @return void
      */
     public static function stop()
     {

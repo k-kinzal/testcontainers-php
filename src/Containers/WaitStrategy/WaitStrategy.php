@@ -15,6 +15,8 @@ interface WaitStrategy
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
+     *
+     * @return void
      */
     public function waitUntilReady($instance);
 
