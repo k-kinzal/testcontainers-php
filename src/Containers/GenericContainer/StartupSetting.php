@@ -89,7 +89,7 @@ trait StartupSetting
     /**
      * The startup check strategy provider.
      *
-     * @var StartupCheckStrategyProvider
+     * @var null|StartupCheckStrategyProvider
      */
     private $startupCheckStrategyProvider;
 

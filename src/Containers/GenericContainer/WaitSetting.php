@@ -49,7 +49,7 @@ trait WaitSetting
     /**
      * The wait strategy provider.
      *
-     * @var WaitStrategyProvider
+     * @var null|WaitStrategyProvider
      */
     private $waitStrategyProvider;
 

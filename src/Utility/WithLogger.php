@@ -11,7 +11,7 @@ use Psr\Log\NullLogger;
 trait WithLogger
 {
     /**
-     * @var LoggerInterface
+     * @var null|LoggerInterface
      */
     private $logger;
 
