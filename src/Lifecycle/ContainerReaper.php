@@ -106,6 +106,6 @@ class ContainerReaper
             return true;
         }
 
-        return trim($result) === '1';
+        return trim((string) $result) === '1';
     }
 }

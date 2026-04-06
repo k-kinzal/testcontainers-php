@@ -182,6 +182,9 @@ class PDOConnectWaitStrategy implements WaitStrategy
         }
 
         $defaultSocketTimeout = ini_get('default_socket_timeout');
+        if ($defaultSocketTimeout === false) {
+            $defaultSocketTimeout = '';
+        }
         ini_set('default_socket_timeout', 1);
 
         $now = time();

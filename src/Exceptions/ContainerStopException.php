@@ -13,10 +13,11 @@ class ContainerStopException extends \RuntimeException
     public function __construct(array $errors)
     {
         $this->errors = $errors;
+        $firstError = reset($errors);
         parent::__construct(
             sprintf('Failed to stop %d container(s)', count($errors)),
             0,
-            reset($errors)
+            $firstError !== false ? $firstError : null
         );
     }
 
