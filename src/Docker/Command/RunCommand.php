@@ -25,7 +25,7 @@ trait RunCommand
      *
      * @param string      $image   the name of the Docker image to use
      * @param null|string $command the command to run inside the container (optional)
-     * @param array       $args    the arguments for the command (optional)
+     * @param string[]    $args    the arguments for the command (optional)
      * @param array{
      *     addHost?: null|string[]|Stringable[],
      *     detach?: null|bool,

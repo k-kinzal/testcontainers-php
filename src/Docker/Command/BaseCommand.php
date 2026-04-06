@@ -321,7 +321,7 @@ trait BaseCommand
      * @param string               $command    the command to execute
      * @param null|string          $subcommand the subcommand to execute (optional)
      * @param string[]             $args       the arguments for the command (optional)
-     * @param array<string, mixed> $options    additional options for the Docker command
+     * @param array<string, null|bool|int|float|string|object|array<array-key, scalar|object>> $options additional options for the Docker command
      * @param bool                 $wait       whether to wait for the command to finish executing
      *
      * @throws NoSuchContainerException       if the specified container does not exist
@@ -395,7 +395,7 @@ trait BaseCommand
      *
      * @param array<string, null|bool|int|float|string|object|array<array-key, scalar|object>> $options command line options (key-value pairs)
      *
-     * @return array
+     * @return list<scalar>
      */
     private function arrayToArgs($options)
     {
