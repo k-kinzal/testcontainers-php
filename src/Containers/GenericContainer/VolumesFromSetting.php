@@ -79,7 +79,7 @@ trait VolumesFromSetting
             foreach ($targets as $volume) {
                 if (is_string($volume)) {
                     $volumesFrom[] = VolumeFrom::fromString($volume);
-                } elseif (is_array($volume)) {
+                } else {
                     if (!isset($volume['mode'])) {
                         $volume['mode'] = BindMode::READ_WRITE();
                     }
@@ -87,8 +87,6 @@ trait VolumesFromSetting
                         $volume['mode'] = BindMode::fromString($volume['mode']);
                     }
                     $volumesFrom[] = VolumeFrom::fromArray($volume);
-                } else {
-                    throw new InvalidFormatException($volume, 'string|array{name: string, mode?: string}');
                 }
             }
 

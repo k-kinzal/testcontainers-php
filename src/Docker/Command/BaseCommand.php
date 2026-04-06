@@ -437,7 +437,7 @@ trait BaseCommand
                             $result[] = $k.'='.$this->expandEnv($v);
                         } elseif (is_scalar($v)) {
                             $result[] = $k.'='.$v;
-                        } elseif (is_object($v) && method_exists($v, '__toString')) {
+                        } elseif (method_exists($v, '__toString')) {
                             $result[] = $k.'='.$this->expandEnv((string) $v);
                         } else {
                             throw new \LogicException('Unsupported value type: `'.var_export($v, true).'`');
@@ -447,7 +447,7 @@ trait BaseCommand
                             $result[] = $this->expandEnv($v);
                         } elseif (is_scalar($v)) {
                             $result[] = $v;
-                        } elseif (is_object($v) && method_exists($v, '__toString')) {
+                        } elseif (method_exists($v, '__toString')) {
                             $result[] = $this->expandEnv((string) $v);
                         } else {
                             throw new \LogicException('Unsupported value type: `'.var_export($v, true).'`');
