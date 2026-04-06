@@ -19,9 +19,6 @@ class HttpProbeGetHeaders implements HttpProbe
         if (!isset($headers[0])) {
             return false;
         }
-        if (!is_string($headers[0])) {
-            return false;
-        }
         $statusCode = (int) substr($headers[0], 9, 3);
 
         return $statusCode == $responseCode;
