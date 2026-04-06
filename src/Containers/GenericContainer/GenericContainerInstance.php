@@ -208,9 +208,14 @@ class GenericContainerInstance implements ContainerInstance
         $this->data[get_class($value)] = $value;
     }
 
+    /**
+     * @template T
+     * @param class-string<T> $class
+     * @return T
+     */
     public function getData($class)
     {
-        $value = $this->data[$class];
+        $value = $this->tryGetData($class);
         if ($value === null) {
             throw new \LogicException("No data of type {$class} associated with the container");
         }
@@ -218,13 +223,22 @@ class GenericContainerInstance implements ContainerInstance
         return $value;
     }
 
+    /**
+     * @template T
+     * @param class-string<T> $class
+     * @return null|T
+     */
     public function tryGetData($class)
     {
-        if (isset($this->data[$class])) {
-            return $this->data[$class];
+        $value = $this->data[$class] ?? null;
+        if ($value === null) {
+            return null;
+        }
+        if (!$value instanceof $class) {
+            throw new \LogicException("No data of type {$class} associated with the container");
         }
 
-        return null;
+        return $value;
     }
 
     public function isRunning()

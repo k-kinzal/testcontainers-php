@@ -15,7 +15,7 @@ class DockerVersionOutput extends DockerOutput
     /**
      * The parsed version data.
      *
-     * @var array
+     * @var array{Client?: array{Version?: string}, Server?: array{Version?: string}}
      */
     private $data;
 
