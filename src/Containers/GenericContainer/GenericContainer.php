@@ -126,6 +126,7 @@ class GenericContainer implements Container
         $maxRetryAttempts = $this->startupConflictRetryAttempts();
         $retryCount = 0;
         $ports = [];
+        $output = null;
         while ($retryCount < $maxRetryAttempts) {
             $ports = $this->ports();
             $options['publish'] = array_map(function ($containerPort, $hostPort) {
@@ -135,16 +136,13 @@ class GenericContainer implements Container
             try {
                 $startupTimeout = $this->startupTimeout();
                 $runClient = $client->withLogger($this->logger());
+                $originalTimeout = $runClient->getTimeout();
                 if ($startupTimeout !== null) {
-                    $originalTimeout = $runClient->getTimeout();
                     $runClient->withTimeout($startupTimeout);
                 }
                 $output = $runClient->run($image, $command, $args, $options);
                 if ($startupTimeout !== null) {
                     $runClient->withTimeout($originalTimeout);
-                }
-                if (!$output instanceof DockerRunWithDetachOutput) {
-                    throw new \LogicException('Expected DockerRunWithDetachOutput');
                 }
 
                 break; // Success, exit the retry loop
@@ -209,6 +207,10 @@ class GenericContainer implements Container
             } catch (ProcessTimedOutException $e) {
                 throw new StartupCheckFailedException('container startup timed out', 0, $e);
             }
+        }
+
+        if (!$output instanceof DockerRunWithDetachOutput) {
+            throw new \LogicException('Expected DockerRunWithDetachOutput');
         }
 
         $this->logger()->debug('Container started', [
