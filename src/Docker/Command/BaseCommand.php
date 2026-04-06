@@ -393,7 +393,7 @@ trait BaseCommand
     /**
      * Convert array to command line arguments.
      *
-     * @param array<string, mixed> $options command line options (key-value pairs)
+     * @param array<string, null|bool|int|float|string|object|array<array-key, scalar|object>> $options command line options (key-value pairs)
      *
      * @return array
      */

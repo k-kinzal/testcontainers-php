@@ -68,6 +68,10 @@ trait GeneralSetting
      */
     private $name;
 
+    /**
+     * @param string $cmd
+     * @return self
+     */
     public function withCommand($cmd)
     {
         $this->commands = [$cmd];
@@ -75,6 +79,10 @@ trait GeneralSetting
         return $this;
     }
 
+    /**
+     * @param string[] $commandParts
+     * @return self
+     */
     public function withCommands($commandParts)
     {
         $this->commands = $commandParts;
