@@ -26,7 +26,7 @@ class DockerVersionOutput extends DockerOutput
     {
         parent::__construct($process);
 
-        /** @var null|array<string, mixed> $output */
+        /** @var null|array{Client?: array{Version?: string}, Server?: array{Version?: string}} $output */
         $output = json_decode($process->getOutput(), true);
         $this->data = is_array($output) ? $output : [];
     }

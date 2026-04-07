@@ -120,7 +120,7 @@ trait BaseCommand
      * executed by this client. These options can include flags and parameters that modify the behavior
      * of Docker commands.
      *
-     * @param array<string, string> $options an associative array of Docker global options
+     * @param array{host?: string|string[]} $options an associative array of Docker global options
      *
      * @return self
      */
