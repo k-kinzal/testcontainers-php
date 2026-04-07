@@ -49,7 +49,7 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * The data associated with the container.
      *
-     * @var array<string, mixed> the data associated with the container
+     * @var array<class-string, object> the data associated with the container
      */
     private $data = [];
 
@@ -92,11 +92,17 @@ class GenericContainerInstance implements ContainerInstance
         $this->client = $client;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getContainerId()
     {
         return $this->containerDef['containerId'];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getLabel($label)
     {
         if (!isset($this->containerDef['labels'])) {
@@ -109,6 +115,9 @@ class GenericContainerInstance implements ContainerInstance
         return $this->containerDef['labels'][$label];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getLabels()
     {
         if (!isset($this->containerDef['labels'])) {
@@ -118,6 +127,9 @@ class GenericContainerInstance implements ContainerInstance
         return $this->containerDef['labels'];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getHost()
     {
         if ($this->tryGetData(Session::class) !== null) {
@@ -153,6 +165,9 @@ class GenericContainerInstance implements ContainerInstance
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getExposedPorts()
     {
         if (!isset($this->containerDef['ports'])) {
@@ -162,6 +177,9 @@ class GenericContainerInstance implements ContainerInstance
         return array_keys($this->containerDef['ports']);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getMappedPort($exposedPort)
     {
         if (!isset($this->containerDef['ports'])) {
@@ -174,16 +192,25 @@ class GenericContainerInstance implements ContainerInstance
         return $this->containerDef['ports'][$exposedPort];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getImagePullPolicy()
     {
         return isset($this->containerDef['pull']) ? $this->containerDef['pull'] : null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPrivilegedMode()
     {
         return isset($this->containerDef['privileged']) ? $this->containerDef['privileged'] : false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getOutput()
     {
         $client = $this->client ?: DockerClientFactory::create();
@@ -192,6 +219,9 @@ class GenericContainerInstance implements ContainerInstance
         return $output->getOutput();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getErrorOutput()
     {
         $client = $this->client ?: DockerClientFactory::create();
@@ -201,8 +231,7 @@ class GenericContainerInstance implements ContainerInstance
     }
 
     /**
-     * @param object $value
-     * @return void
+     * {@inheritDoc}
      */
     public function setData($value)
     {
@@ -210,9 +239,7 @@ class GenericContainerInstance implements ContainerInstance
     }
 
     /**
-     * @template T
-     * @param class-string<T> $class
-     * @return T
+     * {@inheritDoc}
      */
     public function getData($class)
     {
@@ -225,9 +252,7 @@ class GenericContainerInstance implements ContainerInstance
     }
 
     /**
-     * @template T
-     * @param class-string<T> $class
-     * @return null|T
+     * {@inheritDoc}
      */
     public function tryGetData($class)
     {
@@ -242,6 +267,9 @@ class GenericContainerInstance implements ContainerInstance
         return $value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isRunning()
     {
         if ($this->running === false) {
@@ -270,18 +298,24 @@ class GenericContainerInstance implements ContainerInstance
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getStopTimeout()
     {
         return isset($this->containerDef['stopTimeout']) ? $this->containerDef['stopTimeout'] : null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getStopSignal()
     {
         return isset($this->containerDef['stopSignal']) ? $this->containerDef['stopSignal'] : null;
     }
 
     /**
-     * @return void
+     * {@inheritDoc}
      */
     public function stop()
     {

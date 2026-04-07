@@ -87,6 +87,9 @@ class Mount implements Stringable
         $this->opt = $opt ?: [];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()
     {
         $parts = [];

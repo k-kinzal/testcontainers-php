@@ -23,11 +23,17 @@ class StaticPortStrategy implements PortStrategy
         $this->port = $port;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPort()
     {
         return $this->port;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function conflictBehavior()
     {
         return ConflictBehavior::FAIL();

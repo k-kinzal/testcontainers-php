@@ -40,11 +40,17 @@ class MySQLDSN implements DSN, Stringable
      */
     private $charset;
 
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()
     {
         return $this->toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withHost($host)
     {
         $this->host = $host;
@@ -52,11 +58,17 @@ class MySQLDSN implements DSN, Stringable
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getHost()
     {
         return $this->host;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withPort($port)
     {
         $this->port = $port;
@@ -64,6 +76,9 @@ class MySQLDSN implements DSN, Stringable
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPort()
     {
         return $this->port;
@@ -97,6 +112,9 @@ class MySQLDSN implements DSN, Stringable
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function toString()
     {
         if ($this->host === null) {
@@ -116,6 +134,9 @@ class MySQLDSN implements DSN, Stringable
         return $dsn;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function requiresHostPort()
     {
         return true;

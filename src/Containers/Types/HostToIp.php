@@ -37,6 +37,9 @@ class HostToIp implements Stringable
         $this->ip = $ip;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()
     {
         return $this->host.':'.$this->ip;

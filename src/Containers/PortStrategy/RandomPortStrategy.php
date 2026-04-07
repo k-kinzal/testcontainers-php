@@ -7,6 +7,9 @@ namespace Testcontainers\Containers\PortStrategy;
  */
 class RandomPortStrategy implements PortStrategy
 {
+    /**
+     * {@inheritDoc}
+     */
     public function getPort()
     {
         for ($i = 0; $i < 65535 - 49152; ++$i) {
@@ -19,6 +22,9 @@ class RandomPortStrategy implements PortStrategy
         throw new \RuntimeException('Could not find an available port');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function conflictBehavior()
     {
         return ConflictBehavior::RETRY();

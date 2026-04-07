@@ -50,6 +50,9 @@ class ConflictBehavior implements Stringable
         $this->action = $action;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()
     {
         return $this->toString();

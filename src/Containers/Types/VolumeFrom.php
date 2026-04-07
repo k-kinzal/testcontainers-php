@@ -37,6 +37,9 @@ class VolumeFrom implements Stringable
         $this->mode = $mode;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()
     {
         return $this->name.':'.$this->mode->toString();

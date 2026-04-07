@@ -85,6 +85,8 @@ class GenericContainer implements Container
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @throws InvalidFormatException if the provided mode is not valid
      * @throws DockerException        if the Docker command fails
      */

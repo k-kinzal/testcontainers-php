@@ -61,6 +61,9 @@ class NetworkMode implements Stringable
         $this->mode = $mode;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()
     {
         return $this->toString();
