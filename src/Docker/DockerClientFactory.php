@@ -29,7 +29,7 @@ class DockerClientFactory
      *
      * @var array{
      *             command?: string,
-     *             globalOptions?: array<string, string>,
+     *             globalOptions?: array{host?: string|string[]},
      *             cwd?: string,
      *             env?: array<string, string>,
      *             input?: null|mixed,
@@ -48,7 +48,7 @@ class DockerClientFactory
      *
      * @param array{
      *      command?: string,
-     *      globalOptions?: array<string, string>,
+     *      globalOptions?: array{host?: string|string[]},
      *      cwd?: string,
      *      env?: array<string, string>,
      *      input?: null|mixed,
@@ -72,7 +72,7 @@ class DockerClientFactory
      *
      * @param array{
      *     command?: string,
-     *     globalOptions?: array<string, string>,
+     *     globalOptions?: array{host?: string|string[]},
      *     cwd?: string,
      *     env?: array<string, string>,
      *     input?: null|mixed,
