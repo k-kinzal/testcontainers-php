@@ -16,6 +16,9 @@ class DockerFollowLogsOutput extends DockerOutput
      */
     public function getIterator()
     {
-        return $this->process->getIterator();
+        /** @var \Generator<string> $iterator */
+        $iterator = $this->process->getIterator();
+
+        return $iterator;
     }
 }
