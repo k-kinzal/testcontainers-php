@@ -74,7 +74,7 @@ trait VolumesFromSetting
     protected function volumesFrom()
     {
         $targets = static::$VOLUMES_FROM;
-        if (!empty($targets)) {
+        if ($targets !== null && count($targets) > 0) {
             $volumesFrom = [];
             foreach ($targets as $volume) {
                 if (is_string($volume)) {

@@ -194,21 +194,21 @@ class Tunnel
             '-N',
             '-L',
         ];
-        if ($this->localBindAddress) {
+        if ($this->localBindAddress !== null) {
             $commandParts[] = $this->localBindAddress.':'.$this->localPort.':'.$this->remoteHost.':'.$this->remotePort;
         } else {
             $commandParts[] = $this->localPort.':'.$this->remoteHost.':'.$this->remotePort;
         }
-        if ($this->user) {
+        if ($this->user !== null) {
             $commandParts[] = $this->user.'@'.$this->sshHost;
         } else {
             $commandParts[] = $this->sshHost;
         }
-        if ($this->sshPort) {
+        if ($this->sshPort !== null) {
             $commandParts[] = '-p';
             $commandParts[] = $this->sshPort;
         }
-        if ($this->identityFile) {
+        if ($this->identityFile !== null) {
             $commandParts[] = '-i';
             $commandParts[] = $this->identityFile;
         }

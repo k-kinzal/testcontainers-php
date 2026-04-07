@@ -253,10 +253,10 @@ trait MountSetting
     protected function mounts()
     {
         $mounts = static::$MOUNTS;
-        if (empty($mounts)) {
+        if ($mounts === null || count($mounts) === 0) {
             $mounts = static::$VOLUMES;
         }
-        if (!empty($mounts)) {
+        if ($mounts !== null && count($mounts) > 0) {
             $m = [];
             foreach ($mounts as $mount) {
                 $m[] = Mount::fromString($mount);

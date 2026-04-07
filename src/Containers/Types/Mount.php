@@ -84,7 +84,7 @@ class Mount implements Stringable
         $this->subpath = $subpath;
         $this->readonly = $readonly ?: false;
         $this->nocopy = $nocopy ?: false;
-        $this->opt = $opt ?: [];
+        $this->opt = $opt ?? [];
     }
 
     /**

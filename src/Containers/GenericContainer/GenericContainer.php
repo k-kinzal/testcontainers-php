@@ -67,7 +67,7 @@ class GenericContainer implements Container
             throw new \InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
         }
 
-        $this->image = $image ?: static::$IMAGE;
+        $this->image = $image ?? static::$IMAGE;
     }
 
     /**
@@ -245,9 +245,9 @@ class GenericContainer implements Container
 
             if (count($ports) > 0) {
                 $sshPortForward = $this->sshPortForward();
-                if ($sshPortForward) {
+                if ($sshPortForward !== null) {
                     $port = $instance->getMappedPort(array_keys($ports)[0]);
-                    if ($port) {
+                    if ($port !== null) {
                         $remoteHost = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE();
                         if ($remoteHost === null) {
                             $remoteHost = '127.0.0.1';
@@ -256,10 +256,10 @@ class GenericContainer implements Container
                         $sshUser = isset($sshPortForward['sshUser']) ? $sshPortForward['sshUser'] : null;
                         $sshPort = isset($sshPortForward['sshPort']) ? $sshPortForward['sshPort'] : null;
                         $tunnel = (new Tunnel($port, $remoteHost, $port, $sshHost));
-                        if ($sshUser) {
+                        if ($sshUser !== null) {
                             $tunnel->withUser($sshUser);
                         }
-                        if ($sshPort) {
+                        if ($sshPort !== null) {
                             $tunnel->withSshPort($sshPort);
                         }
                         $this->logger()->debug('Opening SSH tunnel');

@@ -203,10 +203,10 @@ class HttpWaitStrategy implements WaitStrategy
         $now = time();
         $endpoint = $this->endpoint;
         if ($endpoint === null) {
-            $schema = $this->schema ?: 'http';
-            $host = $this->host ?: $instance->getHost();
-            $port = $this->port ?: $instance->getMappedPort($instance->getExposedPorts()[0]);
-            $path = $this->path ?: '/';
+            $schema = $this->schema ?? 'http';
+            $host = $this->host ?? $instance->getHost();
+            $port = $this->port ?? $instance->getMappedPort($instance->getExposedPorts()[0]);
+            $path = $this->path ?? '/';
             $endpoint = sprintf('%s://%s:%s%s', $schema, $host, $port, $path);
         }
 
