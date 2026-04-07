@@ -174,7 +174,7 @@ class GenericContainer implements Container
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
+                throw new \LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
             } catch (BindAddressAlreadyUseException $e) {
                 if ($portStrategy === null) {
                     throw $e;
@@ -203,7 +203,7 @@ class GenericContainer implements Container
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `'.$behavior.'`', 0, $e);
+                throw new \LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
             } catch (ProcessTimedOutException $e) {
                 throw new StartupCheckFailedException('container startup timed out', 0, $e);
             }
