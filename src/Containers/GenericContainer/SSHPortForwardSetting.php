@@ -112,11 +112,11 @@ trait SSHPortForwardSetting
      *
      * @param string $s the SSH string to parse
      *
-     * @return null|array{
-     *                     sshUser?: null|string,
-     *                     sshHost?: null|string,
-     *                     sshPort?: null|int,
-     *                     }
+     * @return array{
+     *     sshUser: null|string,
+     *     sshHost: string,
+     *     sshPort: int|null,
+     * }
      */
     private function parseSSHString($s)
     {
