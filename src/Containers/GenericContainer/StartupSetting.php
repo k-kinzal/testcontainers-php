@@ -62,6 +62,8 @@ trait StartupSetting
 
     /**
      * Default number of retry attempts for startup conflicts (port/bind address conflicts).
+     *
+     * @var int
      */
     private static $DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS = 3;
 
