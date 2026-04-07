@@ -29,6 +29,7 @@ trait RunCommand
      * @param array{
      *     addHost?: null|string[]|Stringable[],
      *     detach?: null|bool,
+     *     entrypoint?: null|string,
      *     env?: null|array<string, string|Stringable>,
      *     label?: null|array<string, string|Stringable>,
      *     mount?: null|string[]|Stringable[],
@@ -40,6 +41,7 @@ trait RunCommand
      *     privileged?: null|bool,
      *     quiet?: null|bool,
      *     rm?: null|bool,
+     *     user?: null|string,
      *     volumesFrom?: null|string[]|Stringable[],
      *     workdir?: null|string,
      * } $options Additional options for the Docker command
