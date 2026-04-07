@@ -113,8 +113,11 @@ interface Container
     /**
      * Add an extra host entry to be passed to the container.
      *
-     * @param array|HostToIp|string $hostname  the hostname to add
-     * @param null|string           $ipAddress the IP address associated with the hostname
+     * @param array{
+     *      hostname: string,
+     *      ipAddress: string
+     *  }|HostToIp|string $hostname  The hostname to add
+     * @param null|string $ipAddress the IP address associated with the hostname
      *
      * @return self
      */
