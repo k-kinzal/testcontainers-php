@@ -201,6 +201,7 @@ class GenericContainerInstance implements ContainerInstance
     }
 
     /**
+     * @param object $value
      * @return void
      */
     public function setData($value)

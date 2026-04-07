@@ -37,7 +37,7 @@ trait StopCommand
      *
      * Both `time` and `timeout` are accepted as option keys and normalized internally.
      *
-     * @param array|ContainerId|string $containerId the ID or an array of IDs of the container(s) to stop
+     * @param array<array-key, ContainerId|string>|ContainerId|string $containerId the ID or an array of IDs of the container(s) to stop
      * @param array{
      *     signal?: null|string|Stringable,
      *     time?: null|int,

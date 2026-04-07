@@ -19,7 +19,7 @@ trait RmCommand
      *
      * This method wraps the `docker rm` command to remove the specified container(s).
      *
-     * @param array|ContainerId|string $containerId the ID or an array of IDs of the container(s) to remove
+     * @param array<array-key, ContainerId|string>|ContainerId|string $containerId the ID or an array of IDs of the container(s) to remove
      * @param array{
      *     force?: null|bool,
      *     link?: null|bool,
