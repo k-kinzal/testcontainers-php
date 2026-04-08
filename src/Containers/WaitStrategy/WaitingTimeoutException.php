@@ -22,7 +22,7 @@ class WaitingTimeoutException extends \RuntimeException
             sprintf(
                 'Waiting for container to be ready timed out after %d seconds: %s',
                 $timeout,
-                $message
+                $message ?? ''
             ),
             $code,
             $previous

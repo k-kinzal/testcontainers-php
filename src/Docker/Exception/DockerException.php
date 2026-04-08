@@ -30,7 +30,7 @@ class DockerException extends \RuntimeException
             sprintf(
                 'Failed to docker command: `%s`, exit code: `%s`, stderr: `%s`',
                 $command,
-                $exitCode,
+                $exitCode ?? 'unknown',
                 $process->getErrorOutput()
             )
         );
