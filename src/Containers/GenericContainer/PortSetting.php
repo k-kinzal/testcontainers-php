@@ -217,9 +217,10 @@ trait PortSetting
             $this->portStrategyProvider = new PortStrategyProvider();
             $this->registerPortStrategy($this->portStrategyProvider);
         }
+        $portStrategyProvider = $this->portStrategyProvider;
         $portStrategyName = static::$PORT_STRATEGY;
         if ($portStrategyName !== null) {
-            $strategy = $this->portStrategyProvider->get($portStrategyName);
+            $strategy = $portStrategyProvider->get($portStrategyName);
             if (!$strategy) {
                 throw new \LogicException('Port strategy not found: '.$portStrategyName);
             }
@@ -232,7 +233,7 @@ trait PortSetting
 
         $containerPorts = $this->exposedPorts();
         if (count($containerPorts) > 0) {
-            return $this->portStrategyProvider->get('random');
+            return $portStrategyProvider->get('random');
         }
 
         return null;
