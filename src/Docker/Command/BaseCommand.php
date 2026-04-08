@@ -439,7 +439,7 @@ trait BaseCommand
                         if (is_string($v)) {
                             $result[] = $k.'='.$this->expandEnv($v);
                         } elseif (is_scalar($v)) {
-                            $result[] = $k.'='.$v;
+                            $result[] = $k.'='.(string) $v;
                         } elseif (method_exists($v, '__toString')) {
                             $result[] = $k.'='.$this->expandEnv((string) $v);
                         } else {
