@@ -83,8 +83,12 @@ trait HostSetting
         } elseif (is_string($hostname) && is_string($ipAddress)) {
             $hostToIp = new HostToIp($hostname, $ipAddress);
         } else {
+            $hostnameJson = json_encode($hostname);
+            $ipAddressJson = json_encode($ipAddress);
             throw new \InvalidArgumentException(
-                'Invalid arguments: withExtraHost(`'.json_encode($hostname).'`, `'.json_encode($ipAddress).'`)'
+                'Invalid arguments: withExtraHost(`'
+                .($hostnameJson !== false ? $hostnameJson : 'null').'`, `'
+                .($ipAddressJson !== false ? $ipAddressJson : 'null').'`)'
             );
         }
 

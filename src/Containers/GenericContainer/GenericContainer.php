@@ -322,7 +322,8 @@ class GenericContainer implements Container
             if (function_exists('random_bytes')) {
                 self::$sessionId = bin2hex(random_bytes(16));
             } else {
-                self::$sessionId = md5(uniqid('', true) . getmypid() . microtime(true));
+                $pid = getmypid();
+                self::$sessionId = md5(uniqid('', true) . ($pid !== false ? $pid : 0) . microtime(true));
             }
         }
 
