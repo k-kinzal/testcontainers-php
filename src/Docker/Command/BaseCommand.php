@@ -253,7 +253,7 @@ trait BaseCommand
     {
         // Check if the host is set in the global options
         $host = isset($this->options['host']) ? $this->options['host'] : null;
-        if (is_array($host)) {
+        if (is_array($host) && isset($host[0])) {
             return $host[0];
         }
         if (is_string($host)) {
@@ -289,6 +289,9 @@ trait BaseCommand
         $env = $this->env ?? [];
 
         $expanded = preg_replace_callback('/\$\{([a-zA-Z_][a-zA-Z0-9_]*)}/', function ($m) use ($env) {
+            if (!isset($m[0], $m[1])) {
+                return '';
+            }
             if (empty($env)) {
                 $v = getenv($m[1]);
 

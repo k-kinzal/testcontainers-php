@@ -170,7 +170,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
             }
             if ($dsn->getPort() === null) {
                 $ports = $instance->getExposedPorts();
-                if (count($ports) !== 1) {
+                if (count($ports) !== 1 || !isset($ports[0])) {
                     throw new \LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
                 }
                 $port = $instance->getMappedPort($ports[0]);

@@ -73,7 +73,10 @@ class VolumeFrom implements Stringable
         if (strpos($v, ':') === false) {
             return new VolumeFrom($v, BindMode::READ_WRITE());
         }
-        $parts = explode(':', $v);
+        $parts = explode(':', $v, 2);
+        if (!isset($parts[1])) {
+            return new VolumeFrom($parts[0], BindMode::READ_WRITE());
+        }
 
         return new VolumeFrom($parts[0], BindMode::fromString($parts[1]));
     }

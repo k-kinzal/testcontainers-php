@@ -205,7 +205,15 @@ class HttpWaitStrategy implements WaitStrategy
         if ($endpoint === null) {
             $schema = $this->schema ?? 'http';
             $host = $this->host ?? $instance->getHost();
-            $port = $this->port ?? $instance->getMappedPort($instance->getExposedPorts()[0]);
+            if ($this->port !== null) {
+                $port = $this->port;
+            } else {
+                $exposedPorts = $instance->getExposedPorts();
+                if (!isset($exposedPorts[0])) {
+                    throw new \LogicException('HttpWaitStrategy requires at least one exposed port');
+                }
+                $port = $instance->getMappedPort($exposedPorts[0]);
+            }
             $path = $this->path ?? '/';
             $endpoint = sprintf('%s://%s:%s%s', $schema, $host, $port, $path);
         }

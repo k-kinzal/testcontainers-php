@@ -74,7 +74,7 @@ class DockerInspectOutput extends DockerOutput
         if (!is_array($output)) {
             throw new InvalidValueException('Docker inspect output is not an array', ['output' => $s]);
         }
-        if (count($output) === 0) {
+        if (!isset($output[0])) {
             throw new InvalidValueException('Docker inspect output is an empty array', ['output' => $s]);
         }
         if (!is_array($output[0])) {

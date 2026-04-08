@@ -146,7 +146,7 @@ trait GeneralSetting
         if (is_string($commands)) {
             $commands = [$commands];
         }
-        if (is_array($commands) && count($commands) > 0) {
+        if (is_array($commands) && isset($commands[0])) {
             return $commands[0];
         }
 

@@ -164,9 +164,7 @@ class Mount implements Stringable
         $source = null;
         $subpath = null;
         $readonly = false;
-        if (count($parts) === 1) {
-            $destination = $parts[0];
-        } else {
+        if (isset($parts[1])) {
             $source = $parts[0];
             $destination = $parts[1];
             if (isset($parts[2])) {
@@ -174,6 +172,8 @@ class Mount implements Stringable
                 // See: https://docs.docker.com/engine/storage/volumes/#options-for---volume
                 $readonly = $parts[2] === 'ro';
             }
+        } else {
+            $destination = $parts[0];
         }
 
         return new self('bind', $source, $destination, $subpath, $readonly, false, []);
@@ -199,29 +199,43 @@ class Mount implements Stringable
         $nocopy = false;
         $opt = [];
         foreach ($parts as $part) {
-            $subParts = explode('=', $part);
+            $subParts = explode('=', $part, 2);
+            $key = $subParts[0];
+            $value = isset($subParts[1]) ? $subParts[1] : null;
 
-            switch ($subParts[0]) {
+            switch ($key) {
                 case 'type':
-                    $type = $subParts[1];
+                    if ($value === null) {
+                        throw new InvalidFormatException($part, 'key=value');
+                    }
+                    $type = $value;
 
                     break;
 
                 case 'source':
                 case 'src':
-                    $source = $subParts[1];
+                    if ($value === null) {
+                        throw new InvalidFormatException($part, 'key=value');
+                    }
+                    $source = $value;
 
                     break;
 
                 case 'destination':
                 case 'dst':
                 case 'target':
-                    $destination = $subParts[1];
+                    if ($value === null) {
+                        throw new InvalidFormatException($part, 'key=value');
+                    }
+                    $destination = $value;
 
                     break;
 
                 case 'volume-subpath':
-                    $subpath = $subParts[1];
+                    if ($value === null) {
+                        throw new InvalidFormatException($part, 'key=value');
+                    }
+                    $subpath = $value;
 
                     break;
 
@@ -241,7 +255,7 @@ class Mount implements Stringable
                     throw new \LogicException('unimplemented');
 
                 default:
-                    throw new InvalidFormatException($subParts[0], ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath', 'readonly', 'ro', 'volume-nocopy', 'volume-opt']);
+                    throw new InvalidFormatException($key, ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath', 'readonly', 'ro', 'volume-nocopy', 'volume-opt']);
             }
         }
 
