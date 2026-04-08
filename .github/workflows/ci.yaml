@@ -76,7 +76,7 @@ jobs:
       - name: Composer install
         run: |
           composer install --no-dev --no-interaction --no-progress --prefer-dist
-          composer global require --no-interaction --no-progress vimeo/psalm
+          composer global require --no-interaction --no-progress vimeo/psalm:6.16.1
 
       - name: Run psalm
         run: psalm --no-cache
