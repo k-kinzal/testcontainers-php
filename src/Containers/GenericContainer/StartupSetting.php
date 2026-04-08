@@ -169,10 +169,11 @@ trait StartupSetting
             $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
         }
 
-        if (static::$STARTUP_CHECK_STRATEGY !== null) {
-            $strategy = $this->startupCheckStrategyProvider->get(static::$STARTUP_CHECK_STRATEGY);
+        $startupCheckStrategyName = static::$STARTUP_CHECK_STRATEGY;
+        if ($startupCheckStrategyName !== null) {
+            $strategy = $this->startupCheckStrategyProvider->get($startupCheckStrategyName);
             if (!$strategy) {
-                throw new \LogicException('Startup check strategy not found: '.static::$STARTUP_CHECK_STRATEGY);
+                throw new \LogicException('Startup check strategy not found: '.$startupCheckStrategyName);
             }
             $timeout = $this->startupTimeout();
             if ($timeout !== null) {

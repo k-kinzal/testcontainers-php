@@ -217,10 +217,11 @@ trait PortSetting
             $this->portStrategyProvider = new PortStrategyProvider();
             $this->registerPortStrategy($this->portStrategyProvider);
         }
-        if (static::$PORT_STRATEGY !== null) {
-            $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
+        $portStrategyName = static::$PORT_STRATEGY;
+        if ($portStrategyName !== null) {
+            $strategy = $this->portStrategyProvider->get($portStrategyName);
             if (!$strategy) {
-                throw new \LogicException('Port strategy not found: '.static::$PORT_STRATEGY);
+                throw new \LogicException('Port strategy not found: '.$portStrategyName);
             }
 
             return $strategy;

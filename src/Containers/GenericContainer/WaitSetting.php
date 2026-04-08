@@ -84,10 +84,11 @@ trait WaitSetting
             $this->waitStrategyProvider = new WaitStrategyProvider();
             $this->registerWaitStrategy($this->waitStrategyProvider);
         }
-        if (static::$WAIT_STRATEGY !== null) {
-            $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
+        $waitStrategyName = static::$WAIT_STRATEGY;
+        if ($waitStrategyName !== null) {
+            $strategy = $this->waitStrategyProvider->get($waitStrategyName);
             if (!$strategy) {
-                throw new \LogicException('Wait strategy not found: '.static::$WAIT_STRATEGY);
+                throw new \LogicException('Wait strategy not found: '.$waitStrategyName);
             }
 
             return $strategy;
