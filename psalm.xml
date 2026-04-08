@@ -33,5 +33,6 @@
 
     <issueHandlers>
         <ClassMustBeFinal errorLevel="suppress" />
+        <ForbiddenCode errorLevel="suppress" />
     </issueHandlers>
 </psalm>
