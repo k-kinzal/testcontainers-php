@@ -22,7 +22,7 @@ class BaseCommandTest extends TestCase
 
             $this->assertSame('unix:///var/run/docker.sock', $client->getHost());
         } finally {
-            putenv('DOCKER_HOST='.$backup);
+            $this->restoreEnv('DOCKER_HOST', $backup);
         }
     }
 
@@ -58,7 +58,37 @@ class BaseCommandTest extends TestCase
 
             $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
         } finally {
-            putenv('DOCKER_HOST='.$backup);
+            $this->restoreEnv('DOCKER_HOST', $backup);
         }
+    }
+
+    public function testGetHostFromEmptyGlobalEnvFallsBackToDefault()
+    {
+        $backup = getenv('DOCKER_HOST');
+
+        try {
+            putenv('DOCKER_HOST=');
+            $client = new DockerClient();
+
+            $this->assertSame('unix:///var/run/docker.sock', $client->getHost());
+        } finally {
+            $this->restoreEnv('DOCKER_HOST', $backup);
+        }
+    }
+
+    /**
+     * @param false|string $value
+     *
+     * @return void
+     */
+    private function restoreEnv($name, $value)
+    {
+        if ($value === false) {
+            putenv($name);
+
+            return;
+        }
+
+        putenv($name.'='.$value);
     }
 }

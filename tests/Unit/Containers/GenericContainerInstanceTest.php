@@ -117,6 +117,27 @@ class GenericContainerInstanceTest extends TestCase
         }
     }
 
+    public function testGetHostFromEmptyOverrideFallsBackToDockerHost()
+    {
+        $client = DockerClientFactory::create([
+            'globalOptions' => [
+                'host' => 'tcp://docker.example:2375',
+            ],
+        ]);
+
+        try {
+            putenv('TESTCONTAINERS_HOST_OVERRIDE=');
+            $instance = new GenericContainerInstance([
+                'containerId' => new ContainerId('8188d93d8a27'),
+            ]);
+            $instance->setDockerClient($client);
+
+            $this->assertSame('docker.example', $instance->getHost());
+        } finally {
+            putenv('TESTCONTAINERS_HOST_OVERRIDE');
+        }
+    }
+
     public function testGetMappedPort()
     {
         $instance = new GenericContainerInstance([

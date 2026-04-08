@@ -266,7 +266,7 @@ trait BaseCommand
         }
         // Check if the host is set in the DOCKER_HOST environment variable
         $host = Environments::DOCKER_HOST();
-        if ($host !== null) {
+        if ($host !== null && $host !== '') {
             return $host;
         }
 
