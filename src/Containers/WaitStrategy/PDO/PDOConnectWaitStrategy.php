@@ -205,11 +205,13 @@ class PDOConnectWaitStrategy implements WaitStrategy
             }
 
             try {
+                $username = $this->username !== null ? $this->username : '';
+                $password = $this->password !== null ? $this->password : '';
                 $this->logger()->debug(sprintf(
                     'Trying to connect to PDO: dsn=%s, username=%s, password=%s',
                     $dsn->toString(),
-                    $this->username ?? '',
-                    $this->password ?? ''
+                    $username,
+                    $password
                 ));
                 $pdo = new \PDO($dsn->toString(), $this->username, $this->password, [
                     \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,

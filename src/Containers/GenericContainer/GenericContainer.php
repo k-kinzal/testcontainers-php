@@ -67,7 +67,7 @@ class GenericContainer implements Container
             throw new \InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
         }
 
-        $this->image = $image ?? static::$IMAGE;
+        $this->image = $image !== null ? $image : static::$IMAGE;
     }
 
     /**

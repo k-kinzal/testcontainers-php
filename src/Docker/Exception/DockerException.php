@@ -26,11 +26,12 @@ class DockerException extends \RuntimeException
     {
         $command = $process->getCommandLine();
         $exitCode = $process->getExitCode();
+        $exitCodeText = $exitCode !== null ? $exitCode : 'unknown';
         parent::__construct(
             sprintf(
                 'Failed to docker command: `%s`, exit code: `%s`, stderr: `%s`',
                 $command,
-                $exitCode ?? 'unknown',
+                $exitCodeText,
                 $process->getErrorOutput()
             )
         );

@@ -15,11 +15,12 @@ class WaitingTimeoutException extends \RuntimeException
      */
     public function __construct($timeout, $message = null, $code = 0, $previous = null)
     {
+        $messageText = $message !== null ? $message : '';
         parent::__construct(
             sprintf(
                 'Waiting for container to be ready timed out after %d seconds: %s',
                 $timeout,
-                $message ?? ''
+                $messageText
             ),
             $code,
             $previous

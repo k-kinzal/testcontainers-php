@@ -203,8 +203,8 @@ class HttpWaitStrategy implements WaitStrategy
         $now = time();
         $endpoint = $this->endpoint;
         if ($endpoint === null) {
-            $schema = $this->schema ?? 'http';
-            $host = $this->host ?? $instance->getHost();
+            $schema = $this->schema !== null ? $this->schema : 'http';
+            $host = $this->host !== null ? $this->host : $instance->getHost();
             if ($this->port !== null) {
                 $port = $this->port;
             } else {
@@ -217,7 +217,7 @@ class HttpWaitStrategy implements WaitStrategy
                     throw new \LogicException(sprintf('No host port mapped to exposed port %d', $exposedPorts[0]));
                 }
             }
-            $path = $this->path ?? '/';
+            $path = $this->path !== null ? $this->path : '/';
             $endpoint = sprintf('%s://%s:%s%s', $schema, $host, $port, $path);
         }
 

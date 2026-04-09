@@ -286,7 +286,7 @@ trait BaseCommand
      */
     public function expandEnv($s)
     {
-        $env = $this->env ?? [];
+        $env = $this->env !== null ? $this->env : [];
 
         $expanded = preg_replace_callback('/\$\{([a-zA-Z_][a-zA-Z0-9_]*)}/', function ($m) use ($env) {
             if (!isset($m[0], $m[1])) {

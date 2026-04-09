@@ -256,7 +256,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function tryGetData($class)
     {
-        $value = $this->data[$class] ?? null;
+        $value = isset($this->data[$class]) ? $this->data[$class] : null;
         if ($value === null) {
             return null;
         }
