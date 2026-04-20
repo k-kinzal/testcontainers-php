@@ -7,6 +7,8 @@ use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
+use function Testcontainers\ensure;
+
 /**
  * ExposedPortSetting is a trait that provides the ability to expose ports on a container.
  *
@@ -89,6 +91,8 @@ trait PortSetting
      */
     public function withExposedPort($port)
     {
+        ensure(is_int($port) || is_string($port), '$port must be int|string');
+
         if (is_string($port)) {
             $port = intval($port);
         }
@@ -106,6 +110,8 @@ trait PortSetting
      */
     public function withExpose($port)
     {
+        ensure(is_int($port) || is_string($port), '$port must be int|string');
+
         return $this->withExposedPort($port);
     }
 
@@ -118,6 +124,8 @@ trait PortSetting
      */
     public function withPort($port)
     {
+        ensure(is_int($port) || is_string($port), '$port must be int|string');
+
         return $this->withExposedPort($port);
     }
 
@@ -130,6 +138,8 @@ trait PortSetting
      */
     public function withExposedPorts($ports)
     {
+        ensure(is_array($ports), '$ports must be array');
+
         $this->exposedPorts = $ports;
 
         return $this;
@@ -144,6 +154,8 @@ trait PortSetting
      */
     public function withExposes($ports)
     {
+        ensure(is_array($ports), '$ports must be array');
+
         return $this->withExposedPorts($ports);
     }
 
@@ -156,6 +168,8 @@ trait PortSetting
      */
     public function withPorts($ports)
     {
+        ensure(is_array($ports), '$ports must be array');
+
         return $this->withExposedPorts($ports);
     }
 
@@ -168,6 +182,8 @@ trait PortSetting
      */
     public function withPortStrategy($strategy)
     {
+        ensure($strategy instanceof PortStrategy, '$strategy must be PortStrategy');
+
         $this->portStrategy = $strategy;
 
         return $this;
@@ -186,6 +202,10 @@ trait PortSetting
      */
     protected function exposedPorts()
     {
+        ensure(static::$EXPOSED_PORTS === null || is_array(static::$EXPOSED_PORTS), 'static::$EXPOSED_PORTS must be null|array');
+        ensure(static::$EXPOSE === null || is_array(static::$EXPOSE), 'static::$EXPOSE must be null|array');
+        ensure(static::$PORTS === null || is_array(static::$PORTS), 'static::$PORTS must be null|array');
+
         if (static::$EXPOSED_PORTS !== null) {
             return static::$EXPOSED_PORTS;
         }
@@ -218,6 +238,7 @@ trait PortSetting
             $this->registerPortStrategy($this->portStrategyProvider);
         }
         $portStrategyProvider = $this->portStrategyProvider;
+        ensure(static::$PORT_STRATEGY === null || is_string(static::$PORT_STRATEGY), 'static::$PORT_STRATEGY must be null|string');
         $portStrategyName = static::$PORT_STRATEGY;
         if ($portStrategyName !== null) {
             $strategy = $portStrategyProvider->get($portStrategyName);

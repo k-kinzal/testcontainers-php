@@ -11,6 +11,8 @@ use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Environments;
+
+use function Testcontainers\ensure;
 use function Testcontainers\kebab;
 
 /**
@@ -108,6 +110,8 @@ trait BaseCommand
      */
     public function withCommand($command)
     {
+        ensure(is_string($command), '$command must be string');
+
         $this->command = $command;
 
         return $this;
@@ -126,6 +130,8 @@ trait BaseCommand
      */
     public function withGlobalOptions($options)
     {
+        ensure(is_array($options), '$options must be array');
+
         $this->options = $options;
 
         return $this;
@@ -144,6 +150,8 @@ trait BaseCommand
      */
     public function withCwd($cwd)
     {
+        ensure($cwd === null || is_string($cwd), '$cwd must be null|string');
+
         $this->cwd = $cwd;
 
         return $this;
@@ -162,6 +170,8 @@ trait BaseCommand
      */
     public function withEnv($env)
     {
+        ensure(is_array($env), '$env must be array');
+
         $this->env = $env;
 
         return $this;
@@ -207,6 +217,11 @@ trait BaseCommand
      */
     public function withTimeout($timeout)
     {
+        ensure(
+            $timeout === null || is_int($timeout) || is_float($timeout),
+            '$timeout must be null|int|float'
+        );
+
         $this->timeout = $timeout;
 
         return $this;
@@ -225,6 +240,8 @@ trait BaseCommand
      */
     public function withProcOptions($proc_options)
     {
+        ensure(is_array($proc_options), '$proc_options must be array');
+
         $this->proc_options = $proc_options;
 
         return $this;
@@ -239,6 +256,8 @@ trait BaseCommand
      */
     public function withLogger($logger)
     {
+        ensure($logger instanceof LoggerInterface, '$logger must be LoggerInterface');
+
         $this->logger = $logger;
 
         return $this;
@@ -286,6 +305,8 @@ trait BaseCommand
      */
     public function expandEnv($s)
     {
+        ensure(is_string($s), '$s must be string');
+
         $env = $this->env !== null ? $this->env : [];
 
         $expanded = preg_replace_callback('/\$\{([a-zA-Z_][a-zA-Z0-9_]*)}/', function ($m) use ($env) {

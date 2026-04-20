@@ -4,6 +4,8 @@ namespace Testcontainers\Docker\Exception;
 
 use Symfony\Component\Process\Process;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when a Docker command fails.
  *
@@ -24,6 +26,8 @@ class DockerException extends \RuntimeException
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         $command = $process->getCommandLine();
         $exitCode = $process->getExitCode();
         $exitCodeText = $exitCode !== null ? $exitCode : 'unknown';

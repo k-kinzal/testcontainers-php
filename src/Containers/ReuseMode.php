@@ -5,6 +5,8 @@ namespace Testcontainers\Containers;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the mode for container reuse behavior.
  *
@@ -49,7 +51,11 @@ class ReuseMode implements Stringable
      */
     public function __construct($mode)
     {
-        assert(in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE]));
+        ensure(is_string($mode), '$mode must be string');
+        ensure(
+            in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE], true),
+            '$mode must be one of ADD, RESTART, REUSE'
+        );
 
         $this->mode = $mode;
     }
@@ -103,6 +109,8 @@ class ReuseMode implements Stringable
      */
     public static function fromString($mode)
     {
+        ensure(is_string($mode), '$mode must be string');
+
         if (!in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE])) {
             throw new InvalidFormatException($mode, [static::$ADD, static::$RESTART, static::$REUSE]);
         }

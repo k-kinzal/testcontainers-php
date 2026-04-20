@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when waiting for a container to be ready times out.
  *
@@ -18,6 +20,11 @@ class WaitingTimeoutException extends \RuntimeException
      */
     public function __construct($timeout, $message = null, $code = 0, $previous = null)
     {
+        ensure(is_int($timeout), '$timeout must be int');
+        ensure($message === null || is_string($message), '$message must be null|string');
+        ensure(is_int($code), '$code must be int');
+        ensure($previous === null || $previous instanceof \Exception, '$previous must be null|Exception');
+
         $messageText = $message !== null ? $message : '';
         parent::__construct(
             sprintf(

@@ -5,6 +5,8 @@ namespace Testcontainers\Utility;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
+use function Testcontainers\ensure;
+
 /**
  * WithLogger trait provides a way to set and get a logger instance.
  */
@@ -24,6 +26,8 @@ trait WithLogger
      */
     public function withLogger($logger)
     {
+        ensure($logger instanceof LoggerInterface, '$logger must be LoggerInterface');
+
         $this->logger = $logger;
 
         return $this;

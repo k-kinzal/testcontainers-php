@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
+use function Testcontainers\ensure;
+
 /**
  * Provides a registry for port strategies.
  *
@@ -32,6 +34,9 @@ class PortStrategyProvider
      */
     public function register($name, $strategy)
     {
+        ensure(is_string($name), '$name must be string');
+        ensure($strategy instanceof PortStrategy, '$strategy must be PortStrategy');
+
         if (isset($this->strategies[$name])) {
             throw new AlreadyExistsPortStrategyException($name);
         }
@@ -51,6 +56,8 @@ class PortStrategyProvider
      */
     public function get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         return isset($this->strategies[$name]) ? $this->strategies[$name] : null;
     }
 }

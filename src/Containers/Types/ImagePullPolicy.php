@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\Types;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Defines the policy for determining when to pull a container image.
  */
@@ -43,7 +45,11 @@ class ImagePullPolicy implements Stringable
      */
     public function __construct($policy)
     {
-        assert(in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]));
+        ensure(is_string($policy), '$policy must be string');
+        ensure(
+            in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER], true),
+            '$policy must be one of ALWAYS, MISSING, NEVER'
+        );
 
         $this->policy = $policy;
     }
@@ -97,6 +103,8 @@ class ImagePullPolicy implements Stringable
      */
     public static function fromString($policy)
     {
+        ensure(is_string($policy), '$policy must be string');
+
         if (!in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER])) {
             throw new InvalidFormatException($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]);
         }

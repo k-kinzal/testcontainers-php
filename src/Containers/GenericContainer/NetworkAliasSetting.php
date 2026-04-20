@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * NetworkAliasSetting is a trait that provides the ability to add network aliases to a container.
  *
@@ -47,6 +49,8 @@ trait NetworkAliasSetting
      */
     public function withNetworkAlias($alias)
     {
+        ensure(is_string($alias), '$alias must be string');
+
         $this->networkAliases[] = $alias;
 
         return $this;
@@ -61,6 +65,8 @@ trait NetworkAliasSetting
      */
     public function withNetworkAliases($aliases)
     {
+        ensure(is_array($aliases), '$aliases must be array');
+
         $this->networkAliases = $aliases;
 
         return $this;
@@ -73,6 +79,11 @@ trait NetworkAliasSetting
      */
     protected function networkAliases()
     {
+        ensure(
+            static::$NETWORK_ALIASES === null || is_array(static::$NETWORK_ALIASES),
+            'static::$NETWORK_ALIASES must be null|array'
+        );
+
         if (static::$NETWORK_ALIASES !== null) {
             return static::$NETWORK_ALIASES;
         }

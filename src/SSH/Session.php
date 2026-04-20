@@ -4,6 +4,8 @@ namespace Testcontainers\SSH;
 
 use Symfony\Component\Process\Process;
 
+use function Testcontainers\ensure;
+
 /**
  * This class represents an SSH session managed by a Symfony Process.
  * It provides methods to check if the session is running and to stop the session.
@@ -22,6 +24,8 @@ class Session
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         $this->process = $process;
     }
 

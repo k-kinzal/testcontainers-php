@@ -4,6 +4,8 @@ namespace Testcontainers\Docker\Types;
 
 use Testcontainers\Docker\Exception\InvalidValueException;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents a container entry from the `docker ps` command output.
  *
@@ -110,6 +112,8 @@ class ContainerListItem
      */
     public function __get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         if (!property_exists($this, $name)) {
             throw new \LogicException('ContainerListItem::'.$name.' does not exist');
         }
@@ -128,6 +132,8 @@ class ContainerListItem
      */
     public static function fromArray($arr)
     {
+        ensure(is_array($arr), '$arr must be array');
+
         $item = new self();
         $item->id = self::ensureIdFromArray($arr);
         $item->command = self::ensureStringFromArray($arr, 'Command');
@@ -156,6 +162,8 @@ class ContainerListItem
      */
     public function getLabel($key)
     {
+        ensure(is_string($key), '$key must be string');
+
         return isset($this->labels[$key]) ? $this->labels[$key] : null;
     }
 

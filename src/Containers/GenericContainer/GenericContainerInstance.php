@@ -12,6 +12,8 @@ use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\Environments;
 use Testcontainers\SSH\Session;
 
+use function Testcontainers\ensure;
+
 /**
  * GenericContainerInstance is a generic implementation of docker container.
  */
@@ -66,6 +68,8 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function __construct($containerDef)
     {
+        ensure(is_array($containerDef), '$containerDef must be array');
+
         $this->containerDef = $containerDef;
     }
 
@@ -89,6 +93,8 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function setDockerClient($client)
     {
+        ensure($client instanceof DockerClient, '$client must be DockerClient');
+
         $this->client = $client;
     }
 
@@ -105,6 +111,8 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getLabel($label)
     {
+        ensure(is_string($label), '$label must be string');
+
         if (!isset($this->containerDef['labels'])) {
             return null;
         }
@@ -182,6 +190,8 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getMappedPort($exposedPort)
     {
+        ensure(is_int($exposedPort), '$exposedPort must be int');
+
         if (!isset($this->containerDef['ports'])) {
             return null;
         }
@@ -235,6 +245,8 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function setData($value)
     {
+        ensure(is_object($value), '$value must be object');
+
         $this->data[get_class($value)] = $value;
     }
 
@@ -243,6 +255,8 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getData($class)
     {
+        ensure(is_string($class), '$class must be string');
+
         $value = $this->tryGetData($class);
         if ($value === null) {
             throw new \LogicException("No data of type {$class} associated with the container");
@@ -256,6 +270,8 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function tryGetData($class)
     {
+        ensure(is_string($class), '$class must be string');
+
         $value = isset($this->data[$class]) ? $this->data[$class] : null;
         if ($value === null) {
             return null;

@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\GenericContainer;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+use function Testcontainers\ensure;
+
 /**
  * PullPolicySetting is a trait that provides the ability to set the image pull policy for a container.
  *
@@ -50,6 +52,8 @@ trait PullPolicySetting
      */
     public function withImagePullPolicy($policy)
     {
+        ensure($policy instanceof ImagePullPolicy, '$policy must be ImagePullPolicy');
+
         $this->pullPolicy = $policy;
 
         return $this;
@@ -64,6 +68,8 @@ trait PullPolicySetting
      */
     public function withPullPolicy($policy)
     {
+        ensure($policy instanceof ImagePullPolicy, '$policy must be ImagePullPolicy');
+
         return $this->withImagePullPolicy($policy);
     }
 
@@ -80,6 +86,8 @@ trait PullPolicySetting
      */
     protected function pullPolicy()
     {
+        ensure(static::$PULL_POLICY === null || is_string(static::$PULL_POLICY), 'static::$PULL_POLICY must be null|string');
+
         if (static::$PULL_POLICY !== null) {
             return ImagePullPolicy::fromString(static::$PULL_POLICY);
         }

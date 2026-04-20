@@ -11,6 +11,8 @@ use Testcontainers\Docker\Output\DockerRunOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Run command for Docker commands.
  *
@@ -56,6 +58,11 @@ trait RunCommand
      */
     public function run($image, $command = null, $args = [], $options = [])
     {
+        ensure(is_string($image), '$image must be string');
+        ensure($command === null || is_string($command), '$command must be null|string');
+        ensure(is_array($args), '$args must be array');
+        ensure(is_array($options), '$options must be array');
+
         $process = $this->execute(
             'run',
             null,

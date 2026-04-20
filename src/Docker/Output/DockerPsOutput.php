@@ -6,6 +6,8 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\ContainerListItem;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the output of a Docker `ps` command executed via Symfony Process.
  *
@@ -26,6 +28,8 @@ class DockerPsOutput extends DockerOutput
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         parent::__construct($process);
 
         $this->containers = $this->deserialize($process->getOutput());

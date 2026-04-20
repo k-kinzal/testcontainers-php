@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * GeneralSetting is a trait that provides the ability to set general container options.
  *
@@ -74,6 +76,8 @@ trait GeneralSetting
      */
     public function withCommand($cmd)
     {
+        ensure(is_string($cmd), '$cmd must be string');
+
         $this->commands = [$cmd];
 
         return $this;
@@ -85,6 +89,8 @@ trait GeneralSetting
      */
     public function withCommands($commandParts)
     {
+        ensure(is_array($commandParts), '$commandParts must be array');
+
         $this->commands = $commandParts;
 
         return $this;
@@ -99,6 +105,8 @@ trait GeneralSetting
      */
     public function withName($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         $this->name = $name;
 
         return $this;
@@ -125,6 +133,11 @@ trait GeneralSetting
      */
     protected function commands()
     {
+        ensure(
+            static::$COMMANDS === null || is_string(static::$COMMANDS) || is_array(static::$COMMANDS),
+            'static::$COMMANDS must be null|string|array'
+        );
+
         if (static::$COMMANDS !== null) {
             return static::$COMMANDS;
         }
@@ -178,6 +191,8 @@ trait GeneralSetting
      */
     protected function name()
     {
+        ensure(static::$NAME === null || is_string(static::$NAME), 'static::$NAME must be null|string');
+
         if (static::$NAME !== null) {
             return static::$NAME;
         }

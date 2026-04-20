@@ -5,6 +5,8 @@ namespace Testcontainers\Docker\Output;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Types\ContainerId;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the output of a Docker `stop` command executed via Symfony Process.
  *
@@ -27,6 +29,8 @@ class DockerStopOutput extends DockerOutput
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         parent::__construct($process);
 
         $output = $process->getOutput();

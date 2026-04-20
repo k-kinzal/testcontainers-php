@@ -7,6 +7,8 @@ use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\ContainerObject;
 use Testcontainers\Docker\Types\State;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the output of a Docker `inspect` command executed via Symfony Process.
  *
@@ -26,6 +28,8 @@ class DockerInspectOutput extends DockerOutput
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         parent::__construct($process);
 
         try {
@@ -49,6 +53,8 @@ class DockerInspectOutput extends DockerOutput
      */
     public function __get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         if (!property_exists($this->object, $name)) {
             throw new \LogicException("Property {$name} does not exist");
         }

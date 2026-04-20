@@ -4,6 +4,8 @@ namespace Testcontainers\Containers\WaitStrategy\PDO;
 
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * SQLiteDSN is a class that implements the DSN interface for SQLite database connections.
  *
@@ -25,6 +27,8 @@ class SQLiteDSN implements DSN, Stringable
      */
     public function withHost($host)
     {
+        ensure(is_string($host), '$host must be string');
+
         return $this;
     }
 
@@ -41,6 +45,8 @@ class SQLiteDSN implements DSN, Stringable
      */
     public function withPort($port)
     {
+        ensure(is_int($port), '$port must be int');
+
         return $this;
     }
 

@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use function Testcontainers\ensure;
+
 /**
  * Provides a registry for wait strategies.
  *
@@ -32,6 +34,9 @@ class WaitStrategyProvider
      */
     public function register($name, $strategy)
     {
+        ensure(is_string($name), '$name must be string');
+        ensure($strategy instanceof WaitStrategy, '$strategy must be WaitStrategy');
+
         if (isset($this->strategies[$name])) {
             throw new AlreadyExistsWaitStrategyException($name);
         }
@@ -51,6 +56,8 @@ class WaitStrategyProvider
      */
     public function get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         return isset($this->strategies[$name]) ? $this->strategies[$name] : null;
     }
 }

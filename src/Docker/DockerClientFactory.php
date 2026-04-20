@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker;
 
+use function Testcontainers\ensure;
+
 /**
  * A factory for creating DockerClient instances.
  *
@@ -60,6 +62,8 @@ class DockerClientFactory
      */
     public static function config($config = [])
     {
+        ensure(is_array($config), '$config must be array');
+
         self::$config = $config;
     }
 
@@ -84,6 +88,8 @@ class DockerClientFactory
      */
     public static function create($config = [])
     {
+        ensure(is_array($config), '$config must be array');
+
         $config = array_merge(self::$config, $config);
         $hash = md5(serialize($config));
 

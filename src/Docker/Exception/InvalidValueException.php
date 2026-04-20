@@ -4,6 +4,8 @@ namespace Testcontainers\Docker\Exception;
 
 use Exception;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when a value is invalid.
  *
@@ -24,6 +26,8 @@ class InvalidValueException extends \Exception
      */
     public function __construct($message, $context = null)
     {
+        ensure(is_string($message), '$message must be string');
+
         parent::__construct($message);
         $this->context = $context;
     }

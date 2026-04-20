@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * LabelSetting is a trait that provides the ability to set labels for a container.
  *
@@ -50,6 +52,9 @@ trait LabelSetting
      */
     public function withLabel($key, $value)
     {
+        ensure(is_string($key), '$key must be string');
+        ensure(is_string($value), '$value must be string');
+
         $this->labels[$key] = $value;
 
         return $this;
@@ -64,6 +69,8 @@ trait LabelSetting
      */
     public function withLabels($labels)
     {
+        ensure(is_array($labels), '$labels must be array');
+
         $this->labels = $labels;
 
         return $this;
@@ -80,6 +87,8 @@ trait LabelSetting
      */
     protected function labels()
     {
+        ensure(static::$LABELS === null || is_array(static::$LABELS), 'static::$LABELS must be null|array');
+
         if (static::$LABELS !== null) {
             return static::$LABELS;
         }

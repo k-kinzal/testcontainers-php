@@ -4,6 +4,8 @@ namespace Testcontainers\Docker\Types;
 
 use Testcontainers\Docker\Exception\InvalidValueException;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents a container object returned by the Docker API.
  *
@@ -31,6 +33,8 @@ class ContainerObject
      */
     public function __get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         if (!property_exists($this, $name)) {
             throw new \LogicException('ContainerObject::'.$name.' does not exist');
         }
@@ -49,6 +53,8 @@ class ContainerObject
      */
     public static function fromArray($arr)
     {
+        ensure(is_array($arr), '$arr must be array');
+
         $object = new ContainerObject();
         $object->state = self::ensureStateFromArray($arr);
 

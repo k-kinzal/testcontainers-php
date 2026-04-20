@@ -4,6 +4,8 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use Testcontainers\Containers\ReuseMode;
 
+use function Testcontainers\ensure;
+
 /**
  * ReuseModeSetting is a trait that provides the ability to set the reuse mode for a container.
  *
@@ -49,6 +51,8 @@ trait ReuseModeSetting
      */
     public function withReuseMode($reuseMode)
     {
+        ensure($reuseMode instanceof ReuseMode, '$reuseMode must be ReuseMode');
+
         $this->reuseMode = $reuseMode;
 
         return $this;
@@ -61,6 +65,8 @@ trait ReuseModeSetting
      */
     public function reuseMode()
     {
+        ensure(static::$REUSE_MODE === null || is_string(static::$REUSE_MODE), 'static::$REUSE_MODE must be null|string');
+
         if (static::$REUSE_MODE !== null) {
             return ReuseMode::fromString(static::$REUSE_MODE);
         }

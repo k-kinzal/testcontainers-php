@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
+use function Testcontainers\ensure;
+
 /**
  * A port strategy that returns a fixed port.
  * When a port conflict occurs, it fails (does not retry).
@@ -20,6 +22,8 @@ class StaticPortStrategy implements PortStrategy
      */
     public function __construct($port)
     {
+        ensure(is_int($port), '$port must be int');
+
         $this->port = $port;
     }
 

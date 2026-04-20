@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\Types;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 class BindMode implements Stringable
 {
     /**
@@ -33,7 +35,8 @@ class BindMode implements Stringable
      */
     public function __construct($mode)
     {
-        assert(in_array($mode, [static::$READ_ONLY, static::$READ_WRITE]));
+        ensure(is_string($mode), '$mode must be string');
+        ensure(in_array($mode, [static::$READ_ONLY, static::$READ_WRITE], true), '$mode must be one of READ_ONLY or READ_WRITE');
 
         $this->mode = $mode;
     }
@@ -77,6 +80,8 @@ class BindMode implements Stringable
      */
     public static function fromString($mode)
     {
+        ensure(is_string($mode), '$mode must be string');
+
         if (!in_array($mode, [static::$READ_ONLY, static::$READ_WRITE])) {
             throw new InvalidFormatException($mode, [static::$READ_ONLY, static::$READ_WRITE]);
         }

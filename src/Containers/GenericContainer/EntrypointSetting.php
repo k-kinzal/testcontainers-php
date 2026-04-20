@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * EntrypointSetting is a trait that provides the ability to set the entrypoint for a container.
  *
@@ -47,6 +49,8 @@ trait EntrypointSetting
      */
     public function withEntrypoint($entrypoint)
     {
+        ensure(is_string($entrypoint), '$entrypoint must be string');
+
         $this->entrypoint = $entrypoint;
 
         return $this;
@@ -59,6 +63,8 @@ trait EntrypointSetting
      */
     protected function entrypoint()
     {
+        ensure(static::$ENTRYPOINT === null || is_string(static::$ENTRYPOINT), 'static::$ENTRYPOINT must be null|string');
+
         if (static::$ENTRYPOINT !== null) {
             return static::$ENTRYPOINT;
         }

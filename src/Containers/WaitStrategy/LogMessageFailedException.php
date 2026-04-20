@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when a container log message matches the failure pattern.
  *
@@ -18,6 +20,10 @@ class LogMessageFailedException extends \RuntimeException
      */
     public function __construct($logLine, $code = 0, $previous = null)
     {
+        ensure(is_string($logLine), '$logLine must be string');
+        ensure(is_int($code), '$code must be int');
+        ensure($previous === null || $previous instanceof \Exception, '$previous must be null|Exception');
+
         parent::__construct(
             sprintf('Container log matched failure pattern: %s', $logLine),
             $code,

@@ -6,6 +6,8 @@ use Symfony\Component\Process\Process;
 use Testcontainers\SSH\Exceptions\TunnelException;
 use Testcontainers\Utility\WithLogger;
 
+use function Testcontainers\ensure;
+
 /**
  * A tunnel for forwarding connections over SSH.
  */
@@ -88,6 +90,11 @@ class Tunnel
         $remotePort,
         $sshHost
     ) {
+        ensure(is_int($localPort), '$localPort must be int');
+        ensure(is_string($remoteHost), '$remoteHost must be string');
+        ensure(is_int($remotePort), '$remotePort must be int');
+        ensure(is_string($sshHost), '$sshHost must be string');
+
         $this->localPort = $localPort;
         $this->remoteHost = $remoteHost;
         $this->remotePort = $remotePort;
@@ -103,6 +110,8 @@ class Tunnel
      */
     public function withUser($user)
     {
+        ensure(is_string($user), '$user must be string');
+
         $this->user = $user;
 
         return $this;
@@ -117,6 +126,8 @@ class Tunnel
      */
     public function withSshPort($sshPort)
     {
+        ensure(is_int($sshPort), '$sshPort must be int');
+
         $this->sshPort = $sshPort;
 
         return $this;
@@ -131,6 +142,8 @@ class Tunnel
      */
     public function withLocalBindAddress($localBindAddress)
     {
+        ensure(is_string($localBindAddress), '$localBindAddress must be string');
+
         $this->localBindAddress = $localBindAddress;
 
         return $this;
@@ -145,6 +158,8 @@ class Tunnel
      */
     public function withIdentityFile($identityFile)
     {
+        ensure(is_string($identityFile), '$identityFile must be string');
+
         $this->identityFile = $identityFile;
 
         return $this;
@@ -159,6 +174,8 @@ class Tunnel
      */
     public function withSshOptions($sshOptions)
     {
+        ensure(is_array($sshOptions), '$sshOptions must be array');
+
         $this->sshOptions = $sshOptions;
 
         return $this;
@@ -174,6 +191,9 @@ class Tunnel
      */
     public function withSshOption($option, $value)
     {
+        ensure(is_string($option), '$option must be string');
+        ensure(is_string($value), '$value must be string');
+
         $this->sshOptions[$option] = $value;
 
         return $this;

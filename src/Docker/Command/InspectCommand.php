@@ -7,6 +7,8 @@ use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Output\DockerInspectOutput;
 use Testcontainers\Docker\Types\ContainerId;
 
+use function Testcontainers\ensure;
+
 /**
  * Inspect command for Docker command.
  *
@@ -28,6 +30,8 @@ trait InspectCommand
      */
     public function inspect($containerId)
     {
+        ensure($containerId instanceof ContainerId, '$containerId must be ContainerId');
+
         $process = $this->execute('inspect', null, [(string) $containerId], [
             'format' => 'json',
         ]);

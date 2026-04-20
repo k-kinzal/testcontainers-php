@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Exception;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when a specified Docker container does not exist.
  *
@@ -20,6 +22,8 @@ class NoSuchContainerException extends DockerException
      */
     public static function match($output)
     {
+        ensure(is_string($output), '$output must be string');
+
         return strpos($output, 'Error response from daemon: No such container: ') === 0;
     }
 }

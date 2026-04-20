@@ -4,6 +4,8 @@ namespace Testcontainers\Docker\Types;
 
 use Testcontainers\Docker\Exception\InvalidValueException;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the state of a container.
  *
@@ -39,6 +41,8 @@ class State
      */
     public function __get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         if (!property_exists($this, $name)) {
             throw new \LogicException('State::'.$name.' does not exist');
         }
@@ -57,6 +61,8 @@ class State
      */
     public static function fromArray($arr)
     {
+        ensure(is_array($arr), '$arr must be array');
+
         $state = new State();
         $state->status = self::ensureStatusFromArray($arr);
         $state->exitCode = self::ensureExitCodeFromArray($arr);
@@ -75,6 +81,8 @@ class State
      */
     public static function ensureStatusFromArray($arr)
     {
+        ensure(is_array($arr), '$arr must be array');
+
         if (!isset($arr['Status'])) {
             throw new InvalidValueException("State expects a string 'Status' property, but 'Status' is missing", ['data' => $arr]);
         }
@@ -111,6 +119,8 @@ class State
      */
     public static function ensureExitCodeFromArray($arr)
     {
+        ensure(is_array($arr), '$arr must be array');
+
         if (!isset($arr['ExitCode'])) {
             throw new InvalidValueException("State expects a integer 'ExitCode' property, but 'ExitCode' is missing", ['data' => $arr]);
         }

@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\WaitStrategy;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Utility\WithLogger;
 
+use function Testcontainers\ensure;
+
 /**
  * HostPortWaitStrategy waits until the specified ports on the container instance are available.
  *
@@ -41,6 +43,8 @@ class HostPortWaitStrategy implements WaitStrategy
      */
     public function __construct($probe = null)
     {
+        ensure($probe === null || $probe instanceof PortProbe, '$probe must be null|PortProbe');
+
         $this->probe = $probe ?: new PortProbeTcp();
     }
 
@@ -53,6 +57,8 @@ class HostPortWaitStrategy implements WaitStrategy
      */
     public function withPorts($ports)
     {
+        ensure(is_array($ports), '$ports must be array');
+
         $this->ports = $ports;
 
         return $this;
@@ -67,6 +73,8 @@ class HostPortWaitStrategy implements WaitStrategy
      */
     public function withTimeoutSeconds($seconds)
     {
+        ensure(is_int($seconds), '$seconds must be int');
+
         $this->timeout = $seconds;
 
         return $this;
@@ -81,6 +89,8 @@ class HostPortWaitStrategy implements WaitStrategy
      */
     public function waitUntilReady($instance)
     {
+        ensure($instance instanceof ContainerInstance, '$instance must be ContainerInstance');
+
         $now = time();
 
         $host = $instance->getHost();

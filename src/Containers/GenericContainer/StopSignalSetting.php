@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * StopSignalSetting is a trait that provides the ability to set the stop signal for a container.
  *
@@ -53,6 +55,8 @@ trait StopSignalSetting
      */
     public function withStopSignal($signal)
     {
+        ensure(is_string($signal), '$signal must be string');
+
         $this->stopSignal = $signal;
 
         return $this;
@@ -68,6 +72,8 @@ trait StopSignalSetting
      */
     protected function stopSignal()
     {
+        ensure(static::$STOP_SIGNAL === null || is_string(static::$STOP_SIGNAL), 'static::$STOP_SIGNAL must be null|string');
+
         if (static::$STOP_SIGNAL !== null) {
             return static::$STOP_SIGNAL;
         }

@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * AutoRemoveOnExitSetting is a trait that provides the ability to automatically remove a container when it exits.
  *
@@ -48,6 +50,8 @@ trait AutoRemoveOnExitSetting
      */
     public function withAutoRemoveOnExit($autoRemoveOnExit)
     {
+        ensure(is_bool($autoRemoveOnExit), '$autoRemoveOnExit must be bool');
+
         $this->autoRemoveOnExit = $autoRemoveOnExit;
 
         return $this;
@@ -63,6 +67,11 @@ trait AutoRemoveOnExitSetting
      */
     protected function autoRemoveOnExit()
     {
+        ensure(
+            static::$AUTO_REMOVE_ON_EXIT === null || is_bool(static::$AUTO_REMOVE_ON_EXIT),
+            'static::$AUTO_REMOVE_ON_EXIT must be null|bool'
+        );
+
         if (static::$AUTO_REMOVE_ON_EXIT !== null) {
             return static::$AUTO_REMOVE_ON_EXIT;
         }

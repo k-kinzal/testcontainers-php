@@ -5,6 +5,8 @@ namespace Testcontainers\Docker\Command;
 use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Network create command for Docker.
  *
@@ -17,7 +19,7 @@ trait NetworkCreateCommand
      *
      * This method wraps the `docker network create` command to create a new Docker network.
      *
-     * @param string $network the name of the Docker network to create
+     * @param string|Stringable $network the name of the Docker network to create
      * @param array{
      *     attachable?: null|bool,
      *     auxAddress?: null|string[]|Stringable[],
@@ -41,6 +43,9 @@ trait NetworkCreateCommand
      */
     public function networkCreate($network, $options = [])
     {
+        ensure(is_string($network) || $network instanceof Stringable, '$network must be string|Stringable');
+        ensure(is_array($options), '$options must be array');
+
         $process = $this->execute(
             'network',
             'create',

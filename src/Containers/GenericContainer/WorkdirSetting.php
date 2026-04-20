@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * WorkdirSetting is a trait that provides the ability to set the working directory for a container.
  *
@@ -47,6 +49,8 @@ trait WorkdirSetting
      */
     public function withWorkingDirectory($workDir)
     {
+        ensure(is_string($workDir), '$workDir must be string');
+
         $this->workDir = $workDir;
 
         return $this;
@@ -61,6 +65,8 @@ trait WorkdirSetting
      */
     public function withWorkDir($workDir)
     {
+        ensure(is_string($workDir), '$workDir must be string');
+
         return $this->withWorkingDirectory($workDir);
     }
 
@@ -71,6 +77,8 @@ trait WorkdirSetting
      */
     protected function workDir()
     {
+        ensure(static::$WORKDIR === null || is_string(static::$WORKDIR), 'static::$WORKDIR must be null|string');
+
         if (static::$WORKDIR !== null) {
             return static::$WORKDIR;
         }

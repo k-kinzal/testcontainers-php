@@ -5,6 +5,8 @@ namespace Testcontainers\Docker\Output;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Types\ContainerId;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the output of a Docker `run` command executed via Symfony Process.
  *
@@ -28,6 +30,8 @@ class DockerRunWithDetachOutput extends DockerRunOutput
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         parent::__construct($process);
 
         $this->containerId = new ContainerId(trim($process->getOutput()));

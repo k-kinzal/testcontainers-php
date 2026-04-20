@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\Types;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents a volume from.
  *
@@ -33,6 +35,9 @@ class VolumeFrom implements Stringable
      */
     public function __construct($name, $mode)
     {
+        ensure(is_string($name), '$name must be string');
+        ensure($mode instanceof BindMode, '$mode must be BindMode');
+
         $this->name = $name;
         $this->mode = $mode;
     }
@@ -52,6 +57,8 @@ class VolumeFrom implements Stringable
      */
     public function __get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         if (!property_exists($this, $name)) {
             throw new \LogicException('VolumeFrom::'.$name.' does not exist');
         }
@@ -70,6 +77,8 @@ class VolumeFrom implements Stringable
      */
     public static function fromString($v)
     {
+        ensure(is_string($v), '$v must be string');
+
         if (strpos($v, ':') === false) {
             return new VolumeFrom($v, BindMode::READ_WRITE());
         }
@@ -91,6 +100,8 @@ class VolumeFrom implements Stringable
      */
     public static function fromArray($arr)
     {
+        ensure(is_array($arr), '$arr must be array');
+
         return new VolumeFrom($arr['name'], $arr['mode']);
     }
 

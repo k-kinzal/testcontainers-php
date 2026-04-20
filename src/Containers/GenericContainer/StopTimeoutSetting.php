@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * StopTimeoutSetting is a trait that provides the ability to set the stop timeout for a container.
  *
@@ -49,6 +51,8 @@ trait StopTimeoutSetting
      */
     public function withStopTimeout($seconds)
     {
+        ensure(is_int($seconds), '$seconds must be int');
+
         $this->stopTimeout = $seconds;
 
         return $this;
@@ -64,6 +68,8 @@ trait StopTimeoutSetting
      */
     protected function stopTimeout()
     {
+        ensure(static::$STOP_TIMEOUT === null || is_int(static::$STOP_TIMEOUT), 'static::$STOP_TIMEOUT must be null|int');
+
         if (static::$STOP_TIMEOUT !== null) {
             return static::$STOP_TIMEOUT;
         }

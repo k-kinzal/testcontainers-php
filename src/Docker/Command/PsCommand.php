@@ -5,6 +5,8 @@ namespace Testcontainers\Docker\Command;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Output\DockerPsOutput;
 
+use function Testcontainers\ensure;
+
 /**
  * Ps command for Docker command.
  *
@@ -34,6 +36,8 @@ trait PsCommand
      */
     public function ps($options = [])
     {
+        ensure(is_array($options), '$options must be array');
+
         // Force JSON format for structured parsing
         $options['format'] = 'json';
 

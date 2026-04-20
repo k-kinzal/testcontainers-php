@@ -4,6 +4,8 @@ namespace Testcontainers\Exceptions;
 
 use Exception;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when an invalid format is encountered.
  */
@@ -19,6 +21,10 @@ class InvalidFormatException extends \Exception
      */
     public function __construct($actual, $expects = [], $code = 0, $previous = null)
     {
+        ensure(is_string($expects) || is_array($expects), '$expects must be string|array');
+        ensure(is_int($code), '$code must be int');
+        ensure($previous === null || $previous instanceof \Exception, '$previous must be null|Exception');
+
         $actual = json_encode($actual);
         if (empty($expects)) {
             parent::__construct("Invalid format: `{$actual}`", $code, $previous);

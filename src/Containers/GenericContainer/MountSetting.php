@@ -6,6 +6,8 @@ use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\Mount;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+use function Testcontainers\ensure;
+
 /**
  * MountSetting is a trait that provides the ability to add file system bindings to a container.
  *
@@ -77,6 +79,13 @@ trait MountSetting
      */
     public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
+        ensure(
+            is_array($hostPath) || is_string($hostPath) || $hostPath instanceof Mount,
+            '$hostPath must be array|Mount|string'
+        );
+        ensure($containerPath === null || is_string($containerPath), '$containerPath must be null|string');
+        ensure($mode === null || $mode instanceof BindMode, '$mode must be null|BindMode');
+
         if ($containerPath === null || $mode === null) {
             if (is_string($hostPath)) {
                 $mount = Mount::fromString($hostPath);
@@ -124,6 +133,8 @@ trait MountSetting
      */
     public function withFileSystemBinds($mounts)
     {
+        ensure(is_array($mounts), '$mounts must be array');
+
         $this->mounts = [];
         foreach ($mounts as $mount) {
             $this->withFileSystemBind($mount);
@@ -252,6 +263,9 @@ trait MountSetting
      */
     protected function mounts()
     {
+        ensure(static::$MOUNTS === null || is_array(static::$MOUNTS), 'static::$MOUNTS must be null|array');
+        ensure(static::$VOLUMES === null || is_array(static::$VOLUMES), 'static::$VOLUMES must be null|array');
+
         $mounts = static::$MOUNTS;
         if ($mounts === null || count($mounts) === 0) {
             $mounts = static::$VOLUMES;

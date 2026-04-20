@@ -4,6 +4,8 @@ namespace Testcontainers\Containers\WaitStrategy;
 
 use Exception;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when a wait strategy with the same name already exists.
  *
@@ -17,6 +19,8 @@ class AlreadyExistsWaitStrategyException extends \Exception
      */
     public function __construct($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         parent::__construct("Wait strategy with name {$name} already exists.");
     }
 }

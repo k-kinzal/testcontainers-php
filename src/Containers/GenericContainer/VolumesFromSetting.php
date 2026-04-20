@@ -7,6 +7,8 @@ use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\VolumeFrom;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+use function Testcontainers\ensure;
+
 /**
  * VolumesFromSetting is a trait that provides the ability to add volumes from other containers to a container.
  *
@@ -56,6 +58,9 @@ trait VolumesFromSetting
      */
     public function withVolumesFrom($container, $mode)
     {
+        ensure($container instanceof ContainerInstance, '$container must be ContainerInstance');
+        ensure($mode instanceof BindMode, '$mode must be BindMode');
+
         $this->volumesFrom[] = new VolumeFrom((string) $container->getContainerId(), $mode);
 
         return $this;
@@ -73,6 +78,8 @@ trait VolumesFromSetting
      */
     protected function volumesFrom()
     {
+        ensure(static::$VOLUMES_FROM === null || is_array(static::$VOLUMES_FROM), 'static::$VOLUMES_FROM must be null|array');
+
         $targets = static::$VOLUMES_FROM;
         if ($targets !== null && count($targets) > 0) {
             $volumesFrom = [];

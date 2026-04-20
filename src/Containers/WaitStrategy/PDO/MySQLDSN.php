@@ -4,6 +4,8 @@ namespace Testcontainers\Containers\WaitStrategy\PDO;
 
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * MySQLDSN provides a way to define a MySQL Data Source Name (DSN).
  * It allows setting the host, port, database name, and character set for the DSN.
@@ -53,6 +55,8 @@ class MySQLDSN implements DSN, Stringable
      */
     public function withHost($host)
     {
+        ensure(is_string($host), '$host must be string');
+
         $this->host = $host;
 
         return $this;
@@ -71,6 +75,8 @@ class MySQLDSN implements DSN, Stringable
      */
     public function withPort($port)
     {
+        ensure(is_int($port), '$port must be int');
+
         $this->port = $port;
 
         return $this;
@@ -93,6 +99,8 @@ class MySQLDSN implements DSN, Stringable
      */
     public function withDbname($dbname)
     {
+        ensure(is_string($dbname), '$dbname must be string');
+
         $this->dbname = $dbname;
 
         return $this;
@@ -107,6 +115,8 @@ class MySQLDSN implements DSN, Stringable
      */
     public function withCharset($charset)
     {
+        ensure(is_string($charset), '$charset must be string');
+
         $this->charset = $charset;
 
         return $this;

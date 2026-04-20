@@ -4,6 +4,8 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use Testcontainers\Containers\Types\NetworkMode;
 
+use function Testcontainers\ensure;
+
 /**
  * NetworkModeSetting is a trait that provides the ability to set the network mode for a container.
  *
@@ -49,6 +51,8 @@ trait NetworkModeSetting
      */
     public function withNetworkMode($networkMode)
     {
+        ensure($networkMode instanceof NetworkMode, '$networkMode must be NetworkMode');
+
         $this->networkMode = $networkMode;
 
         return $this;
@@ -61,6 +65,8 @@ trait NetworkModeSetting
      */
     protected function networkMode()
     {
+        ensure(static::$NETWORK_MODE === null || is_string(static::$NETWORK_MODE), 'static::$NETWORK_MODE must be null|string');
+
         if (static::$NETWORK_MODE !== null) {
             return NetworkMode::fromString(static::$NETWORK_MODE);
         }

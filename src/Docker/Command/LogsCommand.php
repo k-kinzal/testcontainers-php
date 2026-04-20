@@ -7,6 +7,8 @@ use Testcontainers\Docker\Output\DockerLogsOutput;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Logs command for Docker.
  *
@@ -33,6 +35,9 @@ trait LogsCommand
      */
     public function logs($containerId, $options = [])
     {
+        ensure($containerId instanceof ContainerId, '$containerId must be ContainerId');
+        ensure(is_array($options), '$options must be array');
+
         $follow = isset($options['follow']) ? $options['follow'] : false;
         $process = $this->execute('logs', null, [(string) $containerId], $options, $follow === false);
 

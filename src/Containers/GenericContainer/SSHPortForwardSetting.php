@@ -4,6 +4,8 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use Testcontainers\Environments;
 
+use function Testcontainers\ensure;
+
 /**
  * SSHPortForwardSetting is a trait that provides the ability to set up SSH port forwarding to the remote host that starts the container.
  *
@@ -56,6 +58,10 @@ trait SSHPortForwardSetting
      */
     public function withSSHPortForward($sshHost, $sshPort = null, $sshUser = null)
     {
+        ensure(is_string($sshHost), '$sshHost must be string');
+        ensure($sshPort === null || is_int($sshPort), '$sshPort must be null|int');
+        ensure($sshUser === null || is_string($sshUser), '$sshUser must be null|string');
+
         $this->sshPortForward = [
             'sshUser' => $sshUser,
             'sshHost' => $sshHost,
@@ -76,6 +82,11 @@ trait SSHPortForwardSetting
      */
     protected function sshPortForward()
     {
+        ensure(
+            self::$SSH_PORT_FORWARD === null || is_bool(self::$SSH_PORT_FORWARD) || is_string(self::$SSH_PORT_FORWARD),
+            'self::$SSH_PORT_FORWARD must be null|bool|string'
+        );
+
         if (self::$SSH_PORT_FORWARD !== null) {
             if (is_bool(self::$SSH_PORT_FORWARD)) {
                 return self::$SSH_PORT_FORWARD ? [

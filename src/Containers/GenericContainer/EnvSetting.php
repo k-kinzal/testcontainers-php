@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * EnvSetting is a trait that provides the ability to add environment variables to a container.
  *
@@ -59,6 +61,9 @@ trait EnvSetting
      */
     public function withEnv($key, $value)
     {
+        ensure(is_string($key), '$key must be string');
+        ensure(is_string($value), '$value must be string');
+
         $this->env[$key] = $value;
 
         return $this;
@@ -73,6 +78,8 @@ trait EnvSetting
      */
     public function withEnvs($env)
     {
+        ensure(is_array($env), '$env must be array');
+
         $this->env = $env;
 
         return $this;
@@ -89,6 +96,9 @@ trait EnvSetting
      */
     protected function env()
     {
+        ensure(static::$ENVIRONMENTS === null || is_array(static::$ENVIRONMENTS), 'static::$ENVIRONMENTS must be null|array');
+        ensure(static::$ENV === null || is_array(static::$ENV), 'static::$ENV must be null|array');
+
         if (static::$ENVIRONMENTS !== null) {
             return static::$ENVIRONMENTS;
         }

@@ -4,6 +4,8 @@ namespace Testcontainers\Docker\Output;
 
 use Symfony\Component\Process\Process;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the output of a Docker command executed via Symfony Process.
  *
@@ -24,6 +26,8 @@ class DockerOutput
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         $this->process = $process;
     }
 

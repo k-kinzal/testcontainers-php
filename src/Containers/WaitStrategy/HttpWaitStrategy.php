@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\WaitStrategy;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Utility\WithLogger;
 
+use function Testcontainers\ensure;
+
 /**
  * HttpWaitStrategy waits until a specified HTTP endpoint is reachable.
  *
@@ -90,6 +92,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function __construct($probe = null)
     {
+        ensure($probe === null || $probe instanceof HttpProbe, '$probe must be null|HttpProbe');
+
         $this->probe = $probe ?: new HttpProbeGetHeaders();
     }
 
@@ -102,6 +106,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withEndpoint($endpoint)
     {
+        ensure(is_string($endpoint), '$endpoint must be string');
+
         $this->endpoint = $endpoint;
 
         return $this;
@@ -116,6 +122,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withSchema($schema)
     {
+        ensure(is_string($schema), '$schema must be string');
+
         $this->schema = $schema;
 
         return $this;
@@ -130,6 +138,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withHost($host)
     {
+        ensure(is_string($host), '$host must be string');
+
         $this->host = $host;
 
         return $this;
@@ -144,6 +154,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withPath($path)
     {
+        ensure(is_string($path), '$path must be string');
+
         $this->path = $path;
 
         return $this;
@@ -158,6 +170,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withPort($port)
     {
+        ensure(is_int($port), '$port must be int');
+
         $this->port = $port;
 
         return $this;
@@ -172,6 +186,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withExpectedResponseCode($responseCode)
     {
+        ensure(is_int($responseCode), '$responseCode must be int');
+
         $this->expectedResponseCode = $responseCode;
 
         return $this;
@@ -186,6 +202,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withTimeoutSeconds($seconds)
     {
+        ensure(is_int($seconds), '$seconds must be int');
+
         $this->timeout = $seconds;
 
         return $this;
@@ -200,6 +218,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function waitUntilReady($instance)
     {
+        ensure($instance instanceof ContainerInstance, '$instance must be ContainerInstance');
+
         $now = time();
         $endpoint = $this->endpoint;
         if ($endpoint === null) {

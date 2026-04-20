@@ -16,6 +16,8 @@ use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\SSH\Tunnel;
 use Testcontainers\Utility\WithLogger;
 
+use function Testcontainers\ensure;
+
 /**
  * GenericContainer is a generic implementation of docker container.
  */
@@ -63,6 +65,9 @@ class GenericContainer implements Container
      */
     public function __construct($image = null)
     {
+        ensure($image === null || is_string($image), '$image must be null|string');
+        ensure(static::$IMAGE === null || is_string(static::$IMAGE), 'static::$IMAGE must be null|string');
+
         if ($image === null && static::$IMAGE === null) {
             throw new \InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
         }
@@ -79,6 +84,8 @@ class GenericContainer implements Container
      */
     public function withDockerClient($client)
     {
+        ensure($client instanceof DockerClient, '$client must be DockerClient');
+
         $this->client = $client;
 
         return $this;

@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Exception;
 
+use function Testcontainers\ensure;
+
 class NoSuchObjectException extends DockerException
 {
     /**
@@ -13,6 +15,8 @@ class NoSuchObjectException extends DockerException
      */
     public static function match($output)
     {
+        ensure(is_string($output), '$output must be string');
+
         return stripos($output, 'error: no such object: ') === 0;
     }
 }

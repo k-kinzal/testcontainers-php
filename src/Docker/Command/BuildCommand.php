@@ -6,6 +6,8 @@ use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Output\DockerBuildOutput;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Build command for Docker command.
  *
@@ -63,6 +65,9 @@ trait BuildCommand
      */
     public function build($path, $options = [])
     {
+        ensure(is_string($path), '$path must be string');
+        ensure(is_array($options), '$options must be array');
+
         $process = $this->execute('build', null, [$path], $options);
 
         return new DockerBuildOutput($process);

@@ -8,6 +8,8 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Utility\WithLogger;
 
+use function Testcontainers\ensure;
+
 /**
  * LogMessageWaitStrategy waits until a specified log message is found in the container logs.
  *
@@ -51,6 +53,8 @@ class LogMessageWaitStrategy implements WaitStrategy
      */
     public function withPattern($pattern)
     {
+        ensure(is_string($pattern), '$pattern must be string');
+
         $this->pattern = $pattern;
 
         return $this;
@@ -68,6 +72,8 @@ class LogMessageWaitStrategy implements WaitStrategy
      */
     public function withFailurePattern($pattern)
     {
+        ensure(is_string($pattern), '$pattern must be string');
+
         $this->failurePattern = $pattern;
 
         return $this;
@@ -82,6 +88,8 @@ class LogMessageWaitStrategy implements WaitStrategy
      */
     public function withTimeoutSeconds($seconds)
     {
+        ensure(is_int($seconds), '$seconds must be int');
+
         $this->timeout = $seconds;
 
         return $this;
@@ -96,6 +104,8 @@ class LogMessageWaitStrategy implements WaitStrategy
      */
     public function waitUntilReady($instance)
     {
+        ensure($instance instanceof ContainerInstance, '$instance must be ContainerInstance');
+
         $containerId = $instance->getContainerId();
 
         $client = DockerClientFactory::create();

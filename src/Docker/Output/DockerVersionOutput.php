@@ -4,6 +4,8 @@ namespace Testcontainers\Docker\Output;
 
 use Symfony\Component\Process\Process;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the output of a Docker `version` command executed via Symfony Process.
  *
@@ -24,6 +26,8 @@ class DockerVersionOutput extends DockerOutput
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         parent::__construct($process);
 
         /** @var null|array{Client?: array{Version?: string}, Server?: array{Version?: string}} $output */

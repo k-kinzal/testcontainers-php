@@ -4,6 +4,8 @@ namespace Testcontainers\Docker\Types;
 
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents a Docker network ID.
  *
@@ -25,6 +27,8 @@ class NetworkId implements Stringable
      */
     public function __construct($v)
     {
+        ensure(is_string($v), '$v must be string');
+
         if (!self::isValid($v)) {
             throw new \LogicException('Invalid network ID: `'.$v.'`');
         }
@@ -71,6 +75,8 @@ class NetworkId implements Stringable
      */
     public static function fromString($v)
     {
+        ensure(is_string($v), '$v must be string');
+
         if (!self::isValid($v)) {
             throw new \InvalidArgumentException('Invalid network ID: `'.$v.'`');
         }

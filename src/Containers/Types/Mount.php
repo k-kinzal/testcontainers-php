@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\Types;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents a mount.
  *
@@ -78,6 +80,14 @@ class Mount implements Stringable
      */
     public function __construct($type, $source, $destination, $subpath, $readonly, $nocopy, $opt)
     {
+        ensure($type === null || is_string($type), '$type must be null|string');
+        ensure($source === null || is_string($source), '$source must be null|string');
+        ensure(is_string($destination), '$destination must be string');
+        ensure($subpath === null || is_string($subpath), '$subpath must be null|string');
+        ensure($readonly === null || is_bool($readonly), '$readonly must be null|bool');
+        ensure($nocopy === null || is_bool($nocopy), '$nocopy must be null|bool');
+        ensure($opt === null || is_array($opt), '$opt must be null|array');
+
         $this->type = $type;
         $this->source = $source;
         $this->destination = $destination;
@@ -125,6 +135,8 @@ class Mount implements Stringable
      */
     public function __get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         if (!property_exists($this, $name)) {
             throw new \LogicException('Mount::'.$name.' does not exist');
         }
@@ -143,6 +155,8 @@ class Mount implements Stringable
      */
     public static function fromString($v)
     {
+        ensure(is_string($v), '$v must be string');
+
         if (strpos($v, ':') > 0 || strpos($v, '=') === false) {
             return self::fromVolumeString($v);
         }
@@ -159,6 +173,8 @@ class Mount implements Stringable
      */
     public static function fromVolumeString($v)
     {
+        ensure(is_string($v), '$v must be string');
+
         $parts = explode(':', $v);
 
         $source = null;
@@ -190,6 +206,8 @@ class Mount implements Stringable
      */
     public static function fromMountString($v)
     {
+        ensure(is_string($v), '$v must be string');
+
         $parts = explode(',', $v);
         $type = 'bind';
         $source = null;
@@ -287,6 +305,8 @@ class Mount implements Stringable
      */
     public static function fromArray($v)
     {
+        ensure(is_array($v), '$v must be array');
+
         $type = isset($v['type']) ? $v['type'] : null;
         $source = isset($v['source']) ? $v['source'] : null;
         if ($source === null) {

@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\StartupCheckStrategy;
 
+use function Testcontainers\ensure;
+
 /**
  * A provider for startup check strategies.
  *
@@ -30,6 +32,9 @@ class StartupCheckStrategyProvider
      */
     public function register($name, $strategy)
     {
+        ensure(is_string($name), '$name must be string');
+        ensure($strategy instanceof StartupCheckStrategy, '$strategy must be StartupCheckStrategy');
+
         if (isset($this->strategies[$name])) {
             throw new AlreadyExistsStartupStrategyException($name);
         }
@@ -49,6 +54,8 @@ class StartupCheckStrategyProvider
      */
     public function get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         return isset($this->strategies[$name]) ? $this->strategies[$name] : null;
     }
 }

@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\PortStrategy;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the behavior to take when a port conflict occurs.
  *
@@ -45,7 +47,11 @@ class ConflictBehavior implements Stringable
      */
     public function __construct($action)
     {
-        assert(in_array($action, [static::$RETRY, static::$FAIL]));
+        ensure(is_string($action), '$action must be string');
+        ensure(
+            in_array($action, [static::$RETRY, static::$FAIL], true),
+            '$action must be one of RETRY or FAIL'
+        );
 
         $this->action = $action;
     }
@@ -95,6 +101,8 @@ class ConflictBehavior implements Stringable
      */
     public static function fromString($action)
     {
+        ensure(is_string($action), '$action must be string');
+
         if (!in_array($action, [static::$RETRY, static::$FAIL])) {
             throw new InvalidFormatException($action, [static::$RETRY, static::$FAIL]);
         }

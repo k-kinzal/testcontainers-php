@@ -8,6 +8,8 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Lifecycle\ContainerReaper;
 use Testcontainers\Lifecycle\ShutdownHandler;
 
+use function Testcontainers\ensure;
+
 /**
  * Class Testcontainers.
  *
@@ -71,6 +73,11 @@ class Testcontainers
      */
     public static function run($containerClass)
     {
+        ensure(
+            is_string($containerClass) || $containerClass instanceof Container,
+            '$containerClass must be string|Container'
+        );
+
         if (is_string($containerClass) && class_exists($containerClass)) {
             $container = new $containerClass();
         } elseif ($containerClass instanceof Container) {

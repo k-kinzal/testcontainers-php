@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * UserSetting is a trait that provides the ability to set the user for a container.
  *
@@ -47,6 +49,8 @@ trait UserSetting
      */
     public function withUser($user)
     {
+        ensure(is_string($user), '$user must be string');
+
         $this->user = $user;
 
         return $this;
@@ -59,6 +63,8 @@ trait UserSetting
      */
     protected function user()
     {
+        ensure(static::$USER === null || is_string(static::$USER), 'static::$USER must be null|string');
+
         if (static::$USER !== null) {
             return static::$USER;
         }

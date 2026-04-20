@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Exception;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when a bind address is already in use by another process.
  *
@@ -20,6 +22,8 @@ class BindAddressAlreadyUseException extends PortConflictException
      */
     public static function match($output)
     {
+        ensure(is_string($output), '$output must be string');
+
         return strpos($output, 'Error response from daemon:') !== false
             && strpos($output, 'address already in use') !== false;
     }

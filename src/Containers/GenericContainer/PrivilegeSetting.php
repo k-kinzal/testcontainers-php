@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use function Testcontainers\ensure;
+
 /**
  * PrivilegeSetting is a trait that provides the ability to run a container in privileged mode.
  *
@@ -47,6 +49,8 @@ trait PrivilegeSetting
      */
     public function withPrivilegedMode($mode)
     {
+        ensure(is_bool($mode), '$mode must be bool');
+
         $this->privileged = $mode;
 
         return $this;
@@ -63,6 +67,8 @@ trait PrivilegeSetting
      */
     protected function privileged()
     {
+        ensure(static::$PRIVILEGED === null || is_bool(static::$PRIVILEGED), 'static::$PRIVILEGED must be null|bool');
+
         if (static::$PRIVILEGED !== null) {
             return static::$PRIVILEGED;
         }

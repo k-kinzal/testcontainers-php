@@ -8,6 +8,8 @@ use Testcontainers\Docker\Output\DockerStopOutput;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Stop command for Docker command.
  *
@@ -51,6 +53,12 @@ trait StopCommand
      */
     public function stop($containerId, $options = [])
     {
+        ensure(
+            is_array($containerId) || is_string($containerId) || $containerId instanceof ContainerId,
+            '$containerId must be array|ContainerId|string'
+        );
+        ensure(is_array($options), '$options must be array');
+
         if (is_array($containerId)) {
             $containerIds = array_map('strval', $containerId);
         } else {

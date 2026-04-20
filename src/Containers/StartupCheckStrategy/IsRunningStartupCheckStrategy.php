@@ -7,6 +7,8 @@ use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Utility\WithLogger;
 
+use function Testcontainers\ensure;
+
 /**
  * StartupCheckStrategy that waits until a container is running.
  */
@@ -44,6 +46,8 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     public function withDockerClient($client)
     {
+        ensure($client instanceof DockerClient, '$client must be DockerClient');
+
         $this->client = $client;
 
         return $this;
@@ -58,6 +62,8 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     public function withTimeoutSeconds($seconds)
     {
+        ensure(is_int($seconds), '$seconds must be int');
+
         $this->timeout = $seconds;
 
         return $this;
@@ -72,6 +78,8 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     public function withRetryInterval($interval)
     {
+        ensure(is_int($interval), '$interval must be int');
+
         $this->retryInterval = $interval;
 
         return $this;
@@ -86,6 +94,8 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     public function waitUntilStartupSuccessful($instance)
     {
+        ensure($instance instanceof ContainerInstance, '$instance must be ContainerInstance');
+
         $now = time();
 
         $client = $this->client ?: DockerClientFactory::create();

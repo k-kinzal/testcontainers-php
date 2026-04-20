@@ -4,6 +4,8 @@ namespace Testcontainers\Containers\Types;
 
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents a network mode for a container.
  *
@@ -58,6 +60,8 @@ class NetworkMode implements Stringable
      */
     public function __construct($mode)
     {
+        ensure(is_string($mode), '$mode must be string');
+
         $this->mode = $mode;
     }
 
@@ -108,6 +112,8 @@ class NetworkMode implements Stringable
      */
     public static function fromString($s)
     {
+        ensure(is_string($s), '$s must be string');
+
         return new self($s);
     }
 

@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\Types;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents a host-to-IP mapping.
  *
@@ -33,6 +35,9 @@ class HostToIp implements Stringable
      */
     public function __construct($host, $ip)
     {
+        ensure(is_string($host), '$host must be string');
+        ensure(is_string($ip), '$ip must be string');
+
         $this->host = $host;
         $this->ip = $ip;
     }
@@ -54,6 +59,8 @@ class HostToIp implements Stringable
      */
     public function __get($name)
     {
+        ensure(is_string($name), '$name must be string');
+
         if (!property_exists($this, $name)) {
             throw new \LogicException('HostToIp::'.$name.' does not exist');
         }
@@ -72,6 +79,8 @@ class HostToIp implements Stringable
      */
     public static function fromString($v)
     {
+        ensure(is_string($v), '$v must be string');
+
         $parts = explode(':', $v);
         if (count($parts) !== 2) {
             throw new InvalidFormatException($v, 'host:ip');
@@ -92,6 +101,8 @@ class HostToIp implements Stringable
      */
     public static function fromArray($v)
     {
+        ensure(is_array($v), '$v must be array');
+
         return new self($v['hostname'], $v['ipAddress']);
     }
 

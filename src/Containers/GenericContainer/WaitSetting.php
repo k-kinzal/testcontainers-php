@@ -10,6 +10,8 @@ use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 
+use function Testcontainers\ensure;
+
 /**
  * WaitSetting trait provides the functionality to set and retrieve the wait strategy for the container.
  *
@@ -62,6 +64,8 @@ trait WaitSetting
      */
     public function withWaitStrategy($waitStrategy)
     {
+        ensure($waitStrategy instanceof WaitStrategy, '$waitStrategy must be WaitStrategy');
+
         $this->waitStrategy = $waitStrategy;
 
         return $this;
@@ -84,6 +88,7 @@ trait WaitSetting
             $this->waitStrategyProvider = new WaitStrategyProvider();
             $this->registerWaitStrategy($this->waitStrategyProvider);
         }
+        ensure(static::$WAIT_STRATEGY === null || is_string(static::$WAIT_STRATEGY), 'static::$WAIT_STRATEGY must be null|string');
         $waitStrategyName = static::$WAIT_STRATEGY;
         if ($waitStrategyName !== null) {
             $strategy = $this->waitStrategyProvider->get($waitStrategyName);

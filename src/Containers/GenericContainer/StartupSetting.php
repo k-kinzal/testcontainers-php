@@ -9,6 +9,8 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 
+use function Testcontainers\ensure;
+
 /**
  * StartupSetting is a trait that provides the ability to set the startup timeout and check strategy for a container.
  *
@@ -104,6 +106,8 @@ trait StartupSetting
      */
     public function withStartupTimeout($timeout)
     {
+        ensure(is_int($timeout), '$timeout must be int');
+
         $this->startupTimeout = $timeout;
 
         return $this;
@@ -118,6 +122,8 @@ trait StartupSetting
      */
     public function withStartupCheckStrategy($strategy)
     {
+        ensure($strategy instanceof StartupCheckStrategy, '$strategy must be StartupCheckStrategy');
+
         $this->startupCheckStrategy = $strategy;
 
         return $this;
@@ -132,6 +138,8 @@ trait StartupSetting
      */
     public function withStartupConflictRetries($retryAttempts)
     {
+        ensure(is_int($retryAttempts), '$retryAttempts must be int');
+
         $this->startupConflictRetryAttempts = $retryAttempts;
 
         return $this;
@@ -144,6 +152,8 @@ trait StartupSetting
      */
     protected function startupTimeout()
     {
+        ensure(static::$STARTUP_TIMEOUT === null || is_int(static::$STARTUP_TIMEOUT), 'static::$STARTUP_TIMEOUT must be null|int');
+
         if (static::$STARTUP_TIMEOUT !== null) {
             return static::$STARTUP_TIMEOUT;
         }
@@ -169,6 +179,10 @@ trait StartupSetting
             $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
         }
 
+        ensure(
+            static::$STARTUP_CHECK_STRATEGY === null || is_string(static::$STARTUP_CHECK_STRATEGY),
+            'static::$STARTUP_CHECK_STRATEGY must be null|string'
+        );
         $startupCheckStrategyName = static::$STARTUP_CHECK_STRATEGY;
         if ($startupCheckStrategyName !== null) {
             $strategy = $this->startupCheckStrategyProvider->get($startupCheckStrategyName);
@@ -229,6 +243,11 @@ trait StartupSetting
      */
     protected function startupConflictRetryAttempts()
     {
+        ensure(
+            static::$STARTUP_CONFLICT_RETRY_ATTEMPTS === null || is_int(static::$STARTUP_CONFLICT_RETRY_ATTEMPTS),
+            'static::$STARTUP_CONFLICT_RETRY_ATTEMPTS must be null|int'
+        );
+
         if (static::$STARTUP_CONFLICT_RETRY_ATTEMPTS !== null) {
             return static::$STARTUP_CONFLICT_RETRY_ATTEMPTS;
         }

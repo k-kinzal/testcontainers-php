@@ -2,6 +2,8 @@
 
 namespace Testcontainers;
 
+use function Testcontainers\ensure;
+
 /**
  * Environments is a class that provides the ability to get environment variables.
  *
@@ -20,6 +22,9 @@ class Environments
      */
     public static function __callStatic($name, $arguments)
     {
+        ensure(is_string($name), '$name must be string');
+        ensure(is_array($arguments), '$arguments must be array');
+
         $value = getenv($name);
         if (is_string($value)) {
             return $value;

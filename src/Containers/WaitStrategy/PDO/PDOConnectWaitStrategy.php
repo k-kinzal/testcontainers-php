@@ -8,6 +8,8 @@ use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Utility\WithLogger;
 
+use function Testcontainers\ensure;
+
 /**
  * PDOConnectWaitStrategy ensures that a PDO connection is established before proceeding.
  * This strategy continuously checks the readiness of the PDO connection until it is successfully established or a timeout occurs.
@@ -91,6 +93,8 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function withUsername($username)
     {
+        ensure(is_string($username), '$username must be string');
+
         $this->username = $username;
 
         return $this;
@@ -107,6 +111,8 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function withPassword($password)
     {
+        ensure(is_string($password), '$password must be string');
+
         $this->password = $password;
 
         return $this;
@@ -124,6 +130,8 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function withTimeoutSeconds($timeout)
     {
+        ensure(is_int($timeout), '$timeout must be int');
+
         $this->timeout = $timeout;
 
         return $this;
@@ -141,6 +149,8 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function withRetryInterval($interval)
     {
+        ensure(is_int($interval), '$interval must be int');
+
         $this->retryInterval = $interval;
 
         return $this;
@@ -157,6 +167,8 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function waitUntilReady($instance)
     {
+        ensure($instance instanceof ContainerInstance, '$instance must be ContainerInstance');
+
         if ($this->dsn === null) {
             throw new \LogicException('The DSN for the PDO connection is not set');
         }

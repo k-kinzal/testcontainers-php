@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\GenericContainer;
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Exceptions\InvalidFormatException;
 
+use function Testcontainers\ensure;
+
 /**
  * HostSetting is a trait that provides the ability to add extra hosts to a container.
  *
@@ -76,6 +78,12 @@ trait HostSetting
      */
     public function withExtraHost($hostname, $ipAddress = null)
     {
+        ensure(
+            is_array($hostname) || is_string($hostname) || $hostname instanceof HostToIp,
+            '$hostname must be array|HostToIp|string'
+        );
+        ensure($ipAddress === null || is_string($ipAddress), '$ipAddress must be null|string');
+
         if (($hostname instanceof HostToIp) && $ipAddress === null) {
             $hostToIp = $hostname;
         } elseif (is_array($hostname) && $ipAddress === null) {
@@ -113,6 +121,8 @@ trait HostSetting
      */
     public function withExtraHosts($extraHosts)
     {
+        ensure(is_array($extraHosts), '$extraHosts must be array');
+
         $this->extraHosts = [];
         foreach ($extraHosts as $extraHost) {
             $this->withExtraHost($extraHost);
@@ -130,6 +140,9 @@ trait HostSetting
      */
     protected function extraHosts()
     {
+        ensure(is_array(static::$EXTRA_HOSTS), 'static::$EXTRA_HOSTS must be array');
+        ensure(is_array(static::$HOSTS), 'static::$HOSTS must be array');
+
         $static = static::$EXTRA_HOSTS;
         if (empty($static)) {
             $static = static::$HOSTS;

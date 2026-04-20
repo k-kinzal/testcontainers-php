@@ -6,6 +6,8 @@ use Psr\Log\AbstractLogger;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
 
+use function Testcontainers\ensure;
+
 /**
  * A simple PSR-3 logger that writes formatted messages to a stream.
  *
@@ -49,6 +51,9 @@ class ConsoleLogger extends AbstractLogger
      */
     public function __construct($stream = null, $minLevel = LogLevel::DEBUG)
     {
+        ensure($stream === null || is_resource($stream), '$stream must be null|resource');
+        ensure(is_string($minLevel), '$minLevel must be string');
+
         if ($stream !== null) {
             $this->stream = $stream;
         } elseif (defined('STDERR')) {
@@ -69,6 +74,8 @@ class ConsoleLogger extends AbstractLogger
      */
     public function log($level, string|\Stringable $message, array $context = []): void
     {
+        ensure(is_string($level), '$level must be string');
+
         if (!isset(self::$LOG_LEVELS[$level])) {
             throw new InvalidArgumentException(sprintf('Invalid log level: "%s"', $level));
         }

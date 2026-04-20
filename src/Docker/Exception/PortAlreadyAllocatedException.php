@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Exception;
 
+use function Testcontainers\ensure;
+
 /**
  * Exception thrown when a port is already allocated by another process.
  *
@@ -20,6 +22,8 @@ class PortAlreadyAllocatedException extends PortConflictException
      */
     public static function match($output)
     {
+        ensure(is_string($output), '$output must be string');
+
         return strpos($output, 'Error response from daemon:') !== false
             && strpos($output, 'port is already allocated') !== false;
     }

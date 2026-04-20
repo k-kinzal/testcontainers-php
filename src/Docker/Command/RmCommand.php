@@ -7,6 +7,8 @@ use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Output\DockerRmOutput;
 use Testcontainers\Docker\Types\ContainerId;
 
+use function Testcontainers\ensure;
+
 /**
  * Rm command for Docker command.
  *
@@ -33,6 +35,12 @@ trait RmCommand
      */
     public function rm($containerId, $options = [])
     {
+        ensure(
+            is_array($containerId) || is_string($containerId) || $containerId instanceof ContainerId,
+            '$containerId must be array|ContainerId|string'
+        );
+        ensure(is_array($options), '$options must be array');
+
         if (is_array($containerId)) {
             $containerIds = array_map('strval', $containerId);
         } else {

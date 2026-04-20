@@ -5,6 +5,8 @@ namespace Testcontainers\Docker\Output;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Types\NetworkId;
 
+use function Testcontainers\ensure;
+
 /**
  * Represents the output of a Docker `network create` command executed via Symfony Process.
  *
@@ -27,6 +29,8 @@ class DockerNetworkCreateOutput extends DockerOutput
      */
     public function __construct($process)
     {
+        ensure($process instanceof Process, '$process must be Process');
+
         parent::__construct($process);
 
         $this->networkId = new NetworkId(trim($process->getOutput()));
