@@ -40,7 +40,7 @@
             <errorLevel type="suppress">
                 <referencedClass name="LogicException" />
                 <referencedClass name="InvalidArgumentException" />
-                <referencedClass name="Testcontainers\Exceptions\AssertException" />
+                <referencedClass name="Testcontainers\Exceptions\EnsureException" />
             </errorLevel>
         </MissingThrowsDocblock>
     </issueHandlers>

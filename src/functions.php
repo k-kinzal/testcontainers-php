@@ -2,7 +2,7 @@
 
 namespace Testcontainers;
 
-use Testcontainers\Exceptions\AssertException;
+use Testcontainers\Exceptions\EnsureException;
 
 /**
  * Convert a string to kebab-case.
@@ -22,18 +22,18 @@ function kebab($str)
 }
 
 /**
- * Assert a type or invariant. Throws AssertException on failure.
+ * Assert a type or invariant. Throws EnsureException on failure.
  *
  * @param bool   $condition
  * @param string $message
  *
- * @throws AssertException
+ * @throws EnsureException
  *
  * @psalm-assert true $condition
  */
 function ensure($condition, $message)
 {
     if ($condition !== true) {
-        throw new AssertException($message);
+        throw new EnsureException($message);
     }
 }
