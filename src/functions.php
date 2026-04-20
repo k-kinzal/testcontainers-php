@@ -26,6 +26,7 @@ function kebab($str)
  *
  * @param bool   $condition
  * @param string $message
+ * @return void
  *
  * @throws EnsureException
  *
