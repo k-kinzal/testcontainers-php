@@ -61,7 +61,11 @@ class ConsoleLogger extends AbstractLogger
         } elseif (defined('STDERR')) {
             $this->stream = STDERR;
         } else {
-            $this->stream = fopen('php://stderr', 'w');
+            $fallback = fopen('php://stderr', 'w');
+            if ($fallback === false) {
+                throw new \RuntimeException('Unable to open php://stderr for logging');
+            }
+            $this->stream = $fallback;
         }
 
         if (!isset(self::$LOG_LEVELS[$minLevel])) {
