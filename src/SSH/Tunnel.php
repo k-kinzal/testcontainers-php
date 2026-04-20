@@ -239,7 +239,7 @@ class Tunnel
         }
         if ($this->sshPort !== null) {
             $commandParts[] = '-p';
-            $commandParts[] = $this->sshPort;
+            $commandParts[] = (string) $this->sshPort;
         }
         if ($this->identityFile !== null) {
             $commandParts[] = '-i';
