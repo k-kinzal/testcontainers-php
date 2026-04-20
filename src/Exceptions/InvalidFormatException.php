@@ -28,7 +28,8 @@ class InvalidFormatException extends Exception
         /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($previous === null || $previous instanceof Exception, '$previous must be null|Exception');
 
-        $actual = json_encode($actual);
+        $encoded = json_encode($actual);
+        $actual = $encoded !== false ? $encoded : 'null';
         if (empty($expects)) {
             parent::__construct("Invalid format: `{$actual}`", $code, $previous);
         } elseif (is_array($expects)) {
