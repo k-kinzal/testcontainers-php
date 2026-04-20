@@ -79,7 +79,7 @@ trait SSHPortForwardSetting
      *
      * @return null|array{
      *                     sshUser?: null|string,
-     *                     sshHost?: null|string,
+     *                     sshHost: null|string,
      *                     sshPort?: null|int,
      *                     }
      */
