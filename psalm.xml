@@ -13,7 +13,7 @@
     findUnusedCode="false"
     findUnusedPsalmSuppress="true"
     phpVersion="5.6"
-    rememberPropertyAssignmentsAfterCall="false"
+    rememberPropertyAssignmentsAfterCall="true"
     reportMixedIssues="true"
     resolveFromConfigFile="true"
     sealAllMethods="true"
