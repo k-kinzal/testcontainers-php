@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Exception;
+use RuntimeException;
+
 use function Testcontainers\ensure;
 
 /**
@@ -10,20 +13,20 @@ use function Testcontainers\ensure;
  * This exception is used to indicate that the specified timeout duration
  * has been exceeded while waiting for the container to be ready.
  */
-class WaitingTimeoutException extends \RuntimeException
+class WaitingTimeoutException extends RuntimeException
 {
     /**
-     * @param int             $timeout  the timeout in seconds
-     * @param null|string     $message  the exception message
-     * @param int             $code     the exception code
-     * @param null|\Exception $previous the previous exception
+     * @param int            $timeout  the timeout in seconds
+     * @param null|string    $message  the exception message
+     * @param int            $code     the exception code
+     * @param null|Exception $previous the previous exception
      */
     public function __construct($timeout, $message = null, $code = 0, $previous = null)
     {
         ensure(is_int($timeout), '$timeout must be int');
         ensure($message === null || is_string($message), '$message must be null|string');
         ensure(is_int($code), '$code must be int');
-        ensure($previous === null || $previous instanceof \Exception, '$previous must be null|Exception');
+        ensure($previous === null || $previous instanceof Exception, '$previous must be null|Exception');
 
         $messageText = $message !== null ? $message : '';
         parent::__construct(

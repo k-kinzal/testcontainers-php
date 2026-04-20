@@ -9,7 +9,7 @@ use function Testcontainers\ensure;
 /**
  * Exception thrown when an invalid format is encountered.
  */
-class InvalidFormatException extends \Exception
+class InvalidFormatException extends Exception
 {
     /**
      * InvalidFormatException constructor.
@@ -17,13 +17,13 @@ class InvalidFormatException extends \Exception
      * @param mixed           $actual   the actual format encountered
      * @param string|string[] $expects  an array of expected formats
      * @param int             $code     the exception code
-     * @param null|\Exception $previous the previous exception used for exception chaining
+     * @param null|Exception $previous the previous exception used for exception chaining
      */
     public function __construct($actual, $expects = [], $code = 0, $previous = null)
     {
         ensure(is_string($expects) || is_array($expects), '$expects must be string|array');
         ensure(is_int($code), '$code must be int');
-        ensure($previous === null || $previous instanceof \Exception, '$previous must be null|Exception');
+        ensure($previous === null || $previous instanceof Exception, '$previous must be null|Exception');
 
         $actual = json_encode($actual);
         if (empty($expects)) {

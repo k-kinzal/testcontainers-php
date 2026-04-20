@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\Types;
 
+use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -60,7 +61,7 @@ class VolumeFrom implements Stringable
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
-            throw new \LogicException('VolumeFrom::'.$name.' does not exist');
+            throw new LogicException('VolumeFrom::'.$name.' does not exist');
         }
 
         return $this->{$name};

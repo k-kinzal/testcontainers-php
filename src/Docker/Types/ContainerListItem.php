@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
 
 use function Testcontainers\ensure;
@@ -115,7 +116,7 @@ class ContainerListItem
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
-            throw new \LogicException('ContainerListItem::'.$name.' does not exist');
+            throw new LogicException('ContainerListItem::'.$name.' does not exist');
         }
 
         return $this->{$name};

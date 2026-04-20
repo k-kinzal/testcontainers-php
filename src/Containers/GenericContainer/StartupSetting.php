@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
@@ -187,7 +188,7 @@ trait StartupSetting
         if ($startupCheckStrategyName !== null) {
             $strategy = $this->startupCheckStrategyProvider->get($startupCheckStrategyName);
             if (!$strategy) {
-                throw new \LogicException('Startup check strategy not found: '.$startupCheckStrategyName);
+                throw new LogicException('Startup check strategy not found: '.$startupCheckStrategyName);
             }
             $timeout = $this->startupTimeout();
             if ($timeout !== null) {
@@ -226,13 +227,13 @@ trait StartupSetting
         try {
             $provider->register('is_running', new IsRunningStartupCheckStrategy());
         } catch (AlreadyExistsStartupStrategyException $e) {
-            throw new \LogicException('Startup check strategy with name is_running already exists.', 0, $e);
+            throw new LogicException('Startup check strategy with name is_running already exists.', 0, $e);
         }
 
         try {
             $provider->register('one_shot', new OneShotStartupCheckStrategy());
         } catch (AlreadyExistsStartupStrategyException $e) {
-            throw new \LogicException('Startup check strategy with name one_shot already exists.', 0, $e);
+            throw new LogicException('Startup check strategy with name one_shot already exists.', 0, $e);
         }
     }
 

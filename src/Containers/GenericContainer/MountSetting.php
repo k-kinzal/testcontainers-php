@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use InvalidArgumentException;
 use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\Mount;
 use Testcontainers\Exceptions\InvalidFormatException;
@@ -102,7 +103,7 @@ trait MountSetting
                 'readonly' => $mode->isReadOnly(),
             ]);
         } else {
-            throw new \InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
+            throw new InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
         }
 
         $this->mounts[] = $mount;

@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\StartupCheckStrategy;
 
+use Exception;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
@@ -128,7 +129,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
             }
         } catch (WaitingTimeoutException $e) {
             throw $e;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger()->debug('Error while checking container status: '.$e->getMessage());
 
             return false;

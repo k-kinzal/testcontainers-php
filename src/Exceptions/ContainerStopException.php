@@ -2,13 +2,16 @@
 
 namespace Testcontainers\Exceptions;
 
-class ContainerStopException extends \RuntimeException
+use Exception;
+use RuntimeException;
+
+class ContainerStopException extends RuntimeException
 {
-    /** @var array<string, \Exception> */
+    /** @var array<string, Exception> */
     private $errors;
 
     /**
-     * @param array<string, \Exception> $errors
+     * @param array<string, Exception> $errors
      */
     public function __construct(array $errors)
     {
@@ -21,7 +24,7 @@ class ContainerStopException extends \RuntimeException
         );
     }
 
-    /** @return array<string, \Exception> */
+    /** @return array<string, Exception> */
     public function getErrors()
     {
         return $this->errors;

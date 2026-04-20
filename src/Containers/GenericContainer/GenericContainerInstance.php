@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use Exception;
+use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
@@ -78,7 +80,7 @@ class GenericContainerInstance implements ContainerInstance
         if ($this->running) {
             try {
                 $this->stop();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Destructors must not throw
             }
         }
@@ -156,10 +158,10 @@ class GenericContainerInstance implements ContainerInstance
         }
         $url = parse_url($host);
         if (!isset($url['scheme'])) {
-            throw new \LogicException("Invalid URL: {$host}");
+            throw new LogicException("Invalid URL: {$host}");
         }
         if (!isset($url['host'])) {
-            throw new \LogicException("Invalid URL: {$host}");
+            throw new LogicException("Invalid URL: {$host}");
         }
 
         switch ($url['scheme']) {
@@ -259,7 +261,7 @@ class GenericContainerInstance implements ContainerInstance
 
         $value = $this->tryGetData($class);
         if ($value === null) {
-            throw new \LogicException("No data of type {$class} associated with the container");
+            throw new LogicException("No data of type {$class} associated with the container");
         }
 
         return $value;
@@ -277,7 +279,7 @@ class GenericContainerInstance implements ContainerInstance
             return null;
         }
         if (!$value instanceof $class) {
-            throw new \LogicException("No data of type {$class} associated with the container");
+            throw new LogicException("No data of type {$class} associated with the container");
         }
 
         return $value;

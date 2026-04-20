@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\Types;
 
+use InvalidArgumentException;
+use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -138,7 +140,7 @@ class Mount implements Stringable
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
-            throw new \LogicException('Mount::'.$name.' does not exist');
+            throw new LogicException('Mount::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -270,7 +272,7 @@ class Mount implements Stringable
 
                 case 'volume-opt':
                     // TODO: Implement volume-opt on Mount
-                    throw new \LogicException('unimplemented');
+                    throw new LogicException('unimplemented');
 
                 default:
                     throw new InvalidFormatException($key, ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath', 'readonly', 'ro', 'volume-nocopy', 'volume-opt']);
@@ -320,7 +322,7 @@ class Mount implements Stringable
             $destination = isset($v['target']) ? $v['target'] : null;
         }
         if ($destination === null) {
-            throw new \InvalidArgumentException('Invalid mount configuration: destination is required');
+            throw new InvalidArgumentException('Invalid mount configuration: destination is required');
         }
         $subpath = isset($v['subpath']) ? $v['subpath'] : null;
         $readonly = isset($v['readonly']) ? $v['readonly'] : false;

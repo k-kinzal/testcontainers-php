@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Utility\WithLogger;
 
@@ -233,11 +234,11 @@ class HttpWaitStrategy implements WaitStrategy
             } else {
                 $exposedPorts = $instance->getExposedPorts();
                 if (!isset($exposedPorts[0])) {
-                    throw new \LogicException('HttpWaitStrategy requires at least one exposed port');
+                    throw new LogicException('HttpWaitStrategy requires at least one exposed port');
                 }
                 $port = $instance->getMappedPort($exposedPorts[0]);
                 if ($port === null) {
-                    throw new \LogicException(sprintf('No host port mapped to exposed port %d', $exposedPorts[0]));
+                    throw new LogicException(sprintf('No host port mapped to exposed port %d', $exposedPorts[0]));
                 }
             }
             $path = $this->path !== null ? $this->path : '/';

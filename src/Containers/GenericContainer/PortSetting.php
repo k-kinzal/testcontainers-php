@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use LogicException;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
@@ -243,7 +244,7 @@ trait PortSetting
         if ($portStrategyName !== null) {
             $strategy = $portStrategyProvider->get($portStrategyName);
             if (!$strategy) {
-                throw new \LogicException('Port strategy not found: '.$portStrategyName);
+                throw new LogicException('Port strategy not found: '.$portStrategyName);
             }
 
             return $strategy;
@@ -294,7 +295,7 @@ trait PortSetting
         try {
             $provider->register('random', new RandomPortStrategy());
         } catch (AlreadyExistsPortStrategyException $e) {
-            throw new \LogicException('Port strategy already registered: random', 0, $e);
+            throw new LogicException('Port strategy already registered: random', 0, $e);
         }
     }
 }

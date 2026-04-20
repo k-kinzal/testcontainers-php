@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Types;
 
+use InvalidArgumentException;
+use LogicException;
 use Testcontainers\Utility\Stringable;
 
 use function Testcontainers\ensure;
@@ -28,7 +30,7 @@ class NetworkId implements Stringable
         ensure(is_string($v), '$v must be string');
 
         if (!self::isValid($v)) {
-            throw new \LogicException('Invalid network ID: `'.$v.'`');
+            throw new LogicException('Invalid network ID: `'.$v.'`');
         }
 
         $this->data = $v;
@@ -74,7 +76,7 @@ class NetworkId implements Stringable
         ensure(is_string($v), '$v must be string');
 
         if (!self::isValid($v)) {
-            throw new \InvalidArgumentException('Invalid network ID: `'.$v.'`');
+            throw new InvalidArgumentException('Invalid network ID: `'.$v.'`');
         }
 
         return new self($v);

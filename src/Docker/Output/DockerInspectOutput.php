@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Output;
 
+use LogicException;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\ContainerObject;
@@ -56,7 +57,7 @@ class DockerInspectOutput extends DockerOutput
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this->object, $name)) {
-            throw new \LogicException("Property {$name} does not exist");
+            throw new LogicException("Property {$name} does not exist");
         }
 
         return $this->object->{$name};

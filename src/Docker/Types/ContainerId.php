@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Types;
 
+use InvalidArgumentException;
+use LogicException;
 use Testcontainers\Utility\Stringable;
 
 use function Testcontainers\ensure;
@@ -30,7 +32,7 @@ class ContainerId implements Stringable
         ensure(is_string($v), '$v must be string');
 
         if (!self::isValid($v)) {
-            throw new \LogicException('Invalid container ID: `'.$v.'`');
+            throw new LogicException('Invalid container ID: `'.$v.'`');
         }
 
         $this->data = $v;
@@ -76,7 +78,7 @@ class ContainerId implements Stringable
         ensure(is_string($v), '$v must be string');
 
         if (!self::isValid($v)) {
-            throw new \InvalidArgumentException('Invalid container ID: `'.$v.'`');
+            throw new InvalidArgumentException('Invalid container ID: `'.$v.'`');
         }
 
         return new self($v);

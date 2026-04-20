@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use Exception;
+use InvalidArgumentException;
+use LogicException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 use Testcontainers\Containers\StartupCheckStrategy\WaitingTimeoutException as StartupWaitingTimeoutException;
@@ -74,7 +77,7 @@ class GenericContainer implements Container
         ensure(static::$IMAGE === null || is_string(static::$IMAGE), 'static::$IMAGE must be null|string');
 
         if ($image === null && static::$IMAGE === null) {
-            throw new \InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
+            throw new InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
         }
 
         $this->image = $image !== null ? $image : static::$IMAGE;
@@ -196,7 +199,7 @@ class GenericContainer implements Container
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
+                throw new LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
             } catch (BindAddressAlreadyUseException $e) {
                 if ($portStrategy === null) {
                     throw $e;
@@ -225,14 +228,14 @@ class GenericContainer implements Container
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
+                throw new LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
             } catch (ProcessTimedOutException $e) {
                 throw new StartupCheckFailedException('container startup timed out', 0, $e);
             }
         }
 
         if (!$output instanceof DockerRunWithDetachOutput) {
-            throw new \LogicException('Expected DockerRunWithDetachOutput');
+            throw new LogicException('Expected DockerRunWithDetachOutput');
         }
 
         $this->logger()->debug('Container started', [
@@ -299,7 +302,7 @@ class GenericContainer implements Container
                 ]);
                 $waitStrategy->withLogger($this->logger())->waitUntilReady($instance);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger()->debug('Container startup failed, stopping container', [
                 'containerId' => $output->getContainerId(),
                 'exception' => $e,
@@ -307,7 +310,7 @@ class GenericContainer implements Container
 
             try {
                 $instance->stop();
-            } catch (\Exception $stopException) {
+            } catch (Exception $stopException) {
                 $this->logger()->debug('Failed to stop container during cleanup', [
                     'exception' => $stopException,
                 ]);

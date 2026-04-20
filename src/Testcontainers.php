@@ -2,6 +2,8 @@
 
 namespace Testcontainers;
 
+use Exception;
+use LogicException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
@@ -91,7 +93,7 @@ class Testcontainers
         } elseif ($containerClass instanceof Container) {
             $container = $containerClass;
         } else {
-            throw new \LogicException('The container class must be a valid class name or an instance of `Container`');
+            throw new LogicException('The container class must be a valid class name or an instance of `Container`');
         }
 
         $identifier = is_string($containerClass)
@@ -148,7 +150,7 @@ class Testcontainers
             try {
                 $instance->stop();
                 $stopped[] = $key;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $errors[$key] = $e;
             }
         }
@@ -156,7 +158,7 @@ class Testcontainers
             unset(self::$instances[$key]);
         }
         if (!empty($errors)) {
-            throw new \Testcontainers\Exceptions\ContainerStopException($errors);
+            throw new ContainerStopException($errors);
         }
     }
 

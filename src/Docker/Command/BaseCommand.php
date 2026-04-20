@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Command;
 
+use LogicException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Process\Process;
@@ -11,6 +12,7 @@ use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Environments;
+use Traversable;
 
 use function Testcontainers\ensure;
 use function Testcontainers\kebab;
@@ -65,7 +67,7 @@ trait BaseCommand
     /**
      * The input for Docker commands.
      *
-     * This can be a stream resource, scalar value, `\Traversable`, or null if no input is provided.
+     * This can be a stream resource, scalar value, `Traversable`, or null if no input is provided.
      *
      * @var null|mixed
      */
@@ -181,7 +183,7 @@ trait BaseCommand
      * Set the input for Docker commands.
      *
      * This method allows you to specify the input that will be passed to the Docker process
-     * when executing commands. The input can be a stream resource, a scalar value, a `\Traversable`,
+     * when executing commands. The input can be a stream resource, a scalar value, a `Traversable`,
      * or `null` if no input is provided.
      *
      * @param null|mixed $input the input for the Docker process
@@ -464,7 +466,7 @@ trait BaseCommand
                         } elseif (method_exists($v, '__toString')) {
                             $result[] = $k.'='.$this->expandEnv((string) $v);
                         } else {
-                            throw new \LogicException('Unsupported value type: `'.var_export($v, true).'`');
+                            throw new LogicException('Unsupported value type: `'.var_export($v, true).'`');
                         }
                     } else {
                         if (is_string($v)) {
@@ -474,7 +476,7 @@ trait BaseCommand
                         } elseif (method_exists($v, '__toString')) {
                             $result[] = $this->expandEnv((string) $v);
                         } else {
-                            throw new \LogicException('Unsupported value type: `'.var_export($v, true).'`');
+                            throw new LogicException('Unsupported value type: `'.var_export($v, true).'`');
                         }
                     }
                 }

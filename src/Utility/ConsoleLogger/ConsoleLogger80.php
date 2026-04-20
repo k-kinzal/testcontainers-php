@@ -5,6 +5,7 @@ namespace Testcontainers\Utility;
 use Psr\Log\AbstractLogger;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
+use Stringable;
 
 use function Testcontainers\ensure;
 
@@ -72,7 +73,7 @@ class ConsoleLogger extends AbstractLogger
     /**
      * {@inheritDoc}
      */
-    public function log($level, string|\Stringable $message, array $context = []): void
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         ensure(is_string($level), '$level must be string');
 

@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use InvalidArgumentException;
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Exceptions\InvalidFormatException;
 
@@ -91,7 +92,7 @@ trait HostSetting
         } else {
             $hostnameJson = json_encode($hostname);
             $ipAddressJson = json_encode($ipAddress);
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Invalid arguments: withExtraHost(`'
                 .($hostnameJson !== false ? $hostnameJson : 'null').'`, `'
                 .($ipAddressJson !== false ? $ipAddressJson : 'null').'`)'

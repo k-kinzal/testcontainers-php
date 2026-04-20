@@ -12,7 +12,7 @@ use function Testcontainers\ensure;
  * This exception is used to indicate that an attempt was made to register
  * a wait strategy with a name that is already in use.
  */
-class AlreadyExistsWaitStrategyException extends \Exception
+class AlreadyExistsWaitStrategyException extends Exception
 {
     /**
      * @param string $name the name of the wait strategy that already exists

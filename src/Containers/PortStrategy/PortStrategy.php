@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
+use RuntimeException;
+
 /**
  * An interface representing a port strategy.
  */
@@ -12,7 +14,7 @@ interface PortStrategy
      *
      * @return int the port number
      *
-     * @throws \RuntimeException if no available port can be selected
+     * @throws RuntimeException if no available port can be selected
      */
     public function getPort();
 

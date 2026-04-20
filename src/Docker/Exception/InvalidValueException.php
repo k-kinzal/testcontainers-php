@@ -11,7 +11,7 @@ use function Testcontainers\ensure;
  *
  * @template T
  */
-class InvalidValueException extends \Exception
+class InvalidValueException extends Exception
 {
     /**
      * The context of the invalid value.

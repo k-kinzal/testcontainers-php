@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
+use LogicException;
 use Testcontainers\Utility\Stringable;
 
 use function Testcontainers\ensure;
@@ -128,7 +129,7 @@ class MySQLDSN implements DSN, Stringable
     public function toString()
     {
         if ($this->host === null) {
-            throw new \LogicException('Host is required');
+            throw new LogicException('Host is required');
         }
         $dsn = sprintf('mysql:host=%s;', $this->host);
         if ($this->port !== null) {

@@ -2,9 +2,11 @@
 
 namespace Testcontainers\Docker\Command;
 
+use Exception;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Output\DockerStopOutput;
+use Testcontainers\Docker\Output\DockerVersionOutput;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\Utility\Stringable;
 
@@ -73,7 +75,7 @@ trait StopCommand
                 try {
                     $clientVersion = $this->version()->getClientVersion();
                     $this->stopTimeoutOption = ($clientVersion !== null && version_compare($clientVersion, '28.0', '>=')) ? 'timeout' : 'time';
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->stopTimeoutOption = 'time';
                 }
             }
@@ -93,7 +95,7 @@ trait StopCommand
     abstract protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true);
 
     /**
-     * @return \Testcontainers\Docker\Output\DockerVersionOutput
+     * @return DockerVersionOutput
      */
     abstract public function version();
 }
