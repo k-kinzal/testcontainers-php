@@ -53,7 +53,7 @@ trait NetworkCreateCommand
         $process = $this->execute(
             'network',
             'create',
-            [$network],
+            [(string) $network],
             $options
         );
 
