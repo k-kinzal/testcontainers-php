@@ -26,6 +26,8 @@ class DockerInspectOutput extends DockerOutput
 
     /**
      * @param Process $process the Symfony Process instance that executed the `docker inspect` command
+     *
+     * @throws InvalidValueException if the fallback container object could not be constructed
      */
     public function __construct($process)
     {

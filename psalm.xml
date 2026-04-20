@@ -41,6 +41,8 @@
                 <referencedClass name="LogicException" />
                 <referencedClass name="InvalidArgumentException" />
                 <referencedClass name="Testcontainers\Exceptions\EnsureException" />
+                <referencedClass name="Symfony\Component\Process\Exception\LogicException" />
+                <referencedClass name="Symfony\Component\Process\Exception\RuntimeException" />
             </errorLevel>
         </MissingThrowsDocblock>
     </issueHandlers>

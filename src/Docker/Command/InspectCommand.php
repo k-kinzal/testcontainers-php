@@ -3,6 +3,7 @@
 namespace Testcontainers\Docker\Command;
 
 use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Output\DockerInspectOutput;
 use Testcontainers\Docker\Types\ContainerId;
@@ -24,6 +25,7 @@ trait InspectCommand
      * @param ContainerId $containerId the ID of the container to inspect
      *
      * @throws DockerException       if the Docker command fails for any other reason
+     * @throws InvalidValueException if the fallback container object could not be constructed
      * @throws NoSuchObjectException if the specified container does not exist
      *
      * @return DockerInspectOutput the output of the Docker inspect command, including detailed information about the container

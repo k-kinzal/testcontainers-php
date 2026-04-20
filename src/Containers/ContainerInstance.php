@@ -4,6 +4,7 @@ namespace Testcontainers\Containers;
 
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Types\ContainerId;
 
@@ -142,7 +143,8 @@ interface ContainerInstance
      *
      * @return bool true if the container is running, false otherwise
      *
-     * @throws DockerException if the Docker command fails
+     * @throws DockerException       if the Docker command fails
+     * @throws InvalidValueException if the container inspect output could not be parsed
      */
     public function isRunning();
 

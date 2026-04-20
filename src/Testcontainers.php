@@ -9,6 +9,7 @@ use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Exceptions\ContainerStopException;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Lifecycle\ContainerReaper;
@@ -79,6 +80,7 @@ class Testcontainers
      *
      * @throws InvalidFormatException      if a configuration value is not valid
      * @throws DockerException             if the Docker command fails
+     * @throws InvalidValueException       if the container inspect output could not be parsed
      * @throws StartupCheckFailedException if the container fails to start within the timeout
      */
     public static function run($containerClass)
