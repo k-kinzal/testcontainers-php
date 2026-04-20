@@ -42,6 +42,7 @@ class State
      */
     public function __get($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
@@ -62,6 +63,7 @@ class State
      */
     public static function fromArray($arr)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($arr), '$arr must be array');
 
         $state = new State();
@@ -82,6 +84,7 @@ class State
      */
     public static function ensureStatusFromArray($arr)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($arr), '$arr must be array');
 
         if (!isset($arr['Status'])) {
@@ -120,6 +123,7 @@ class State
      */
     public static function ensureExitCodeFromArray($arr)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($arr), '$arr must be array');
 
         if (!isset($arr['ExitCode'])) {

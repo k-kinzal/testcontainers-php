@@ -35,8 +35,9 @@ class BindMode implements Stringable
      */
     public function __construct($mode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($mode), '$mode must be string');
-        ensure(in_array($mode, [static::$READ_ONLY, static::$READ_WRITE], true), '$mode must be one of READ_ONLY or READ_WRITE');
+        assert(in_array($mode, [static::$READ_ONLY, static::$READ_WRITE]));
 
         $this->mode = $mode;
     }
@@ -80,6 +81,7 @@ class BindMode implements Stringable
      */
     public static function fromString($mode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($mode), '$mode must be string');
 
         if (!in_array($mode, [static::$READ_ONLY, static::$READ_WRITE])) {

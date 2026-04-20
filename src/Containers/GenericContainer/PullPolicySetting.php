@@ -52,6 +52,7 @@ trait PullPolicySetting
      */
     public function withImagePullPolicy($policy)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($policy instanceof ImagePullPolicy, '$policy must be ImagePullPolicy');
 
         $this->pullPolicy = $policy;
@@ -68,6 +69,7 @@ trait PullPolicySetting
      */
     public function withPullPolicy($policy)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($policy instanceof ImagePullPolicy, '$policy must be ImagePullPolicy');
 
         return $this->withImagePullPolicy($policy);
@@ -86,6 +88,7 @@ trait PullPolicySetting
      */
     protected function pullPolicy()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$PULL_POLICY === null || is_string(static::$PULL_POLICY), 'static::$PULL_POLICY must be null|string');
 
         if (static::$PULL_POLICY !== null) {

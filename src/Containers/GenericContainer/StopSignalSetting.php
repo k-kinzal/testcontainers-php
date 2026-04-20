@@ -55,6 +55,7 @@ trait StopSignalSetting
      */
     public function withStopSignal($signal)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($signal), '$signal must be string');
 
         $this->stopSignal = $signal;
@@ -72,6 +73,7 @@ trait StopSignalSetting
      */
     protected function stopSignal()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$STOP_SIGNAL === null || is_string(static::$STOP_SIGNAL), 'static::$STOP_SIGNAL must be null|string');
 
         if (static::$STOP_SIGNAL !== null) {

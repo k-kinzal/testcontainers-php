@@ -92,6 +92,7 @@ trait PortSetting
      */
     public function withExposedPort($port)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($port) || is_string($port), '$port must be int|string');
 
         if (is_string($port)) {
@@ -111,6 +112,7 @@ trait PortSetting
      */
     public function withExpose($port)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($port) || is_string($port), '$port must be int|string');
 
         return $this->withExposedPort($port);
@@ -125,6 +127,7 @@ trait PortSetting
      */
     public function withPort($port)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($port) || is_string($port), '$port must be int|string');
 
         return $this->withExposedPort($port);
@@ -139,6 +142,7 @@ trait PortSetting
      */
     public function withExposedPorts($ports)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($ports), '$ports must be array');
 
         $this->exposedPorts = $ports;
@@ -155,6 +159,7 @@ trait PortSetting
      */
     public function withExposes($ports)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($ports), '$ports must be array');
 
         return $this->withExposedPorts($ports);
@@ -169,6 +174,7 @@ trait PortSetting
      */
     public function withPorts($ports)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($ports), '$ports must be array');
 
         return $this->withExposedPorts($ports);
@@ -203,8 +209,11 @@ trait PortSetting
      */
     protected function exposedPorts()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$EXPOSED_PORTS === null || is_array(static::$EXPOSED_PORTS), 'static::$EXPOSED_PORTS must be null|array');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$EXPOSE === null || is_array(static::$EXPOSE), 'static::$EXPOSE must be null|array');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$PORTS === null || is_array(static::$PORTS), 'static::$PORTS must be null|array');
 
         if (static::$EXPOSED_PORTS !== null) {
@@ -239,6 +248,7 @@ trait PortSetting
             $this->registerPortStrategy($this->portStrategyProvider);
         }
         $portStrategyProvider = $this->portStrategyProvider;
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$PORT_STRATEGY === null || is_string(static::$PORT_STRATEGY), 'static::$PORT_STRATEGY must be null|string');
         $portStrategyName = static::$PORT_STRATEGY;
         if ($portStrategyName !== null) {

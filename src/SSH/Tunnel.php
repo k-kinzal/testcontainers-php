@@ -90,9 +90,13 @@ class Tunnel
         $remotePort,
         $sshHost
     ) {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($localPort), '$localPort must be int');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($remoteHost), '$remoteHost must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($remotePort), '$remotePort must be int');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($sshHost), '$sshHost must be string');
 
         $this->localPort = $localPort;
@@ -110,6 +114,7 @@ class Tunnel
      */
     public function withUser($user)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($user), '$user must be string');
 
         $this->user = $user;
@@ -126,6 +131,7 @@ class Tunnel
      */
     public function withSshPort($sshPort)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($sshPort), '$sshPort must be int');
 
         $this->sshPort = $sshPort;
@@ -142,6 +148,7 @@ class Tunnel
      */
     public function withLocalBindAddress($localBindAddress)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($localBindAddress), '$localBindAddress must be string');
 
         $this->localBindAddress = $localBindAddress;
@@ -158,6 +165,7 @@ class Tunnel
      */
     public function withIdentityFile($identityFile)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($identityFile), '$identityFile must be string');
 
         $this->identityFile = $identityFile;
@@ -174,6 +182,7 @@ class Tunnel
      */
     public function withSshOptions($sshOptions)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($sshOptions), '$sshOptions must be array');
 
         $this->sshOptions = $sshOptions;
@@ -191,7 +200,9 @@ class Tunnel
      */
     public function withSshOption($option, $value)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($option), '$option must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($value), '$value must be string');
 
         $this->sshOptions[$option] = $value;

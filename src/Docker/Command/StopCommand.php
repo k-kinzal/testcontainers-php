@@ -55,10 +55,12 @@ trait StopCommand
      */
     public function stop($containerId, $options = [])
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             is_array($containerId) || is_string($containerId) || $containerId instanceof ContainerId,
             '$containerId must be array|ContainerId|string'
         );
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($options), '$options must be array');
 
         if (is_array($containerId)) {

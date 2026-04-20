@@ -30,6 +30,7 @@ class DockerRunWithDetachOutput extends DockerRunOutput
      */
     public function __construct($process)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($process instanceof Process, '$process must be Process');
 
         parent::__construct($process);

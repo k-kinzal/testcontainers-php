@@ -51,6 +51,7 @@ trait NetworkModeSetting
      */
     public function withNetworkMode($networkMode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($networkMode instanceof NetworkMode, '$networkMode must be NetworkMode');
 
         $this->networkMode = $networkMode;
@@ -65,6 +66,7 @@ trait NetworkModeSetting
      */
     protected function networkMode()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$NETWORK_MODE === null || is_string(static::$NETWORK_MODE), 'static::$NETWORK_MODE must be null|string');
 
         if (static::$NETWORK_MODE !== null) {

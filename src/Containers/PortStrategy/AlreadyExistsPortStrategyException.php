@@ -18,8 +18,11 @@ class AlreadyExistsPortStrategyException extends Exception
      */
     public function __construct($name, $code = 0, $previous = null)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($code), '$code must be int');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($previous === null || $previous instanceof Exception, '$previous must be null|Exception');
 
         parent::__construct('Port strategy with name '.$name.' already exists.', $code, $previous);

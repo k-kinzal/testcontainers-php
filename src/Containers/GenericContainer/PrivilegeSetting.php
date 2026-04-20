@@ -49,6 +49,7 @@ trait PrivilegeSetting
      */
     public function withPrivilegedMode($mode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_bool($mode), '$mode must be bool');
 
         $this->privileged = $mode;
@@ -67,6 +68,7 @@ trait PrivilegeSetting
      */
     protected function privileged()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$PRIVILEGED === null || is_bool(static::$PRIVILEGED), 'static::$PRIVILEGED must be null|bool');
 
         if (static::$PRIVILEGED !== null) {

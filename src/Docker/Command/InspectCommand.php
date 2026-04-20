@@ -32,6 +32,7 @@ trait InspectCommand
      */
     public function inspect($containerId)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($containerId instanceof ContainerId, '$containerId must be ContainerId');
 
         $process = $this->execute('inspect', null, [(string) $containerId], [

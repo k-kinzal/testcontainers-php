@@ -56,6 +56,7 @@ class MySQLDSN implements DSN, Stringable
      */
     public function withHost($host)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($host), '$host must be string');
 
         $this->host = $host;
@@ -76,6 +77,7 @@ class MySQLDSN implements DSN, Stringable
      */
     public function withPort($port)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($port), '$port must be int');
 
         $this->port = $port;
@@ -100,6 +102,7 @@ class MySQLDSN implements DSN, Stringable
      */
     public function withDbname($dbname)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($dbname), '$dbname must be string');
 
         $this->dbname = $dbname;
@@ -116,6 +119,7 @@ class MySQLDSN implements DSN, Stringable
      */
     public function withCharset($charset)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($charset), '$charset must be string');
 
         $this->charset = $charset;

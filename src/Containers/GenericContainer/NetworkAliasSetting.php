@@ -49,6 +49,7 @@ trait NetworkAliasSetting
      */
     public function withNetworkAlias($alias)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($alias), '$alias must be string');
 
         $this->networkAliases[] = $alias;
@@ -65,6 +66,7 @@ trait NetworkAliasSetting
      */
     public function withNetworkAliases($aliases)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($aliases), '$aliases must be array');
 
         $this->networkAliases = $aliases;
@@ -79,6 +81,7 @@ trait NetworkAliasSetting
      */
     protected function networkAliases()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             static::$NETWORK_ALIASES === null || is_array(static::$NETWORK_ALIASES),
             'static::$NETWORK_ALIASES must be null|array'

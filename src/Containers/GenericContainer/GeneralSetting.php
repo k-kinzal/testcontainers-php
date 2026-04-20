@@ -76,6 +76,7 @@ trait GeneralSetting
      */
     public function withCommand($cmd)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($cmd), '$cmd must be string');
 
         $this->commands = [$cmd];
@@ -89,6 +90,7 @@ trait GeneralSetting
      */
     public function withCommands($commandParts)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($commandParts), '$commandParts must be array');
 
         $this->commands = $commandParts;
@@ -105,6 +107,7 @@ trait GeneralSetting
      */
     public function withName($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         $this->name = $name;
@@ -133,6 +136,7 @@ trait GeneralSetting
      */
     protected function commands()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             static::$COMMANDS === null || is_string(static::$COMMANDS) || is_array(static::$COMMANDS),
             'static::$COMMANDS must be null|string|array'
@@ -191,6 +195,7 @@ trait GeneralSetting
      */
     protected function name()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$NAME === null || is_string(static::$NAME), 'static::$NAME must be null|string');
 
         if (static::$NAME !== null) {

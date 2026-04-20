@@ -40,7 +40,9 @@ trait LogsCommand
      */
     public function logs($containerId, $options = [])
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($containerId instanceof ContainerId, '$containerId must be ContainerId');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($options), '$options must be array');
 
         $follow = isset($options['follow']) ? $options['follow'] : false;

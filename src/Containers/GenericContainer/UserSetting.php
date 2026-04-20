@@ -49,6 +49,7 @@ trait UserSetting
      */
     public function withUser($user)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($user), '$user must be string');
 
         $this->user = $user;
@@ -63,6 +64,7 @@ trait UserSetting
      */
     protected function user()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$USER === null || is_string(static::$USER), 'static::$USER must be null|string');
 
         if (static::$USER !== null) {

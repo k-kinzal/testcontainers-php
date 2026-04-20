@@ -34,6 +34,7 @@ class ContainerObject
      */
     public function __get($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
@@ -54,6 +55,7 @@ class ContainerObject
      */
     public static function fromArray($arr)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($arr), '$arr must be array');
 
         $object = new ContainerObject();

@@ -27,6 +27,7 @@ class SQLiteDSN implements DSN, Stringable
      */
     public function withHost($host)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($host), '$host must be string');
 
         return $this;
@@ -45,6 +46,7 @@ class SQLiteDSN implements DSN, Stringable
      */
     public function withPort($port)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($port), '$port must be int');
 
         return $this;

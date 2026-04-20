@@ -34,6 +34,7 @@ class PortStrategyProvider
      */
     public function register($name, $strategy)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
         ensure($strategy instanceof PortStrategy, '$strategy must be PortStrategy');
 
@@ -56,6 +57,7 @@ class PortStrategyProvider
      */
     public function get($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         return isset($this->strategies[$name]) ? $this->strategies[$name] : null;

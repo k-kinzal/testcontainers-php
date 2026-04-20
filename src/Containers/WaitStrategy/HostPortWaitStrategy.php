@@ -57,6 +57,7 @@ class HostPortWaitStrategy implements WaitStrategy
      */
     public function withPorts($ports)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($ports), '$ports must be array');
 
         $this->ports = $ports;
@@ -73,6 +74,7 @@ class HostPortWaitStrategy implements WaitStrategy
      */
     public function withTimeoutSeconds($seconds)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($seconds), '$seconds must be int');
 
         $this->timeout = $seconds;

@@ -59,6 +59,7 @@ trait VolumesFromSetting
     public function withVolumesFrom($container, $mode)
     {
         ensure($container instanceof ContainerInstance, '$container must be ContainerInstance');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($mode instanceof BindMode, '$mode must be BindMode');
 
         $this->volumesFrom[] = new VolumeFrom((string) $container->getContainerId(), $mode);
@@ -78,6 +79,7 @@ trait VolumesFromSetting
      */
     protected function volumesFrom()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$VOLUMES_FROM === null || is_array(static::$VOLUMES_FROM), 'static::$VOLUMES_FROM must be null|array');
 
         $targets = static::$VOLUMES_FROM;

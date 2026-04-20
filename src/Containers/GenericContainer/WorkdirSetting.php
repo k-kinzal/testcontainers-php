@@ -49,6 +49,7 @@ trait WorkdirSetting
      */
     public function withWorkingDirectory($workDir)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($workDir), '$workDir must be string');
 
         $this->workDir = $workDir;
@@ -65,6 +66,7 @@ trait WorkdirSetting
      */
     public function withWorkDir($workDir)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($workDir), '$workDir must be string');
 
         return $this->withWorkingDirectory($workDir);
@@ -77,6 +79,7 @@ trait WorkdirSetting
      */
     protected function workDir()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$WORKDIR === null || is_string(static::$WORKDIR), 'static::$WORKDIR must be null|string');
 
         if (static::$WORKDIR !== null) {

@@ -47,6 +47,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     public function withDockerClient($client)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($client instanceof DockerClient, '$client must be DockerClient');
 
         $this->client = $client;
@@ -63,6 +64,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     public function withTimeoutSeconds($seconds)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($seconds), '$seconds must be int');
 
         $this->timeout = $seconds;
@@ -79,6 +81,7 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      */
     public function withRetryInterval($interval)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($interval), '$interval must be int');
 
         $this->retryInterval = $interval;

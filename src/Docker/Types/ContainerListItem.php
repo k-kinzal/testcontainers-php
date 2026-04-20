@@ -113,6 +113,7 @@ class ContainerListItem
      */
     public function __get($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
@@ -133,6 +134,7 @@ class ContainerListItem
      */
     public static function fromArray($arr)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($arr), '$arr must be array');
 
         $item = new self();
@@ -163,6 +165,7 @@ class ContainerListItem
      */
     public function getLabel($key)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($key), '$key must be string');
 
         return isset($this->labels[$key]) ? $this->labels[$key] : null;

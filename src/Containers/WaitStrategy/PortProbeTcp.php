@@ -14,7 +14,9 @@ class PortProbeTcp implements PortProbe
      */
     public function available($host, $port)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($host), '$host must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($port), '$port must be int');
 
         $fp = @fsockopen($host, $port);

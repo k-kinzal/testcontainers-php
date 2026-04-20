@@ -70,6 +70,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function __construct($containerDef)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($containerDef), '$containerDef must be array');
 
         $this->containerDef = $containerDef;
@@ -95,6 +96,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function setDockerClient($client)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($client instanceof DockerClient, '$client must be DockerClient');
 
         $this->client = $client;
@@ -113,6 +115,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getLabel($label)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($label), '$label must be string');
 
         if (!isset($this->containerDef['labels'])) {
@@ -192,6 +195,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getMappedPort($exposedPort)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($exposedPort), '$exposedPort must be int');
 
         if (!isset($this->containerDef['ports'])) {
@@ -247,6 +251,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function setData($value)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_object($value), '$value must be object');
 
         $this->data[get_class($value)] = $value;
@@ -257,6 +262,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function getData($class)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($class), '$class must be string');
 
         $value = $this->tryGetData($class);
@@ -272,6 +278,7 @@ class GenericContainerInstance implements ContainerInstance
      */
     public function tryGetData($class)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($class), '$class must be string');
 
         $value = isset($this->data[$class]) ? $this->data[$class] : null;

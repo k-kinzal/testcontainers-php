@@ -22,6 +22,7 @@ class StaticPortStrategy implements PortStrategy
      */
     public function __construct($port)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($port), '$port must be int');
 
         $this->port = $port;

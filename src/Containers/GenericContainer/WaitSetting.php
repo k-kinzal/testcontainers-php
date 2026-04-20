@@ -89,6 +89,7 @@ trait WaitSetting
             $this->waitStrategyProvider = new WaitStrategyProvider();
             $this->registerWaitStrategy($this->waitStrategyProvider);
         }
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$WAIT_STRATEGY === null || is_string(static::$WAIT_STRATEGY), 'static::$WAIT_STRATEGY must be null|string');
         $waitStrategyName = static::$WAIT_STRATEGY;
         if ($waitStrategyName !== null) {

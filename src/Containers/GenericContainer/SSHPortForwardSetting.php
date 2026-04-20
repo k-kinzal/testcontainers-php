@@ -58,8 +58,11 @@ trait SSHPortForwardSetting
      */
     public function withSSHPortForward($sshHost, $sshPort = null, $sshUser = null)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($sshHost), '$sshHost must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($sshPort === null || is_int($sshPort), '$sshPort must be null|int');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($sshUser === null || is_string($sshUser), '$sshUser must be null|string');
 
         $this->sshPortForward = [
@@ -82,6 +85,7 @@ trait SSHPortForwardSetting
      */
     protected function sshPortForward()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             self::$SSH_PORT_FORWARD === null || is_bool(self::$SSH_PORT_FORWARD) || is_string(self::$SSH_PORT_FORWARD),
             'self::$SSH_PORT_FORWARD must be null|bool|string'

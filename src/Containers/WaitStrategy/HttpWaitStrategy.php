@@ -107,6 +107,7 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withEndpoint($endpoint)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($endpoint), '$endpoint must be string');
 
         $this->endpoint = $endpoint;
@@ -123,6 +124,7 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withSchema($schema)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($schema), '$schema must be string');
 
         $this->schema = $schema;
@@ -139,6 +141,7 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withHost($host)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($host), '$host must be string');
 
         $this->host = $host;
@@ -155,6 +158,7 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withPath($path)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($path), '$path must be string');
 
         $this->path = $path;
@@ -171,6 +175,7 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withPort($port)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($port), '$port must be int');
 
         $this->port = $port;
@@ -187,6 +192,7 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withExpectedResponseCode($responseCode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($responseCode), '$responseCode must be int');
 
         $this->expectedResponseCode = $responseCode;
@@ -203,6 +209,7 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withTimeoutSeconds($seconds)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($seconds), '$seconds must be int');
 
         $this->timeout = $seconds;

@@ -51,7 +51,9 @@ class ConsoleLogger extends AbstractLogger
      */
     public function __construct($stream = null, $minLevel = LogLevel::DEBUG)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($stream === null || is_resource($stream), '$stream must be null|resource');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($minLevel), '$minLevel must be string');
 
         if ($stream !== null) {
@@ -74,7 +76,9 @@ class ConsoleLogger extends AbstractLogger
      */
     public function log($level, $message, array $context = array())
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($level), '$level must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($message), '$message must be string');
 
         if (!isset(self::$LOG_LEVELS[$level])) {

@@ -56,6 +56,7 @@ class LogMessageWaitStrategy implements WaitStrategy
      */
     public function withPattern($pattern)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($pattern), '$pattern must be string');
 
         $this->pattern = $pattern;
@@ -75,6 +76,7 @@ class LogMessageWaitStrategy implements WaitStrategy
      */
     public function withFailurePattern($pattern)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($pattern), '$pattern must be string');
 
         $this->failurePattern = $pattern;
@@ -91,6 +93,7 @@ class LogMessageWaitStrategy implements WaitStrategy
      */
     public function withTimeoutSeconds($seconds)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($seconds), '$seconds must be int');
 
         $this->timeout = $seconds;

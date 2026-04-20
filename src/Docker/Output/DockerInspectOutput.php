@@ -31,6 +31,7 @@ class DockerInspectOutput extends DockerOutput
      */
     public function __construct($process)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($process instanceof Process, '$process must be Process');
 
         parent::__construct($process);
@@ -56,6 +57,7 @@ class DockerInspectOutput extends DockerOutput
      */
     public function __get($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this->object, $name)) {

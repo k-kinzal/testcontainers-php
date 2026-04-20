@@ -96,6 +96,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function withUsername($username)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($username), '$username must be string');
 
         $this->username = $username;
@@ -114,6 +115,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function withPassword($password)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($password), '$password must be string');
 
         $this->password = $password;
@@ -133,6 +135,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function withTimeoutSeconds($timeout)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($timeout), '$timeout must be int');
 
         $this->timeout = $timeout;
@@ -152,6 +155,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
      */
     public function withRetryInterval($interval)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($interval), '$interval must be int');
 
         $this->retryInterval = $interval;

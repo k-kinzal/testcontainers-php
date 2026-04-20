@@ -77,10 +77,12 @@ trait HostSetting
      */
     public function withExtraHost($hostname, $ipAddress = null)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             is_array($hostname) || is_string($hostname) || $hostname instanceof HostToIp,
             '$hostname must be array|HostToIp|string'
         );
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($ipAddress === null || is_string($ipAddress), '$ipAddress must be null|string');
 
         if (($hostname instanceof HostToIp) && $ipAddress === null) {
@@ -118,6 +120,7 @@ trait HostSetting
      */
     public function withExtraHosts($extraHosts)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($extraHosts), '$extraHosts must be array');
 
         $this->extraHosts = [];
@@ -137,7 +140,9 @@ trait HostSetting
      */
     protected function extraHosts()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array(static::$EXTRA_HOSTS), 'static::$EXTRA_HOSTS must be array');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array(static::$HOSTS), 'static::$HOSTS must be array');
 
         $static = static::$EXTRA_HOSTS;

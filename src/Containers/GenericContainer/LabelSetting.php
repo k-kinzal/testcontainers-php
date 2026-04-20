@@ -52,7 +52,9 @@ trait LabelSetting
      */
     public function withLabel($key, $value)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($key), '$key must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($value), '$value must be string');
 
         $this->labels[$key] = $value;
@@ -69,6 +71,7 @@ trait LabelSetting
      */
     public function withLabels($labels)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($labels), '$labels must be array');
 
         $this->labels = $labels;
@@ -87,6 +90,7 @@ trait LabelSetting
      */
     protected function labels()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$LABELS === null || is_array(static::$LABELS), 'static::$LABELS must be null|array');
 
         if (static::$LABELS !== null) {

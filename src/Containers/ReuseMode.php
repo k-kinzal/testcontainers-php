@@ -51,11 +51,9 @@ class ReuseMode implements Stringable
      */
     public function __construct($mode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($mode), '$mode must be string');
-        ensure(
-            in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE], true),
-            '$mode must be one of ADD, RESTART, REUSE'
-        );
+        assert(in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE]));
 
         $this->mode = $mode;
     }
@@ -109,6 +107,7 @@ class ReuseMode implements Stringable
      */
     public static function fromString($mode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($mode), '$mode must be string');
 
         if (!in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE])) {

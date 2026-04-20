@@ -19,6 +19,7 @@ class AlreadyExistsWaitStrategyException extends Exception
      */
     public function __construct($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         parent::__construct("Wait strategy with name {$name} already exists.");

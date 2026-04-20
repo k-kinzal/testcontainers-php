@@ -27,6 +27,7 @@ class NetworkId implements Stringable
      */
     public function __construct($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($v), '$v must be string');
 
         if (!self::isValid($v)) {
@@ -73,6 +74,7 @@ class NetworkId implements Stringable
      */
     public static function fromString($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($v), '$v must be string');
 
         if (!self::isValid($v)) {

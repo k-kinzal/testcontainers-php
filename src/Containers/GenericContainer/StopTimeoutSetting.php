@@ -51,6 +51,7 @@ trait StopTimeoutSetting
      */
     public function withStopTimeout($seconds)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($seconds), '$seconds must be int');
 
         $this->stopTimeout = $seconds;
@@ -68,6 +69,7 @@ trait StopTimeoutSetting
      */
     protected function stopTimeout()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$STOP_TIMEOUT === null || is_int(static::$STOP_TIMEOUT), 'static::$STOP_TIMEOUT must be null|int');
 
         if (static::$STOP_TIMEOUT !== null) {

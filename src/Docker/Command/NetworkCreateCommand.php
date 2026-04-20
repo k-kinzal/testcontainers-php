@@ -47,6 +47,7 @@ trait NetworkCreateCommand
     public function networkCreate($network, $options = [])
     {
         ensure(is_string($network) || $network instanceof Stringable, '$network must be string|Stringable');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($options), '$options must be array');
 
         $process = $this->execute(

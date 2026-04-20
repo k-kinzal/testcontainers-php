@@ -47,11 +47,9 @@ class ConflictBehavior implements Stringable
      */
     public function __construct($action)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($action), '$action must be string');
-        ensure(
-            in_array($action, [static::$RETRY, static::$FAIL], true),
-            '$action must be one of RETRY or FAIL'
-        );
+        assert(in_array($action, [static::$RETRY, static::$FAIL]));
 
         $this->action = $action;
     }
@@ -101,6 +99,7 @@ class ConflictBehavior implements Stringable
      */
     public static function fromString($action)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($action), '$action must be string');
 
         if (!in_array($action, [static::$RETRY, static::$FAIL])) {

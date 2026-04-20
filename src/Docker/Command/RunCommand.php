@@ -58,9 +58,13 @@ trait RunCommand
      */
     public function run($image, $command = null, $args = [], $options = [])
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($image), '$image must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($command === null || is_string($command), '$command must be null|string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($args), '$args must be array');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($options), '$options must be array');
 
         $process = $this->execute(

@@ -73,7 +73,9 @@ class GenericContainer implements Container
      */
     public function __construct($image = null)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($image === null || is_string($image), '$image must be null|string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$IMAGE === null || is_string(static::$IMAGE), 'static::$IMAGE must be null|string');
 
         if ($image === null && static::$IMAGE === null) {
@@ -92,6 +94,7 @@ class GenericContainer implements Container
      */
     public function withDockerClient($client)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($client instanceof DockerClient, '$client must be DockerClient');
 
         $this->client = $client;

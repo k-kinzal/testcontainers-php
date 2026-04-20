@@ -11,6 +11,7 @@
     errorLevel="1"
     findUnusedBaselineEntry="false"
     findUnusedCode="false"
+    findUnusedPsalmSuppress="true"
     phpVersion="5.6"
     rememberPropertyAssignmentsAfterCall="false"
     reportMixedIssues="true"

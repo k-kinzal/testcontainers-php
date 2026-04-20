@@ -107,6 +107,7 @@ trait StartupSetting
      */
     public function withStartupTimeout($timeout)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($timeout), '$timeout must be int');
 
         $this->startupTimeout = $timeout;
@@ -139,6 +140,7 @@ trait StartupSetting
      */
     public function withStartupConflictRetries($retryAttempts)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($retryAttempts), '$retryAttempts must be int');
 
         $this->startupConflictRetryAttempts = $retryAttempts;
@@ -153,6 +155,7 @@ trait StartupSetting
      */
     protected function startupTimeout()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$STARTUP_TIMEOUT === null || is_int(static::$STARTUP_TIMEOUT), 'static::$STARTUP_TIMEOUT must be null|int');
 
         if (static::$STARTUP_TIMEOUT !== null) {
@@ -180,6 +183,7 @@ trait StartupSetting
             $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
         }
 
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             static::$STARTUP_CHECK_STRATEGY === null || is_string(static::$STARTUP_CHECK_STRATEGY),
             'static::$STARTUP_CHECK_STRATEGY must be null|string'
@@ -244,6 +248,7 @@ trait StartupSetting
      */
     protected function startupConflictRetryAttempts()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             static::$STARTUP_CONFLICT_RETRY_ATTEMPTS === null || is_int(static::$STARTUP_CONFLICT_RETRY_ATTEMPTS),
             'static::$STARTUP_CONFLICT_RETRY_ATTEMPTS must be null|int'

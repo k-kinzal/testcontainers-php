@@ -36,7 +36,9 @@ class HostToIp implements Stringable
      */
     public function __construct($host, $ip)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($host), '$host must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($ip), '$ip must be string');
 
         $this->host = $host;
@@ -60,6 +62,7 @@ class HostToIp implements Stringable
      */
     public function __get($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
@@ -80,6 +83,7 @@ class HostToIp implements Stringable
      */
     public static function fromString($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($v), '$v must be string');
 
         $parts = explode(':', $v);
@@ -102,6 +106,7 @@ class HostToIp implements Stringable
      */
     public static function fromArray($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($v), '$v must be array');
 
         return new self($v['hostname'], $v['ipAddress']);

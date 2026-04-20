@@ -15,6 +15,7 @@ class NoSuchObjectException extends DockerException
      */
     public static function match($output)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($output), '$output must be string');
 
         return stripos($output, 'error: no such object: ') === 0;

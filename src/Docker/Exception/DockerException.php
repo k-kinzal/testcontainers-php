@@ -27,6 +27,7 @@ class DockerException extends RuntimeException
      */
     public function __construct($process)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($process instanceof Process, '$process must be Process');
 
         $command = $process->getCommandLine();

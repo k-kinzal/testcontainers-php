@@ -26,6 +26,7 @@ class InvalidValueException extends Exception
      */
     public function __construct($message, $context = null)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($message), '$message must be string');
 
         parent::__construct($message);

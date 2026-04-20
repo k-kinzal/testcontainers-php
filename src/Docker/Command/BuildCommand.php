@@ -65,7 +65,9 @@ trait BuildCommand
      */
     public function build($path, $options = [])
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($path), '$path must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($options), '$options must be array');
 
         $process = $this->execute('build', null, [$path], $options);

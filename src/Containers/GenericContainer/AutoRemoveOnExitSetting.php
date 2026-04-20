@@ -50,6 +50,7 @@ trait AutoRemoveOnExitSetting
      */
     public function withAutoRemoveOnExit($autoRemoveOnExit)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_bool($autoRemoveOnExit), '$autoRemoveOnExit must be bool');
 
         $this->autoRemoveOnExit = $autoRemoveOnExit;
@@ -67,6 +68,7 @@ trait AutoRemoveOnExitSetting
      */
     protected function autoRemoveOnExit()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             static::$AUTO_REMOVE_ON_EXIT === null || is_bool(static::$AUTO_REMOVE_ON_EXIT),
             'static::$AUTO_REMOVE_ON_EXIT must be null|bool'

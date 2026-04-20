@@ -45,11 +45,9 @@ class ImagePullPolicy implements Stringable
      */
     public function __construct($policy)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($policy), '$policy must be string');
-        ensure(
-            in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER], true),
-            '$policy must be one of ALWAYS, MISSING, NEVER'
-        );
+        assert(in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]));
 
         $this->policy = $policy;
     }
@@ -103,6 +101,7 @@ class ImagePullPolicy implements Stringable
      */
     public static function fromString($policy)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($policy), '$policy must be string');
 
         if (!in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER])) {

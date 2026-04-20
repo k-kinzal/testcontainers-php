@@ -36,7 +36,9 @@ class VolumeFrom implements Stringable
      */
     public function __construct($name, $mode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($mode instanceof BindMode, '$mode must be BindMode');
 
         $this->name = $name;
@@ -58,6 +60,7 @@ class VolumeFrom implements Stringable
      */
     public function __get($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
@@ -78,6 +81,7 @@ class VolumeFrom implements Stringable
      */
     public static function fromString($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($v), '$v must be string');
 
         if (strpos($v, ':') === false) {
@@ -101,6 +105,7 @@ class VolumeFrom implements Stringable
      */
     public static function fromArray($arr)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($arr), '$arr must be array');
 
         return new VolumeFrom($arr['name'], $arr['mode']);

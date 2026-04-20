@@ -26,6 +26,7 @@ class DockerVersionOutput extends DockerOutput
      */
     public function __construct($process)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($process instanceof Process, '$process must be Process');
 
         parent::__construct($process);

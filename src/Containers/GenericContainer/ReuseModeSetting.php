@@ -52,6 +52,7 @@ trait ReuseModeSetting
      */
     public function withReuseMode($reuseMode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($reuseMode instanceof ReuseMode, '$reuseMode must be ReuseMode');
 
         $this->reuseMode = $reuseMode;
@@ -68,6 +69,7 @@ trait ReuseModeSetting
      */
     public function reuseMode()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$REUSE_MODE === null || is_string(static::$REUSE_MODE), 'static::$REUSE_MODE must be null|string');
 
         if (static::$REUSE_MODE !== null) {

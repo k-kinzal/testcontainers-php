@@ -22,6 +22,7 @@ class BindAddressAlreadyUseException extends PortConflictException
      */
     public static function match($output)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($output), '$output must be string');
 
         return strpos($output, 'Error response from daemon:') !== false

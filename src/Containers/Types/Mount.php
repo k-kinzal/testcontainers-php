@@ -82,12 +82,19 @@ class Mount implements Stringable
      */
     public function __construct($type, $source, $destination, $subpath, $readonly, $nocopy, $opt)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($type === null || is_string($type), '$type must be null|string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($source === null || is_string($source), '$source must be null|string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($destination), '$destination must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($subpath === null || is_string($subpath), '$subpath must be null|string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($readonly === null || is_bool($readonly), '$readonly must be null|bool');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($nocopy === null || is_bool($nocopy), '$nocopy must be null|bool');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($opt === null || is_array($opt), '$opt must be null|array');
 
         $this->type = $type;
@@ -137,6 +144,7 @@ class Mount implements Stringable
      */
     public function __get($name)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
 
         if (!property_exists($this, $name)) {
@@ -157,6 +165,7 @@ class Mount implements Stringable
      */
     public static function fromString($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($v), '$v must be string');
 
         if (strpos($v, ':') > 0 || strpos($v, '=') === false) {
@@ -175,6 +184,7 @@ class Mount implements Stringable
      */
     public static function fromVolumeString($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($v), '$v must be string');
 
         $parts = explode(':', $v);
@@ -208,6 +218,7 @@ class Mount implements Stringable
      */
     public static function fromMountString($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($v), '$v must be string');
 
         $parts = explode(',', $v);
@@ -307,6 +318,7 @@ class Mount implements Stringable
      */
     public static function fromArray($v)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($v), '$v must be array');
 
         $type = isset($v['type']) ? $v['type'] : null;

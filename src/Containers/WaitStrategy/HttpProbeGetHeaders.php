@@ -17,7 +17,9 @@ class HttpProbeGetHeaders implements HttpProbe
      */
     public function available($endpoint, $responseCode = 200)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($endpoint), '$endpoint must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($responseCode), '$responseCode must be int');
 
         $headers = @get_headers($endpoint);

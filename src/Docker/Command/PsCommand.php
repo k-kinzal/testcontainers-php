@@ -38,6 +38,7 @@ trait PsCommand
      */
     public function ps($options = [])
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($options), '$options must be array');
 
         // Force JSON format for structured parsing

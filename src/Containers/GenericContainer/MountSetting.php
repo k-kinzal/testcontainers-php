@@ -80,11 +80,14 @@ trait MountSetting
      */
     public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(
             is_array($hostPath) || is_string($hostPath) || $hostPath instanceof Mount,
             '$hostPath must be array|Mount|string'
         );
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($containerPath === null || is_string($containerPath), '$containerPath must be null|string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($mode === null || $mode instanceof BindMode, '$mode must be null|BindMode');
 
         if ($containerPath === null || $mode === null) {
@@ -134,6 +137,7 @@ trait MountSetting
      */
     public function withFileSystemBinds($mounts)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($mounts), '$mounts must be array');
 
         $this->mounts = [];
@@ -264,7 +268,9 @@ trait MountSetting
      */
     protected function mounts()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$MOUNTS === null || is_array(static::$MOUNTS), 'static::$MOUNTS must be null|array');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$VOLUMES === null || is_array(static::$VOLUMES), 'static::$VOLUMES must be null|array');
 
         $mounts = static::$MOUNTS;

@@ -112,6 +112,7 @@ trait BaseCommand
      */
     public function withCommand($command)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($command), '$command must be string');
 
         $this->command = $command;
@@ -132,6 +133,7 @@ trait BaseCommand
      */
     public function withGlobalOptions($options)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($options), '$options must be array');
 
         $this->options = $options;
@@ -152,6 +154,7 @@ trait BaseCommand
      */
     public function withCwd($cwd)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($cwd === null || is_string($cwd), '$cwd must be null|string');
 
         $this->cwd = $cwd;
@@ -172,6 +175,7 @@ trait BaseCommand
      */
     public function withEnv($env)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($env), '$env must be array');
 
         $this->env = $env;
@@ -242,6 +246,7 @@ trait BaseCommand
      */
     public function withProcOptions($proc_options)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($proc_options), '$proc_options must be array');
 
         $this->proc_options = $proc_options;
@@ -307,6 +312,7 @@ trait BaseCommand
      */
     public function expandEnv($s)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($s), '$s must be string');
 
         $env = $this->env !== null ? $this->env : [];

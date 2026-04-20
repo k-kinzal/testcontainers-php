@@ -22,7 +22,9 @@ class Environments
      */
     public static function __callStatic($name, $arguments)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($name), '$name must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($arguments), '$arguments must be array');
 
         $value = getenv($name);

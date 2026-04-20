@@ -49,6 +49,7 @@ trait EntrypointSetting
      */
     public function withEntrypoint($entrypoint)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($entrypoint), '$entrypoint must be string');
 
         $this->entrypoint = $entrypoint;
@@ -63,6 +64,7 @@ trait EntrypointSetting
      */
     protected function entrypoint()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$ENTRYPOINT === null || is_string(static::$ENTRYPOINT), 'static::$ENTRYPOINT must be null|string');
 
         if (static::$ENTRYPOINT !== null) {

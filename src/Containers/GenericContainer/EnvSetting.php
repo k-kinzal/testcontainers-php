@@ -61,7 +61,9 @@ trait EnvSetting
      */
     public function withEnv($key, $value)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($key), '$key must be string');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($value), '$value must be string');
 
         $this->env[$key] = $value;
@@ -78,6 +80,7 @@ trait EnvSetting
      */
     public function withEnvs($env)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_array($env), '$env must be array');
 
         $this->env = $env;
@@ -96,7 +99,9 @@ trait EnvSetting
      */
     protected function env()
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$ENVIRONMENTS === null || is_array(static::$ENVIRONMENTS), 'static::$ENVIRONMENTS must be null|array');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(static::$ENV === null || is_array(static::$ENV), 'static::$ENV must be null|array');
 
         if (static::$ENVIRONMENTS !== null) {

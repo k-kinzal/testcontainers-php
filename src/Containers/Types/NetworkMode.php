@@ -60,6 +60,7 @@ class NetworkMode implements Stringable
      */
     public function __construct($mode)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($mode), '$mode must be string');
 
         $this->mode = $mode;
@@ -112,6 +113,7 @@ class NetworkMode implements Stringable
      */
     public static function fromString($s)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($s), '$s must be string');
 
         return new self($s);

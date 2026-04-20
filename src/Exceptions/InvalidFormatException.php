@@ -21,8 +21,11 @@ class InvalidFormatException extends Exception
      */
     public function __construct($actual, $expects = [], $code = 0, $previous = null)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_string($expects) || is_array($expects), '$expects must be string|array');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure(is_int($code), '$code must be int');
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
         ensure($previous === null || $previous instanceof Exception, '$previous must be null|Exception');
 
         $actual = json_encode($actual);
