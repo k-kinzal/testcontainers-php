@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Command;
 
+use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Docker\Output\DockerLogsOutput;
 use Testcontainers\Docker\Types\ContainerId;
@@ -32,6 +34,9 @@ trait LogsCommand
      * } $options Additional options for the Docker logs command
      *
      * @return DockerFollowLogsOutput|DockerLogsOutput the output containing the logs of the container
+     *
+     * @throws NoSuchContainerException if the specified container does not exist
+     * @throws DockerException          if the Docker command fails
      */
     public function logs($containerId, $options = [])
     {

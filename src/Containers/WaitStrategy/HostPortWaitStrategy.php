@@ -86,6 +86,9 @@ class HostPortWaitStrategy implements WaitStrategy
      * @param ContainerInstance $instance the container instance to check
      *
      * @return void
+     *
+     * @throws WaitingTimeoutException   if the timeout duration is exceeded
+     * @throws ContainerStoppedException if the container stops while waiting
      */
     public function waitUntilReady($instance)
     {

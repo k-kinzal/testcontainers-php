@@ -4,7 +4,11 @@ namespace Testcontainers;
 
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
+use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Exceptions\ContainerStopException;
+use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Lifecycle\ContainerReaper;
 use Testcontainers\Lifecycle\ShutdownHandler;
 
@@ -70,6 +74,10 @@ class Testcontainers
      * @param class-string<Container>|Container $containerClass the class name of the container to run
      *
      * @return ContainerInstance
+     *
+     * @throws InvalidFormatException      if a configuration value is not valid
+     * @throws DockerException             if the Docker command fails
+     * @throws StartupCheckFailedException if the container fails to start within the timeout
      */
     public static function run($containerClass)
     {
@@ -129,6 +137,8 @@ class Testcontainers
      * It iterates over the list of started containers and calls the `stop` method on each instance.
      *
      * @return void
+     *
+     * @throws ContainerStopException if one or more containers fail to stop
      */
     public static function stop()
     {

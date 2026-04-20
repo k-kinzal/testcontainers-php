@@ -11,6 +11,8 @@ interface PortStrategy
      * Get the port number.
      *
      * @return int the port number
+     *
+     * @throws \RuntimeException if no available port can be selected
      */
     public function getPort();
 

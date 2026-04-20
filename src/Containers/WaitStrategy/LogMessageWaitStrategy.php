@@ -5,6 +5,8 @@ namespace Testcontainers\Containers\WaitStrategy;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
 use Testcontainers\Utility\WithLogger;
 
@@ -101,6 +103,12 @@ class LogMessageWaitStrategy implements WaitStrategy
      * @param ContainerInstance $instance the container instance to check
      *
      * @return void
+     *
+     * @throws LogMessageFailedException if the failure pattern matches a log line
+     * @throws WaitingTimeoutException   if the timeout duration is exceeded
+     * @throws ContainerStoppedException if the container stops while waiting
+     * @throws NoSuchContainerException  if the container no longer exists
+     * @throws DockerException           if the Docker command fails
      */
     public function waitUntilReady($instance)
     {

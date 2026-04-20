@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers\GenericContainer;
 
 use Testcontainers\Containers\ReuseMode;
+use Testcontainers\Exceptions\InvalidFormatException;
 
 use function Testcontainers\ensure;
 
@@ -62,6 +63,8 @@ trait ReuseModeSetting
      * Retrieve the reuse mode for the container.
      *
      * @return ReuseMode
+     *
+     * @throws InvalidFormatException if the reuse mode is not valid
      */
     public function reuseMode()
     {

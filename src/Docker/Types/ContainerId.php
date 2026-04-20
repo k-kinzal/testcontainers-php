@@ -24,8 +24,6 @@ class ContainerId implements Stringable
 
     /**
      * @param string $v
-     *
-     * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
      */
     public function __construct($v)
     {
@@ -70,8 +68,6 @@ class ContainerId implements Stringable
      * Create a ContainerId object from a string.
      *
      * @param string $v the container ID
-     *
-     * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
      *
      * @return ContainerId the ContainerId object
      */

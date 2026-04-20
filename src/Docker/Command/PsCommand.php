@@ -3,6 +3,7 @@
 namespace Testcontainers\Docker\Command;
 
 use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Output\DockerPsOutput;
 
 use function Testcontainers\ensure;
@@ -30,7 +31,8 @@ trait PsCommand
      *     size?: null|bool,
      * } $options Additional options for the Docker ps command
      *
-     * @throws DockerException if the Docker command fails
+     * @throws DockerException       if the Docker command fails
+     * @throws InvalidValueException if the ps output cannot be parsed as JSON lines
      *
      * @return DockerPsOutput the output of the Docker ps command
      */

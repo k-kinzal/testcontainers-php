@@ -70,8 +70,6 @@ trait HostSetting
      *  }|HostToIp|string $hostname The hostname to add
      * @param null|string $ipAddress the IP address associated with the hostname
      *
-     * @throws \InvalidArgumentException if the arguments are invalid
-     *
      * @return self
      *
      * @see Container::withExtraHost()
@@ -112,8 +110,6 @@ trait HostSetting
      *      hostname: string,
      *      ipAddress: string
      *  }[]|HostToIp[]|string[] $extraHosts The extra hosts to add
-     *
-     * @throws \InvalidArgumentException if the arguments are invalid
      *
      * @return self
      *

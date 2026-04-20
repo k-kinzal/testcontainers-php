@@ -3,6 +3,8 @@
 namespace Testcontainers\Containers;
 
 use Testcontainers\Containers\Types\ImagePullPolicy;
+use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Types\ContainerId;
 
 /**
@@ -74,6 +76,9 @@ interface ContainerInstance
      * Retrieve the standard output from the container.
      *
      * @return string the standard output from the container
+     *
+     * @throws NoSuchContainerException if the container no longer exists
+     * @throws DockerException          if the Docker command fails
      */
     public function getOutput();
 
@@ -81,6 +86,9 @@ interface ContainerInstance
      * Retrieve the error output from the container.
      *
      * @return string the error output from the container
+     *
+     * @throws NoSuchContainerException if the container no longer exists
+     * @throws DockerException          if the Docker command fails
      */
     public function getErrorOutput();
 
@@ -133,6 +141,8 @@ interface ContainerInstance
      * Checks if the container is currently running.
      *
      * @return bool true if the container is running, false otherwise
+     *
+     * @throws DockerException if the Docker command fails
      */
     public function isRunning();
 
@@ -140,6 +150,8 @@ interface ContainerInstance
      * Stops the container if it is running.
      *
      * @return void
+     *
+     * @throws DockerException if the Docker command fails
      */
     public function stop();
 }

@@ -9,6 +9,8 @@ class RandomPortStrategy implements PortStrategy
 {
     /**
      * {@inheritDoc}
+     *
+     * @throws \RuntimeException if no available port can be found in the ephemeral range
      */
     public function getPort()
     {

@@ -4,6 +4,10 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
+use Testcontainers\Containers\StartupCheckStrategy\WaitingTimeoutException as StartupWaitingTimeoutException;
+use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
+use Testcontainers\Containers\WaitStrategy\LogMessageFailedException;
+use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
@@ -13,6 +17,7 @@ use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Environments;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\SSH\Exceptions\TunnelException;
 use Testcontainers\SSH\Tunnel;
 use Testcontainers\Utility\WithLogger;
 
@@ -94,8 +99,16 @@ class GenericContainer implements Container
     /**
      * {@inheritDoc}
      *
-     * @throws InvalidFormatException if the provided mode is not valid
-     * @throws DockerException        if the Docker command fails
+     * @throws InvalidFormatException             if the provided mode is not valid
+     * @throws DockerException                    if the Docker command fails
+     * @throws PortAlreadyAllocatedException      if a host port is already allocated and retry is exhausted or disabled
+     * @throws BindAddressAlreadyUseException     if a bind address is already in use and retry is exhausted or disabled
+     * @throws StartupCheckFailedException        if the container fails to start within the timeout
+     * @throws StartupWaitingTimeoutException     if the startup check strategy times out
+     * @throws WaitingTimeoutException            if the wait strategy times out
+     * @throws ContainerStoppedException          if the container stops while waiting to be ready
+     * @throws LogMessageFailedException          if the log message wait strategy matches a failure pattern
+     * @throws TunnelException                    if opening the SSH port-forward tunnel fails
      */
     public function start()
     {
@@ -300,6 +313,7 @@ class GenericContainer implements Container
                 ]);
             }
 
+            /** @psalm-suppress MissingThrowsDocblock re-throws already-declared @throws types */
             throw $e;
         }
 

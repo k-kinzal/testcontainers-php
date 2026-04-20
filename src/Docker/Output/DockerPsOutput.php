@@ -25,6 +25,8 @@ class DockerPsOutput extends DockerOutput
 
     /**
      * @param Process $process the Symfony Process instance that executed the `docker ps` command
+     *
+     * @throws InvalidValueException if the process output cannot be parsed as JSON lines
      */
     public function __construct($process)
     {
@@ -53,6 +55,8 @@ class DockerPsOutput extends DockerOutput
      * @param string $output the raw output from the docker ps command
      *
      * @return ContainerListItem[]
+     *
+     * @throws InvalidValueException if a line is not valid JSON or ContainerListItem rejects the entry
      */
     private function deserialize($output)
     {

@@ -22,8 +22,6 @@ class NetworkId implements Stringable
 
     /**
      * @param string $v
-     *
-     * @throws \InvalidArgumentException if the network ID is not a valid 64-character hexadecimal string
      */
     public function __construct($v)
     {
@@ -68,8 +66,6 @@ class NetworkId implements Stringable
      * Create a NetworkId object from a string.
      *
      * @param string $v the network ID
-     *
-     * @throws \InvalidArgumentException if the network ID is not valid
      *
      * @return NetworkId the NetworkId object
      */

@@ -2,6 +2,7 @@
 <psalm
     autoloader="vendor/autoload.php"
     allowStringToStandInForClass="false"
+    checkForThrowsDocblock="true"
     disableVarParsing="false"
     docblockPropertyTypesSealProperties="true"
     ensureArrayIntOffsetsExist="true"
@@ -34,5 +35,13 @@
     <issueHandlers>
         <ClassMustBeFinal errorLevel="suppress" />
         <ForbiddenCode errorLevel="suppress" />
+
+        <MissingThrowsDocblock errorLevel="error">
+            <errorLevel type="suppress">
+                <referencedClass name="LogicException" />
+                <referencedClass name="InvalidArgumentException" />
+                <referencedClass name="Testcontainers\Exceptions\AssertException" />
+            </errorLevel>
+        </MissingThrowsDocblock>
     </issueHandlers>
 </psalm>

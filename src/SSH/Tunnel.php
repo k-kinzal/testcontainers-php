@@ -203,6 +203,8 @@ class Tunnel
      * Open the tunnel.
      *
      * @return Session
+     *
+     * @throws TunnelException if the tunnel fails to start
      */
     public function open()
     {

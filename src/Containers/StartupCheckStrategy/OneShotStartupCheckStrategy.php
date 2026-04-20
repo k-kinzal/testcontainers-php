@@ -93,6 +93,8 @@ class OneShotStartupCheckStrategy implements StartupCheckStrategy
      * @param ContainerInstance $instance the container instance to check
      *
      * @return bool
+     *
+     * @throws WaitingTimeoutException if the timeout duration is exceeded
      */
     public function waitUntilStartupSuccessful($instance)
     {

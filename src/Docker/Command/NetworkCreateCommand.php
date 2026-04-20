@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Command;
 
+use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
 use Testcontainers\Utility\Stringable;
 
@@ -40,6 +41,8 @@ trait NetworkCreateCommand
      * } $options Additional options for the Docker network create command
      *
      * @return DockerNetworkCreateOutput the output of the Docker network create command
+     *
+     * @throws DockerException if the Docker command fails
      */
     public function networkCreate($network, $options = [])
     {

@@ -163,7 +163,8 @@ class PDOConnectWaitStrategy implements WaitStrategy
      *
      * @return void
      *
-     * @throws WaitingTimeoutException if the timeout duration is exceeded
+     * @throws WaitingTimeoutException  if the timeout duration is exceeded
+     * @throws ContainerStoppedException if the container stops while waiting
      */
     public function waitUntilReady($instance)
     {
