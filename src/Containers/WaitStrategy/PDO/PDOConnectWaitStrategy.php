@@ -61,7 +61,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
      *
      * @var int the retry interval in microseconds
      */
-    private $retryInterval = 100;
+    private $retryInterval = 100000;
 
     /**
      * Specify the DSN (Data Source Name) for the PDO connection.
@@ -195,7 +195,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
 
                 throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
             }
-            if (!$instance->isRunning()) {
+            if ($instance->isStopped()) {
                 throw new ContainerStoppedException('Container stopped while waiting for PDO connection');
             }
 

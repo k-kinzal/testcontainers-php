@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Output;
 
+use Testcontainers\Utility\LineIterator;
+
 /**
  * Represents the output of a Docker `logs` command executed via Symfony Process.
  *
@@ -10,12 +12,14 @@ namespace Testcontainers\Docker\Output;
 class DockerFollowLogsOutput extends DockerOutput
 {
     /**
-     * Returns an iterator for the Docker logs output.
+     * Returns an iterator for the Docker logs output line by line.
      *
-     * @return \Generator<string> an iterator to traverse the Docker logs output
+     * @return \Generator<string, string> an iterator to traverse the lines of the Docker logs output
      */
     public function getIterator()
     {
-        return $this->process->getIterator();
+        $lines = new LineIterator($this->process);
+
+        return $lines->getIterator();
     }
 }

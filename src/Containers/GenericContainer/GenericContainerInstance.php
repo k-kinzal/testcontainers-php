@@ -9,6 +9,9 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Types\ContainerId;
+use Testcontainers\Docker\Types\Event;
+use Testcontainers\Docker\Types\EventAction;
+use Testcontainers\Docker\Types\State;
 use Testcontainers\Environments;
 use Testcontainers\SSH\Session;
 
@@ -35,6 +38,7 @@ class GenericContainerInstance implements ContainerInstance
      *             privileged?: bool,
      *             stopTimeout?: null|int,
      *             stopSignal?: null|string,
+     *             inspectInterval?: null|float|int,
      *             } The container definition
      */
     private $containerDef;
@@ -45,6 +49,41 @@ class GenericContainerInstance implements ContainerInstance
      * @var bool true if the container is running, false otherwise
      */
     private $running = true;
+
+    /**
+     * Indicates whether the events of the container have been subscribed.
+     *
+     * @var bool
+     */
+    private $subscribed = false;
+
+    /**
+     * The events of the container.
+     *
+     * @var null|\Generator<null|Event>
+     */
+    private $events;
+
+    /**
+     * Indicates whether an event of the container has been observed.
+     *
+     * @var bool
+     */
+    private $eventObserved = false;
+
+    /**
+     * The state of the container from the last `docker inspect`.
+     *
+     * @var null|State
+     */
+    private $state;
+
+    /**
+     * The time of the last `docker inspect`.
+     *
+     * @var null|float
+     */
+    private $inspectedAt;
 
     /**
      * The data associated with the container.
@@ -62,6 +101,7 @@ class GenericContainerInstance implements ContainerInstance
      *     privileged?: bool,
      *     stopTimeout?: null|int,
      *     stopSignal?: null|string,
+     *     inspectInterval?: null|float|int,
      * } $containerDef The container definition
      */
     public function __construct($containerDef)
@@ -222,32 +262,94 @@ class GenericContainerInstance implements ContainerInstance
         return null;
     }
 
+    /**
+     * Get the state of the container.
+     *
+     * The state from the last `docker inspect` is reused until a new event of the container is emitted
+     * or the inspect interval elapses.
+     *
+     * @return null|State the state of the container, or null if the container does not exist
+     */
+    public function getState()
+    {
+        if (!$this->subscribed) {
+            $this->subscribed = true;
+
+            try {
+                $client = $this->client ?: DockerClientFactory::create();
+                $output = $client->events([
+                    'filter' => [
+                        'type=container',
+                        'container='.$this->containerDef['containerId'],
+                        'event='.EventAction::$CREATE,
+                        'event='.EventAction::$START,
+                        'event='.EventAction::$RESTART,
+                        'event='.EventAction::$PAUSE,
+                        'event='.EventAction::$UNPAUSE,
+                        'event='.EventAction::$DIE,
+                        'event='.EventAction::$DESTROY,
+                    ],
+                    'since' => '0',
+                    'timeout' => null,
+                ]);
+                $this->events = $output->getIterator();
+            } catch (\Exception $e) {
+                $this->events = null;
+            }
+        }
+
+        $changed = false;
+        if ($this->events !== null) {
+            try {
+                if ($this->events->current() === null) {
+                    $this->events->next();
+                }
+                while ($this->events->current() !== null) {
+                    $this->eventObserved = true;
+                    $changed = true;
+                    $this->events->next();
+                }
+                if (!$this->events->valid()) {
+                    $this->events = null;
+                }
+            } catch (\Exception $e) {
+                $this->events = null;
+            }
+        }
+
+        $expired = $this->inspectedAt === null || microtime(true) - $this->inspectedAt >= $this->getInspectInterval();
+        if ($this->events !== null && $this->eventObserved && !$changed && !$expired) {
+            return $this->state;
+        }
+
+        try {
+            $client = $this->client ?: DockerClientFactory::create();
+            $this->state = $client->inspect($this->containerDef['containerId'])->state;
+        } catch (NoSuchObjectException $e) {
+            $this->state = null;
+        }
+        $this->inspectedAt = microtime(true);
+
+        return $this->state;
+    }
+
     public function isRunning()
     {
         if ($this->running === false) {
             return false;
         }
 
-        try {
-            $client = $this->client ?: DockerClientFactory::create();
-            $output = $client->inspect($this->containerDef['containerId']);
+        $state = $this->getState();
+        $this->running = $state !== null && $state->status === 'running';
 
-            switch ($output->state->status) {
-                case 'running':
-                    $this->running = true;
+        return $this->running;
+    }
 
-                    return true;
+    public function isStopped()
+    {
+        $state = $this->getState();
 
-                default:
-                    $this->running = false;
-
-                    return false;
-            }
-        } catch (NoSuchObjectException $e) {
-            $this->running = false;
-
-            return false;
-        }
+        return $state === null || in_array($state->status, ['removing', 'exited', 'dead'], true);
     }
 
     public function getStopTimeout()
@@ -258,6 +360,11 @@ class GenericContainerInstance implements ContainerInstance
     public function getStopSignal()
     {
         return isset($this->containerDef['stopSignal']) ? $this->containerDef['stopSignal'] : null;
+    }
+
+    public function getInspectInterval()
+    {
+        return isset($this->containerDef['inspectInterval']) ? $this->containerDef['inspectInterval'] : 10;
     }
 
     public function stop()
@@ -276,5 +383,7 @@ class GenericContainerInstance implements ContainerInstance
             // Container already gone -- expected
         }
         $this->running = false;
+        $this->subscribed = true;
+        $this->events = null;
     }
 }

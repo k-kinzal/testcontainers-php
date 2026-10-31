@@ -251,6 +251,16 @@ interface Container
     public function withStopTimeout($seconds);
 
     /**
+     * Set the interval in seconds for inspecting the container.
+     * A value of 0 will inspect the container every time its state is checked.
+     *
+     * @param float|int $seconds the inspect interval in seconds
+     *
+     * @return self
+     */
+    public function withInspectInterval($seconds);
+
+    /**
      * Set the signal to send when stopping the container.
      * Equivalent to `docker stop --signal <signal>`.
      *

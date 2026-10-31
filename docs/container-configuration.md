@@ -662,6 +662,39 @@ $container = (new GenericContainer('mysql:8'))
     ->withStopTimeout(0);
 ```
 
+### Inspect Interval Settings
+
+Inspect interval settings control how often the state of the container is checked with `docker inspect`.
+
+The container instance watches the events of the container with `docker events`. The state of the container from the last `docker inspect` is reused while no event of the container is emitted, and `docker inspect` is executed again when an event of the container is emitted or the inspect interval elapses. The inspect interval is a safeguard against changes of the state that are not observed as events.
+
+| Static Property | Method | Description |
+|-----------------|--------|-------------|
+| `$INSPECT_INTERVAL` | `inspectInterval()` | Inspect interval in seconds. This is the maximum duration to reuse the state of the container from the last `docker inspect` while no event of the container is emitted. A value of `0` executes `docker inspect` every time the state of the container is checked. Default is `null` (10 seconds). |
+
+#### Example
+
+```php
+// Static Property
+class MyContainer extends GenericContainer
+{
+    protected static $INSPECT_INTERVAL = 1;
+}
+
+// Method Override
+class MyContainer extends GenericContainer
+{
+    protected function inspectInterval()
+    {
+        return 1;
+    }
+}
+
+// Fluent API
+$container = (new GenericContainer('mysql:8'))
+    ->withInspectInterval(1);
+```
+
 ### Reuse Mode Settings
 
 Reuse mode settings control how testcontainers-php handles containers when the same container class is run multiple times.
