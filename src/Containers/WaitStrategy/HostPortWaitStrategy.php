@@ -41,7 +41,7 @@ class HostPortWaitStrategy implements WaitStrategy
      *
      * @var int the retry interval in microseconds
      */
-    private $retryInterval = 0;
+    private $retryInterval = 100000;
 
     /**
      * @param PortProbeTcp $probe
