@@ -128,11 +128,25 @@ interface ContainerInstance
     public function getStopSignal();
 
     /**
+     * Get the inspect interval of the container.
+     *
+     * @return float|int the inspect interval in seconds
+     */
+    public function getInspectInterval();
+
+    /**
      * Checks if the container is currently running.
      *
      * @return bool true if the container is running, false otherwise
      */
     public function isRunning();
+
+    /**
+     * Checks if the container has stopped.
+     *
+     * @return bool true if the container has exited or no longer exists, false otherwise
+     */
+    public function isStopped();
 
     /**
      * Stops the container if it is running.

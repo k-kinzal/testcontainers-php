@@ -12,6 +12,9 @@ use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Output\DockerEventsOutput;
+use Testcontainers\Docker\Output\DockerInspectOutput;
+use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\SSH\Session;
 use Testcontainers\Testcontainers;
@@ -201,6 +204,194 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertFalse($instance->isRunning());
     }
 
+    public function testIsRunningReusesInspectedStateUntilEventIsEmitted()
+    {
+        $status = 'running';
+        $count = 0;
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($this->createDockerClient($status, $count, ['create', 'die']));
+
+        $deadline = time() + 10;
+        do {
+            $inspected = $count;
+            $this->assertTrue($instance->isRunning());
+            usleep(10000);
+        } while ($count !== $inspected && time() < $deadline);
+
+        for ($i = 0; $i < 100; ++$i) {
+            $this->assertTrue($instance->isRunning());
+        }
+        $this->assertSame($inspected, $count);
+
+        $status = 'exited';
+        $deadline = time() + 5;
+        while ($instance->isRunning() && time() < $deadline) {
+            usleep(10000);
+        }
+        $this->assertFalse($instance->isRunning());
+        $this->assertTrue($instance->isStopped());
+        $this->assertGreaterThan($inspected, $count);
+    }
+
+    public function testIsRunningInspectsWithoutEvents()
+    {
+        $status = 'running';
+        $count = 0;
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($this->createDockerClient($status, $count, []));
+
+        $this->assertTrue($instance->isRunning());
+        $this->assertTrue($instance->isRunning());
+        $this->assertSame(2, $count);
+    }
+
+    public function testIsRunningInspectsAfterInspectIntervalElapses()
+    {
+        $status = 'running';
+        $count = 0;
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+            'inspectInterval' => 0.5,
+        ]);
+        $instance->setDockerClient($this->createDockerClient($status, $count, ['create']));
+
+        $deadline = time() + 10;
+        do {
+            $inspected = $count;
+            $this->assertTrue($instance->isRunning());
+            usleep(10000);
+        } while ($count !== $inspected && time() < $deadline);
+
+        usleep(500000);
+        $this->assertTrue($instance->isRunning());
+        $this->assertSame($inspected + 1, $count);
+    }
+
+    public function testIsRunningInspectsEveryTimeWithInspectIntervalOfZero()
+    {
+        $status = 'running';
+        $count = 0;
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+            'inspectInterval' => 0,
+        ]);
+        $instance->setDockerClient($this->createDockerClient($status, $count, ['create']));
+
+        $deadline = microtime(true) + 0.3;
+        while (microtime(true) < $deadline) {
+            $this->assertTrue($instance->isRunning());
+            usleep(10000);
+        }
+        $inspected = $count;
+
+        $this->assertTrue($instance->isRunning());
+        $this->assertTrue($instance->isRunning());
+        $this->assertSame($inspected + 2, $count);
+    }
+
+    public function testIsStopped()
+    {
+        $client = new DockerClient();
+
+        /** @var DockerRunWithDetachOutput $output */
+        $output = $client->run('alpine:latest', 'sleep', ['10'], [
+            'detach' => true,
+        ]);
+        $instance = new GenericContainerInstance([
+            'containerId' => $output->getContainerId(),
+        ]);
+
+        $this->assertFalse($instance->isStopped());
+
+        $instance->stop();
+
+        $this->assertTrue($instance->isStopped());
+
+        $client->rm($output->getContainerId());
+
+        $this->assertTrue($instance->isStopped());
+    }
+
+    public function testGetState()
+    {
+        $status = 'running';
+        $count = 0;
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($this->createDockerClient($status, $count, []));
+
+        $this->assertSame('running', $instance->getState()->status);
+    }
+
+    public function testGetStateIfContainerDoesNotExist()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+
+        $this->assertNull($instance->getState());
+    }
+
+    public function testIsStoppedIfContainerDoesNotExist()
+    {
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+
+        $this->assertTrue($instance->isStopped());
+    }
+
+    public function testGetStateSubscribesEventsOfContainer()
+    {
+        $options = null;
+        $client = $this->createMock(DockerClient::class);
+        $client->expects($this->once())->method('events')->willReturnCallback(function ($arg) use (&$options) {
+            $options = $arg;
+
+            return self::createEventsOutput([]);
+        });
+        $client->method('inspect')->willReturn(self::createInspectOutput('running'));
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($client);
+
+        $instance->getState();
+        $instance->getState();
+
+        $this->assertContains('container=8188d93d8a27', $options['filter']);
+        $this->assertContains('event=die', $options['filter']);
+        $this->assertSame('0', $options['since']);
+        $this->assertNull($options['timeout']);
+    }
+
+    public function testStopStopsObservingEvents()
+    {
+        $process = new Process(['sleep', '30']);
+        $process->start();
+        $client = $this->createMock(DockerClient::class);
+        $client->expects($this->once())->method('events')->willReturnCallback(function () use ($process) {
+            return new DockerEventsOutput($process, true);
+        });
+        $client->method('inspect')->willReturn(self::createInspectOutput('running'));
+        $instance = new GenericContainerInstance([
+            'containerId' => new ContainerId('8188d93d8a27'),
+        ]);
+        $instance->setDockerClient($client);
+
+        $this->assertTrue($instance->isRunning());
+        $this->assertTrue($process->isRunning());
+
+        $instance->stop();
+
+        $this->assertFalse($process->isRunning());
+    }
+
     public function testStop()
     {
         $instance = new GenericContainerInstance([
@@ -249,6 +440,71 @@ class GenericContainerInstanceTest extends TestCase
         unset($instance);
 
         $this->assertTrue(true);
+    }
+
+    /**
+     * @param string   $status  the status of the container returned by `docker inspect`
+     * @param int      $count   the number of times `docker inspect` has been executed
+     * @param string[] $actions the actions of the events emitted every two seconds
+     *
+     * @return DockerClient
+     */
+    private function createDockerClient(&$status, &$count, $actions)
+    {
+        $outputs = [
+            'running' => self::createInspectOutput('running'),
+            'exited' => self::createInspectOutput('exited'),
+        ];
+        $client = $this->createMock(DockerClient::class);
+        $client->expects($this->atLeastOnce())->method('inspect')->willReturnCallback(function () use (&$status, &$count, $outputs) {
+            ++$count;
+
+            return $outputs[$status];
+        });
+        $client->method('events')->willReturnCallback(function () use ($actions) {
+            return self::createEventsOutput($actions);
+        });
+
+        return $client;
+    }
+
+    /**
+     * @param string $status
+     *
+     * @return DockerInspectOutput
+     */
+    private static function createInspectOutput($status)
+    {
+        $output = json_encode([['State' => ['Status' => $status, 'ExitCode' => 0]]]);
+        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($output, true).';']);
+        $process->run();
+
+        return new DockerInspectOutput($process);
+    }
+
+    /**
+     * @param string[] $actions the actions of the events emitted every two seconds
+     *
+     * @return DockerEventsOutput
+     */
+    private static function createEventsOutput($actions)
+    {
+        $script = '';
+        foreach ($actions as $i => $action) {
+            $event = json_encode([
+                'Type' => 'container',
+                'Action' => $action,
+                'Actor' => ['ID' => '8188d93d8a27', 'Attributes' => null],
+                'scope' => 'local',
+                'time' => 1700000000 + $i,
+                'timeNano' => (1700000000 + $i) * 1000000000,
+            ]);
+            $script .= 'echo '.var_export($event."\n", true).'; flush(); usleep(2000000);';
+        }
+        $process = new Process([PHP_BINARY, '-r', $script.'sleep(30);']);
+        $process->start();
+
+        return new DockerEventsOutput($process, true);
     }
 }
 

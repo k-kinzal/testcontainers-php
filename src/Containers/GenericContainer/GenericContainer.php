@@ -26,6 +26,7 @@ class GenericContainer implements Container
     use EnvSetting;
     use GeneralSetting;
     use HostSetting;
+    use InspectIntervalSetting;
     use LabelSetting;
     use MountSetting;
     use NetworkAliasSetting;
@@ -223,6 +224,7 @@ class GenericContainer implements Container
             'privileged' => $this->privileged(),
             'stopTimeout' => $this->stopTimeout(),
             'stopSignal' => $this->stopSignal(),
+            'inspectInterval' => $this->inspectInterval(),
         ];
         $instance = new GenericContainerInstance($containerDef);
         $instance->setDockerClient($client);

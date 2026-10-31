@@ -37,6 +37,13 @@ class HostPortWaitStrategy implements WaitStrategy
     private $timeout = 30;
 
     /**
+     * The interval duration between each retry attempt in microseconds.
+     *
+     * @var int the retry interval in microseconds
+     */
+    private $retryInterval = 0;
+
+    /**
      * @param PortProbeTcp $probe
      */
     public function __construct($probe = null)
@@ -73,6 +80,20 @@ class HostPortWaitStrategy implements WaitStrategy
     }
 
     /**
+     * Sets the interval duration between each retry attempt.
+     *
+     * @param int $interval the interval duration in microseconds
+     *
+     * @return $this the current instance for method chaining
+     */
+    public function withRetryInterval($interval)
+    {
+        $this->retryInterval = $interval;
+
+        return $this;
+    }
+
+    /**
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
@@ -103,13 +124,13 @@ class HostPortWaitStrategy implements WaitStrategy
                 if (time() - $now > $this->timeout) {
                     throw new WaitingTimeoutException($this->timeout);
                 }
-                if (!$instance->isRunning()) {
+                if ($instance->isStopped()) {
                     throw new ContainerStoppedException('Container stopped while waiting for port availability');
                 }
                 if ($this->probe->available($host, $port)) {
                     break;
                 }
-                usleep(0);
+                usleep($this->retryInterval);
             }
         }
     }

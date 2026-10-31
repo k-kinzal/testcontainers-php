@@ -33,6 +33,20 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $this->assertTrue(true);
     }
 
+    public function testWaitUntilReadyWithMultipleLinesAtOnce()
+    {
+        $container = new GenericContainer('alpine:latest');
+        $container->withCommands(['sh', '-c', 'printf "Starting\\nReady\\n"; sleep 10']);
+        $instance = $container->start();
+
+        $strategy = new LogMessageWaitStrategy();
+        $strategy->withPattern('^Ready$');
+        $strategy->withTimeoutSeconds(5);
+        $strategy->waitUntilReady($instance);
+
+        $this->assertTrue(true);
+    }
+
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);

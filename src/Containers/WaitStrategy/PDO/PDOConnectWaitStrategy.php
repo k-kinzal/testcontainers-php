@@ -195,7 +195,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
 
                 throw new WaitingTimeoutException($this->timeout, $message, 0, $ex);
             }
-            if (!$instance->isRunning()) {
+            if ($instance->isStopped()) {
                 throw new ContainerStoppedException('Container stopped while waiting for PDO connection');
             }
 

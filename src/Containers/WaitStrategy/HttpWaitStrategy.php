@@ -86,6 +86,13 @@ class HttpWaitStrategy implements WaitStrategy
     private $timeout = 30;
 
     /**
+     * The interval duration between each retry attempt in microseconds.
+     *
+     * @var int the retry interval in microseconds
+     */
+    private $retryInterval = 0;
+
+    /**
      * @param null|HttpProbe $probe
      */
     public function __construct($probe = null)
@@ -192,6 +199,20 @@ class HttpWaitStrategy implements WaitStrategy
     }
 
     /**
+     * Sets the interval duration between each retry attempt.
+     *
+     * @param int $interval the interval duration in microseconds
+     *
+     * @return $this the current instance for method chaining
+     */
+    public function withRetryInterval($interval)
+    {
+        $this->retryInterval = $interval;
+
+        return $this;
+    }
+
+    /**
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
@@ -219,13 +240,13 @@ class HttpWaitStrategy implements WaitStrategy
             if (time() - $now > $this->timeout) {
                 throw new WaitingTimeoutException($this->timeout);
             }
-            if (!$instance->isRunning()) {
+            if ($instance->isStopped()) {
                 throw new ContainerStoppedException('Container stopped while waiting for HTTP endpoint');
             }
             if ($this->probe->available($endpoint, $this->expectedResponseCode)) {
                 break;
             }
-            usleep(100);
+            usleep($this->retryInterval);
         }
     }
 }
