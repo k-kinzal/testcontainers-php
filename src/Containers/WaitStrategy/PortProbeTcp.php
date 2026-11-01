@@ -12,6 +12,10 @@ final class PortProbeTcp implements PortProbe
 {
     use Ensure;
 
+    /**
+     * @psalm-param mixed $host
+     * @psalm-param mixed $port
+     */
     public function available($host, $port)
     {
         self::ensureString($host);

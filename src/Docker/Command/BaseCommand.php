@@ -362,6 +362,11 @@ trait BaseCommand
      * @param string[]             $args       the arguments for the command (optional)
      * @param array<string, mixed> $options    additional options for the Docker command
      * @param bool                 $wait       whether to wait for the command to finish executing
+     * @psalm-param mixed $command
+     * @psalm-param mixed $subcommand
+     * @psalm-param mixed $args
+     * @psalm-param mixed $options
+     * @psalm-param mixed $wait
      *
      * @throws NoSuchContainerException       if the specified container does not exist
      * @throws NoSuchObjectException          if the specified object does not exist
@@ -406,11 +411,12 @@ trait BaseCommand
             'proc_options' => $this->proc_options,
         ]);
         $processArgs = [$commandLine, $this->cwd, $this->env, $this->input, $this->timeout];
-        if (!method_exists(Process::class, 'setOptions')) {
+        $supportsOptions = method_exists(Process::class, 'setOptions');
+        if (!$supportsOptions) {
             $processArgs[] = $this->proc_options;
         }
         $process = (new \ReflectionClass(Process::class))->newInstanceArgs($processArgs);
-        if (method_exists($process, 'setOptions')) {
+        if ($supportsOptions) {
             $process->setOptions($this->proc_options);
         }
         if ($wait) {
@@ -450,7 +456,6 @@ trait BaseCommand
     {
         $result = [];
         foreach ($options as $key => $value) {
-            self::ensureString($key, 'option name');
             $key = kebab($key);
             if ($value === null) {
                 continue;

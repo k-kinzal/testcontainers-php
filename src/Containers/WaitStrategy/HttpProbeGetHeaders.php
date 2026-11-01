@@ -14,6 +14,10 @@ final class HttpProbeGetHeaders implements HttpProbe
 {
     use Ensure;
 
+    /**
+     * @psalm-param mixed $endpoint
+     * @psalm-param mixed $responseCode
+     */
     public function available($endpoint, $responseCode = 200)
     {
         self::ensureString($endpoint);
