@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<psalm xmlns="https://getpsalm.org/schema/config"
+       errorLevel="1"
+       ensureOverrideAttribute="false"
+       phpVersion="5.6"
+       resolveFromConfigFile="true"
+       findUnusedCode="true"
+       findUnusedVariablesAndParams="true"
+       findUnusedPsalmSuppress="true">
+    <stubs>
+        <file name="stubs/Process.php" />
+    </stubs>
+    <projectFiles>
+        <directory name="src" />
+        <ignoreFiles>
+            <directory name="vendor" />
+            <file name="src/Logger/ConsoleLogger/ConsoleLogger80.php" />
+        </ignoreFiles>
+    </projectFiles>
+</psalm>
