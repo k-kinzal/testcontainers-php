@@ -34,6 +34,7 @@ class WaitStrategyProvider
      * @psalm-param mixed $strategy
      *
      * @throws AlreadyExistsWaitStrategyException if a strategy with the same name already exists
+     * @return void
      */
     public function register($name, $strategy)
     {

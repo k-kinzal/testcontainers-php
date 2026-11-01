@@ -169,6 +169,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * @psalm-param mixed $instance
      *
      * @throws WaitingTimeoutException if the timeout duration is exceeded
+     * @return void
      */
     public function waitUntilReady($instance)
     {

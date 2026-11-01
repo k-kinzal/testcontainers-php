@@ -34,6 +34,7 @@ class PortStrategyProvider
      * @psalm-param mixed $strategy
      *
      * @throws AlreadyExistsPortStrategyException if a strategy with the same name already exists
+     * @return void
      */
     public function register($name, $strategy)
     {
