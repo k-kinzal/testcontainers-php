@@ -99,7 +99,7 @@ class ContainerReaper
 
         $result = @shell_exec("kill -0 {$pid} 2>/dev/null && echo 1 || echo 0");
 
-        if ($result === null) {
+        if (!is_string($result)) {
             return true;
         }
 
