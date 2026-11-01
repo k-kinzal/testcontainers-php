@@ -27,7 +27,7 @@ class ContainerReaper
     /**
      * Find and stop orphaned testcontainers containers.
      *
-     * Queries Docker for containers labeled with `org.testcontainers=true`,
+     * Queries Docker for active containers labeled with `org.testcontainers=true`,
      * checks if the owning process (from `org.testcontainers.pid` label) is still alive,
      * and stops containers whose owning process has died.
      *
@@ -37,7 +37,6 @@ class ContainerReaper
     {
         try {
             $output = $this->client->ps([
-                'all' => true,
                 'filter' => ['label=org.testcontainers=true'],
             ]);
 
