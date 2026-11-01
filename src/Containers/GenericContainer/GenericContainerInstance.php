@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
@@ -20,6 +21,8 @@ use Testcontainers\SSH\Session;
  */
 class GenericContainerInstance implements ContainerInstance
 {
+    use Ensure;
+
     /**
      * The docker client.
      *
@@ -88,7 +91,7 @@ class GenericContainerInstance implements ContainerInstance
     /**
      * The data associated with the container.
      *
-     * @var array<string, mixed> the data associated with the container
+     * @var array<class-string, object> the data associated with the container
      */
     private $data = [];
 
@@ -103,10 +106,38 @@ class GenericContainerInstance implements ContainerInstance
      *     stopSignal?: null|string,
      *     inspectInterval?: null|float|int,
      * } $containerDef The container definition
+     * @psalm-param mixed $containerDef
      */
     public function __construct($containerDef)
     {
-        $this->containerDef = $containerDef;
+        self::ensureArray($containerDef);
+
+        if (!isset($containerDef['containerId'])) {
+            throw new \InvalidArgumentException('containerDef requires containerId');
+        }
+        self::ensureInstanceOf($containerDef['containerId'], ContainerId::class);
+
+        $ports = [];
+        if (isset($containerDef['ports'])) {
+            $portMap = self::ensureArray($containerDef['ports']);
+
+            foreach ($portMap as $exposed => $mapped) {
+                $ports[self::ensureIntRange($exposed, 1, 65535)] = self::ensureIntRange($mapped, 1, 65535);
+
+            }
+        }
+
+        $this->containerDef = [
+            'containerId' => $containerDef['containerId'],
+            'labels' => isset($containerDef['labels']) ? self::ensureStringMap($containerDef['labels']) : [],
+            'ports' => $ports,
+            'pull' => isset($containerDef['pull']) ? self::ensureInstanceOf($containerDef['pull'], ImagePullPolicy::class) : null,
+            'privileged' => isset($containerDef['privileged']) ? self::ensureBool($containerDef['privileged']) : false,
+            'stopTimeout' => isset($containerDef['stopTimeout']) ? self::ensureIntRange($containerDef['stopTimeout'], -1) : null,
+            'stopSignal' => isset($containerDef['stopSignal']) ? self::ensureString($containerDef['stopSignal']) : null,
+            'inspectInterval' => isset($containerDef['inspectInterval']) ? self::ensureNonNegativeNumber($containerDef['inspectInterval']) : null,
+        ];
+
     }
 
     public function __destruct()
@@ -124,9 +155,12 @@ class GenericContainerInstance implements ContainerInstance
      * Sets the docker client.
      *
      * @param DockerClient $client
+     * @psalm-param mixed $client
      */
     public function setDockerClient($client)
     {
+        self::ensureInstanceOf($client, DockerClient::class);
+
         $this->client = $client;
     }
 
@@ -135,8 +169,13 @@ class GenericContainerInstance implements ContainerInstance
         return $this->containerDef['containerId'];
     }
 
+    /**
+     * @psalm-param mixed $label
+     */
     public function getLabel($label)
     {
+        self::ensureString($label);
+
         if (!isset($this->containerDef['labels'])) {
             return null;
         }
@@ -200,8 +239,18 @@ class GenericContainerInstance implements ContainerInstance
         return array_keys($this->containerDef['ports']);
     }
 
+    /**
+     * @psalm-param mixed $exposedPort
+     */
     public function getMappedPort($exposedPort)
     {
+        self::ensureIntOrDigitString($exposedPort);
+
+        if ($exposedPort < 1 || $exposedPort > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
+        }
+        $exposedPort = (int) $exposedPort;
+
         if (!isset($this->containerDef['ports'])) {
             return null;
         }
@@ -238,14 +287,28 @@ class GenericContainerInstance implements ContainerInstance
         return $output->getErrorOutput();
     }
 
+    /**
+     * @psalm-param mixed $value
+     */
     public function setData($value)
     {
+        if (!is_object($value)) {
+            throw new \InvalidArgumentException('value must be an object');
+        }
+
         $this->data[get_class($value)] = $value;
     }
 
+    /**
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
     public function getData($class)
     {
-        $value = $this->data[$class];
+        self::ensureClassString($class);
+
+        $value = $this->tryGetData($class);
         if ($value === null) {
             throw new \LogicException("No data of type {$class} associated with the container");
         }
@@ -253,10 +316,17 @@ class GenericContainerInstance implements ContainerInstance
         return $value;
     }
 
+    /**
+     * @template T of object
+     * @param class-string<T> $class
+     * @return null|T
+     */
     public function tryGetData($class)
     {
+        self::ensureClassString($class);
+
         if (isset($this->data[$class])) {
-            return $this->data[$class];
+            return self::ensureInstanceOf($this->data[$class], $class);
         }
 
         return null;
@@ -281,13 +351,13 @@ class GenericContainerInstance implements ContainerInstance
                     'filter' => [
                         'type=container',
                         'container='.$this->containerDef['containerId'],
-                        'event='.EventAction::$CREATE,
-                        'event='.EventAction::$START,
-                        'event='.EventAction::$RESTART,
-                        'event='.EventAction::$PAUSE,
-                        'event='.EventAction::$UNPAUSE,
-                        'event='.EventAction::$DIE,
-                        'event='.EventAction::$DESTROY,
+                        'event='.EventAction::CREATE()->toString(),
+                        'event='.EventAction::START()->toString(),
+                        'event='.EventAction::RESTART()->toString(),
+                        'event='.EventAction::PAUSE()->toString(),
+                        'event='.EventAction::UNPAUSE()->toString(),
+                        'event='.EventAction::DIE_()->toString(),
+                        'event='.EventAction::DESTROY()->toString(),
                     ],
                     'since' => '0',
                     'timeout' => null,

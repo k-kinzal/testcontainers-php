@@ -35,6 +35,7 @@ trait PortSetting
      * Define the default ports to be exposed by the container.
      *
      * @var null|int[]
+     * @psalm-var mixed
      */
     protected static $EXPOSED_PORTS;
 
@@ -42,6 +43,7 @@ trait PortSetting
      * Define the default ports to be exposed by the container. Alias for `EXPOSED_PORTS`.
      *
      * @var null|int[]
+     * @psalm-var mixed
      */
     protected static $EXPOSE;
 
@@ -49,6 +51,7 @@ trait PortSetting
      * Define the default ports to be exposed by the container. Alias for `EXPOSED_PORTS`.
      *
      * @var null|int[]
+     * @psalm-var mixed
      */
     protected static $PORTS;
 
@@ -56,6 +59,7 @@ trait PortSetting
      * Define the default port strategy to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $PORT_STRATEGY;
 
@@ -84,14 +88,19 @@ trait PortSetting
      * Set the port that this container listens on.
      *
      * @param int|string $port the port to expose
+     * @psalm-param mixed $port
      *
      * @return self
      */
     public function withExposedPort($port)
     {
-        if (is_string($port)) {
-            $port = intval($port);
+        self::ensureIntOrDigitString($port);
+
+        if ($port < 1 || $port > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
         }
+        $port = (int) $port;
+
         $this->exposedPorts[] = $port;
 
         return $this;
@@ -101,6 +110,7 @@ trait PortSetting
      * Set the port that this container listens on. Alias for `withExposedPort`.
      *
      * @param int|string $port the port to expose
+     * @psalm-param mixed $port
      *
      * @return self
      */
@@ -113,6 +123,7 @@ trait PortSetting
      * Set the port that this container listens on. Alias for `withExposedPort`.
      *
      * @param int|string $port the port to expose
+     * @psalm-param mixed $port
      *
      * @return self
      */
@@ -125,11 +136,25 @@ trait PortSetting
      * Set the ports that this container listens on.
      *
      * @param int[] $ports the ports to expose
+     * @psalm-param mixed $ports
      *
      * @return self
      */
     public function withExposedPorts($ports)
     {
+        self::ensureArray($ports);
+
+        $normalizedPorts = [];
+        foreach (array_keys($ports) as $key) {
+            self::ensureIntOrDigitString($ports[$key]);
+
+            if ($ports[$key] < 1 || $ports[$key] > 65535) {
+                throw new \InvalidArgumentException('Port must be between 1 and 65535');
+            }
+            $normalizedPorts[] = (int) $ports[$key];
+        }
+        $ports = $normalizedPorts;
+
         $this->exposedPorts = $ports;
 
         return $this;
@@ -139,6 +164,7 @@ trait PortSetting
      * Set the ports that this container listens on. Alias for `withExposedPorts`.
      *
      * @param int[] $ports the ports to expose
+     * @psalm-param mixed $ports
      *
      * @return self
      */
@@ -151,6 +177,7 @@ trait PortSetting
      * Set the ports that this container listens on. Alias for `withExposedPorts`.
      *
      * @param int[] $ports the ports to expose
+     * @psalm-param mixed $ports
      *
      * @return self
      */
@@ -163,11 +190,14 @@ trait PortSetting
      * Set the port strategy used for determining the ports that the container listens on.
      *
      * @param PortStrategy $strategy the port strategy to use
+     * @psalm-param mixed $strategy
      *
      * @return self
      */
     public function withPortStrategy($strategy)
     {
+        self::ensureInstanceOf($strategy, PortStrategy::class);
+
         $this->portStrategy = $strategy;
 
         return $this;
@@ -187,19 +217,28 @@ trait PortSetting
     protected function exposedPorts()
     {
         if (static::$EXPOSED_PORTS !== null) {
-            return static::$EXPOSED_PORTS;
+            $ports = self::ensureArray(static::$EXPOSED_PORTS);
+
+        } elseif (static::$EXPOSE !== null) {
+            $ports = self::ensureArray(static::$EXPOSE);
+
+        } elseif (static::$PORTS !== null) {
+            $ports = self::ensureArray(static::$PORTS);
+
+        } else {
+            $ports = $this->exposedPorts;
         }
-        if (static::$EXPOSE !== null) {
-            return static::$EXPOSE;
-        }
-        if (static::$PORTS !== null) {
-            return static::$PORTS;
-        }
-        if ($this->exposedPorts) {
-            return $this->exposedPorts;
+        $normalizedPorts = [];
+        foreach (array_keys($ports) as $key) {
+            self::ensureIntOrDigitString($ports[$key]);
+
+            if ($ports[$key] < 1 || $ports[$key] > 65535) {
+                throw new \InvalidArgumentException('Port must be between 1 and 65535');
+            }
+            $normalizedPorts[] = (int) $ports[$key];
         }
 
-        return [];
+        return $normalizedPorts;
     }
 
     /**
@@ -218,9 +257,11 @@ trait PortSetting
             $this->registerPortStrategy($this->portStrategyProvider);
         }
         if (static::$PORT_STRATEGY !== null) {
-            $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
+            $name = self::ensureString(static::$PORT_STRATEGY);
+
+            $strategy = $this->portStrategyProvider->get($name);
             if (!$strategy) {
-                throw new \LogicException('Port strategy not found: '.static::$PORT_STRATEGY);
+                throw new \LogicException('Port strategy not found: '.$name);
             }
 
             return $strategy;

@@ -28,6 +28,7 @@ trait EntrypointSetting
      * Define the default entrypoint to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $ENTRYPOINT;
 
@@ -42,11 +43,14 @@ trait EntrypointSetting
      * Set the entrypoint for the container, overriding the default entrypoint defined in the Docker image.
      *
      * @param string $entrypoint the entrypoint to use (e.g., '/bin/sh', '/usr/local/bin/custom-entrypoint.sh')
+     * @psalm-param mixed $entrypoint
      *
      * @return self
      */
     public function withEntrypoint($entrypoint)
     {
+        self::ensureNullableString($entrypoint);
+
         $this->entrypoint = $entrypoint;
 
         return $this;
@@ -59,6 +63,8 @@ trait EntrypointSetting
      */
     protected function entrypoint()
     {
+        self::ensureNullableString(static::$ENTRYPOINT);
+
         if (static::$ENTRYPOINT !== null) {
             return static::$ENTRYPOINT;
         }

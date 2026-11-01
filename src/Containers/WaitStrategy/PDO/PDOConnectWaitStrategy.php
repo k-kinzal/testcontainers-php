@@ -70,11 +70,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * the connection details such as host, port, and database name.
      *
      * @param DSN $dsn the DSN instance containing connection details
+     * @psalm-param mixed $dsn
      *
      * @return $this
      */
-    public function withDsn(DSN $dsn)
+    public function withDsn($dsn)
     {
+        self::ensureInstanceOf($dsn, DSN::class);
+
         $this->dsn = $dsn;
 
         return $this;
@@ -86,11 +89,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * This method sets the username used to authenticate the PDO connection.
      *
      * @param string $username the username for the PDO connection
+     * @psalm-param mixed $username
      *
      * @return $this
      */
     public function withUsername($username)
     {
+        self::ensureString($username);
+
         $this->username = $username;
 
         return $this;
@@ -102,11 +108,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * This method sets the password used to authenticate the PDO connection.
      *
      * @param string $password the password for the PDO connection
+     * @psalm-param mixed $password
      *
      * @return $this
      */
     public function withPassword($password)
     {
+        self::ensureString($password);
+
         $this->password = $password;
 
         return $this;
@@ -119,11 +128,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * for the container to be ready before timing out.
      *
      * @param int $timeout the timeout duration in seconds
+     * @psalm-param mixed $timeout
      *
      * @return $this
      */
     public function withTimeoutSeconds($timeout)
     {
+        self::ensureIntRange($timeout, 0);
+
         $this->timeout = $timeout;
 
         return $this;
@@ -136,11 +148,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * when waiting for the container to be ready. The interval is defined in microseconds.
      *
      * @param int $interval the interval duration in microseconds
+     * @psalm-param mixed $interval
      *
      * @return $this
      */
     public function withRetryInterval($interval)
     {
+        self::ensureIntRange($interval, 0);
+
         $this->retryInterval = $interval;
 
         return $this;
@@ -150,11 +165,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
+     * @psalm-param mixed $instance
      *
      * @throws WaitingTimeoutException if the timeout duration is exceeded
      */
     public function waitUntilReady($instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         if ($this->dsn === null) {
             throw new \LogicException('The DSN for the PDO connection is not set');
         }

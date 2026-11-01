@@ -26,8 +26,9 @@ class DockerVersionOutput extends DockerOutput
     {
         parent::__construct($process);
 
-        $output = json_decode($process->getOutput(), true);
-        $this->data = is_array($output) ? $output : [];
+        $output = self::ensureNullableArray(json_decode($process->getOutput(), true));
+
+        $this->data = $output === null ? [] : $output;
     }
 
     /**
@@ -37,7 +38,7 @@ class DockerVersionOutput extends DockerOutput
      */
     public function getClientVersion()
     {
-        return isset($this->data['Client']['Version']) ? $this->data['Client']['Version'] : null;
+        return isset($this->data['Client']['Version']) ? self::ensureString($this->data['Client']['Version']) : null;
     }
 
     /**
@@ -47,6 +48,6 @@ class DockerVersionOutput extends DockerOutput
      */
     public function getServerVersion()
     {
-        return isset($this->data['Server']['Version']) ? $this->data['Server']['Version'] : null;
+        return isset($this->data['Server']['Version']) ? self::ensureString($this->data['Server']['Version']) : null;
     }
 }

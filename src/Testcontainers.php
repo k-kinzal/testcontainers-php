@@ -2,6 +2,7 @@
 
 namespace Testcontainers;
 
+use Testcontainers\Utility\Ensure;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Testcontainers\Containers\Container;
@@ -47,6 +48,8 @@ use Testcontainers\Logger\LoggerFactory;
  */
 class Testcontainers
 {
+    use Ensure;
+
     /**
      * Map of started containers by identifier.
      *
@@ -75,9 +78,15 @@ class Testcontainers
      * The logger is not passed to containers that have their own logger.
      *
      * @param null|LoggerInterface $logger the logger instance
+     * @psalm-param mixed $logger
      */
     public static function setLogger($logger)
     {
+        if ($logger !== null) {
+            self::ensureInstanceOf($logger, LoggerInterface::class);
+
+        }
+
         self::$logger = $logger;
     }
 
@@ -90,12 +99,13 @@ class Testcontainers
      *  If the container has no logger, the logger set by `setLogger` or specified by environment variables is passed to the container.
      *
      * @param class-string<Container>|Container $containerClass the class name of the container to run
+     * @psalm-param mixed $containerClass
      *
      * @return ContainerInstance
      */
     public static function run($containerClass)
     {
-        if (is_string($containerClass) && class_exists($containerClass)) {
+        if (is_string($containerClass) && is_a($containerClass, Container::class, true)) {
             $container = new $containerClass();
         } elseif ($containerClass instanceof Container) {
             $container = $containerClass;

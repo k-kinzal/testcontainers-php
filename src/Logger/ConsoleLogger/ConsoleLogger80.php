@@ -99,9 +99,9 @@ class ConsoleLogger extends AbstractLogger
     private function interpolate($message, array $context)
     {
         $replace = [];
-        foreach ($context as $key => $val) {
-            if (is_string($val) || is_numeric($val) || (is_object($val) && method_exists($val, '__toString'))) {
-                $replace['{' . $key . '}'] = (string) $val;
+        foreach (array_keys($context) as $key) {
+            if (is_string($context[$key]) || is_numeric($context[$key]) || (is_object($context[$key]) && method_exists($context[$key], '__toString'))) {
+                $replace['{' . $key . '}'] = (string) $context[$key];
             }
         }
 

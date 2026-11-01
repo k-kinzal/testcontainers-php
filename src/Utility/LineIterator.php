@@ -9,6 +9,8 @@ use Symfony\Component\Process\Process;
  */
 class LineIterator
 {
+    use Ensure;
+
     /**
      * The process to read the output from.
      *
@@ -21,6 +23,8 @@ class LineIterator
      */
     public function __construct($process)
     {
+        self::ensureInstanceOf($process, Process::class);
+
         $this->process = $process;
     }
 
@@ -37,6 +41,8 @@ class LineIterator
      */
     public function getIterator($flags = 0)
     {
+        self::ensureIntRange($flags, 0);
+
         $blocking = !(Process::ITER_NON_BLOCKING & $flags);
         $buffers = [Process::OUT => '', Process::ERR => ''];
         foreach ($this->process->getIterator($flags) as $type => $chunk) {

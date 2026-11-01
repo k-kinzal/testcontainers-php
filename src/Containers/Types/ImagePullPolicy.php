@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -10,10 +11,13 @@ use Testcontainers\Utility\Stringable;
  */
 class ImagePullPolicy implements Stringable
 {
+    use Ensure;
+
     /**
      * The policy to always pull the image.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $ALWAYS = 'always';
 
@@ -21,6 +25,7 @@ class ImagePullPolicy implements Stringable
      * The policy to use when the image is missing.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $MISSING = 'missing';
 
@@ -28,6 +33,7 @@ class ImagePullPolicy implements Stringable
      * The policy to never pull the image.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $NEVER = 'never';
 
@@ -40,10 +46,17 @@ class ImagePullPolicy implements Stringable
 
     /**
      * @param string $policy
+     * @psalm-param mixed $policy
      */
     public function __construct($policy)
     {
-        assert(in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]));
+        self::ensureString($policy);
+
+        $values = self::ensureStringList([static::$ALWAYS, static::$MISSING, static::$NEVER]);
+
+        if (!in_array($policy, $values, true)) {
+            throw new InvalidFormatException($policy, $values);
+        }
 
         $this->policy = $policy;
     }
@@ -87,6 +100,7 @@ class ImagePullPolicy implements Stringable
      * Create a new instance of `PullPolicy` from a string representation.
      *
      * @param string $policy the string representation of the pull policy
+     * @psalm-param mixed $policy
      *
      * @throws InvalidFormatException if the provided policy is not valid
      *
@@ -94,8 +108,12 @@ class ImagePullPolicy implements Stringable
      */
     public static function fromString($policy)
     {
-        if (!in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER])) {
-            throw new InvalidFormatException($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]);
+        self::ensureString($policy);
+
+        $values = self::ensureStringList([static::$ALWAYS, static::$MISSING, static::$NEVER]);
+
+        if (!in_array($policy, $values, true)) {
+            throw new InvalidFormatException($policy, $values);
         }
 
         return new self($policy);

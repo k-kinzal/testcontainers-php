@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -13,12 +14,15 @@ use Testcontainers\Utility\Stringable;
  */
 class ConflictBehavior implements Stringable
 {
+    use Ensure;
+
     /**
      * Retry action for conflict behavior.
      *
      * This constant represents the action to retry when a port conflict occurs.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $RETRY = 'retry';
 
@@ -28,6 +32,7 @@ class ConflictBehavior implements Stringable
      * This constant represents the action to fail when a port conflict occurs.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $FAIL = 'fail';
 
@@ -42,10 +47,17 @@ class ConflictBehavior implements Stringable
 
     /**
      * @param string $action
+     * @psalm-param mixed $action
      */
     public function __construct($action)
     {
-        assert(in_array($action, [static::$RETRY, static::$FAIL]));
+        self::ensureString($action);
+
+        $values = self::ensureStringList([static::$RETRY, static::$FAIL]);
+
+        if (!in_array($action, $values, true)) {
+            throw new InvalidFormatException($action, $values);
+        }
 
         $this->action = $action;
     }
@@ -85,6 +97,7 @@ class ConflictBehavior implements Stringable
      * Creates a ConflictBehavior instance from a string.
      *
      * @param string $action The action to take on port conflict. Valid values are 'retry' or 'fail'.
+     * @psalm-param mixed $action
      *
      * @throws InvalidFormatException if the action is invalid
      *
@@ -92,8 +105,12 @@ class ConflictBehavior implements Stringable
      */
     public static function fromString($action)
     {
-        if (!in_array($action, [static::$RETRY, static::$FAIL])) {
-            throw new InvalidFormatException($action, [static::$RETRY, static::$FAIL]);
+        self::ensureString($action);
+
+        $values = self::ensureStringList([static::$RETRY, static::$FAIL]);
+
+        if (!in_array($action, $values, true)) {
+            throw new InvalidFormatException($action, $values);
         }
 
         return new self($action);

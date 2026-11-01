@@ -43,6 +43,10 @@ trait RunCommand
      *     volumesFrom?: null|string[]|Stringable[],
      *     workdir?: null|string,
      * } $options Additional options for the Docker command
+     * @psalm-param mixed $image
+     * @psalm-param mixed $command
+     * @psalm-param mixed $args
+     * @psalm-param mixed $options
      *
      * @throws NoSuchContainerException       if the specified container does not exist
      * @throws NoSuchObjectException          if the specified object does not exist
@@ -54,6 +58,14 @@ trait RunCommand
      */
     public function run($image, $command = null, $args = [], $options = [])
     {
+        self::ensureStringKeyedArray($options);
+
+        self::ensureNonEmptyString($image);
+
+        self::ensureNullableString($command);
+
+        $args = self::ensureStringList($args);
+
         $process = $this->execute(
             'run',
             null,

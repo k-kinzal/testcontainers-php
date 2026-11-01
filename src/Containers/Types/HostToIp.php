@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -13,6 +14,8 @@ use Testcontainers\Utility\Stringable;
  */
 class HostToIp implements Stringable
 {
+    use Ensure;
+
     /**
      * The host name.
      *
@@ -30,9 +33,15 @@ class HostToIp implements Stringable
     /**
      * @param string $host
      * @param string $ip
+     * @psalm-param mixed $host
+     * @psalm-param mixed $ip
      */
     public function __construct($host, $ip)
     {
+        self::ensureNonEmptyString($host);
+
+        self::ensureNonEmptyString($ip);
+
         $this->host = $host;
         $this->ip = $ip;
     }
@@ -62,6 +71,7 @@ class HostToIp implements Stringable
      * Create a HostToIp object from a string.
      *
      * @param string $v the host-to-IP mapping
+     * @psalm-param mixed $v
      *
      * @throws InvalidFormatException if the format is invalid
      *
@@ -69,6 +79,8 @@ class HostToIp implements Stringable
      */
     public static function fromString($v)
     {
+        self::ensureString($v);
+
         $parts = explode(':', $v);
         if (count($parts) !== 2) {
             throw new InvalidFormatException($v, 'host:ip');
@@ -84,11 +96,18 @@ class HostToIp implements Stringable
      *     hostname: string,
      *     ipAddress: string
      * } $v The host-to-IP mapping
+     * @psalm-param mixed $v
      *
      * @return HostToIp the HostToIp object
      */
     public static function fromArray($v)
     {
+        self::ensureArray($v);
+
+        if (!isset($v['hostname'], $v['ipAddress'])) {
+            throw new \InvalidArgumentException('Host mapping requires hostname and ipAddress');
+        }
+
         return new self($v['hostname'], $v['ipAddress']);
     }
 

@@ -94,9 +94,15 @@ class HttpWaitStrategy implements WaitStrategy
 
     /**
      * @param null|HttpProbe $probe
+     * @psalm-param mixed $probe
      */
     public function __construct($probe = null)
     {
+        if ($probe !== null) {
+            self::ensureInstanceOf($probe, HttpProbe::class);
+
+        }
+
         $this->probe = $probe ?: new HttpProbeGetHeaders();
     }
 
@@ -104,11 +110,14 @@ class HttpWaitStrategy implements WaitStrategy
      * Sets the endpoint to be checked for readiness.
      *
      * @param string $endpoint the endpoint to be checked
+     * @psalm-param mixed $endpoint
      *
      * @return $this
      */
     public function withEndpoint($endpoint)
     {
+        self::ensureString($endpoint);
+
         $this->endpoint = $endpoint;
 
         return $this;
@@ -118,11 +127,14 @@ class HttpWaitStrategy implements WaitStrategy
      * Sets the schema to be used in the endpoint URL.
      *
      * @param string $schema the schema to be used
+     * @psalm-param mixed $schema
      *
      * @return $this
      */
     public function withSchema($schema)
     {
+        self::ensureString($schema);
+
         $this->schema = $schema;
 
         return $this;
@@ -132,11 +144,14 @@ class HttpWaitStrategy implements WaitStrategy
      * Sets the host to be used in the endpoint URL.
      *
      * @param string $host the host to be used
+     * @psalm-param mixed $host
      *
      * @return $this
      */
     public function withHost($host)
     {
+        self::ensureString($host);
+
         $this->host = $host;
 
         return $this;
@@ -146,11 +161,14 @@ class HttpWaitStrategy implements WaitStrategy
      * Sets the path to be used in the endpoint URL.
      *
      * @param string $path the path to be used
+     * @psalm-param mixed $path
      *
      * @return $this
      */
     public function withPath($path)
     {
+        self::ensureString($path);
+
         $this->path = $path;
 
         return $this;
@@ -160,11 +178,19 @@ class HttpWaitStrategy implements WaitStrategy
      * Sets the port to be used in the endpoint URL.
      *
      * @param int $port the port to be used
+     * @psalm-param mixed $port
      *
      * @return $this
      */
     public function withPort($port)
     {
+        self::ensureIntOrDigitString($port);
+
+        if ($port < 1 || $port > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
+        }
+        $port = (int) $port;
+
         $this->port = $port;
 
         return $this;
@@ -174,11 +200,14 @@ class HttpWaitStrategy implements WaitStrategy
      * Sets the expected HTTP response code for the endpoint.
      *
      * @param int $responseCode the expected HTTP response code
+     * @psalm-param mixed $responseCode
      *
      * @return $this
      */
     public function withExpectedResponseCode($responseCode)
     {
+        self::ensureIntRange($responseCode, 100, 599);
+
         $this->expectedResponseCode = $responseCode;
 
         return $this;
@@ -188,11 +217,14 @@ class HttpWaitStrategy implements WaitStrategy
      * Sets the timeout duration for waiting until the container instance is ready.
      *
      * @param int $seconds the number of seconds to wait before timing out
+     * @psalm-param mixed $seconds
      *
      * @return $this the current instance for method chaining
      */
     public function withTimeoutSeconds($seconds)
     {
+        self::ensureIntRange($seconds, 0);
+
         $this->timeout = $seconds;
 
         return $this;
@@ -202,11 +234,14 @@ class HttpWaitStrategy implements WaitStrategy
      * Sets the interval duration between each retry attempt.
      *
      * @param int $interval the interval duration in microseconds
+     * @psalm-param mixed $interval
      *
      * @return $this the current instance for method chaining
      */
     public function withRetryInterval($interval)
     {
+        self::ensureIntRange($interval, 0);
+
         $this->retryInterval = $interval;
 
         return $this;
@@ -216,15 +251,28 @@ class HttpWaitStrategy implements WaitStrategy
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
+     * @psalm-param mixed $instance
      */
     public function waitUntilReady($instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         $now = time();
         $endpoint = $this->endpoint;
         if ($endpoint === null) {
             $schema = $this->schema ?: 'http';
             $host = $this->host ?: $instance->getHost();
-            $port = $this->port ?: $instance->getMappedPort($instance->getExposedPorts()[0]);
+            $port = $this->port;
+            if ($port === null) {
+                $ports = $instance->getExposedPorts();
+                if (count($ports) === 0) {
+                    throw new \LogicException('HTTP wait strategy requires an exposed port');
+                }
+                $port = $instance->getMappedPort($ports[0]);
+                if ($port === null) {
+                    throw new \LogicException('HTTP wait strategy requires a mapped port');
+                }
+            }
             $path = $this->path ?: '/';
             $endpoint = sprintf('%s://%s:%s%s', $schema, $host, $port, $path);
         }
