@@ -2,7 +2,7 @@
 
 namespace Testcontainers\Exceptions;
 
-class ContainerStopException extends \RuntimeException
+final class ContainerStopException extends \RuntimeException
 {
     /** @var array<string, \Exception> */
     private $errors;

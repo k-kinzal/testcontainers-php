@@ -12,7 +12,7 @@ use Testcontainers\Utility\Stringable;
  * The container ID is a 64-character hexadecimal string that uniquely identifies
  * a Docker container on the host system.
  */
-class ContainerId implements Stringable
+final class ContainerId implements Stringable
 {
     use Ensure;
 

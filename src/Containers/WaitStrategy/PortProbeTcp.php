@@ -8,7 +8,7 @@ use Testcontainers\Utility\Ensure;
  * PortProbeTcp checks the availability of a specific port on a given host using `fsockopen`.
  * A TCP self-connect is not treated as available.
  */
-class PortProbeTcp implements PortProbe
+final class PortProbeTcp implements PortProbe
 {
     use Ensure;
 

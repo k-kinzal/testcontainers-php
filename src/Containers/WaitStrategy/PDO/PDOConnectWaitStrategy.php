@@ -14,7 +14,7 @@ use Testcontainers\Logger\WithLogger;
  *
  * Note: Do not use this strategy in PHP 5.6 as it may cause a Fatal error due to memory leaks.
  */
-class PDOConnectWaitStrategy implements WaitStrategy
+final class PDOConnectWaitStrategy implements WaitStrategy
 {
     use WithLogger;
 

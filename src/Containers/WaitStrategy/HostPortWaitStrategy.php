@@ -10,7 +10,7 @@ use Testcontainers\Logger\WithLogger;
  *
  * This strategy continuously checks the readiness of the specified ports on the container instance until they are available or a timeout occurs.
  */
-class HostPortWaitStrategy implements WaitStrategy
+final class HostPortWaitStrategy implements WaitStrategy
 {
     use WithLogger;
 

@@ -6,7 +6,7 @@ use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
-class BindMode implements Stringable
+final class BindMode implements Stringable
 {
     use Ensure;
 

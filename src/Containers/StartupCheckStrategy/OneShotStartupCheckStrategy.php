@@ -12,7 +12,7 @@ use Testcontainers\Logger\WithLogger;
  *
  * Useful for one-shot containers that run a command and exit (e.g. echo, printenv).
  */
-class OneShotStartupCheckStrategy implements StartupCheckStrategy
+final class OneShotStartupCheckStrategy implements StartupCheckStrategy
 {
     use WithLogger;
 

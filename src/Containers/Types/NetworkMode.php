@@ -12,7 +12,7 @@ use Testcontainers\Utility\Stringable;
  * convenient access to common network modes (`host`, `bridge`), as well as supporting
  * custom network modes.
  */
-class NetworkMode implements Stringable
+final class NetworkMode implements Stringable
 {
     use Ensure;
 

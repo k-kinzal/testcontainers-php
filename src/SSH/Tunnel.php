@@ -9,7 +9,7 @@ use Testcontainers\Logger\WithLogger;
 /**
  * A tunnel for forwarding connections over SSH.
  */
-class Tunnel
+final class Tunnel
 {
     use WithLogger;
 

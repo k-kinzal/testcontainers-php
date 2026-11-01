@@ -7,7 +7,7 @@ use Exception;
 /**
  * An exception thrown when a port strategy with the same name already exists.
  */
-class AlreadyExistsPortStrategyException extends \Exception
+final class AlreadyExistsPortStrategyException extends \Exception
 {
     /**
      * @param string          $name     the name of the port strategy that already exists

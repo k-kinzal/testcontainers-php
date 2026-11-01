@@ -13,7 +13,7 @@ use Testcontainers\Utility\Ensure;
  *
  * The process is stopped when this output is released.
  */
-class DockerEventsOutput
+final class DockerEventsOutput
 {
     use Ensure;
 

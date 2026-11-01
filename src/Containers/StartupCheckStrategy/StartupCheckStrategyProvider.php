@@ -9,7 +9,7 @@ use Testcontainers\Utility\Ensure;
  *
  * This class provides a way to register and retrieve startup check strategies by their name.
  */
-class StartupCheckStrategyProvider
+final class StartupCheckStrategyProvider
 {
     use Ensure;
 

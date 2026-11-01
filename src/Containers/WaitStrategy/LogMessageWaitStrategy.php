@@ -14,7 +14,7 @@ use Testcontainers\Logger\WithLogger;
  * This strategy continuously checks the container logs for a specified log message
  * until it is found or a timeout occurs.
  */
-class LogMessageWaitStrategy implements WaitStrategy
+final class LogMessageWaitStrategy implements WaitStrategy
 {
     use WithLogger;
 

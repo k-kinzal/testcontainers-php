@@ -11,7 +11,7 @@ use Testcontainers\Logger\WithLogger;
  * This strategy continuously checks the readiness of the specified HTTP endpoint
  * until it is reachable or a timeout occurs.
  */
-class HttpWaitStrategy implements WaitStrategy
+final class HttpWaitStrategy implements WaitStrategy
 {
     use WithLogger;
 

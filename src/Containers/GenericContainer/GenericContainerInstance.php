@@ -19,7 +19,7 @@ use Testcontainers\SSH\Session;
 /**
  * GenericContainerInstance is a generic implementation of docker container.
  */
-class GenericContainerInstance implements ContainerInstance
+final class GenericContainerInstance implements ContainerInstance
 {
     use Ensure;
 

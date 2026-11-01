@@ -9,7 +9,7 @@ namespace Testcontainers\Docker\Exception;
  * with a Docker container that could not be found. It extends the DockerException
  * class to provide additional context specific to missing containers.
  */
-class NoSuchContainerException extends DockerException
+final class NoSuchContainerException extends DockerException
 {
     /**
      * Checks if the given output matches the "No such container" error message.

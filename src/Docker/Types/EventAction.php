@@ -9,7 +9,7 @@ use Testcontainers\Utility\Stringable;
 /**
  * Represents the action of a Docker event.
  */
-class EventAction implements Stringable
+final class EventAction implements Stringable
 {
     use Ensure;
 

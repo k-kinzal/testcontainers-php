@@ -9,7 +9,7 @@ namespace Testcontainers\Containers\WaitStrategy;
  * that matches the specified failure pattern, signaling that the container has
  * entered an error state.
  */
-class LogMessageFailedException extends \RuntimeException
+final class LogMessageFailedException extends \RuntimeException
 {
     /**
      * @param string         $logLine  the log line that matched the failure pattern

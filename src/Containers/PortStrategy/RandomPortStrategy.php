@@ -5,7 +5,7 @@ namespace Testcontainers\Containers\PortStrategy;
 /**
  * A port strategy that selects a random port from the ephemeral port range.
  */
-class RandomPortStrategy implements PortStrategy
+final class RandomPortStrategy implements PortStrategy
 {
     public function getPort()
     {

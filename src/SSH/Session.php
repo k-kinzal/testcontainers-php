@@ -8,7 +8,7 @@ use Symfony\Component\Process\Process;
  * This class represents an SSH session managed by a Symfony Process.
  * It provides methods to check if the session is running and to stop the session.
  */
-class Session
+final class Session
 {
     /**
      * The process to use for the SSH session.

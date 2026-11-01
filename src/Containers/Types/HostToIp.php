@@ -12,7 +12,7 @@ use Testcontainers\Utility\Stringable;
  * @property string $host The host name.
  * @property string $ip   The IP address.
  */
-class HostToIp implements Stringable
+final class HostToIp implements Stringable
 {
     use Ensure;
 

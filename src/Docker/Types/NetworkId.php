@@ -10,7 +10,7 @@ use Testcontainers\Utility\Stringable;
  *
  * A network ID is a 64-character hexadecimal string.
  */
-class NetworkId implements Stringable
+final class NetworkId implements Stringable
 {
     use Ensure;
 

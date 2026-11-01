@@ -9,7 +9,7 @@ use Testcontainers\Utility\Stringable;
 /**
  * Defines the policy for determining when to pull a container image.
  */
-class ImagePullPolicy implements Stringable
+final class ImagePullPolicy implements Stringable
 {
     use Ensure;
 

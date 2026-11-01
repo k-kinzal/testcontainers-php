@@ -2,6 +2,6 @@
 
 namespace Testcontainers\SSH\Exceptions;
 
-class TunnelException extends \RuntimeException
+final class TunnelException extends \RuntimeException
 {
 }

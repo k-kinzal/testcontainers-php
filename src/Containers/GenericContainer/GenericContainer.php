@@ -18,6 +18,7 @@ use Testcontainers\Logger\WithLogger;
 
 /**
  * GenericContainer is a generic implementation of docker container.
+ * @api
  */
 class GenericContainer implements Container
 {

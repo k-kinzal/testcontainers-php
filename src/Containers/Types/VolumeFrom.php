@@ -12,7 +12,7 @@ use Testcontainers\Utility\Stringable;
  * @property string   $name The name of the container to mount volumes from.
  * @property BindMode $mode The mode of the bind (e.g., read-only or read-write).
  */
-class VolumeFrom implements Stringable
+final class VolumeFrom implements Stringable
 {
     use Ensure;
 

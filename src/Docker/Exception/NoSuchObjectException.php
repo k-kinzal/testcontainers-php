@@ -2,7 +2,7 @@
 
 namespace Testcontainers\Docker\Exception;
 
-class NoSuchObjectException extends DockerException
+final class NoSuchObjectException extends DockerException
 {
     /**
      * Checks if the given output matches the "No such object" error message.

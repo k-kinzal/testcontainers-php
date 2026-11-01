@@ -9,7 +9,7 @@ namespace Testcontainers\Docker;
  * It ensures that only one instance of DockerClient is created and shared across
  * all calls to the `create` method.
  */
-class DockerClientFactory
+final class DockerClientFactory
 {
     /**
      * The Docker client instance.

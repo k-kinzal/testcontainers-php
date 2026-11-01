@@ -7,7 +7,7 @@ use Exception;
 /**
  * Exception thrown when an invalid format is encountered.
  */
-class InvalidFormatException extends \Exception
+final class InvalidFormatException extends \Exception
 {
     /**
      * InvalidFormatException constructor.

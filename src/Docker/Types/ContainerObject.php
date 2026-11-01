@@ -10,7 +10,7 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  *
  * @property State $state The state of the container.
  */
-class ContainerObject
+final class ContainerObject
 {
     use Ensure;
 

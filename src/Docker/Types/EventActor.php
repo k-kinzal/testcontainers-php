@@ -11,7 +11,7 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  * @property string                $id         The ID of the object that generated the event
  * @property array<string, string> $attributes The attributes of the object that generated the event
  */
-class EventActor
+final class EventActor
 {
     use Ensure;
 

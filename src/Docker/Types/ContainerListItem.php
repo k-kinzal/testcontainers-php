@@ -26,7 +26,7 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  * @property string                      $state        The container state (created, running, paused, restarting, removing, exited, dead)
  * @property string                      $status       The human-readable status string
  */
-class ContainerListItem
+final class ContainerListItem
 {
     use Ensure;
 

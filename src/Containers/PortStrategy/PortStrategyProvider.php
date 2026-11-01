@@ -11,7 +11,7 @@ use Testcontainers\Utility\Ensure;
  * by their unique names. It maintains an associative array that maps strategy names
  * to their corresponding `PortStrategy` instances.
  */
-class PortStrategyProvider
+final class PortStrategyProvider
 {
     use Ensure;
 

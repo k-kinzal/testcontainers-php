@@ -15,7 +15,7 @@ use Testcontainers\Utility\Stringable;
  * - RESTART: Stop existing container and start a new one
  * - REUSE: Reuse existing container if it's still running
  */
-class ReuseMode implements Stringable
+final class ReuseMode implements Stringable
 {
     use Ensure;
 

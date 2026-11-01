@@ -46,7 +46,7 @@ use Testcontainers\Logger\LoggerFactory;
  * }
  * ```
  */
-class Testcontainers
+final class Testcontainers
 {
     use Ensure;
 

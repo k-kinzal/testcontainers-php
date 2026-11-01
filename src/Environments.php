@@ -16,7 +16,7 @@ namespace Testcontainers;
  * @method static string|null CI_DEBUG_TRACE()                                         Set by GitLab CI when debug logging is enabled
  * @method static string|null SYSTEM_DEBUG()                                           Set by Azure Pipelines when debug logging is enabled
  */
-class Environments
+final class Environments
 {
     /**
      * @param string $name

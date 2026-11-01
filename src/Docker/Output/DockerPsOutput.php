@@ -12,7 +12,7 @@ use Testcontainers\Docker\Types\ContainerListItem;
  * This class extends DockerOutput to parse the JSON output of `docker ps --format json`
  * into typed ContainerListItem objects.
  */
-class DockerPsOutput extends DockerOutput
+final class DockerPsOutput extends DockerOutput
 {
     /**
      * Parsed container entries from the ps output.

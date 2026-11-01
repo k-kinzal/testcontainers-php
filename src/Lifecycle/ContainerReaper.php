@@ -9,7 +9,7 @@ use Testcontainers\Docker\Exception\InvalidValueException;
 /**
  * Detects and stops orphaned containers whose owning process has died.
  */
-class ContainerReaper
+final class ContainerReaper
 {
     /**
      * @var DockerClient

@@ -12,7 +12,7 @@ use Testcontainers\Utility\Stringable;
  * This class defines the actions that can be taken when a port conflict is detected,
  * such as retrying the operation or failing immediately.
  */
-class ConflictBehavior implements Stringable
+final class ConflictBehavior implements Stringable
 {
     use Ensure;
 

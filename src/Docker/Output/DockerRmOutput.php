@@ -10,7 +10,7 @@ use Testcontainers\Docker\Types\ContainerId;
  *
  * This class extends DockerOutput to include the container IDs of the Docker containers that were removed.
  */
-class DockerRmOutput extends DockerOutput
+final class DockerRmOutput extends DockerOutput
 {
     /**
      * An array of Docker container IDs.

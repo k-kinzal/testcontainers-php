@@ -11,7 +11,7 @@ use Testcontainers\Utility\Ensure;
  * by their unique names. It maintains an associative array that maps strategy names
  * to their corresponding `WaitStrategy` instances.
  */
-class WaitStrategyProvider
+final class WaitStrategyProvider
 {
     use Ensure;
 

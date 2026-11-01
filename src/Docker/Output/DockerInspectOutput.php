@@ -12,7 +12,7 @@ use Testcontainers\Docker\Types\State;
  *
  * @property State $state
  */
-class DockerInspectOutput extends DockerOutput
+final class DockerInspectOutput extends DockerOutput
 {
     /**
      * Object representation of the container.

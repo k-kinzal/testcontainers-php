@@ -10,7 +10,7 @@ use Symfony\Component\Process\Process;
  * This class extends DockerOutput to parse the JSON output from `docker version --format json`
  * and provide access to version information.
  */
-class DockerVersionOutput extends DockerOutput
+final class DockerVersionOutput extends DockerOutput
 {
     /**
      * The parsed version data.

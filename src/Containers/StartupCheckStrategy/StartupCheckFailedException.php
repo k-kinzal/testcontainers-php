@@ -5,7 +5,7 @@ namespace Testcontainers\Containers\StartupCheckStrategy;
 /**
  * StartupCheckFailedException is thrown when a container's startup check strategy reports failure.
  */
-class StartupCheckFailedException extends \RuntimeException
+final class StartupCheckFailedException extends \RuntimeException
 {
     /**
      * @param string          $message  the exception message

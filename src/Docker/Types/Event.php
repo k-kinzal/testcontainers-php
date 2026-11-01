@@ -19,7 +19,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  * @property null|string     $id       Deprecated ID of the object that generated the event
  * @property null|string     $from     Deprecated image of the container that generated the event
  */
-class Event
+final class Event
 {
     use Ensure;
 

@@ -9,7 +9,7 @@ use Testcontainers\Utility\LineIterator;
  *
  * This class extends DockerOutput to provide specific handling for container logs.
  */
-class DockerFollowLogsOutput extends DockerOutput
+final class DockerFollowLogsOutput extends DockerOutput
 {
     /**
      * Returns an iterator for the Docker logs output line by line.

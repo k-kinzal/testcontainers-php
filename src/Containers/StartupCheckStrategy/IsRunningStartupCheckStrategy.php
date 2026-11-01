@@ -10,7 +10,7 @@ use Testcontainers\Logger\WithLogger;
 /**
  * StartupCheckStrategy that waits until a container is running.
  */
-class IsRunningStartupCheckStrategy implements StartupCheckStrategy
+final class IsRunningStartupCheckStrategy implements StartupCheckStrategy
 {
     use WithLogger;
 

@@ -11,7 +11,7 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  * @property string $status   Container status of "created", "running", "paused", "restarting", "removing", "exited", or "dead"
  * @property int    $exitCode The last exit code of the container
  */
-class State
+final class State
 {
     use Ensure;
 

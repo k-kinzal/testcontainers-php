@@ -11,7 +11,7 @@ use Testcontainers\Utility\Stringable;
  *
  * @see https://www.php.net/manual/en/ref.pdo-mysql.connection.php
  */
-class MySQLDSN implements DSN, Stringable
+final class MySQLDSN implements DSN, Stringable
 {
     use Ensure;
 

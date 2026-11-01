@@ -10,7 +10,7 @@ use Testcontainers\Docker\Types\NetworkId;
  *
  * This class extends DockerOutput to provide specific handling for network creation.
  */
-class DockerNetworkCreateOutput extends DockerOutput
+final class DockerNetworkCreateOutput extends DockerOutput
 {
     /**
      * The ID of the Docker network.
