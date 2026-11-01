@@ -488,7 +488,7 @@ trait BaseCommand
                     if (is_string($value[$k])) {
                         $result[] = $k.'='.$this->expandEnv($value[$k]);
                     } elseif (is_scalar($value[$k])) {
-                        $result[] = $k.'='.$value[$k];
+                        $result[] = $k.'='.(string) $value[$k];
                     } elseif (is_object($value[$k]) && method_exists($value[$k], '__toString')) {
                         $result[] = $k.'='.$this->expandEnv((string) $value[$k]);
                     } else {
