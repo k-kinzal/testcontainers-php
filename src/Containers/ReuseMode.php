@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -13,13 +14,17 @@ use Testcontainers\Utility\Stringable;
  * - ADD: Always start a new container (default behavior)
  * - RESTART: Stop existing container and start a new one
  * - REUSE: Reuse existing container if it's still running
+ * @api
  */
 class ReuseMode implements Stringable
 {
+    use Ensure;
+
     /**
      * Add mode: always start a new container.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $ADD = 'add';
 
@@ -27,6 +32,7 @@ class ReuseMode implements Stringable
      * Restart mode: stop existing container and start a new one.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $RESTART = 'restart';
 
@@ -34,6 +40,7 @@ class ReuseMode implements Stringable
      * Reuse mode: reuse existing container if running.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $REUSE = 'reuse';
 
@@ -45,11 +52,18 @@ class ReuseMode implements Stringable
     private $mode;
 
     /**
+     * Create a ReuseMode instance.
+     *
      * @param string $mode
+     * @psalm-param mixed $mode
      */
     public function __construct($mode)
     {
-        assert(in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE]));
+        self::ensureString($mode);
+
+        $values = [static::$ADD, static::$RESTART, static::$REUSE];
+        self::ensureStringArray($values);
+        self::ensureOneOf($mode, $values);
 
         $this->mode = $mode;
     }
@@ -93,6 +107,7 @@ class ReuseMode implements Stringable
      * Creates a ReuseMode instance from a string.
      *
      * @param string $mode The reuse mode. Valid values are 'add', 'restart', or 'reuse'.
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the mode is invalid
      *
@@ -100,9 +115,11 @@ class ReuseMode implements Stringable
      */
     public static function fromString($mode)
     {
-        if (!in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE])) {
-            throw new InvalidFormatException($mode, [static::$ADD, static::$RESTART, static::$REUSE]);
-        }
+        self::ensureString($mode);
+
+        $values = [static::$ADD, static::$RESTART, static::$REUSE];
+        self::ensureStringArray($values);
+        self::ensureOneOf($mode, $values);
 
         return new self($mode);
     }

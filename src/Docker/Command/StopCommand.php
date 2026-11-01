@@ -2,11 +2,14 @@
 
 namespace Testcontainers\Docker\Command;
 
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Output\DockerStopOutput;
+use Testcontainers\Docker\Output\DockerVersionOutput;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\Utility\Stringable;
+use UnexpectedValueException;
 
 /**
  * Stop command for Docker command.
@@ -43,6 +46,8 @@ trait StopCommand
      *     time?: null|int,
      *     timeout?: null|int,
      * } $options Additional options for the Docker stop command
+     * @psalm-param mixed $containerId
+     * @psalm-param mixed $options
      *
      * @throws NoSuchContainerException if the specified container does not exist
      * @throws DockerException          if the Docker command fails for any other reason
@@ -51,21 +56,30 @@ trait StopCommand
      */
     public function stop($containerId, $options = [])
     {
-        if (is_array($containerId)) {
-            $containerIds = array_map('strval', $containerId);
-        } else {
-            $containerIds = [(string) $containerId];
+        self::ensureStringKeyedArray($options);
+
+        $containerIds = [];
+        foreach (is_array($containerId) ? $containerId : [$containerId] as $id) {
+            self::ensureNonEmptyStringOrInstanceOf($id, ContainerId::class);
+
+            $containerIds[] = (string) $id;
         }
 
         // Normalize timeout option key based on Docker client version
         $timeoutValue = isset($options['timeout']) ? $options['timeout'] : (isset($options['time']) ? $options['time'] : null);
         unset($options['timeout'], $options['time']);
         if ($timeoutValue !== null) {
+            self::ensureIntRange($timeoutValue, -1);
+
             if ($this->stopTimeoutOption === null) {
                 try {
                     $clientVersion = $this->version()->getClientVersion();
                     $this->stopTimeoutOption = ($clientVersion !== null && version_compare($clientVersion, '28.0', '>=')) ? 'timeout' : 'time';
-                } catch (\Exception $e) {
+                } catch (DockerException $e) {
+                    $this->stopTimeoutOption = 'time';
+                } catch (ProcessTimedOutException $e) {
+                    $this->stopTimeoutOption = 'time';
+                } catch (UnexpectedValueException $e) {
                     $this->stopTimeoutOption = 'time';
                 }
             }
@@ -85,7 +99,9 @@ trait StopCommand
     abstract protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true);
 
     /**
-     * @return \Testcontainers\Docker\Output\DockerVersionOutput
+     * Read the Docker client and server versions.
+     *
+     * @return DockerVersionOutput
      */
     abstract public function version();
 }

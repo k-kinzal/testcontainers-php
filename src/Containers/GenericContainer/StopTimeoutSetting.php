@@ -28,6 +28,7 @@ trait StopTimeoutSetting
      * Define the default stop timeout to be used for the container.
      *
      * @var null|int
+     * @psalm-var mixed
      */
     protected static $STOP_TIMEOUT;
 
@@ -44,11 +45,14 @@ trait StopTimeoutSetting
      * A value of 0 will send SIGTERM and immediately follow with SIGKILL.
      *
      * @param int $seconds the stop timeout in seconds
+     * @psalm-param mixed $seconds
      *
      * @return self
      */
     public function withStopTimeout($seconds)
     {
+        self::ensureIntRange($seconds, -1);
+
         $this->stopTimeout = $seconds;
 
         return $this;
@@ -65,6 +69,8 @@ trait StopTimeoutSetting
     protected function stopTimeout()
     {
         if (static::$STOP_TIMEOUT !== null) {
+            self::ensureIntRange(static::$STOP_TIMEOUT, -1);
+
             return static::$STOP_TIMEOUT;
         }
 

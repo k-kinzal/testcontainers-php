@@ -35,6 +35,7 @@ trait MountSetting
      * Define the default mounts to be used for the container.
      *
      * @var null|string[]
+     * @psalm-var mixed
      */
     protected static $MOUNTS;
 
@@ -42,6 +43,7 @@ trait MountSetting
      * Define the default volumes to be used for the container. (Alias for $MOUNTS).
      *
      * @var null|string[]
+     * @psalm-var mixed
      */
     protected static $VOLUMES;
 
@@ -70,6 +72,9 @@ trait MountSetting
      * }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
+     * @psalm-param mixed $hostPath
+     * @psalm-param mixed $containerPath
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -77,25 +82,27 @@ trait MountSetting
      */
     public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
+        self::ensureStringOrArrayOrInstanceOf($hostPath, Mount::class);
+        self::ensureNullableString($containerPath);
+        self::ensureNullableInstanceOf($mode, BindMode::class);
+
         if ($containerPath === null || $mode === null) {
             if (is_string($hostPath)) {
                 $mount = Mount::fromString($hostPath);
             } elseif (is_array($hostPath)) {
                 $mount = Mount::fromArray($hostPath);
-            } elseif ($hostPath instanceof Mount) {
-                $mount = $hostPath;
             } else {
-                throw new \InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
+                $mount = $hostPath;
             }
-        } elseif (is_string($hostPath)) {
+        } else {
+            self::ensureString($hostPath);
+
             $mount = Mount::fromArray([
                 'type' => 'bind',
                 'source' => $hostPath,
                 'destination' => $containerPath,
                 'readonly' => $mode->isReadOnly(),
             ]);
-        } else {
-            throw new \InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
         }
 
         $this->mounts[] = $mount;
@@ -119,6 +126,7 @@ trait MountSetting
      *      nocopy?: bool,
      *      opt?: array<string, string>
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     * @psalm-param mixed $mounts
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -126,9 +134,11 @@ trait MountSetting
      */
     public function withFileSystemBinds($mounts)
     {
+        self::ensureArray($mounts);
+
         $this->mounts = [];
-        foreach ($mounts as $mount) {
-            $this->withFileSystemBind($mount);
+        foreach (array_keys($mounts) as $key) {
+            $this->withFileSystemBind($mounts[$key]);
         }
 
         return $this;
@@ -152,6 +162,9 @@ trait MountSetting
      *  }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
+     * @psalm-param mixed $hostPath
+     * @psalm-param mixed $containerPath
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -178,6 +191,7 @@ trait MountSetting
      *      nocopy?: bool,
      *      opt?: array<string, string>
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     * @psalm-param mixed $mounts
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -206,6 +220,9 @@ trait MountSetting
      *  }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
+     * @psalm-param mixed $hostPath
+     * @psalm-param mixed $containerPath
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -232,6 +249,7 @@ trait MountSetting
      *      nocopy?: bool,
      *      opt?: array<string, string>
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     * @psalm-param mixed $mounts
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -255,10 +273,15 @@ trait MountSetting
     protected function mounts()
     {
         $mounts = static::$MOUNTS;
-        if (empty($mounts)) {
-            $mounts = static::$VOLUMES;
+        self::ensureNullableStringArray($mounts);
+
+        if ($mounts === null || $mounts === []) {
+            $fallback = static::$VOLUMES;
+            self::ensureNullableStringArray($fallback);
+
+            $mounts = $fallback;
         }
-        if (!empty($mounts)) {
+        if ($mounts !== null && count($mounts) > 0) {
             $m = [];
             foreach ($mounts as $mount) {
                 $m[] = Mount::fromString($mount);

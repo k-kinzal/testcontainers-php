@@ -3,14 +3,23 @@
 namespace Testcontainers\Containers\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
+/**
+ * The read-only or read-write access mode for a bind mount.
+ *
+ * @api
+ */
 class BindMode implements Stringable
 {
+    use Ensure;
+
     /**
      * The mode for read-only bind.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $READ_ONLY = 'ro';
 
@@ -18,6 +27,7 @@ class BindMode implements Stringable
      * The mode for read-write bind.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $READ_WRITE = 'rw';
 
@@ -29,11 +39,18 @@ class BindMode implements Stringable
     private $mode;
 
     /**
+     * Create a BindMode instance.
+     *
      * @param string $mode
+     * @psalm-param mixed $mode
      */
     public function __construct($mode)
     {
-        assert(in_array($mode, [static::$READ_ONLY, static::$READ_WRITE]));
+        self::ensureString($mode);
+
+        $values = [static::$READ_ONLY, static::$READ_WRITE];
+        self::ensureStringArray($values);
+        self::ensureOneOf($mode, $values);
 
         $this->mode = $mode;
     }
@@ -67,6 +84,7 @@ class BindMode implements Stringable
      * Create a new instance of `BindMode` from a string representation.
      *
      * @param string $mode the string representation of the bind mode
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the provided mode is not valid
      *
@@ -74,9 +92,11 @@ class BindMode implements Stringable
      */
     public static function fromString($mode)
     {
-        if (!in_array($mode, [static::$READ_ONLY, static::$READ_WRITE])) {
-            throw new InvalidFormatException($mode, [static::$READ_ONLY, static::$READ_WRITE]);
-        }
+        self::ensureString($mode);
+
+        $values = [static::$READ_ONLY, static::$READ_WRITE];
+        self::ensureStringArray($values);
+        self::ensureOneOf($mode, $values);
 
         return new self($mode);
     }

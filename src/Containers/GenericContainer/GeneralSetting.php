@@ -30,6 +30,7 @@ trait GeneralSetting
      * Define the default image to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $IMAGE;
 
@@ -37,6 +38,7 @@ trait GeneralSetting
      * The commands to be executed in the container.
      *
      * @var null|string|string[]
+     * @psalm-var mixed
      */
     protected static $COMMANDS;
 
@@ -44,6 +46,7 @@ trait GeneralSetting
      * Define the default name to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $NAME;
 
@@ -68,15 +71,35 @@ trait GeneralSetting
      */
     private $name;
 
+    /**
+     * Set the command to execute in the container.
+     *
+     * @param string $cmd the command to execute
+     * @psalm-param mixed $cmd
+     *
+     * @return self
+     */
     public function withCommand($cmd)
     {
+        self::ensureString($cmd);
+
         $this->commands = [$cmd];
 
         return $this;
     }
 
+    /**
+     * Set the command and its arguments to execute in the container.
+     *
+     * @param string[] $commandParts the command followed by its arguments
+     * @psalm-param mixed $commandParts
+     *
+     * @return self
+     */
     public function withCommands($commandParts)
     {
+        self::ensureStringArray($commandParts);
+
         $this->commands = $commandParts;
 
         return $this;
@@ -86,11 +109,14 @@ trait GeneralSetting
      * Set the name for this container, similar to the `--name <name>` option on the Docker CLI.
      *
      * @param string $name the name to set
+     * @psalm-param mixed $name
      *
      * @return self
      */
     public function withName($name)
     {
+        self::ensureNullableString($name);
+
         $this->name = $name;
 
         return $this;
@@ -117,8 +143,11 @@ trait GeneralSetting
      */
     protected function commands()
     {
-        if (static::$COMMANDS !== null) {
-            return static::$COMMANDS;
+        $commands = static::$COMMANDS;
+        self::ensureNullableStringOrStringArray($commands);
+
+        if ($commands !== null) {
+            return $commands;
         }
         if ($this->commands) {
             return $this->commands;
@@ -170,6 +199,8 @@ trait GeneralSetting
      */
     protected function name()
     {
+        self::ensureNullableString(static::$NAME);
+
         if (static::$NAME !== null) {
             return static::$NAME;
         }

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\WorkdirSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -47,9 +48,44 @@ class WorkdirSettingTest extends TestCase
 
         $this->assertSame("/tmp\n", $instance->getOutput());
     }
+
+    /**
+     * @dataProvider provideWithWorkingDirectoryInvalidInputs
+     * @param mixed $workDir
+     */
+    public function testWithWorkingDirectoryRejectsInvalidInputs($workDir)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withWorkingDirectory($workDir);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithWorkingDirectoryInvalidInputs()
+    {
+        return [
+            'case 1' => [[]],
+        ];
+    }
+
+    public function testStartRejectsInvalidWorkdir()
+    {
+        $container = new WorkdirSettingWithInvalidWorkdirContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class WorkdirSettingWithStaticWorkdirContainer extends GenericContainer
 {
     protected static $WORKDIR = '/tmp';
+}
+
+class WorkdirSettingWithInvalidWorkdirContainer extends GenericContainer
+{
+    protected static $WORKDIR = false;
 }

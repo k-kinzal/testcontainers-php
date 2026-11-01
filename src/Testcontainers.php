@@ -2,14 +2,17 @@
 
 namespace Testcontainers;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Exceptions\ContainerStopException;
 use Testcontainers\Lifecycle\ContainerReaper;
 use Testcontainers\Lifecycle\ShutdownHandler;
 use Testcontainers\Logger\LoggerFactory;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Class Testcontainers.
@@ -44,9 +47,12 @@ use Testcontainers\Logger\LoggerFactory;
  *     protected static $IMAGE = 'alpine:3.10';
  * }
  * ```
+ * @api
  */
 class Testcontainers
 {
+    use Ensure;
+
     /**
      * Map of started containers by identifier.
      *
@@ -75,9 +81,13 @@ class Testcontainers
      * The logger is not passed to containers that have their own logger.
      *
      * @param null|LoggerInterface $logger the logger instance
+     * @psalm-param mixed $logger
+     * @return void
      */
     public static function setLogger($logger)
     {
+        self::ensureNullableInstanceOf($logger, LoggerInterface::class);
+
         self::$logger = $logger;
     }
 
@@ -90,17 +100,18 @@ class Testcontainers
      *  If the container has no logger, the logger set by `setLogger` or specified by environment variables is passed to the container.
      *
      * @param class-string<Container>|Container $containerClass the class name of the container to run
+     * @psalm-param mixed $containerClass
      *
      * @return ContainerInstance
      */
     public static function run($containerClass)
     {
-        if (is_string($containerClass) && class_exists($containerClass)) {
+        self::ensureClassStringOrInstanceOf($containerClass, Container::class);
+
+        if (is_string($containerClass)) {
             $container = new $containerClass();
-        } elseif ($containerClass instanceof Container) {
-            $container = $containerClass;
         } else {
-            throw new \LogicException('The container class must be a valid class name or an instance of `Container`');
+            $container = $containerClass;
         }
 
         $identifier = is_string($containerClass)
@@ -148,6 +159,7 @@ class Testcontainers
      *
      * This method stops all containers that were started using the `run` method.
      * It iterates over the list of started containers and calls the `stop` method on each instance.
+     * @return void
      */
     public static function stop()
     {
@@ -157,7 +169,7 @@ class Testcontainers
             try {
                 $instance->stop();
                 $stopped[] = $key;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $errors[$key] = $e;
             }
         }
@@ -165,8 +177,7 @@ class Testcontainers
             unset(self::$instances[$key]);
         }
         if (!empty($errors)) {
-            throw new \Testcontainers\Exceptions\ContainerStopException($errors);
+            throw new ContainerStopException($errors);
         }
     }
-
 }

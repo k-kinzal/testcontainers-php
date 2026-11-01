@@ -28,6 +28,7 @@ trait PrivilegeSetting
      * Define the default privileged mode to be used for the container.
      *
      * @var null|bool
+     * @psalm-var mixed
      */
     protected static $PRIVILEGED;
 
@@ -42,11 +43,14 @@ trait PrivilegeSetting
      * Set the privileged mode for the container.
      *
      * @param bool $mode whether to enable privileged mode
+     * @psalm-param mixed $mode
      *
      * @return self
      */
     public function withPrivilegedMode($mode)
     {
+        self::ensureBool($mode);
+
         $this->privileged = $mode;
 
         return $this;
@@ -63,6 +67,8 @@ trait PrivilegeSetting
      */
     protected function privileged()
     {
+        self::ensureNullableBool(static::$PRIVILEGED);
+
         if (static::$PRIVILEGED !== null) {
             return static::$PRIVILEGED;
         }

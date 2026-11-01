@@ -28,12 +28,23 @@ trait LogsCommand
      *     timestamps?: null|bool,
      *     until?: null|string|Stringable,
      * } $options Additional options for the Docker logs command
+     * @psalm-param mixed $containerId
+     * @psalm-param mixed $options
      *
      * @return DockerFollowLogsOutput|DockerLogsOutput the output containing the logs of the container
      */
     public function logs($containerId, $options = [])
     {
-        $follow = isset($options['follow']) ? $options['follow'] : false;
+        self::ensureStringKeyedArray($options);
+
+        if (!$containerId instanceof ContainerId) {
+            self::ensureNonEmptyString($containerId);
+        }
+        if (isset($options['follow'])) {
+            self::ensureBool($options['follow']);
+        }
+
+        $follow = isset($options['follow']) && $options['follow'] === true;
         $process = $this->execute('logs', null, [(string) $containerId], $options, $follow === false);
 
         if ($follow === true) {

@@ -5,9 +5,11 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Testcontainers\Containers\GenericContainer\EnvSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -63,6 +65,59 @@ class EnvSettingTest extends TestCase
 
         $this->assertSame("value1\nvalue2\n", $instance->getOutput());
     }
+
+    /**
+     * @dataProvider provideWithEnvInvalidInputs
+     * @param mixed $key
+     * @param mixed $value
+     */
+    public function testWithEnvRejectsInvalidInputs($key, $value)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withEnv($key, $value);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithEnvInvalidInputs()
+    {
+        return [
+            'case 1' => ['KEY', false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideWithEnvsInvalidInputs
+     * @param mixed $env
+     */
+    public function testWithEnvsRejectsInvalidInputs($env)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withEnvs($env);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithEnvsInvalidInputs()
+    {
+        return [
+            'case 1' => [['KEY' => new stdClass()]],
+        ];
+    }
+
+    public function testStartRejectsInvalidEnv()
+    {
+        $container = new EnvSettingWithInvalidEnvContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
@@ -73,4 +128,9 @@ class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
     ];
 
     protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
+}
+
+class EnvSettingWithInvalidEnvContainer extends GenericContainer
+{
+    protected static $ENV = ['KEY' => false];
 }

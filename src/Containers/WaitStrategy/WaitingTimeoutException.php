@@ -2,19 +2,25 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Exception;
+use RuntimeException;
+
 /**
  * Exception thrown when waiting for a container to be ready times out.
  *
  * This exception is used to indicate that the specified timeout duration
  * has been exceeded while waiting for the container to be ready.
+ * @api
  */
-class WaitingTimeoutException extends \RuntimeException
+class WaitingTimeoutException extends RuntimeException
 {
     /**
-     * @param int             $timeout  the timeout in seconds
-     * @param null|string     $message  the exception message
-     * @param int             $code     the exception code
-     * @param null|\Exception $previous the previous exception
+     * Report that the container did not become ready before the timeout.
+     *
+     * @param int            $timeout  the timeout in seconds
+     * @param null|string    $message  the exception message
+     * @param int            $code     the exception code
+     * @param null|Exception $previous the previous exception
      */
     public function __construct($timeout, $message = null, $code = 0, $previous = null)
     {
@@ -22,7 +28,7 @@ class WaitingTimeoutException extends \RuntimeException
             sprintf(
                 'Waiting for container to be ready timed out after %d seconds: %s',
                 $timeout,
-                $message
+                $message === null ? '' : $message
             ),
             $code,
             $previous

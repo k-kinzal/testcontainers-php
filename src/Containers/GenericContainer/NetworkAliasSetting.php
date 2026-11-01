@@ -28,6 +28,7 @@ trait NetworkAliasSetting
      * Define the default network aliases to be used for the container.
      *
      * @var null|string[]
+     * @psalm-var mixed
      */
     protected static $NETWORK_ALIASES;
 
@@ -42,11 +43,14 @@ trait NetworkAliasSetting
      * Set the network alias for this container, similar to the `--network-alias <my-service>` option on the Docker CLI.
      *
      * @param string $alias the network alias to set
+     * @psalm-param mixed $alias
      *
      * @return self
      */
     public function withNetworkAlias($alias)
     {
+        self::ensureString($alias);
+
         $this->networkAliases[] = $alias;
 
         return $this;
@@ -56,11 +60,14 @@ trait NetworkAliasSetting
      * Set the network aliases for this container, similar to the `--network-alias <my-service>` option on the Docker CLI.
      *
      * @param string[] $aliases the network aliases to set
+     * @psalm-param mixed $aliases
      *
      * @return self
      */
     public function withNetworkAliases($aliases)
     {
+        self::ensureStringArray($aliases);
+
         $this->networkAliases = $aliases;
 
         return $this;
@@ -74,6 +81,8 @@ trait NetworkAliasSetting
     protected function networkAliases()
     {
         if (static::$NETWORK_ALIASES !== null) {
+            self::ensureStringArray(static::$NETWORK_ALIASES);
+
             return static::$NETWORK_ALIASES;
         }
         if ($this->networkAliases) {

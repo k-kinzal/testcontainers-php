@@ -30,6 +30,7 @@ trait ReuseModeSetting
      * Define the default reuse mode for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $REUSE_MODE;
 
@@ -44,11 +45,14 @@ trait ReuseModeSetting
      * Set the reuse mode for the container.
      *
      * @param ReuseMode $reuseMode
+     * @psalm-param mixed $reuseMode
      *
      * @return self
      */
     public function withReuseMode($reuseMode)
     {
+        self::ensureInstanceOf($reuseMode, ReuseMode::class);
+
         $this->reuseMode = $reuseMode;
 
         return $this;
@@ -62,6 +66,8 @@ trait ReuseModeSetting
     public function reuseMode()
     {
         if (static::$REUSE_MODE !== null) {
+            self::ensureString(static::$REUSE_MODE);
+
             return ReuseMode::fromString(static::$REUSE_MODE);
         }
         if ($this->reuseMode) {

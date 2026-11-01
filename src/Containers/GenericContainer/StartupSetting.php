@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyException;
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
@@ -43,6 +44,7 @@ trait StartupSetting
      * Define the default startup timeout to be used for the container.
      *
      * @var null|int
+     * @psalm-var mixed
      */
     protected static $STARTUP_TIMEOUT;
 
@@ -50,6 +52,7 @@ trait StartupSetting
      * Define the default startup check strategy to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $STARTUP_CHECK_STRATEGY;
 
@@ -57,11 +60,14 @@ trait StartupSetting
      * Define the default number of retry attempts for startup conflicts (port/bind address conflicts).
      *
      * @var null|int
+     * @psalm-var mixed
      */
     protected static $STARTUP_CONFLICT_RETRY_ATTEMPTS;
 
     /**
      * Default number of retry attempts for startup conflicts (port/bind address conflicts).
+     *
+     * @var int
      */
     private static $DEFAULT_STARTUP_CONFLICT_RETRY_ATTEMPTS = 3;
 
@@ -89,7 +95,7 @@ trait StartupSetting
     /**
      * The startup check strategy provider.
      *
-     * @var StartupCheckStrategyProvider
+     * @var null|StartupCheckStrategyProvider
      */
     private $startupCheckStrategyProvider;
 
@@ -97,11 +103,14 @@ trait StartupSetting
      * Set the duration of waiting time until the container is treated as started.
      *
      * @param int $timeout the duration to wait
+     * @psalm-param mixed $timeout
      *
      * @return self
      */
     public function withStartupTimeout($timeout)
     {
+        self::ensureIntRange($timeout, 0);
+
         $this->startupTimeout = $timeout;
 
         return $this;
@@ -111,11 +120,14 @@ trait StartupSetting
      * Set the startup check strategy used for checking whether the container has started.
      *
      * @param StartupCheckStrategy $strategy the startup check strategy to use
+     * @psalm-param mixed $strategy
      *
      * @return self
      */
     public function withStartupCheckStrategy($strategy)
     {
+        self::ensureInstanceOf($strategy, StartupCheckStrategy::class);
+
         $this->startupCheckStrategy = $strategy;
 
         return $this;
@@ -125,11 +137,14 @@ trait StartupSetting
      * Set the maximum number of retry attempts for startup conflicts (port/bind address conflicts).
      *
      * @param int $retryAttempts the maximum number of retry attempts
+     * @psalm-param mixed $retryAttempts
      *
      * @return self
      */
     public function withStartupConflictRetries($retryAttempts)
     {
+        self::ensureIntRange($retryAttempts, 1);
+
         $this->startupConflictRetryAttempts = $retryAttempts;
 
         return $this;
@@ -143,6 +158,8 @@ trait StartupSetting
     protected function startupTimeout()
     {
         if (static::$STARTUP_TIMEOUT !== null) {
+            self::ensureIntRange(static::$STARTUP_TIMEOUT, 0);
+
             return static::$STARTUP_TIMEOUT;
         }
 
@@ -157,20 +174,26 @@ trait StartupSetting
      * attempt to retrieve the default startup check strategy from the provider.
      *
      * @param ContainerInstance $instance the container instance for which to get the startup check strategy
+     * @psalm-param mixed $instance
      *
      * @return null|StartupCheckStrategy the startup check strategy to be used, or null if none is set
      */
-    protected function startupCheckStrategy(/* @noinspection PhpUnusedParameterInspection */ $instance)
+    protected function startupCheckStrategy($instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         if ($this->startupCheckStrategyProvider === null) {
             $this->startupCheckStrategyProvider = new StartupCheckStrategyProvider();
             $this->registerStartupCheckStrategy($this->startupCheckStrategyProvider);
         }
 
         if (static::$STARTUP_CHECK_STRATEGY !== null) {
-            $strategy = $this->startupCheckStrategyProvider->get(static::$STARTUP_CHECK_STRATEGY);
+            $name = static::$STARTUP_CHECK_STRATEGY;
+            self::ensureString($name);
+
+            $strategy = $this->startupCheckStrategyProvider->get($name);
             if (!$strategy) {
-                throw new \LogicException('Startup check strategy not found: '.static::$STARTUP_CHECK_STRATEGY);
+                throw new LogicException('Startup check strategy not found: '.$name);
             }
             $timeout = $this->startupTimeout();
             if ($timeout !== null) {
@@ -200,20 +223,21 @@ trait StartupSetting
     /**
      * Register a startup check strategy.
      *
-     * @param StartupCheckStrategyProvider $provider the startup check strategy provider
+     * @param  StartupCheckStrategyProvider $provider the startup check strategy provider
+     * @return void
      */
     protected function registerStartupCheckStrategy($provider)
     {
         try {
             $provider->register('is_running', new IsRunningStartupCheckStrategy());
         } catch (AlreadyExistsStartupStrategyException $e) {
-            throw new \LogicException('Startup check strategy with name is_running already exists.', 0, $e);
+            throw new LogicException('Startup check strategy with name is_running already exists.', 0, $e);
         }
 
         try {
             $provider->register('one_shot', new OneShotStartupCheckStrategy());
         } catch (AlreadyExistsStartupStrategyException $e) {
-            throw new \LogicException('Startup check strategy with name one_shot already exists.', 0, $e);
+            throw new LogicException('Startup check strategy with name one_shot already exists.', 0, $e);
         }
     }
 
@@ -225,6 +249,8 @@ trait StartupSetting
     protected function startupConflictRetryAttempts()
     {
         if (static::$STARTUP_CONFLICT_RETRY_ATTEMPTS !== null) {
+            self::ensureIntRange(static::$STARTUP_CONFLICT_RETRY_ATTEMPTS, 1);
+
             return static::$STARTUP_CONFLICT_RETRY_ATTEMPTS;
         }
         if ($this->startupConflictRetryAttempts !== null) {

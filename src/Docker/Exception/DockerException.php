@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Exception;
 
+use RuntimeException;
 use Symfony\Component\Process\Process;
 
 /**
@@ -11,15 +12,20 @@ use Symfony\Component\Process\Process;
  * executed via the Symfony Process component has failed. It provides
  * detailed information about the command that was executed and the
  * exit code returned by the Docker process.
+ * @api
  */
-class DockerException extends \RuntimeException
+class DockerException extends RuntimeException
 {
     /**
+     * The process whose command failed.
+     *
      * @var Process
      */
     private $process;
 
     /**
+     * Report a failed Docker command and its output.
+     *
      * @param Process $process
      */
     public function __construct($process)
@@ -30,7 +36,7 @@ class DockerException extends \RuntimeException
             sprintf(
                 'Failed to docker command: `%s`, exit code: `%s`, stderr: `%s`',
                 $command,
-                $exitCode,
+                $exitCode === null ? '' : (string) $exitCode,
                 $process->getErrorOutput()
             )
         );

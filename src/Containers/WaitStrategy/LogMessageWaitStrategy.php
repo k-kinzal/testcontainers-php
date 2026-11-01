@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use LogicException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
@@ -13,6 +14,7 @@ use Testcontainers\Logger\WithLogger;
  *
  * This strategy continuously checks the container logs for a specified log message
  * until it is found or a timeout occurs.
+ * @api
  */
 class LogMessageWaitStrategy implements WaitStrategy
 {
@@ -46,11 +48,14 @@ class LogMessageWaitStrategy implements WaitStrategy
      * Sets the pattern to be used for matching log messages.
      *
      * @param string $pattern the regex pattern to match against log messages
+     * @psalm-param mixed $pattern
      *
      * @return $this the current instance for method chaining
      */
     public function withPattern($pattern)
     {
+        self::ensureString($pattern);
+
         $this->pattern = $pattern;
 
         return $this;
@@ -63,11 +68,14 @@ class LogMessageWaitStrategy implements WaitStrategy
      * a LogMessageFailedException instead of waiting until timeout.
      *
      * @param string $pattern the regex pattern to match against log messages
+     * @psalm-param mixed $pattern
      *
      * @return $this the current instance for method chaining
      */
     public function withFailurePattern($pattern)
     {
+        self::ensureNullableString($pattern);
+
         $this->failurePattern = $pattern;
 
         return $this;
@@ -77,11 +85,14 @@ class LogMessageWaitStrategy implements WaitStrategy
      * Sets the timeout duration for waiting until the container instance is ready.
      *
      * @param int $seconds the number of seconds to wait before timing out
+     * @psalm-param mixed $seconds
      *
      * @return $this the current instance for method chaining
      */
     public function withTimeoutSeconds($seconds)
     {
+        self::ensureIntRange($seconds, 0);
+
         $this->timeout = $seconds;
 
         return $this;
@@ -91,15 +102,19 @@ class LogMessageWaitStrategy implements WaitStrategy
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
+     * @psalm-param mixed $instance
+     * @return void
      */
     public function waitUntilReady($instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         $containerId = $instance->getContainerId();
 
         $client = DockerClientFactory::create();
         $output = $client->withTimeout($this->timeout)->logs($containerId, ['follow' => true]);
         if (!$output instanceof DockerFollowLogsOutput) {
-            throw new \LogicException('Expected DockerFollowLogsOutput instance: `'.get_class($output).'`');
+            throw new LogicException('Expected DockerFollowLogsOutput instance: `'.get_class($output).'`');
         }
         $iter = $output->getIterator();
         $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';
@@ -113,6 +128,9 @@ class LogMessageWaitStrategy implements WaitStrategy
 
         try {
             foreach ($iter as $line) {
+                if ($line === null) {
+                    continue;
+                }
                 $this->logger()->debug(trim($line));
                 if ($failurePattern !== null && preg_match($failurePattern, trim($line))) {
                     throw new LogMessageFailedException(trim($line));

@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use LogicException;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
@@ -35,6 +36,7 @@ trait PortSetting
      * Define the default ports to be exposed by the container.
      *
      * @var null|int[]
+     * @psalm-var mixed
      */
     protected static $EXPOSED_PORTS;
 
@@ -42,6 +44,7 @@ trait PortSetting
      * Define the default ports to be exposed by the container. Alias for `EXPOSED_PORTS`.
      *
      * @var null|int[]
+     * @psalm-var mixed
      */
     protected static $EXPOSE;
 
@@ -49,6 +52,7 @@ trait PortSetting
      * Define the default ports to be exposed by the container. Alias for `EXPOSED_PORTS`.
      *
      * @var null|int[]
+     * @psalm-var mixed
      */
     protected static $PORTS;
 
@@ -56,6 +60,7 @@ trait PortSetting
      * Define the default port strategy to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $PORT_STRATEGY;
 
@@ -76,7 +81,7 @@ trait PortSetting
     /**
      * The port strategy provider.
      *
-     * @var PortStrategyProvider
+     * @var null|PortStrategyProvider
      */
     private $portStrategyProvider;
 
@@ -84,14 +89,16 @@ trait PortSetting
      * Set the port that this container listens on.
      *
      * @param int|string $port the port to expose
+     * @psalm-param mixed $port
      *
      * @return self
      */
     public function withExposedPort($port)
     {
-        if (is_string($port)) {
-            $port = intval($port);
-        }
+        self::ensureIntOrDigitStringRange($port, 1, 65535);
+
+        $port = (int) $port;
+
         $this->exposedPorts[] = $port;
 
         return $this;
@@ -101,6 +108,7 @@ trait PortSetting
      * Set the port that this container listens on. Alias for `withExposedPort`.
      *
      * @param int|string $port the port to expose
+     * @psalm-param mixed $port
      *
      * @return self
      */
@@ -113,6 +121,7 @@ trait PortSetting
      * Set the port that this container listens on. Alias for `withExposedPort`.
      *
      * @param int|string $port the port to expose
+     * @psalm-param mixed $port
      *
      * @return self
      */
@@ -125,11 +134,22 @@ trait PortSetting
      * Set the ports that this container listens on.
      *
      * @param int[] $ports the ports to expose
+     * @psalm-param mixed $ports
      *
      * @return self
      */
     public function withExposedPorts($ports)
     {
+        self::ensureArray($ports);
+
+        $normalizedPorts = [];
+        foreach (array_keys($ports) as $key) {
+            self::ensureIntOrDigitStringRange($ports[$key], 1, 65535);
+
+            $normalizedPorts[] = (int) $ports[$key];
+        }
+        $ports = $normalizedPorts;
+
         $this->exposedPorts = $ports;
 
         return $this;
@@ -139,6 +159,7 @@ trait PortSetting
      * Set the ports that this container listens on. Alias for `withExposedPorts`.
      *
      * @param int[] $ports the ports to expose
+     * @psalm-param mixed $ports
      *
      * @return self
      */
@@ -151,6 +172,7 @@ trait PortSetting
      * Set the ports that this container listens on. Alias for `withExposedPorts`.
      *
      * @param int[] $ports the ports to expose
+     * @psalm-param mixed $ports
      *
      * @return self
      */
@@ -163,11 +185,14 @@ trait PortSetting
      * Set the port strategy used for determining the ports that the container listens on.
      *
      * @param PortStrategy $strategy the port strategy to use
+     * @psalm-param mixed $strategy
      *
      * @return self
      */
     public function withPortStrategy($strategy)
     {
+        self::ensureInstanceOf($strategy, PortStrategy::class);
+
         $this->portStrategy = $strategy;
 
         return $this;
@@ -187,19 +212,31 @@ trait PortSetting
     protected function exposedPorts()
     {
         if (static::$EXPOSED_PORTS !== null) {
-            return static::$EXPOSED_PORTS;
+            $defaultPorts = static::$EXPOSED_PORTS;
+            self::ensureArray($defaultPorts);
+
+            $ports = $defaultPorts;
+        } elseif (static::$EXPOSE !== null) {
+            $expose = static::$EXPOSE;
+            self::ensureArray($expose);
+
+            $ports = $expose;
+        } elseif (static::$PORTS !== null) {
+            $portsAlias = static::$PORTS;
+            self::ensureArray($portsAlias);
+
+            $ports = $portsAlias;
+        } else {
+            $ports = $this->exposedPorts;
         }
-        if (static::$EXPOSE !== null) {
-            return static::$EXPOSE;
-        }
-        if (static::$PORTS !== null) {
-            return static::$PORTS;
-        }
-        if ($this->exposedPorts) {
-            return $this->exposedPorts;
+        $normalizedPorts = [];
+        foreach (array_keys($ports) as $key) {
+            self::ensureIntOrDigitStringRange($ports[$key], 1, 65535);
+
+            $normalizedPorts[] = (int) $ports[$key];
         }
 
-        return [];
+        return $normalizedPorts;
     }
 
     /**
@@ -218,9 +255,12 @@ trait PortSetting
             $this->registerPortStrategy($this->portStrategyProvider);
         }
         if (static::$PORT_STRATEGY !== null) {
-            $strategy = $this->portStrategyProvider->get(static::$PORT_STRATEGY);
+            $name = static::$PORT_STRATEGY;
+            self::ensureString($name);
+
+            $strategy = $this->portStrategyProvider->get($name);
             if (!$strategy) {
-                throw new \LogicException('Port strategy not found: '.static::$PORT_STRATEGY);
+                throw new LogicException('Port strategy not found: '.$name);
             }
 
             return $strategy;
@@ -262,14 +302,15 @@ trait PortSetting
     /**
      * Register a port strategy.
      *
-     * @param PortStrategyProvider $provider the port strategy provider
+     * @param  PortStrategyProvider $provider the port strategy provider
+     * @return void
      */
     protected function registerPortStrategy($provider)
     {
         try {
             $provider->register('random', new RandomPortStrategy());
         } catch (AlreadyExistsPortStrategyException $e) {
-            throw new \LogicException('Port strategy already registered: random', 0, $e);
+            throw new LogicException('Port strategy already registered: random', 0, $e);
         }
     }
 }

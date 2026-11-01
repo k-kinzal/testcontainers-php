@@ -78,4 +78,11 @@ class BindModeTest extends TestCase
 
         $this->assertTrue($bindMode->isReadWrite());
     }
+
+    public function test__constructRejectsUnknownMode()
+    {
+        $this->expectException(InvalidFormatException::class);
+
+        new BindMode('invalid');
+    }
 }

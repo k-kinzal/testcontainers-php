@@ -8,8 +8,9 @@ use Exception;
  * Exception thrown when a value is invalid.
  *
  * @template T
+ * @api
  */
-class InvalidValueException extends \Exception
+class InvalidValueException extends Exception
 {
     /**
      * The context of the invalid value.
@@ -19,6 +20,8 @@ class InvalidValueException extends \Exception
     private $context;
 
     /**
+     * Report an unexpected value in Docker output.
+     *
      * @param string $message
      * @param null|T $context
      */

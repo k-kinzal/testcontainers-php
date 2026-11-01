@@ -9,6 +9,7 @@ use Symfony\Component\Process\Process;
  *
  * This class extends DockerOutput to parse the JSON output from `docker version --format json`
  * and provide access to version information.
+ * @api
  */
 class DockerVersionOutput extends DockerOutput
 {
@@ -20,6 +21,8 @@ class DockerVersionOutput extends DockerOutput
     private $data;
 
     /**
+     * Read client and server versions from the command output.
+     *
      * @param Process $process the Symfony Process instance that executed the `docker version` command
      */
     public function __construct($process)
@@ -27,7 +30,9 @@ class DockerVersionOutput extends DockerOutput
         parent::__construct($process);
 
         $output = json_decode($process->getOutput(), true);
-        $this->data = is_array($output) ? $output : [];
+        self::ensureNullableArray($output);
+
+        $this->data = $output === null ? [] : $output;
     }
 
     /**
@@ -37,7 +42,12 @@ class DockerVersionOutput extends DockerOutput
      */
     public function getClientVersion()
     {
-        return isset($this->data['Client']['Version']) ? $this->data['Client']['Version'] : null;
+        if (!isset($this->data['Client']['Version'])) {
+            return null;
+        }
+        self::ensureString($this->data['Client']['Version']);
+
+        return $this->data['Client']['Version'];
     }
 
     /**
@@ -47,6 +57,11 @@ class DockerVersionOutput extends DockerOutput
      */
     public function getServerVersion()
     {
-        return isset($this->data['Server']['Version']) ? $this->data['Server']['Version'] : null;
+        if (!isset($this->data['Server']['Version'])) {
+            return null;
+        }
+        self::ensureString($this->data['Server']['Version']);
+
+        return $this->data['Server']['Version'];
     }
 }

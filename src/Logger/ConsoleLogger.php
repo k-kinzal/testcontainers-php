@@ -2,8 +2,17 @@
 
 namespace Testcontainers\Logger;
 
-if (PHP_VERSION_ID >= 80000) {
-    require_once __DIR__ . '/ConsoleLogger/ConsoleLogger80.php';
+if (PHP_VERSION_ID < 80000) {
+    class_alias(ConsoleLogger\ConsoleLogger56::class, ConsoleLoggerBase::class);
 } else {
-    require_once __DIR__ . '/ConsoleLogger/ConsoleLogger56.php';
+    class_alias(ConsoleLogger\ConsoleLogger80::class, ConsoleLoggerBase::class);
+}
+
+/**
+ * Write log messages using the implementation supported by the current PHP version.
+ *
+ * @api
+ */
+class ConsoleLogger extends ConsoleLoggerBase
+{
 }

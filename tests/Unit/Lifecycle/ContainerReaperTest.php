@@ -213,9 +213,6 @@ class ContainerReaperTest extends TestCase
     }
 }
 
-/**
- * Testable subclass that overrides isProcessAlive for deterministic tests.
- */
 class TestableContainerReaper extends ContainerReaper
 {
     /** @var int[] */

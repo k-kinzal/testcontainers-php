@@ -8,6 +8,7 @@ namespace Testcontainers\Docker;
  * This class provides a static method for creating new DockerClient instances.
  * It ensures that only one instance of DockerClient is created and shared across
  * all calls to the `create` method.
+ * @api
  */
 class DockerClientFactory
 {
@@ -55,6 +56,7 @@ class DockerClientFactory
      *      timeout?: null|float|int,
      *      procOptions?: array<string, string>
      *  } $config The configuration options for the Docker client
+     * @return void
      */
     public static function config($config = [])
     {

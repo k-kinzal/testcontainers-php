@@ -9,6 +9,7 @@ use Testcontainers\Containers\GenericContainer\EntrypointSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -50,9 +51,22 @@ class EntrypointSettingTest extends TestCase
 
         $this->assertSame("hello\n", $instance->getOutput());
     }
+
+    public function testStartRejectsInvalidEntrypoint()
+    {
+        $container = new EntrypointSettingWithInvalidEntrypointContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class EntrypointSettingWithStaticEntrypointContainer extends GenericContainer
 {
     protected static $ENTRYPOINT = '/bin/sh';
+}
+
+class EntrypointSettingWithInvalidEntrypointContainer extends GenericContainer
+{
+    protected static $ENTRYPOINT = [];
 }

@@ -2,16 +2,21 @@
 
 namespace Testcontainers\Docker\Types;
 
+use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents the object that generated a Docker event.
  *
  * @property string                $id         The ID of the object that generated the event
  * @property array<string, string> $attributes The attributes of the object that generated the event
+ * @api
  */
 class EventActor
 {
+    use Ensure;
+
     /**
      * The ID of the object that generated the event.
      *
@@ -40,7 +45,7 @@ class EventActor
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('EventActor::'.$name.' does not exist');
+            throw new LogicException('EventActor::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -50,6 +55,7 @@ class EventActor
      * Create an EventActor from a JSON-decoded array.
      *
      * @param array $arr the decoded `Actor` object of a Docker event
+     * @psalm-param mixed $arr
      *
      * @throws InvalidValueException if the array does not contain the expected properties
      *
@@ -57,8 +63,11 @@ class EventActor
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
         $actor = new self();
         $actor->id = self::ensureIdFromArray($arr);
+
         $actor->attributes = self::ensureAttributesFromArray($arr);
 
         return $actor;
@@ -68,11 +77,14 @@ class EventActor
      * Get an attribute value by key.
      *
      * @param string $key the attribute key
+     * @psalm-param mixed $key
      *
      * @return null|string the attribute value, or null if not found
      */
     public function getAttribute($key)
     {
+        self::ensureString($key);
+
         return isset($this->attributes[$key]) ? $this->attributes[$key] : null;
     }
 

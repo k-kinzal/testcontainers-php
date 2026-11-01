@@ -9,6 +9,7 @@ use Testcontainers\Docker\Types\ContainerId;
  * Represents the output of a Docker `stop` command executed via Symfony Process.
  *
  * This class extends DockerOutput to include the container IDs of the Docker containers that were stopped
+ * @api
  */
 class DockerStopOutput extends DockerOutput
 {
@@ -23,6 +24,8 @@ class DockerStopOutput extends DockerOutput
     private $containerIds;
 
     /**
+     * Read the identifiers returned by the stop command.
+     *
      * @param Process $process
      */
     public function __construct($process)

@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PrivilegeSetting;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -39,9 +40,44 @@ class PrivilegeSettingTest extends TestCase
 
         $this->assertSame(true, $instance->getPrivilegedMode());
     }
+
+    /**
+     * @dataProvider provideWithPrivilegedModeInvalidInputs
+     * @param mixed $mode
+     */
+    public function testWithPrivilegedModeRejectsInvalidInputs($mode)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withPrivilegedMode($mode);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithPrivilegedModeInvalidInputs()
+    {
+        return [
+            'case 1' => ['false'],
+        ];
+    }
+
+    public function testStartRejectsInvalidPrivileged()
+    {
+        $container = new PrivilegeSettingWithInvalidPrivilegedContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class PrivilegeSettingWithStaticPrivilegedContainer extends GenericContainer
 {
     protected static $PRIVILEGED = true;
+}
+
+class PrivilegeSettingWithInvalidPrivilegedContainer extends GenericContainer
+{
+    protected static $PRIVILEGED = 'false';
 }

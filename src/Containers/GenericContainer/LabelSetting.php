@@ -30,6 +30,7 @@ trait LabelSetting
      * Define the default labels to be used for the container.
      *
      * @var null|array<string, string>
+     * @psalm-var mixed
      */
     protected static $LABELS;
 
@@ -45,11 +46,16 @@ trait LabelSetting
      *
      * @param string $key   the name of the label
      * @param string $value the value of the label
+     * @psalm-param mixed $key
+     * @psalm-param mixed $value
      *
      * @return self
      */
     public function withLabel($key, $value)
     {
+        self::ensureString($key);
+        self::ensureString($value);
+
         $this->labels[$key] = $value;
 
         return $this;
@@ -59,11 +65,14 @@ trait LabelSetting
      * Adds multiple labels to the container.
      *
      * @param array<string, string> $labels an associative array where the key is the label name and the value is the label value
+     * @psalm-param mixed $labels
      *
      * @return self
      */
     public function withLabels($labels)
     {
+        self::ensureStringMap($labels);
+
         $this->labels = $labels;
 
         return $this;
@@ -81,6 +90,8 @@ trait LabelSetting
     protected function labels()
     {
         if (static::$LABELS !== null) {
+            self::ensureStringMap(static::$LABELS);
+
             return static::$LABELS;
         }
         if ($this->labels) {

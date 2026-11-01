@@ -27,6 +27,7 @@ trait PsCommand
      *     quiet?: null|bool,
      *     size?: null|bool,
      * } $options Additional options for the Docker ps command
+     * @psalm-param mixed $options
      *
      * @throws DockerException if the Docker command fails
      *
@@ -34,6 +35,8 @@ trait PsCommand
      */
     public function ps($options = [])
     {
+        self::ensureStringKeyedArray($options);
+
         // Force JSON format for structured parsing
         $options['format'] = 'json';
 

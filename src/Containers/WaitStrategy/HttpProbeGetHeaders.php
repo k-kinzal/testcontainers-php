@@ -2,24 +2,37 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Testcontainers\Utility\Ensure;
+
 /**
  * HttpProbeGetHeaders checks the availability of a specific HTTP endpoint by retrieving its headers.
  *
  * This class implements the HttpProbe interface and provides a method to check if the specified
  * HTTP endpoint is available by checking its response headers.
+ * @api
  */
 class HttpProbeGetHeaders implements HttpProbe
 {
+    use Ensure;
+
+    /**
+     * Check whether the endpoint is available.
+     *
+     * @param string $endpoint     the endpoint
+     * @param int    $responseCode the response code
+     * @psalm-param mixed $endpoint
+     * @psalm-param mixed $responseCode
+     */
     public function available($endpoint, $responseCode = 200)
     {
+        self::ensureString($endpoint);
+        self::ensureIntRange($responseCode, 100, 599);
+
         $headers = @get_headers($endpoint);
         if ($headers === false) {
             return false;
         }
         if (!isset($headers[0])) {
-            return false;
-        }
-        if (!is_string($headers[0])) {
             return false;
         }
         $statusCode = (int) substr($headers[0], 9, 3);

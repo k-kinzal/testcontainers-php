@@ -2,7 +2,9 @@
 
 namespace Testcontainers\Containers\Types;
 
+use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -15,9 +17,12 @@ use Testcontainers\Utility\Stringable;
  * @property bool                  $readonly    Whether the mount should be read-only.
  * @property bool                  $nocopy      Whether the mount should be created with a nocopy option.
  * @property array<string, string> $opt         An array of key-value pairs that define options for the mount.
+ * @api
  */
 class Mount implements Stringable
 {
+    use Ensure;
+
     /**
      * Mount type is “bind” or “volume”.
      *
@@ -68,6 +73,8 @@ class Mount implements Stringable
     private $opt;
 
     /**
+     * Create a Mount instance.
+     *
      * @param null|string                $type
      * @param null|string                $source
      * @param string                     $destination
@@ -75,9 +82,28 @@ class Mount implements Stringable
      * @param null|bool                  $readonly
      * @param null|bool                  $nocopy
      * @param null|array<string, string> $opt
+     * @psalm-param mixed $type
+     * @psalm-param mixed $source
+     * @psalm-param mixed $destination
+     * @psalm-param mixed $subpath
+     * @psalm-param mixed $readonly
+     * @psalm-param mixed $nocopy
+     * @psalm-param mixed $opt
      */
     public function __construct($type, $source, $destination, $subpath, $readonly, $nocopy, $opt)
     {
+        self::ensureNullableString($type);
+        self::ensureNullableString($source);
+        self::ensureNonEmptyString($destination);
+        self::ensureNullableString($subpath);
+        self::ensureNullableBool($readonly);
+        self::ensureNullableBool($nocopy);
+        self::ensureNullableStringMap($opt);
+
+        $readonly = $readonly === null ? false : $readonly;
+        $nocopy = $nocopy === null ? false : $nocopy;
+        $opt = $opt === null ? [] : $opt;
+
         $this->type = $type;
         $this->source = $source;
         $this->destination = $destination;
@@ -123,7 +149,7 @@ class Mount implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('Mount::'.$name.' does not exist');
+            throw new LogicException('Mount::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -133,6 +159,7 @@ class Mount implements Stringable
      * Create a Mount object from a string.
      *
      * @param string $v the mount string
+     * @psalm-param mixed $v
      *
      * @throws InvalidFormatException if the format is invalid
      *
@@ -140,6 +167,8 @@ class Mount implements Stringable
      */
     public static function fromString($v)
     {
+        self::ensureString($v);
+
         if (strpos($v, ':') > 0 || strpos($v, '=') === false) {
             return self::fromVolumeString($v);
         }
@@ -151,11 +180,14 @@ class Mount implements Stringable
      * Create a Mount object from a volume string.
      *
      * @param string $v the volume string
+     * @psalm-param mixed $v
      *
      * @return Mount the Mount object
      */
     public static function fromVolumeString($v)
     {
+        self::ensureString($v);
+
         $parts = explode(':', $v);
 
         $source = null;
@@ -180,6 +212,7 @@ class Mount implements Stringable
      * Create a Mount object from a mount string.
      *
      * @param string $v the mount string
+     * @psalm-param mixed $v
      *
      * @throws InvalidFormatException if the format is invalid
      *
@@ -187,6 +220,8 @@ class Mount implements Stringable
      */
     public static function fromMountString($v)
     {
+        self::ensureString($v);
+
         $parts = explode(',', $v);
         $type = 'bind';
         $source = null;
@@ -196,29 +231,34 @@ class Mount implements Stringable
         $nocopy = false;
         $opt = [];
         foreach ($parts as $part) {
-            $subParts = explode('=', $part);
+            $subParts = explode('=', $part, 2);
+            self::ensureOneOf($subParts[0], ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath', 'readonly', 'ro', 'volume-nocopy', 'volume-opt']);
 
             switch ($subParts[0]) {
                 case 'type':
-                    $type = $subParts[1];
+                    $type = isset($subParts[1]) ? $subParts[1] : null;
+                    self::ensureString($type);
 
                     break;
 
                 case 'source':
                 case 'src':
-                    $source = $subParts[1];
+                    $source = isset($subParts[1]) ? $subParts[1] : null;
+                    self::ensureString($source);
 
                     break;
 
                 case 'destination':
                 case 'dst':
                 case 'target':
-                    $destination = $subParts[1];
+                    $destination = isset($subParts[1]) ? $subParts[1] : null;
+                    self::ensureString($destination);
 
                     break;
 
                 case 'volume-subpath':
-                    $subpath = $subParts[1];
+                    $subpath = isset($subParts[1]) ? $subParts[1] : null;
+                    self::ensureString($subpath);
 
                     break;
 
@@ -235,16 +275,11 @@ class Mount implements Stringable
 
                 case 'volume-opt':
                     // TODO: Implement volume-opt on Mount
-                    throw new \LogicException('unimplemented');
-
-                default:
-                    throw new InvalidFormatException($subParts[0], ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath', 'readonly', 'ro', 'volume-nocopy', 'volume-opt']);
+                    throw new LogicException('unimplemented');
             }
         }
 
-        if ($destination === null) {
-            throw new InvalidFormatException($v, 'type=<type>[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
-        }
+        self::ensureNonEmptyString($destination);
 
         return new self($type, $source, $destination, $subpath, $readonly, $nocopy, $opt);
     }
@@ -265,43 +300,38 @@ class Mount implements Stringable
      *     nocopy?: bool,
      *     opt?: array<string, string>
      * } $v The mount array
+     * @psalm-param mixed $v
      *
      * @return Mount the Mount object
      */
     public static function fromArray($v)
     {
-        $type = isset($v['type']) ? $v['type'] : null;
-        $source = isset($v['source']) ? $v['source'] : null;
-        if ($source === null) {
-            $source = isset($v['src']) ? $v['src'] : null;
-        }
-        $destination = isset($v['destination']) ? $v['destination'] : null;
-        if ($destination === null) {
-            $destination = isset($v['dst']) ? $v['dst'] : null;
-        }
-        if ($destination === null) {
-            $destination = isset($v['target']) ? $v['target'] : null;
-        }
-        if ($destination === null) {
-            throw new \InvalidArgumentException('Invalid mount configuration: destination is required');
-        }
-        $subpath = isset($v['subpath']) ? $v['subpath'] : null;
-        $readonly = isset($v['readonly']) ? $v['readonly'] : false;
-        if ($readonly === false) {
-            $readonly = isset($v['ro']) ? $v['ro'] : false;
-        }
-        $nocopy = isset($v['nocopy']) ? $v['nocopy'] : false;
-        $opt = isset($v['opt']) ? $v['opt'] : [];
+        self::ensureArray($v);
 
-        return new self(
-            $type,
-            $source,
-            $destination,
-            $subpath,
-            $readonly,
-            $nocopy,
-            $opt
-        );
+        $v += [
+            'type' => null, 'source' => null, 'src' => null,
+            'destination' => null, 'dst' => null, 'target' => null,
+            'subpath' => null, 'readonly' => false, 'ro' => false,
+            'nocopy' => false, 'opt' => [],
+        ];
+        self::ensureNullableString($v['type']);
+        self::ensureNullableString($v['source']);
+        self::ensureNullableString($v['src']);
+        self::ensureNullableString($v['destination']);
+        self::ensureNullableString($v['dst']);
+        self::ensureNullableString($v['target']);
+        self::ensureNullableString($v['subpath']);
+        self::ensureBool($v['readonly']);
+        self::ensureBool($v['ro']);
+        self::ensureBool($v['nocopy']);
+        self::ensureStringMap($v['opt']);
+
+        $source = $v['source'] === null ? $v['src'] : $v['source'];
+        $destination = $v['destination'] === null ? $v['dst'] : $v['destination'];
+        $destination = $destination === null ? $v['target'] : $destination;
+        self::ensureNonEmptyString($destination);
+
+        return new self($v['type'], $source, $destination, $v['subpath'], $v['readonly'] || $v['ro'], $v['nocopy'], $v['opt']);
     }
 
     /**

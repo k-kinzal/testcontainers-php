@@ -28,6 +28,7 @@ trait AutoRemoveOnExitSetting
      * Define the default auto-remove on exit mode to be used for the container.
      *
      * @var null|bool
+     * @psalm-var mixed
      */
     protected static $AUTO_REMOVE_ON_EXIT;
 
@@ -43,11 +44,14 @@ trait AutoRemoveOnExitSetting
      * Similar to the `--rm` option on the Docker CLI.
      *
      * @param bool $autoRemoveOnExit whether to automatically remove the container on exit
+     * @psalm-param mixed $autoRemoveOnExit
      *
      * @return self
      */
     public function withAutoRemoveOnExit($autoRemoveOnExit)
     {
+        self::ensureBool($autoRemoveOnExit);
+
         $this->autoRemoveOnExit = $autoRemoveOnExit;
 
         return $this;
@@ -63,6 +67,8 @@ trait AutoRemoveOnExitSetting
      */
     protected function autoRemoveOnExit()
     {
+        self::ensureNullableBool(static::$AUTO_REMOVE_ON_EXIT);
+
         if (static::$AUTO_REMOVE_ON_EXIT !== null) {
             return static::$AUTO_REMOVE_ON_EXIT;
         }

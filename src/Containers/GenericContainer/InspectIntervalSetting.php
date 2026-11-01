@@ -28,6 +28,7 @@ trait InspectIntervalSetting
      * Define the default inspect interval to be used for the container.
      *
      * @var null|float|int
+     * @psalm-var mixed
      */
     protected static $INSPECT_INTERVAL;
 
@@ -43,11 +44,14 @@ trait InspectIntervalSetting
      * A value of 0 will inspect the container every time its state is checked.
      *
      * @param float|int $seconds the inspect interval in seconds
+     * @psalm-param mixed $seconds
      *
      * @return self
      */
     public function withInspectInterval($seconds)
     {
+        self::ensureNonNegativeNumber($seconds);
+
         $this->inspectInterval = $seconds;
 
         return $this;
@@ -64,6 +68,8 @@ trait InspectIntervalSetting
     protected function inspectInterval()
     {
         if (static::$INSPECT_INTERVAL !== null) {
+            self::ensureNonNegativeNumber(static::$INSPECT_INTERVAL);
+
             return static::$INSPECT_INTERVAL;
         }
 

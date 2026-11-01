@@ -3,17 +3,22 @@
 namespace Testcontainers\Docker\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
  * Represents the type of the object that generated a Docker event.
+ * @api
  */
 class EventType implements Stringable
 {
+    use Ensure;
+
     /**
      * The event type that the builder generates.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $BUILDER = 'builder';
 
@@ -21,6 +26,7 @@ class EventType implements Stringable
      * The event type that configs generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $CONFIG = 'config';
 
@@ -28,6 +34,7 @@ class EventType implements Stringable
      * The event type that containers generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $CONTAINER = 'container';
 
@@ -35,6 +42,7 @@ class EventType implements Stringable
      * The event type that the daemon generates.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $DAEMON = 'daemon';
 
@@ -42,6 +50,7 @@ class EventType implements Stringable
      * The event type that images generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $IMAGE = 'image';
 
@@ -49,6 +58,7 @@ class EventType implements Stringable
      * The event type that networks generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $NETWORK = 'network';
 
@@ -56,6 +66,7 @@ class EventType implements Stringable
      * The event type that nodes generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $NODE = 'node';
 
@@ -63,6 +74,7 @@ class EventType implements Stringable
      * The event type that plugins generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $PLUGIN = 'plugin';
 
@@ -70,6 +82,7 @@ class EventType implements Stringable
      * The event type that secrets generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $SECRET = 'secret';
 
@@ -77,6 +90,7 @@ class EventType implements Stringable
      * The event type that services generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $SERVICE = 'service';
 
@@ -84,6 +98,7 @@ class EventType implements Stringable
      * The event type that volumes generate.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $VOLUME = 'volume';
 
@@ -95,11 +110,14 @@ class EventType implements Stringable
     private $type;
 
     /**
+     * Create a EventType instance.
+     *
      * @param string $type
+     * @psalm-param mixed $type
      */
     public function __construct($type)
     {
-        assert(in_array($type, self::values()));
+        self::ensureOneOf($type, self::values());
 
         $this->type = $type;
     }
@@ -223,6 +241,7 @@ class EventType implements Stringable
      * Create a new instance of `EventType` from a string representation.
      *
      * @param string $type the string representation of the type
+     * @psalm-param mixed $type
      *
      * @throws InvalidFormatException if the provided type is not valid
      *
@@ -230,9 +249,7 @@ class EventType implements Stringable
      */
     public static function fromString($type)
     {
-        if (!in_array($type, self::values(), true)) {
-            throw new InvalidFormatException($type, self::values());
-        }
+        self::ensureOneOf($type, self::values());
 
         return new self($type);
     }
@@ -244,7 +261,7 @@ class EventType implements Stringable
      */
     public static function values()
     {
-        return [
+        $values = [
             static::$BUILDER,
             static::$CONFIG,
             static::$CONTAINER,
@@ -257,6 +274,9 @@ class EventType implements Stringable
             static::$SERVICE,
             static::$VOLUME,
         ];
+        self::ensureStringArray($values);
+
+        return $values;
     }
 
     /**

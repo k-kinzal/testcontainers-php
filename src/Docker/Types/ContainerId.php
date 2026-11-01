@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -10,9 +12,12 @@ use Testcontainers\Utility\Stringable;
  * This class is a value object that represents the ID of a Docker container.
  * The container ID is a 64-character hexadecimal string that uniquely identifies
  * a Docker container on the host system.
+ * @api
  */
 class ContainerId implements Stringable
 {
+    use Ensure;
+
     /**
      * The ID of the Docker container.
      *
@@ -21,14 +26,19 @@ class ContainerId implements Stringable
     private $data;
 
     /**
-     * @param string $v
+     * Create a ContainerId instance.
      *
-     * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
+     * @param string $v
+     * @psalm-param mixed $v
+     *
+     * @throws InvalidFormatException if the container ID is not a valid 64-character hexadecimal string
      */
     public function __construct($v)
     {
+        self::ensureString($v);
+
         if (!self::isValid($v)) {
-            throw new \LogicException('Invalid container ID: `'.$v.'`');
+            throw new InvalidFormatException($v, '12 or 64 hexadecimal characters');
         }
 
         $this->data = $v;
@@ -66,15 +76,18 @@ class ContainerId implements Stringable
      * Create a ContainerId object from a string.
      *
      * @param string $v the container ID
+     * @psalm-param mixed $v
      *
-     * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
+     * @throws InvalidFormatException if the container ID is not a valid 64-character hexadecimal string
      *
      * @return ContainerId the ContainerId object
      */
     public static function fromString($v)
     {
+        self::ensureString($v);
+
         if (!self::isValid($v)) {
-            throw new \InvalidArgumentException('Invalid container ID: `'.$v.'`');
+            throw new InvalidFormatException($v, '12 or 64 hexadecimal characters');
         }
 
         return new self($v);

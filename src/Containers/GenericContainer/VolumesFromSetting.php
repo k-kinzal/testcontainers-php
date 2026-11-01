@@ -36,6 +36,7 @@ trait VolumesFromSetting
      * Define the default volumes to be used for the container.
      *
      * @var null|array{name: string, mode?: string}[]|string[]
+     * @psalm-var mixed
      */
     protected static $VOLUMES_FROM;
 
@@ -51,11 +52,16 @@ trait VolumesFromSetting
      *
      * @param ContainerInstance $container the container instance from which to add volumes
      * @param BindMode          $mode      The mode of the bind (e.g., read-only or read-write).
+     * @psalm-param mixed $container
+     * @psalm-param mixed $mode
      *
      * @return self
      */
     public function withVolumesFrom($container, $mode)
     {
+        self::ensureInstanceOf($container, ContainerInstance::class);
+        self::ensureInstanceOf($mode, BindMode::class);
+
         $this->volumesFrom[] = new VolumeFrom((string) $container->getContainerId(), $mode);
 
         return $this;
@@ -74,12 +80,19 @@ trait VolumesFromSetting
     protected function volumesFrom()
     {
         $targets = static::$VOLUMES_FROM;
-        if (!empty($targets)) {
+        if ($targets !== null) {
+            self::ensureArray($targets);
+        }
+        if ($targets !== null && count($targets) > 0) {
             $volumesFrom = [];
-            foreach ($targets as $volume) {
+            foreach (array_keys($targets) as $key) {
+                self::ensureStringOrArray($targets[$key]);
+
+                $volume = $targets[$key];
+
                 if (is_string($volume)) {
                     $volumesFrom[] = VolumeFrom::fromString($volume);
-                } elseif (is_array($volume)) {
+                } else {
                     if (!isset($volume['mode'])) {
                         $volume['mode'] = BindMode::READ_WRITE();
                     }
@@ -87,8 +100,6 @@ trait VolumesFromSetting
                         $volume['mode'] = BindMode::fromString($volume['mode']);
                     }
                     $volumesFrom[] = VolumeFrom::fromArray($volume);
-                } else {
-                    throw new InvalidFormatException($volume, 'string|array{name: string, mode?: string}');
                 }
             }
 

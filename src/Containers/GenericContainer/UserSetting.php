@@ -28,6 +28,7 @@ trait UserSetting
      * Define the default user to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $USER;
 
@@ -42,11 +43,14 @@ trait UserSetting
      * Set the user that the container should run as.
      *
      * @param string $user the user to run the container as (e.g., 'root', 'nobody', '1000:1000')
+     * @psalm-param mixed $user
      *
      * @return self
      */
     public function withUser($user)
     {
+        self::ensureNullableString($user);
+
         $this->user = $user;
 
         return $this;
@@ -59,6 +63,8 @@ trait UserSetting
      */
     protected function user()
     {
+        self::ensureNullableString(static::$USER);
+
         if (static::$USER !== null) {
             return static::$USER;
         }

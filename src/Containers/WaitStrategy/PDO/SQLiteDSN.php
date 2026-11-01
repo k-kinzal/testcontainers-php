@@ -9,6 +9,7 @@ use Testcontainers\Utility\Stringable;
  *
  * This class provides methods to set and retrieve the host and port for the SQLite database connection.
  * It also provides a method to convert the DSN to a string representation.
+ * @api
  */
 class SQLiteDSN implements DSN, Stringable
 {

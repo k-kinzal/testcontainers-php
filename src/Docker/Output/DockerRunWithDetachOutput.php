@@ -10,6 +10,7 @@ use Testcontainers\Docker\Types\ContainerId;
  *
  * This class extends DockerRunOutput to include the container ID of the Docker container
  * that was started by the `docker run` command.
+ * @api
  */
 class DockerRunWithDetachOutput extends DockerRunOutput
 {
@@ -24,6 +25,8 @@ class DockerRunWithDetachOutput extends DockerRunOutput
     private $containerId;
 
     /**
+     * Read the identifier of the container started in detached mode.
+     *
      * @param Process $process the Symfony Process instance that executed the `docker run` command
      */
     public function __construct($process)

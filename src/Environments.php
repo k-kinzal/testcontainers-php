@@ -2,6 +2,8 @@
 
 namespace Testcontainers;
 
+use Testcontainers\Utility\Ensure;
+
 /**
  * Environments is a class that provides the ability to get environment variables.
  *
@@ -15,17 +17,27 @@ namespace Testcontainers;
  * @method static string|null ACTIONS_STEP_DEBUG()                                     Set by GitHub Actions when step debug logging is enabled
  * @method static string|null CI_DEBUG_TRACE()                                         Set by GitLab CI when debug logging is enabled
  * @method static string|null SYSTEM_DEBUG()                                           Set by Azure Pipelines when debug logging is enabled
+ * @api
  */
 class Environments
 {
+    use Ensure;
+
     /**
-     * @param string $name
-     * @param array  $arguments
+     * Read the environment variable named by the static getter.
+     *
+     * @param string  $name
+     * @param array{} $arguments
+     * @psalm-param mixed $name
+     * @psalm-param mixed $arguments
      *
      * @return null|string
      */
     public static function __callStatic($name, $arguments)
     {
+        self::ensureString($name);
+        self::ensureEmptyArray($arguments);
+
         $value = getenv($name);
         if (is_string($value)) {
             return $value;

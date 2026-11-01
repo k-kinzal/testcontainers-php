@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers;
 
+use Psr\Log\LoggerInterface;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategy;
 use Testcontainers\Containers\Types\BindMode;
@@ -9,10 +10,10 @@ use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Containers\Types\NetworkMode;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
-use Psr\Log\LoggerInterface;
 
 /**
  * An interface representing the definition of a container.
+ * @api
  */
 interface Container
 {

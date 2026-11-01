@@ -28,6 +28,7 @@ trait WorkdirSetting
      * Define the default working directory to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $WORKDIR;
 
@@ -42,11 +43,14 @@ trait WorkdirSetting
      * Set the working directory that the container should use on startup.
      *
      * @param string $workDir the path to the working directory inside the container
+     * @psalm-param mixed $workDir
      *
      * @return self
      */
     public function withWorkingDirectory($workDir)
     {
+        self::ensureNullableString($workDir);
+
         $this->workDir = $workDir;
 
         return $this;
@@ -56,6 +60,7 @@ trait WorkdirSetting
      * Set the working directory that the container should use on startup. Alias for `withWorkingDirectory`.
      *
      * @param string $workDir the path to the working directory inside the container
+     * @psalm-param mixed $workDir
      *
      * @return self
      */
@@ -71,6 +76,8 @@ trait WorkdirSetting
      */
     protected function workDir()
     {
+        self::ensureNullableString(static::$WORKDIR);
+
         if (static::$WORKDIR !== null) {
             return static::$WORKDIR;
         }

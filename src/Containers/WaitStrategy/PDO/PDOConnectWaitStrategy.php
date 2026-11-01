@@ -2,6 +2,10 @@
 
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
+use LogicException;
+use PDO;
+use PDOException;
+use RuntimeException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
@@ -13,6 +17,7 @@ use Testcontainers\Logger\WithLogger;
  * This strategy continuously checks the readiness of the PDO connection until it is successfully established or a timeout occurs.
  *
  * Note: Do not use this strategy in PHP 5.6 as it may cause a Fatal error due to memory leaks.
+ * @api
  */
 class PDOConnectWaitStrategy implements WaitStrategy
 {
@@ -70,11 +75,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * the connection details such as host, port, and database name.
      *
      * @param DSN $dsn the DSN instance containing connection details
+     * @psalm-param mixed $dsn
      *
      * @return $this
      */
-    public function withDsn(DSN $dsn)
+    public function withDsn($dsn)
     {
+        self::ensureInstanceOf($dsn, DSN::class);
+
         $this->dsn = $dsn;
 
         return $this;
@@ -86,11 +94,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * This method sets the username used to authenticate the PDO connection.
      *
      * @param string $username the username for the PDO connection
+     * @psalm-param mixed $username
      *
      * @return $this
      */
     public function withUsername($username)
     {
+        self::ensureString($username);
+
         $this->username = $username;
 
         return $this;
@@ -102,11 +113,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * This method sets the password used to authenticate the PDO connection.
      *
      * @param string $password the password for the PDO connection
+     * @psalm-param mixed $password
      *
      * @return $this
      */
     public function withPassword($password)
     {
+        self::ensureString($password);
+
         $this->password = $password;
 
         return $this;
@@ -119,11 +133,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * for the container to be ready before timing out.
      *
      * @param int $timeout the timeout duration in seconds
+     * @psalm-param mixed $timeout
      *
      * @return $this
      */
     public function withTimeoutSeconds($timeout)
     {
+        self::ensureIntRange($timeout, 0);
+
         $this->timeout = $timeout;
 
         return $this;
@@ -136,11 +153,14 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * when waiting for the container to be ready. The interval is defined in microseconds.
      *
      * @param int $interval the interval duration in microseconds
+     * @psalm-param mixed $interval
      *
      * @return $this
      */
     public function withRetryInterval($interval)
     {
+        self::ensureIntRange($interval, 0);
+
         $this->retryInterval = $interval;
 
         return $this;
@@ -150,13 +170,17 @@ class PDOConnectWaitStrategy implements WaitStrategy
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
+     * @psalm-param mixed $instance
      *
      * @throws WaitingTimeoutException if the timeout duration is exceeded
+     * @return void
      */
     public function waitUntilReady($instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         if ($this->dsn === null) {
-            throw new \LogicException('The DSN for the PDO connection is not set');
+            throw new LogicException('The DSN for the PDO connection is not set');
         }
 
         $dsn = clone $this->dsn;
@@ -169,18 +193,21 @@ class PDOConnectWaitStrategy implements WaitStrategy
             if ($dsn->getPort() === null) {
                 $ports = $instance->getExposedPorts();
                 if (count($ports) !== 1) {
-                    throw new \LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
+                    throw new LogicException('PDOConnectWaitStrategy requires exactly one exposed port: '.count($ports).' exposed');
                 }
                 $port = $instance->getMappedPort($ports[0]);
                 if ($port === null) {
-                    throw new \LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
+                    throw new LogicException('PDOConnectWaitStrategy requires exactly one mapped port');
                 }
                 $dsn = $dsn->withPort($port);
             }
         }
 
         $defaultSocketTimeout = ini_get('default_socket_timeout');
-        ini_set('default_socket_timeout', 1);
+        if ($defaultSocketTimeout === false) {
+            throw new RuntimeException('Unable to read default_socket_timeout');
+        }
+        ini_set('default_socket_timeout', '1');
 
         $now = time();
         $ex = null;
@@ -203,19 +230,19 @@ class PDOConnectWaitStrategy implements WaitStrategy
                 $this->logger()->debug(sprintf(
                     'Trying to connect to PDO: dsn=%s, username=%s, password=%s',
                     $dsn->toString(),
-                    $this->username,
-                    $this->password
+                    $this->username === null ? '' : $this->username,
+                    $this->password === null ? '' : $this->password
                 ));
-                $pdo = new \PDO($dsn->toString(), $this->username, $this->password, [
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                    \PDO::ATTR_TIMEOUT => 1,
+                $pdo = new PDO($dsn->toString(), $this->username, $this->password, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_TIMEOUT => 1,
                 ]);
                 $this->logger()->debug('Pinging PDO connection');
                 $pdo->query('SELECT 1');
-                $pdo = null;
+                unset($pdo);
 
                 break;
-            } catch (\PDOException $e) {
+            } catch (PDOException $e) {
                 $this->logger()->debug(sprintf('Unable to connect to PDO: %s', $e->getMessage()), [
                     'exception' => $e,
                 ]);

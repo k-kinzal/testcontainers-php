@@ -11,6 +11,7 @@ use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\Mount;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClientFactory;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -175,6 +176,36 @@ class MountSettingTest extends TestCase
 
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
+
+    /**
+     * @dataProvider provideWithMountsInvalidInputs
+     * @param mixed $mounts
+     */
+    public function testWithMountsRejectsInvalidInputs($mounts)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withMounts($mounts);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithMountsInvalidInputs()
+    {
+        return [
+            'case 1' => [false],
+        ];
+    }
+
+    public function testStartRejectsInvalidMounts()
+    {
+        $container = new MountSettingWithInvalidMountsContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class MountSettingWithMountsContainer extends GenericContainer
@@ -193,4 +224,9 @@ class MountSettingWithVolumesContainer extends GenericContainer
     public static $VOLUMES = [
         '${HOST_DIR}:/container/path:ro',
     ];
+}
+
+class MountSettingWithInvalidMountsContainer extends GenericContainer
+{
+    protected static $MOUNTS = false;
 }
