@@ -139,6 +139,7 @@ class GenericContainer implements Container
         $maxRetryAttempts = $this->startupConflictRetryAttempts();
         $retryCount = 0;
         $ports = [];
+        $output = null;
         while ($retryCount < $maxRetryAttempts) {
             $ports = $this->ports();
             $options['publish'] = array_map(function ($containerPort, $hostPort) {
@@ -148,8 +149,8 @@ class GenericContainer implements Container
             try {
                 $startupTimeout = $this->startupTimeout();
                 $runClient = $client->withLogger($this->logger());
+                $originalTimeout = $runClient->getTimeout();
                 if ($startupTimeout !== null) {
-                    $originalTimeout = $runClient->getTimeout();
                     $runClient->withTimeout($startupTimeout);
                 }
                 $output = $runClient->run($image, $command, $args, $options);
@@ -222,6 +223,10 @@ class GenericContainer implements Container
             } catch (ProcessTimedOutException $e) {
                 throw new StartupCheckFailedException('container startup timed out', 0, $e);
             }
+        }
+
+        if ($output === null) {
+            throw new \LogicException('No container was started');
         }
 
         $this->logger()->debug('Container started', [
