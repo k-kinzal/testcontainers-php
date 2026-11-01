@@ -44,15 +44,12 @@ final class HostPortWaitStrategy implements WaitStrategy
     private $retryInterval = 100000;
 
     /**
-     * @param PortProbeTcp $probe
+     * @param null|PortProbe $probe
      * @psalm-param mixed $probe
      */
     public function __construct($probe = null)
     {
-        if ($probe !== null) {
-            self::ensureInstanceOf($probe, PortProbe::class);
-
-        }
+        self::ensureNullableInstanceOf($probe, PortProbe::class);
 
         $this->probe = $probe ?: new PortProbeTcp();
     }
@@ -71,11 +68,8 @@ final class HostPortWaitStrategy implements WaitStrategy
 
         $normalizedPorts = [];
         foreach (array_keys($ports) as $key) {
-            self::ensureIntOrDigitString($ports[$key]);
+            self::ensureIntOrDigitStringRange($ports[$key], 1, 65535);
 
-            if ($ports[$key] < 1 || $ports[$key] > 65535) {
-                throw new \InvalidArgumentException('Port must be between 1 and 65535');
-            }
             $normalizedPorts[] = (int) $ports[$key];
         }
         $ports = $normalizedPorts;
@@ -124,6 +118,7 @@ final class HostPortWaitStrategy implements WaitStrategy
      *
      * @param ContainerInstance $instance the container instance to check
      * @psalm-param mixed $instance
+     *
      * @return void
      */
     public function waitUntilReady($instance)

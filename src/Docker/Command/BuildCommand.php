@@ -59,14 +59,13 @@ trait BuildCommand
      * @psalm-param mixed $path
      * @psalm-param mixed $options
      *
-     * @throws DockerException if the Docker command fails for any other reason
-     *
      * @return DockerBuildOutput the output of the Docker build command
+     *
+     * @throws DockerException if the Docker command fails for any other reason
      */
     public function build($path, $options = [])
     {
-        self::ensureStringKeyedArray($options);
-
+        self::ensureNullableScalarOrStringableOrArrayMap($options);
         self::ensureNonEmptyString($path);
 
         $process = $this->execute('build', null, [$path], $options);

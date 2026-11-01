@@ -22,10 +22,10 @@ trait InspectCommand
      * @param ContainerId $containerId the ID of the container to inspect
      * @psalm-param mixed $containerId
      *
+     * @return DockerInspectOutput the output of the Docker inspect command, including detailed information about the container
+     *
      * @throws DockerException       if the Docker command fails for any other reason
      * @throws NoSuchObjectException if the specified container does not exist
-     *
-     * @return DockerInspectOutput the output of the Docker inspect command, including detailed information about the container
      */
     public function inspect($containerId)
     {

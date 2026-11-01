@@ -5,10 +5,12 @@
 namespace Tests\Unit\Containers\PortStrategy;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\ConflictBehavior;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -49,6 +51,13 @@ class PortStrategyProviderTest extends TestCase
         $provider = new PortStrategyProvider();
 
         $this->assertNull($provider->get('test'));
+    }
+
+    public function testRegisterRejectsUnrelatedObject()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        (new PortStrategyProvider())->register('bad', new stdClass());
     }
 }
 

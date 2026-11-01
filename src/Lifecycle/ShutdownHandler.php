@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Lifecycle;
 
+use Exception;
+
 /**
  * Registers shutdown functions and signal handlers to run a callback once on process exit.
  */
@@ -24,7 +26,8 @@ final class ShutdownHandler
     /**
      * Register a callback to be executed once on shutdown and on SIGTERM/SIGINT.
      *
-     * @param callable $callback
+     * @param  callable $callback
+     *
      * @return void
      */
     public static function register(callable $callback)
@@ -40,8 +43,7 @@ final class ShutdownHandler
             self::$called = true;
             try {
                 $callback();
-            } catch (\Exception $e) {
-                // best-effort
+            } catch (Exception $e) {
             }
         });
 
@@ -52,8 +54,7 @@ final class ShutdownHandler
                     self::$called = true;
                     try {
                         $callback();
-                    } catch (\Exception $e) {
-                        // best-effort
+                    } catch (Exception $e) {
                     }
                 }
                 exit(128 + SIGTERM);
@@ -63,8 +64,7 @@ final class ShutdownHandler
                     self::$called = true;
                     try {
                         $callback();
-                    } catch (\Exception $e) {
-                        // best-effort
+                    } catch (Exception $e) {
                     }
                 }
                 exit(128 + SIGINT);

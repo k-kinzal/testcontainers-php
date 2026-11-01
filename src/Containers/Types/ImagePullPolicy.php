@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Containers\Types;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -17,7 +17,6 @@ final class ImagePullPolicy implements Stringable
      * The policy to always pull the image.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $ALWAYS = 'always';
 
@@ -25,7 +24,6 @@ final class ImagePullPolicy implements Stringable
      * The policy to use when the image is missing.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $MISSING = 'missing';
 
@@ -33,7 +31,6 @@ final class ImagePullPolicy implements Stringable
      * The policy to never pull the image.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $NEVER = 'never';
 
@@ -52,11 +49,8 @@ final class ImagePullPolicy implements Stringable
     {
         self::ensureString($policy);
 
-        $values = self::ensureStringList([static::$ALWAYS, static::$MISSING, static::$NEVER]);
-
-        if (!in_array($policy, $values, true)) {
-            throw new InvalidFormatException($policy, $values);
-        }
+        $values = [static::$ALWAYS, static::$MISSING, static::$NEVER];
+        self::ensureOneOf($policy, $values);
 
         $this->policy = $policy;
     }
@@ -102,19 +96,16 @@ final class ImagePullPolicy implements Stringable
      * @param string $policy the string representation of the pull policy
      * @psalm-param mixed $policy
      *
-     * @throws InvalidFormatException if the provided policy is not valid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the provided policy is not valid
      */
     public static function fromString($policy)
     {
         self::ensureString($policy);
 
-        $values = self::ensureStringList([static::$ALWAYS, static::$MISSING, static::$NEVER]);
-
-        if (!in_array($policy, $values, true)) {
-            throw new InvalidFormatException($policy, $values);
-        }
+        $values = [static::$ALWAYS, static::$MISSING, static::$NEVER];
+        self::ensureOneOf($policy, $values);
 
         return new self($policy);
     }

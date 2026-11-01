@@ -68,7 +68,9 @@ trait InspectIntervalSetting
     protected function inspectInterval()
     {
         if (static::$INSPECT_INTERVAL !== null) {
-            return self::ensureNonNegativeNumber(static::$INSPECT_INTERVAL);
+            self::ensureNonNegativeNumber(static::$INSPECT_INTERVAL);
+
+            return static::$INSPECT_INTERVAL;
         }
 
         return $this->inspectInterval;

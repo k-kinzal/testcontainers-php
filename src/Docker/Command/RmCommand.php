@@ -28,19 +28,20 @@ trait RmCommand
      * @psalm-param mixed $containerId
      * @psalm-param mixed $options
      *
+     * @return DockerRmOutput the output of the Docker rm command, including the removed container IDs
+     *
      * @throws NoSuchContainerException if the specified container does not exist
      * @throws DockerException          if the Docker command fails for any other reason
-     *
-     * @return DockerRmOutput the output of the Docker rm command, including the removed container IDs
      */
     public function rm($containerId, $options = [])
     {
-        self::ensureStringKeyedArray($options);
+        self::ensureNullableScalarOrStringableOrArrayMap($options);
 
         $containerIds = [];
         foreach (is_array($containerId) ? $containerId : [$containerId] as $id) {
-            $containerIds[] = $id instanceof ContainerId ? (string) $id : self::ensureNonEmptyString($id);
+            self::ensureNonEmptyStringOrInstanceOf($id, ContainerId::class);
 
+            $containerIds[] = (string) $id;
         }
 
         $process = $this->execute(

@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use Exception;
+use LogicException;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 use Testcontainers\Docker\DockerClient;
@@ -9,12 +12,11 @@ use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
-use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Environments;
 use Testcontainers\Exceptions\InvalidFormatException;
-use Testcontainers\SSH\Tunnel;
 use Testcontainers\Logger\WithLogger;
+use Testcontainers\SSH\Tunnel;
 
 /**
  * GenericContainer is a generic implementation of docker container.
@@ -50,7 +52,6 @@ class GenericContainer implements Container
      * Unique session ID for the current PHP process.
      *
      * @var null|string
-     * @psalm-var mixed
      */
     protected static $sessionId;
 
@@ -67,14 +68,16 @@ class GenericContainer implements Container
      */
     public function __construct($image = null)
     {
-        self::ensureNullableString($image);
+        self::ensureNullableNonEmptyString($image);
 
-        if ($image === null && static::$IMAGE === null) {
-            throw new \InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
+        if ($image === null) {
+            $defaultImage = static::$IMAGE;
+            self::ensureNonEmptyString($defaultImage);
+
+            $image = $defaultImage;
         }
 
-        $this->image = self::ensureNonEmptyString($image !== null ? $image : static::$IMAGE);
-
+        $this->image = $image;
     }
 
     /**
@@ -95,6 +98,8 @@ class GenericContainer implements Container
     }
 
     /**
+     * Start the container and wait for its readiness checks.
+     *
      * @throws InvalidFormatException if the provided mode is not valid
      * @throws DockerException        if the Docker command fails
      */
@@ -105,6 +110,7 @@ class GenericContainer implements Container
         $stopTimeout = $this->stopTimeout();
         $stopSignal = $this->stopSignal();
         $inspectInterval = $this->inspectInterval();
+        $sshPortForward = $this->sshPortForward();
 
         $portStrategy = $this->portStrategy();
 
@@ -159,7 +165,7 @@ class GenericContainer implements Container
                     $runClient->withTimeout($originalTimeout);
                 }
                 if (!$output instanceof DockerRunWithDetachOutput) {
-                    throw new \LogicException('Expected DockerRunWithDetachOutput');
+                    throw new LogicException('Expected DockerRunWithDetachOutput');
                 }
 
                 break; // Success, exit the retry loop
@@ -191,7 +197,7 @@ class GenericContainer implements Container
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
+                throw new LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
             } catch (BindAddressAlreadyUseException $e) {
                 if ($portStrategy === null) {
                     throw $e;
@@ -220,14 +226,14 @@ class GenericContainer implements Container
                     throw $e;
                 }
 
-                throw new \LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
+                throw new LogicException('Unknown conflict behavior: `'.(string) $behavior.'`', 0, $e);
             } catch (ProcessTimedOutException $e) {
                 throw new StartupCheckFailedException('container startup timed out', 0, $e);
             }
         }
 
         if ($output === null) {
-            throw new \LogicException('No container was started');
+            throw new LogicException('No container was started');
         }
 
         $this->logger()->debug('Container started', [
@@ -260,7 +266,6 @@ class GenericContainer implements Container
             }
 
             if (count($ports) > 0) {
-                $sshPortForward = $this->sshPortForward();
                 if ($sshPortForward !== null) {
                     $port = $instance->getMappedPort(array_keys($ports)[0]);
                     if ($port !== null && $port !== 0) {
@@ -295,7 +300,7 @@ class GenericContainer implements Container
                 ]);
                 $waitStrategy->withLogger($this->logger())->waitUntilReady($instance);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger()->debug('Container startup failed, stopping container', [
                 'containerId' => $output->getContainerId(),
                 'exception' => $e,
@@ -303,7 +308,11 @@ class GenericContainer implements Container
 
             try {
                 $instance->stop();
-            } catch (\Exception $stopException) {
+            } catch (DockerException $stopException) {
+                $this->logger()->debug('Failed to stop container during cleanup', [
+                    'exception' => $stopException,
+                ]);
+            } catch (ProcessTimedOutException $stopException) {
                 $this->logger()->debug('Failed to stop container during cleanup', [
                     'exception' => $stopException,
                 ]);
@@ -342,6 +351,6 @@ class GenericContainer implements Container
             }
         }
 
-        return self::ensureString(self::$sessionId);
+        return self::$sessionId;
     }
 }

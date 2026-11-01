@@ -35,15 +35,13 @@ trait LogsCommand
      */
     public function logs($containerId, $options = [])
     {
-        self::ensureStringKeyedArray($options);
+        self::ensureNullableScalarOrStringableOrArrayMap($options);
 
         if (!$containerId instanceof ContainerId) {
             self::ensureNonEmptyString($containerId);
-
         }
         if (isset($options['follow'])) {
             self::ensureBool($options['follow']);
-
         }
 
         $follow = isset($options['follow']) && $options['follow'] === true;

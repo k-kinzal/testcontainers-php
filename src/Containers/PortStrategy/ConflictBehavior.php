@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -22,7 +22,6 @@ final class ConflictBehavior implements Stringable
      * This constant represents the action to retry when a port conflict occurs.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $RETRY = 'retry';
 
@@ -32,7 +31,6 @@ final class ConflictBehavior implements Stringable
      * This constant represents the action to fail when a port conflict occurs.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $FAIL = 'fail';
 
@@ -53,11 +51,8 @@ final class ConflictBehavior implements Stringable
     {
         self::ensureString($action);
 
-        $values = self::ensureStringList([static::$RETRY, static::$FAIL]);
-
-        if (!in_array($action, $values, true)) {
-            throw new InvalidFormatException($action, $values);
-        }
+        $values = [static::$RETRY, static::$FAIL];
+        self::ensureOneOf($action, $values);
 
         $this->action = $action;
     }
@@ -99,19 +94,16 @@ final class ConflictBehavior implements Stringable
      * @param string $action The action to take on port conflict. Valid values are 'retry' or 'fail'.
      * @psalm-param mixed $action
      *
-     * @throws InvalidFormatException if the action is invalid
-     *
      * @return ConflictBehavior the ConflictBehavior instance corresponding to the action
+     *
+     * @throws InvalidFormatException if the action is invalid
      */
     public static function fromString($action)
     {
         self::ensureString($action);
 
-        $values = self::ensureStringList([static::$RETRY, static::$FAIL]);
-
-        if (!in_array($action, $values, true)) {
-            throw new InvalidFormatException($action, $values);
-        }
+        $values = [static::$RETRY, static::$FAIL];
+        self::ensureOneOf($action, $values);
 
         return new self($action);
     }

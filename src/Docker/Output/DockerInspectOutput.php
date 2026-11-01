@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Output;
 
+use LogicException;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\ContainerObject;
@@ -41,8 +42,6 @@ final class DockerInspectOutput extends DockerOutput
     }
 
     /**
-     * Get the value of a property.
-     *
      * @param string $name the name of the property
      *
      * @return mixed the value of the property
@@ -50,7 +49,7 @@ final class DockerInspectOutput extends DockerOutput
     public function __get($name)
     {
         if (!property_exists($this->object, $name)) {
-            throw new \LogicException("Property {$name} does not exist");
+            throw new LogicException("Property {$name} does not exist");
         }
 
         return $this->object->{$name};
@@ -61,9 +60,9 @@ final class DockerInspectOutput extends DockerOutput
      *
      * @param string $s the output of the `docker inspect` command
      *
-     * @throws InvalidValueException if the output could not be parsed
-     *
      * @return ContainerObject the object representation of the container
+     *
+     * @throws InvalidValueException if the output could not be parsed
      */
     private function deserialize($s)
     {

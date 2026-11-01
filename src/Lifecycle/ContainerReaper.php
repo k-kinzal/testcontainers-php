@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Lifecycle;
 
+use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
+use Symfony\Component\Process\Process;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Exception\InvalidValueException;
@@ -12,6 +14,8 @@ use Testcontainers\Docker\Exception\InvalidValueException;
 final class ContainerReaper
 {
     /**
+     * The Docker client used to inspect and remove containers.
+     *
      * @var DockerClient
      */
     protected $client;
@@ -95,11 +99,11 @@ final class ContainerReaper
         }
 
         try {
-            $process = new \Symfony\Component\Process\Process(['kill', '-0', (string) $pid]);
+            $process = new Process(['kill', '-0', (string) $pid]);
             $process->run();
 
             return $process->isSuccessful();
-        } catch (\Exception $e) {
+        } catch (ProcessRuntimeException $e) {
             return true;
         }
     }

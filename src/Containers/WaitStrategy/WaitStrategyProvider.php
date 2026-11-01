@@ -32,13 +32,13 @@ final class WaitStrategyProvider
      * @psalm-param mixed $name
      * @psalm-param mixed $strategy
      *
-     * @throws AlreadyExistsWaitStrategyException if a strategy with the same name already exists
      * @return void
+     *
+     * @throws AlreadyExistsWaitStrategyException if a strategy with the same name already exists
      */
     public function register($name, $strategy)
     {
         self::ensureNonEmptyString($name);
-
         self::ensureInstanceOf($strategy, WaitStrategy::class);
 
         if (isset($this->strategies[$name])) {

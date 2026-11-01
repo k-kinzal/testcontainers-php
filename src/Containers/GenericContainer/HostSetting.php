@@ -4,6 +4,7 @@ namespace Testcontainers\Containers\GenericContainer;
 
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Exceptions\InvalidFormatException;
+use UnexpectedValueException;
 
 /**
  * HostSetting is a trait that provides the ability to add extra hosts to a container.
@@ -64,6 +65,8 @@ trait HostSetting
     /**
      * Add an extra host entry to be passed to the container.
      *
+     * @see Container::withExtraHost()
+     *
      * @param array{
      *      hostname: string,
      *      ipAddress: string
@@ -72,27 +75,27 @@ trait HostSetting
      * @psalm-param mixed $hostname
      * @psalm-param mixed $ipAddress
      *
-     * @throws \InvalidArgumentException if the arguments are invalid
-     *
      * @return self
      *
-     * @see Container::withExtraHost()
+     * @throws UnexpectedValueException if the arguments are invalid
      */
     public function withExtraHost($hostname, $ipAddress = null)
     {
+        self::ensureStringOrArrayOrInstanceOf($hostname, HostToIp::class);
         self::ensureNullableString($ipAddress);
 
-        if (($hostname instanceof HostToIp) && $ipAddress === null) {
-            $hostToIp = $hostname;
+        if ($hostname instanceof HostToIp) {
+            self::ensureNull($ipAddress);
 
-        } elseif (is_array($hostname) && $ipAddress === null) {
+            $hostToIp = $hostname;
+        } elseif (is_array($hostname)) {
+            self::ensureNull($ipAddress);
+
             $hostToIp = HostToIp::fromArray($hostname);
-        } elseif (is_string($hostname) && is_string($ipAddress)) {
-            $hostToIp = new HostToIp($hostname, $ipAddress);
         } else {
-            throw new \InvalidArgumentException(
-                'Invalid arguments: withExtraHost(`'.(string) json_encode($hostname).'`, `'.(string) json_encode($ipAddress).'`)'
-            );
+            self::ensureNonEmptyString($ipAddress);
+
+            $hostToIp = new HostToIp($hostname, $ipAddress);
         }
 
         $this->extraHosts[] = $hostToIp;
@@ -103,17 +106,17 @@ trait HostSetting
     /**
      * Add multiple extra host entries to be passed to the container.
      *
+     * @see Container::withExtraHosts()
+     *
      * @param array{
      *      hostname: string,
      *      ipAddress: string
      *  }[]|HostToIp[]|string[] $extraHosts The extra hosts to add
      * @psalm-param mixed $extraHosts
      *
-     * @throws \InvalidArgumentException if the arguments are invalid
-     *
      * @return self
      *
-     * @see Container::withExtraHosts()
+     * @throws UnexpectedValueException if the arguments are invalid
      */
     public function withExtraHosts($extraHosts)
     {
@@ -130,22 +133,27 @@ trait HostSetting
     /**
      * Retrieve the extra hosts to be used for the container.
      *
-     * @throws InvalidFormatException if the format is invalid
-     *
      * @return HostToIp[]
+     *
+     * @throws InvalidFormatException if the format is invalid
      */
     protected function extraHosts()
     {
-        $static = self::ensureNullableArray(static::$EXTRA_HOSTS);
+        $static = static::$EXTRA_HOSTS;
+        self::ensureNullableArray($static);
 
         if ($static === null || $static === []) {
-            $static = self::ensureNullableArray(static::$HOSTS);
+            $fallback = static::$HOSTS;
+            self::ensureNullableArray($fallback);
 
+            $static = $fallback;
         }
         if ($static !== null && count($static) > 0) {
             $extraHosts = [];
             foreach (array_keys($static) as $key) {
-                $extraHost = self::ensureStringOrArray($static[$key]);
+                self::ensureStringOrArray($static[$key]);
+
+                $extraHost = $static[$key];
 
                 if (is_string($extraHost)) {
                     $extraHosts[] = HostToIp::fromString($extraHost);

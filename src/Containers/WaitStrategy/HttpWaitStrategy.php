@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Logger\WithLogger;
 
@@ -98,10 +99,7 @@ final class HttpWaitStrategy implements WaitStrategy
      */
     public function __construct($probe = null)
     {
-        if ($probe !== null) {
-            self::ensureInstanceOf($probe, HttpProbe::class);
-
-        }
+        self::ensureNullableInstanceOf($probe, HttpProbe::class);
 
         $this->probe = $probe ?: new HttpProbeGetHeaders();
     }
@@ -184,11 +182,8 @@ final class HttpWaitStrategy implements WaitStrategy
      */
     public function withPort($port)
     {
-        self::ensureIntOrDigitString($port);
+        self::ensureIntOrDigitStringRange($port, 1, 65535);
 
-        if ($port < 1 || $port > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $port = (int) $port;
 
         $this->port = $port;
@@ -252,6 +247,7 @@ final class HttpWaitStrategy implements WaitStrategy
      *
      * @param ContainerInstance $instance the container instance to check
      * @psalm-param mixed $instance
+     *
      * @return void
      */
     public function waitUntilReady($instance)
@@ -267,11 +263,11 @@ final class HttpWaitStrategy implements WaitStrategy
             if ($port === null) {
                 $ports = $instance->getExposedPorts();
                 if (count($ports) === 0) {
-                    throw new \LogicException('HTTP wait strategy requires an exposed port');
+                    throw new LogicException('HTTP wait strategy requires an exposed port');
                 }
                 $port = $instance->getMappedPort($ports[0]);
                 if ($port === null) {
-                    throw new \LogicException('HTTP wait strategy requires a mapped port');
+                    throw new LogicException('HTTP wait strategy requires a mapped port');
                 }
             }
             $path = $this->path !== null && $this->path !== '' ? $this->path : '/';

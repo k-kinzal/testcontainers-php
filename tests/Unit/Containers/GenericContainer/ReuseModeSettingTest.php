@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\ReuseModeSetting;
 use Testcontainers\Containers\ReuseMode;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -69,6 +70,14 @@ class ReuseModeSettingTest extends TestCase
 
         $this->assertTrue($reuseMode->isRestart());
     }
+
+    public function testReuseModeRejectsInvalidDefault()
+    {
+        $container = new ReuseModeSettingWithInvalidReuseModeContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->reuseMode();
+    }
 }
 
 class ReuseModeSettingWithStaticReuseModeContainer extends GenericContainer
@@ -79,4 +88,9 @@ class ReuseModeSettingWithStaticReuseModeContainer extends GenericContainer
 class ReuseModeSettingWithStaticRestartModeContainer extends GenericContainer
 {
     protected static $REUSE_MODE = 'restart';
+}
+
+class ReuseModeSettingWithInvalidReuseModeContainer extends GenericContainer
+{
+    protected static $REUSE_MODE = false;
 }

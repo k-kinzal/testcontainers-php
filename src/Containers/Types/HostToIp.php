@@ -2,8 +2,9 @@
 
 namespace Testcontainers\Containers\Types;
 
-use Testcontainers\Utility\Ensure;
+use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -39,7 +40,6 @@ final class HostToIp implements Stringable
     public function __construct($host, $ip)
     {
         self::ensureNonEmptyString($host);
-
         self::ensureNonEmptyString($ip);
 
         $this->host = $host;
@@ -52,8 +52,6 @@ final class HostToIp implements Stringable
     }
 
     /**
-     * Get the value of a property.
-     *
      * @param string $name the name of the property
      *
      * @return mixed the value of the property
@@ -61,7 +59,7 @@ final class HostToIp implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('HostToIp::'.$name.' does not exist');
+            throw new LogicException('HostToIp::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -73,18 +71,15 @@ final class HostToIp implements Stringable
      * @param string $v the host-to-IP mapping
      * @psalm-param mixed $v
      *
-     * @throws InvalidFormatException if the format is invalid
-     *
      * @return HostToIp the HostToIp object
+     *
+     * @throws InvalidFormatException if the format is invalid
      */
     public static function fromString($v)
     {
-        self::ensureString($v);
+        self::ensureMatches($v, '/^[^:]+:[^:]+$/D', 'host:ip');
 
         $parts = explode(':', $v);
-        if (count($parts) !== 2) {
-            throw new InvalidFormatException($v, 'host:ip');
-        }
 
         return new self($parts[0], $parts[1]);
     }
@@ -103,10 +98,8 @@ final class HostToIp implements Stringable
     public static function fromArray($v)
     {
         self::ensureArray($v);
-
-        if (!isset($v['hostname'], $v['ipAddress'])) {
-            throw new \InvalidArgumentException('Host mapping requires hostname and ipAddress');
-        }
+        self::ensureArrayHasKey($v, 'hostname');
+        self::ensureArrayHasKey($v, 'ipAddress');
 
         return new self($v['hostname'], $v['ipAddress']);
     }

@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\InspectIntervalSetting;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -47,9 +48,44 @@ class InspectIntervalSettingTest extends TestCase
 
         $this->assertSame(10, $instance->getInspectInterval());
     }
+
+    /**
+     * @dataProvider providerWithInspectIntervalInvalidInputs
+     * @param float $seconds
+     */
+    public function testWithInspectIntervalRejectsInvalidInputs($seconds)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withInspectInterval($seconds);
+    }
+
+    /**
+     * @return array<string, array{float}>
+     */
+    public static function providerWithInspectIntervalInvalidInputs()
+    {
+        return [
+            'case 1' => [NAN],
+        ];
+    }
+
+    public function testStartRejectsInvalidInspectInterval()
+    {
+        $container = new InspectIntervalSettingWithInvalidInspectIntervalContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class InspectIntervalSettingWithStaticContainer extends GenericContainer
 {
     protected static $INSPECT_INTERVAL = 5;
+}
+
+class InspectIntervalSettingWithInvalidInspectIntervalContainer extends GenericContainer
+{
+    protected static $INSPECT_INTERVAL = INF;
 }

@@ -2,13 +2,23 @@
 
 namespace Testcontainers\Exceptions;
 
-final class ContainerStopException extends \RuntimeException
+use Exception;
+use RuntimeException;
+
+/**
+ * One or more containers could not be stopped.
+ */
+final class ContainerStopException extends RuntimeException
 {
-    /** @var array<string, \Exception> */
+    /**
+     * The failures collected for each container that could not be stopped.
+     *
+     * @var array<string, Exception>
+     */
     private $errors;
 
     /**
-     * @param array<string, \Exception> $errors
+     * @param array<string, Exception> $errors
      */
     public function __construct(array $errors)
     {
@@ -20,7 +30,11 @@ final class ContainerStopException extends \RuntimeException
         );
     }
 
-    /** @return array<string, \Exception> */
+    /**
+     * Get the failures collected while stopping containers.
+     *
+     * @return array<string, Exception>
+     */
     public function getErrors()
     {
         return $this->errors;

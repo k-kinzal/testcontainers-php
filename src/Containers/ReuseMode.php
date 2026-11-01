@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Containers;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -23,7 +23,6 @@ final class ReuseMode implements Stringable
      * Add mode: always start a new container.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $ADD = 'add';
 
@@ -31,7 +30,6 @@ final class ReuseMode implements Stringable
      * Restart mode: stop existing container and start a new one.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $RESTART = 'restart';
 
@@ -39,7 +37,6 @@ final class ReuseMode implements Stringable
      * Reuse mode: reuse existing container if running.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $REUSE = 'reuse';
 
@@ -58,11 +55,8 @@ final class ReuseMode implements Stringable
     {
         self::ensureString($mode);
 
-        $values = self::ensureStringList([static::$ADD, static::$RESTART, static::$REUSE]);
-
-        if (!in_array($mode, $values, true)) {
-            throw new InvalidFormatException($mode, $values);
-        }
+        $values = [static::$ADD, static::$RESTART, static::$REUSE];
+        self::ensureOneOf($mode, $values);
 
         $this->mode = $mode;
     }
@@ -108,19 +102,16 @@ final class ReuseMode implements Stringable
      * @param string $mode The reuse mode. Valid values are 'add', 'restart', or 'reuse'.
      * @psalm-param mixed $mode
      *
-     * @throws InvalidFormatException if the mode is invalid
-     *
      * @return ReuseMode
+     *
+     * @throws InvalidFormatException if the mode is invalid
      */
     public static function fromString($mode)
     {
         self::ensureString($mode);
 
-        $values = self::ensureStringList([static::$ADD, static::$RESTART, static::$REUSE]);
-
-        if (!in_array($mode, $values, true)) {
-            throw new InvalidFormatException($mode, $values);
-        }
+        $values = [static::$ADD, static::$RESTART, static::$REUSE];
+        self::ensureOneOf($mode, $values);
 
         return new self($mode);
     }

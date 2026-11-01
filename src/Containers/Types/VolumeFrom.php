@@ -2,8 +2,9 @@
 
 namespace Testcontainers\Containers\Types;
 
-use Testcontainers\Utility\Ensure;
+use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -39,7 +40,6 @@ final class VolumeFrom implements Stringable
     public function __construct($name, $mode)
     {
         self::ensureNonEmptyString($name);
-
         self::ensureInstanceOf($mode, BindMode::class);
 
         $this->name = $name;
@@ -59,7 +59,7 @@ final class VolumeFrom implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('VolumeFrom::'.$name.' does not exist');
+            throw new LogicException('VolumeFrom::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -71,9 +71,9 @@ final class VolumeFrom implements Stringable
      * @param string $v the volume from string
      * @psalm-param mixed $v
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return VolumeFrom
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public static function fromString($v)
     {
@@ -88,6 +88,8 @@ final class VolumeFrom implements Stringable
     }
 
     /**
+     * Create an instance from the supplied configuration array.
+     *
      * @param array{
      *    name: string,
      *    mode: BindMode
@@ -99,10 +101,8 @@ final class VolumeFrom implements Stringable
     public static function fromArray($arr)
     {
         self::ensureArray($arr);
-
-        if (!isset($arr['name'], $arr['mode'])) {
-            throw new \InvalidArgumentException('Volume requires name and mode');
-        }
+        self::ensureArrayHasKey($arr, 'name');
+        self::ensureArrayHasKey($arr, 'mode');
 
         return new VolumeFrom($arr['name'], $arr['mode']);
     }

@@ -5,9 +5,11 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PortSetting;
 use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -112,6 +114,103 @@ class PortSettingTest extends TestCase
 
         $this->assertSame([80], $instance->getExposedPorts());
     }
+
+    /**
+     * @dataProvider providerWithPortInvalidInputs
+     * @param bool|float|int|string $port
+     */
+    public function testWithPortRejectsInvalidInputs($port)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withPort($port);
+    }
+
+    /**
+     * @return array<string, array{bool|float|int|string}>
+     */
+    public static function providerWithPortInvalidInputs()
+    {
+        return [
+            'case 1' => ['80abc'],
+            'case 2' => ['1e3'],
+            'case 3' => [true],
+            'case 4' => [1.5],
+            'case 5' => [0],
+            'case 6' => [-1],
+            'case 7' => [65536],
+            'case 8' => ['999999999999999999999999999999'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerWithPortsInvalidInputs
+     * @param array{int, int} $ports
+     */
+    public function testWithPortsRejectsInvalidInputs($ports)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withPorts($ports);
+    }
+
+    /**
+     * @return array<string, array{array{int, int}}>
+     */
+    public static function providerWithPortsInvalidInputs()
+    {
+        return [
+            'case 1' => [[80, 65536]],
+        ];
+    }
+
+    /**
+     * @dataProvider providerWithPortStrategyInvalidInputs
+     * @param stdClass $strategy
+     */
+    public function testWithPortStrategyRejectsInvalidInputs($strategy)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withPortStrategy($strategy);
+    }
+
+    /**
+     * @return array<string, array{stdClass}>
+     */
+    public static function providerWithPortStrategyInvalidInputs()
+    {
+        return [
+            'case 1' => [new stdClass()],
+        ];
+    }
+
+    public function testStartRejectsInvalidExposedPorts()
+    {
+        $container = new PortSettingWithInvalidExposedPortsContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
+
+    public function testStartRejectsInvalidPorts()
+    {
+        $container = new PortSettingWithInvalidPortsContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
+
+    public function testStartRejectsInvalidPortStrategy()
+    {
+        $container = new PortSettingWithInvalidPortStrategyContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class PortSettingWithExposedPortsContainer extends GenericContainer
@@ -127,4 +226,19 @@ class PortSettingWithExposeContainer extends GenericContainer
 class PortSettingWithPortsContainer extends GenericContainer
 {
     protected static $PORTS = [80, 443];
+}
+
+class PortSettingWithInvalidExposedPortsContainer extends GenericContainer
+{
+    protected static $EXPOSED_PORTS = [80, 'garbage'];
+}
+
+class PortSettingWithInvalidPortsContainer extends GenericContainer
+{
+    protected static $PORTS = false;
+}
+
+class PortSettingWithInvalidPortStrategyContainer extends GenericContainer
+{
+    protected static $PORT_STRATEGY = [];
 }

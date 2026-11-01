@@ -2,10 +2,13 @@
 
 namespace Testcontainers\Containers\Types;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
+/**
+ * The read-only or read-write access mode for a bind mount.
+ */
 final class BindMode implements Stringable
 {
     use Ensure;
@@ -14,7 +17,6 @@ final class BindMode implements Stringable
      * The mode for read-only bind.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $READ_ONLY = 'ro';
 
@@ -22,7 +24,6 @@ final class BindMode implements Stringable
      * The mode for read-write bind.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $READ_WRITE = 'rw';
 
@@ -41,11 +42,8 @@ final class BindMode implements Stringable
     {
         self::ensureString($mode);
 
-        $values = self::ensureStringList([static::$READ_ONLY, static::$READ_WRITE]);
-
-        if (!in_array($mode, $values, true)) {
-            throw new InvalidFormatException($mode, $values);
-        }
+        $values = [static::$READ_ONLY, static::$READ_WRITE];
+        self::ensureOneOf($mode, $values);
 
         $this->mode = $mode;
     }
@@ -81,19 +79,16 @@ final class BindMode implements Stringable
      * @param string $mode the string representation of the bind mode
      * @psalm-param mixed $mode
      *
-     * @throws InvalidFormatException if the provided mode is not valid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the provided mode is not valid
      */
     public static function fromString($mode)
     {
         self::ensureString($mode);
 
-        $values = self::ensureStringList([static::$READ_ONLY, static::$READ_WRITE]);
-
-        if (!in_array($mode, $values, true)) {
-            throw new InvalidFormatException($mode, $values);
-        }
+        $values = [static::$READ_ONLY, static::$READ_WRITE];
+        self::ensureOneOf($mode, $values);
 
         return new self($mode);
     }

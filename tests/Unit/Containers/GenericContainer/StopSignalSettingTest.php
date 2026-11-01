@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StopSignalSetting;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -47,9 +48,22 @@ class StopSignalSettingTest extends TestCase
 
         $this->assertNull($instance->getStopSignal());
     }
+
+    public function testStartRejectsInvalidStopSignal()
+    {
+        $container = new StopSignalSettingWithInvalidStopSignalContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class StopSignalSettingWithStaticContainer extends GenericContainer
 {
     protected static $STOP_SIGNAL = 'KILL';
+}
+
+class StopSignalSettingWithInvalidStopSignalContainer extends GenericContainer
+{
+    protected static $STOP_SIGNAL = [];
 }

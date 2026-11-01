@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Docker\Exception;
 
+/**
+ * The requested Docker object does not exist.
+ */
 final class NoSuchObjectException extends DockerException
 {
     /**

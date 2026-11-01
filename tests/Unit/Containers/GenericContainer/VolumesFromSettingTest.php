@@ -12,6 +12,7 @@ use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -89,6 +90,14 @@ class VolumesFromSettingTest extends TestCase
 
         $this->assertSame('Hello, World!', $instance2->getOutput());
     }
+
+    public function testStartRejectsInvalidVolumesFrom()
+    {
+        $container = new VolumesFromSettingWithInvalidVolumesFromContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class VolumesFromSettingWithStaticVolumesFromContainer extends GenericContainer
@@ -96,4 +105,9 @@ class VolumesFromSettingWithStaticVolumesFromContainer extends GenericContainer
     protected static $VOLUMES_FROM = [
         ['name' => 'volumes-from-container', 'mode' => 'rw'],
     ];
+}
+
+class VolumesFromSettingWithInvalidVolumesFromContainer extends GenericContainer
+{
+    protected static $VOLUMES_FROM = false;
 }

@@ -3,8 +3,8 @@
 namespace Testcontainers\SSH;
 
 use Symfony\Component\Process\Process;
-use Testcontainers\SSH\Exceptions\TunnelException;
 use Testcontainers\Logger\WithLogger;
+use Testcontainers\SSH\Exceptions\TunnelException;
 
 /**
  * A tunnel for forwarding connections over SSH.
@@ -17,7 +17,6 @@ final class Tunnel
      * The local port to bind to.
      *
      * @var int
-     * @psalm-var mixed
      */
     protected $localPort;
 
@@ -25,7 +24,6 @@ final class Tunnel
      * The remote host to connect to.
      *
      * @var string
-     * @psalm-var mixed
      */
     protected $remoteHost;
 
@@ -33,7 +31,6 @@ final class Tunnel
      * The remote port to connect to.
      *
      * @var int
-     * @psalm-var mixed
      */
     protected $remotePort;
 
@@ -41,7 +38,6 @@ final class Tunnel
      * The SSH host to connect to.
      *
      * @var string
-     * @psalm-var mixed
      */
     protected $sshHost;
 
@@ -49,7 +45,6 @@ final class Tunnel
      * The user to connect as.
      *
      * @var null|string
-     * @psalm-var mixed
      */
     protected $user;
 
@@ -57,7 +52,6 @@ final class Tunnel
      * The SSH port to connect to.
      *
      * @var null|int
-     * @psalm-var mixed
      */
     protected $sshPort;
 
@@ -65,7 +59,6 @@ final class Tunnel
      * The local bind address.
      *
      * @var null|string
-     * @psalm-var mixed
      */
     protected $localBindAddress;
 
@@ -73,7 +66,6 @@ final class Tunnel
      * The identity file to use.
      *
      * @var null|string
-     * @psalm-var mixed
      */
     protected $identityFile;
 
@@ -81,7 +73,6 @@ final class Tunnel
      * The SSH options to use.
      *
      * @var array<string, string>
-     * @psalm-var mixed
      */
     protected $sshOptions = [];
 
@@ -101,22 +92,12 @@ final class Tunnel
         $remotePort,
         $sshHost
     ) {
-        self::ensureIntOrDigitString($localPort);
-
-        self::ensureIntOrDigitString($remotePort);
-
+        self::ensureIntOrDigitStringRange($localPort, 1, 65535);
         self::ensureNonEmptyString($remoteHost);
-
+        self::ensureIntOrDigitStringRange($remotePort, 1, 65535);
         self::ensureNonEmptyString($sshHost);
 
-        if ($localPort < 1 || $localPort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $localPort = (int) $localPort;
-
-        if ($remotePort < 1 || $remotePort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $remotePort = (int) $remotePort;
 
         $this->localPort = $localPort;
@@ -152,11 +133,8 @@ final class Tunnel
      */
     public function withSshPort($sshPort)
     {
-        self::ensureIntOrDigitString($sshPort);
+        self::ensureIntOrDigitStringRange($sshPort, 1, 65535);
 
-        if ($sshPort < 1 || $sshPort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $sshPort = (int) $sshPort;
 
         $this->sshPort = $sshPort;
@@ -228,10 +206,9 @@ final class Tunnel
     public function withSshOption($option, $value)
     {
         self::ensureString($option);
-
         self::ensureString($value);
 
-        $options = self::ensureStringMap($this->sshOptions);
+        $options = $this->sshOptions;
 
         $options[$option] = $value;
         $this->sshOptions = $options;
@@ -246,42 +223,6 @@ final class Tunnel
      */
     public function open()
     {
-        self::ensureIntOrDigitString($this->localPort);
-
-        if ($this->localPort < 1 || $this->localPort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
-        $this->localPort = (int) $this->localPort;
-
-        self::ensureIntOrDigitString($this->remotePort);
-
-        if ($this->remotePort < 1 || $this->remotePort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
-        $this->remotePort = (int) $this->remotePort;
-
-        $this->remoteHost = self::ensureNonEmptyString($this->remoteHost);
-
-        $this->sshHost = self::ensureNonEmptyString($this->sshHost);
-
-        $this->user = self::ensureNullableString($this->user);
-
-        $this->localBindAddress = self::ensureNullableString($this->localBindAddress);
-
-        $this->identityFile = self::ensureNullableString($this->identityFile);
-
-        $this->sshOptions = self::ensureStringMap($this->sshOptions);
-
-        if ($this->sshPort !== null) {
-            self::ensureIntOrDigitString($this->sshPort);
-
-            if ($this->sshPort < 1 || $this->sshPort > 65535) {
-                throw new \InvalidArgumentException('Port must be between 1 and 65535');
-            }
-            $this->sshPort = (int) $this->sshPort;
-
-        }
-
         $commandParts = [
             'ssh',
             '-v',

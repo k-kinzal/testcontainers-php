@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Docker\Output;
 
-use Testcontainers\Utility\Ensure;
 use Symfony\Component\Process\Process;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents the output of a Docker command executed via Symfony Process.
@@ -19,7 +19,6 @@ class DockerOutput
      * The Symfony Process instance used to run the Docker command.
      *
      * @var Process
-     * @psalm-var mixed
      */
     protected $process;
 
@@ -44,7 +43,7 @@ class DockerOutput
      */
     public function getOutput()
     {
-        return self::ensureInstanceOf($this->process, Process::class)->getOutput();
+        return $this->process->getOutput();
     }
 
     /**
@@ -57,7 +56,7 @@ class DockerOutput
      */
     public function getErrorOutput()
     {
-        return self::ensureInstanceOf($this->process, Process::class)->getErrorOutput();
+        return $this->process->getErrorOutput();
     }
 
     /**
@@ -73,6 +72,6 @@ class DockerOutput
      */
     public function getExitCode()
     {
-        return self::ensureInstanceOf($this->process, Process::class)->getExitCode();
+        return $this->process->getExitCode();
     }
 }

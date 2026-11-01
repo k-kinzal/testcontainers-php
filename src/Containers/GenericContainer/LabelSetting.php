@@ -54,7 +54,6 @@ trait LabelSetting
     public function withLabel($key, $value)
     {
         self::ensureString($key);
-
         self::ensureString($value);
 
         $this->labels[$key] = $value;
@@ -91,7 +90,9 @@ trait LabelSetting
     protected function labels()
     {
         if (static::$LABELS !== null) {
-            return self::ensureStringMap(static::$LABELS);
+            self::ensureStringMap(static::$LABELS);
+
+            return static::$LABELS;
         }
         if ($this->labels) {
             return $this->labels;

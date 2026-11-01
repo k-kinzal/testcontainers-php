@@ -2,19 +2,20 @@
 
 namespace Testcontainers\Logger;
 
-use Testcontainers\Utility\Ensure;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Testcontainers\Utility\Ensure;
 
 /**
  * WithLogger trait provides a way to set and get a logger instance.
  */
 trait WithLogger
 {
-    // Import Ensure once through this shared trait; PHP 5.6 rejects duplicate imports.
     use Ensure;
 
     /**
+     * The logger used by this component.
+     *
      * @var null|LoggerInterface
      */
     private $logger;

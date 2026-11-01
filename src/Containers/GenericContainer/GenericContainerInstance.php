@@ -2,11 +2,15 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
-use Testcontainers\Utility\Ensure;
+use Generator;
+use LogicException;
+use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Docker\Exception\DockerException;
+use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Exception\NoSuchContainerException;
 use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Types\ContainerId;
@@ -15,6 +19,8 @@ use Testcontainers\Docker\Types\EventAction;
 use Testcontainers\Docker\Types\State;
 use Testcontainers\Environments;
 use Testcontainers\SSH\Session;
+use Testcontainers\Utility\Ensure;
+use UnexpectedValueException;
 
 /**
  * GenericContainerInstance is a generic implementation of docker container.
@@ -63,7 +69,7 @@ final class GenericContainerInstance implements ContainerInstance
     /**
      * The events of the container.
      *
-     * @var null|\Generator<null|Event>
+     * @var null|Generator<null|Event>
      */
     private $events;
 
@@ -91,7 +97,7 @@ final class GenericContainerInstance implements ContainerInstance
     /**
      * The data associated with the container.
      *
-     * @var array<class-string, object> the data associated with the container
+     * @var class-string-map<T of object, T>
      */
     private $data = [];
 
@@ -111,33 +117,44 @@ final class GenericContainerInstance implements ContainerInstance
     public function __construct($containerDef)
     {
         self::ensureArray($containerDef);
-
-        if (!isset($containerDef['containerId'])) {
-            throw new \InvalidArgumentException('containerDef requires containerId');
-        }
+        self::ensureArrayHasKey($containerDef, 'containerId');
         self::ensureInstanceOf($containerDef['containerId'], ContainerId::class);
 
+        $containerDef += [
+            'labels' => null,
+            'ports' => [],
+            'pull' => null,
+            'privileged' => false,
+            'stopTimeout' => null,
+            'stopSignal' => null,
+            'inspectInterval' => null,
+        ];
+        self::ensureNullableStringMap($containerDef['labels']);
+        self::ensureArray($containerDef['ports']);
+        self::ensureNullableInstanceOf($containerDef['pull'], ImagePullPolicy::class);
+        self::ensureBool($containerDef['privileged']);
+        self::ensureNullableIntRange($containerDef['stopTimeout'], -1);
+        self::ensureNullableString($containerDef['stopSignal']);
+        self::ensureNullableNonNegativeNumber($containerDef['inspectInterval']);
+
         $ports = [];
-        if (isset($containerDef['ports'])) {
-            $portMap = self::ensureArray($containerDef['ports']);
+        foreach ($containerDef['ports'] as $exposed => $mapped) {
+            self::ensureIntRange($exposed, 1, 65535);
+            self::ensureIntRange($mapped, 1, 65535);
 
-            foreach ($portMap as $exposed => $mapped) {
-                $ports[self::ensureIntRange($exposed, 1, 65535)] = self::ensureIntRange($mapped, 1, 65535);
-
-            }
+            $ports[$exposed] = $mapped;
         }
 
         $this->containerDef = [
             'containerId' => $containerDef['containerId'],
-            'labels' => isset($containerDef['labels']) ? self::ensureStringMap($containerDef['labels']) : [],
+            'labels' => $containerDef['labels'] === null ? [] : $containerDef['labels'],
             'ports' => $ports,
-            'pull' => isset($containerDef['pull']) ? self::ensureInstanceOf($containerDef['pull'], ImagePullPolicy::class) : null,
-            'privileged' => isset($containerDef['privileged']) ? self::ensureBool($containerDef['privileged']) : false,
-            'stopTimeout' => isset($containerDef['stopTimeout']) ? self::ensureIntRange($containerDef['stopTimeout'], -1) : null,
-            'stopSignal' => isset($containerDef['stopSignal']) ? self::ensureString($containerDef['stopSignal']) : null,
-            'inspectInterval' => isset($containerDef['inspectInterval']) ? self::ensureNonNegativeNumber($containerDef['inspectInterval']) : null,
+            'pull' => $containerDef['pull'],
+            'privileged' => $containerDef['privileged'],
+            'stopTimeout' => $containerDef['stopTimeout'],
+            'stopSignal' => $containerDef['stopSignal'],
+            'inspectInterval' => $containerDef['inspectInterval'],
         ];
-
     }
 
     public function __destruct()
@@ -145,8 +162,8 @@ final class GenericContainerInstance implements ContainerInstance
         if ($this->running) {
             try {
                 $this->stop();
-            } catch (\Exception $e) {
-                // Destructors must not throw
+            } catch (DockerException $e) {
+            } catch (ProcessRuntimeException $e) {
             }
         }
     }
@@ -156,6 +173,7 @@ final class GenericContainerInstance implements ContainerInstance
      *
      * @param DockerClient $client
      * @psalm-param mixed $client
+     *
      * @return void
      */
     public function setDockerClient($client)
@@ -171,6 +189,9 @@ final class GenericContainerInstance implements ContainerInstance
     }
 
     /**
+     * Get the value of a container label.
+     *
+     * @param string $label the label name
      * @psalm-param mixed $label
      */
     public function getLabel($label)
@@ -214,10 +235,10 @@ final class GenericContainerInstance implements ContainerInstance
         }
         $url = parse_url($host);
         if (!isset($url['scheme'])) {
-            throw new \LogicException("Invalid URL: {$host}");
+            throw new LogicException("Invalid URL: {$host}");
         }
         if (!isset($url['host'])) {
-            throw new \LogicException("Invalid URL: {$host}");
+            throw new LogicException("Invalid URL: {$host}");
         }
 
         switch ($url['scheme']) {
@@ -241,15 +262,15 @@ final class GenericContainerInstance implements ContainerInstance
     }
 
     /**
+     * Get the host port mapped to an exposed container port.
+     *
+     * @param int|string $exposedPort the exposed container port
      * @psalm-param mixed $exposedPort
      */
     public function getMappedPort($exposedPort)
     {
-        self::ensureIntOrDigitString($exposedPort);
+        self::ensureIntOrDigitStringRange($exposedPort, 1, 65535);
 
-        if ($exposedPort < 1 || $exposedPort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $exposedPort = (int) $exposedPort;
 
         if (!isset($this->containerDef['ports'])) {
@@ -289,21 +310,30 @@ final class GenericContainerInstance implements ContainerInstance
     }
 
     /**
-     * @psalm-param mixed $value
+     * Store data associated with this container instance.
+     *
+     * @template T
+     *
+     * @param object $value the object to associate with this container
+     * @psalm-param T $value
+     *
      * @return void
      */
     public function setData($value)
     {
-        if (!is_object($value)) {
-            throw new \InvalidArgumentException('value must be an object');
-        }
+        self::ensureObject($value);
 
-        $this->data[get_class($value)] = $value;
+        $class = get_class($value);
+        $this->data[$class] = $value;
     }
 
     /**
+     * Get the data associated with the requested class.
+     *
      * @template T of object
-     * @param class-string<T> $class
+     *
+     * @param  class-string<T> $class
+     *
      * @return T
      */
     public function getData($class)
@@ -312,15 +342,19 @@ final class GenericContainerInstance implements ContainerInstance
 
         $value = $this->tryGetData($class);
         if ($value === null) {
-            throw new \LogicException("No data of type {$class} associated with the container");
+            throw new LogicException("No data of type {$class} associated with the container");
         }
 
         return $value;
     }
 
     /**
+     * Get associated data when an instance of the requested class is available.
+     *
      * @template T of object
-     * @param class-string<T> $class
+     *
+     * @param  class-string<T> $class
+     *
      * @return null|T
      */
     public function tryGetData($class)
@@ -328,7 +362,7 @@ final class GenericContainerInstance implements ContainerInstance
         self::ensureClassString($class);
 
         if (isset($this->data[$class])) {
-            return self::ensureInstanceOf($this->data[$class], $class);
+            return $this->data[$class];
         }
 
         return null;
@@ -365,7 +399,13 @@ final class GenericContainerInstance implements ContainerInstance
                     'timeout' => null,
                 ]);
                 $this->events = $output->getIterator();
-            } catch (\Exception $e) {
+            } catch (DockerException $e) {
+                $this->events = null;
+            } catch (InvalidValueException $e) {
+                $this->events = null;
+            } catch (UnexpectedValueException $e) {
+                $this->events = null;
+            } catch (ProcessRuntimeException $e) {
                 $this->events = null;
             }
         }
@@ -384,7 +424,13 @@ final class GenericContainerInstance implements ContainerInstance
                 if (!$this->events->valid()) {
                     $this->events = null;
                 }
-            } catch (\Exception $e) {
+            } catch (DockerException $e) {
+                $this->events = null;
+            } catch (InvalidValueException $e) {
+                $this->events = null;
+            } catch (UnexpectedValueException $e) {
+                $this->events = null;
+            } catch (ProcessRuntimeException $e) {
                 $this->events = null;
             }
         }
@@ -440,6 +486,8 @@ final class GenericContainerInstance implements ContainerInstance
     }
 
     /**
+     * Stop the container and release its resources.
+     *
      * @return void
      */
     public function stop()

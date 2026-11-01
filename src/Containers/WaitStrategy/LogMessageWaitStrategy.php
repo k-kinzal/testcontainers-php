@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use LogicException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
@@ -101,6 +102,7 @@ final class LogMessageWaitStrategy implements WaitStrategy
      *
      * @param ContainerInstance $instance the container instance to check
      * @psalm-param mixed $instance
+     *
      * @return void
      */
     public function waitUntilReady($instance)
@@ -112,7 +114,7 @@ final class LogMessageWaitStrategy implements WaitStrategy
         $client = DockerClientFactory::create();
         $output = $client->withTimeout($this->timeout)->logs($containerId, ['follow' => true]);
         if (!$output instanceof DockerFollowLogsOutput) {
-            throw new \LogicException('Expected DockerFollowLogsOutput instance: `'.get_class($output).'`');
+            throw new LogicException('Expected DockerFollowLogsOutput instance: `'.get_class($output).'`');
         }
         $iter = $output->getIterator();
         $pattern = '/'.str_replace('/', '\/', $this->pattern).'/';

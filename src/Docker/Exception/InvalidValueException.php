@@ -9,7 +9,7 @@ use Exception;
  *
  * @template T
  */
-final class InvalidValueException extends \Exception
+final class InvalidValueException extends Exception
 {
     /**
      * The context of the invalid value.

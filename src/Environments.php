@@ -20,16 +20,12 @@ final class Environments
 {
     /**
      * @param string $name
-     * @param array  $arguments
+     * @param array  $_arguments
      *
      * @return null|string
      */
-    public static function __callStatic($name, $arguments)
+    public static function __callStatic($name, $_arguments)
     {
-        if ($arguments !== []) {
-            throw new \InvalidArgumentException('Environment getters do not accept arguments');
-        }
-
         $value = getenv($name);
         if (is_string($value)) {
             return $value;

@@ -55,6 +55,7 @@ final class DockerClientFactory
      *      timeout?: null|float|int,
      *      procOptions?: array<string, string>
      *  } $config The configuration options for the Docker client
+     *
      * @return void
      */
     public static function config($config = [])

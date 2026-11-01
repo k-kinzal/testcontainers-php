@@ -6,6 +6,7 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -56,5 +57,26 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
 
         $strategy = new HttpWaitStrategy();
         $strategy->waitUntilReady($instance);
+    }
+
+    public function testWithTimeoutSecondsRejectsNegativeTimeout()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        (new HttpWaitStrategy())->withTimeoutSeconds(-1);
+    }
+
+    public function testWithRetryIntervalRejectsStringInterval()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        (new HttpWaitStrategy())->withRetryInterval('1');
+    }
+
+    public function testWithExpectedResponseCodeRejectsOutOfRangeCode()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        (new HttpWaitStrategy())->withExpectedResponseCode(99);
     }
 }

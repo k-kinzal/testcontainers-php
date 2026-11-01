@@ -76,14 +76,14 @@ trait MountSetting
      * @psalm-param mixed $containerPath
      * @psalm-param mixed $mode
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
+        self::ensureStringOrArrayOrInstanceOf($hostPath, Mount::class);
         self::ensureNullableString($containerPath);
-
         self::ensureNullableInstanceOf($mode, BindMode::class);
 
         if ($containerPath === null || $mode === null) {
@@ -91,20 +91,18 @@ trait MountSetting
                 $mount = Mount::fromString($hostPath);
             } elseif (is_array($hostPath)) {
                 $mount = Mount::fromArray($hostPath);
-            } elseif ($hostPath instanceof Mount) {
-                $mount = $hostPath;
             } else {
-                throw new \InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
+                $mount = $hostPath;
             }
-        } elseif (is_string($hostPath)) {
+        } else {
+            self::ensureString($hostPath);
+
             $mount = Mount::fromArray([
                 'type' => 'bind',
                 'source' => $hostPath,
                 'destination' => $containerPath,
                 'readonly' => $mode->isReadOnly(),
             ]);
-        } else {
-            throw new \InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
         }
 
         $this->mounts[] = $mount;
@@ -130,9 +128,9 @@ trait MountSetting
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      * @psalm-param mixed $mounts
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public function withFileSystemBinds($mounts)
     {
@@ -168,9 +166,9 @@ trait MountSetting
      * @psalm-param mixed $containerPath
      * @psalm-param mixed $mode
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public function withVolume($hostPath, $containerPath = null, $mode = null)
     {
@@ -195,9 +193,9 @@ trait MountSetting
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      * @psalm-param mixed $mounts
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public function withVolumes($mounts)
     {
@@ -226,9 +224,9 @@ trait MountSetting
      * @psalm-param mixed $containerPath
      * @psalm-param mixed $mode
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public function withMount($hostPath, $containerPath = null, $mode = null)
     {
@@ -253,9 +251,9 @@ trait MountSetting
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
      * @psalm-param mixed $mounts
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return self
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public function withMounts($mounts)
     {
@@ -268,17 +266,20 @@ trait MountSetting
      * This method returns an array of mounts, where each mount is an associative array
      * containing the host path, container path, and bind mode.
      *
-     * @throws InvalidFormatException if the mount format is invalid
-     *
      * @return Mount[] the mounts to be used for the container
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     protected function mounts()
     {
-        $mounts = self::ensureNullableStringList(static::$MOUNTS);
+        $mounts = static::$MOUNTS;
+        self::ensureNullableStringArray($mounts);
 
         if ($mounts === null || $mounts === []) {
-            $mounts = self::ensureNullableStringList(static::$VOLUMES);
+            $fallback = static::$VOLUMES;
+            self::ensureNullableStringArray($fallback);
 
+            $mounts = $fallback;
         }
         if ($mounts !== null && count($mounts) > 0) {
             $m = [];

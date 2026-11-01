@@ -66,7 +66,7 @@ trait NetworkAliasSetting
      */
     public function withNetworkAliases($aliases)
     {
-        $aliases = self::ensureStringList($aliases);
+        self::ensureStringArray($aliases);
 
         $this->networkAliases = $aliases;
 
@@ -81,7 +81,9 @@ trait NetworkAliasSetting
     protected function networkAliases()
     {
         if (static::$NETWORK_ALIASES !== null) {
-            return self::ensureStringList(static::$NETWORK_ALIASES);
+            self::ensureStringArray(static::$NETWORK_ALIASES);
+
+            return static::$NETWORK_ALIASES;
         }
         if ($this->networkAliases) {
             return $this->networkAliases;

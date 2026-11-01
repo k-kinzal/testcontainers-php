@@ -2,8 +2,9 @@
 
 namespace Testcontainers\Docker\Types;
 
-use Testcontainers\Utility\Ensure;
+use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents the object that generated a Docker event.
@@ -34,8 +35,6 @@ final class EventActor
     }
 
     /**
-     * Retrieve the value of a property.
-     *
      * @param string $name the name of the property to retrieve
      *
      * @return mixed
@@ -43,7 +42,7 @@ final class EventActor
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('EventActor::'.$name.' does not exist');
+            throw new LogicException('EventActor::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -55,9 +54,9 @@ final class EventActor
      * @param array $arr the decoded `Actor` object of a Docker event
      * @psalm-param mixed $arr
      *
-     * @throws InvalidValueException if the array does not contain the expected properties
-     *
      * @return self
+     *
+     * @throws InvalidValueException if the array does not contain the expected properties
      */
     public static function fromArray($arr)
     {
@@ -65,7 +64,6 @@ final class EventActor
 
         $actor = new self();
         $actor->id = self::ensureIdFromArray($arr);
-
         $actor->attributes = self::ensureAttributesFromArray($arr);
 
         return $actor;
@@ -91,9 +89,9 @@ final class EventActor
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'ID' property is missing or not a string
-     *
      * @return string
+     *
+     * @throws InvalidValueException if the 'ID' property is missing or not a string
      */
     private static function ensureIdFromArray($arr)
     {
@@ -118,9 +116,9 @@ final class EventActor
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'Attributes' property is not a map of strings
-     *
      * @return array<string, string>
+     *
+     * @throws InvalidValueException if the 'Attributes' property is not a map of strings
      */
     private static function ensureAttributesFromArray($arr)
     {

@@ -24,7 +24,6 @@ final class NetworkMode implements Stringable
      * No port mapping is required.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $HOST = 'host';
 
@@ -35,7 +34,6 @@ final class NetworkMode implements Stringable
      * Port mapping is typically used to expose container ports to the host.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $BRIDGE = 'bridge';
 
@@ -45,7 +43,6 @@ final class NetworkMode implements Stringable
      * In this mode, the container has no network access.
      *
      * @var string
-     * @psalm-var mixed
      */
     public static $NONE = 'none';
 
@@ -58,8 +55,6 @@ final class NetworkMode implements Stringable
     private $mode;
 
     /**
-     * Initializes a NetworkMode object.
-     *
      * @param string $mode The network mode (e.g., 'host', 'bridge', or a custom network name).
      * @psalm-param mixed $mode
      */

@@ -72,7 +72,12 @@ trait GeneralSetting
     private $name;
 
     /**
+     * Set the command to execute in the container.
+     *
+     * @param string $cmd the command to execute
      * @psalm-param mixed $cmd
+     *
+     * @return self
      */
     public function withCommand($cmd)
     {
@@ -84,11 +89,16 @@ trait GeneralSetting
     }
 
     /**
+     * Set the command and its arguments to execute in the container.
+     *
+     * @param string[] $commandParts the command followed by its arguments
      * @psalm-param mixed $commandParts
+     *
+     * @return self
      */
     public function withCommands($commandParts)
     {
-        $commandParts = self::ensureStringList($commandParts);
+        self::ensureStringArray($commandParts);
 
         $this->commands = $commandParts;
 
@@ -133,7 +143,8 @@ trait GeneralSetting
      */
     protected function commands()
     {
-        $commands = self::ensureNullableStringOrStringList(static::$COMMANDS);
+        $commands = static::$COMMANDS;
+        self::ensureNullableStringOrStringArray($commands);
 
         if ($commands !== null) {
             return $commands;

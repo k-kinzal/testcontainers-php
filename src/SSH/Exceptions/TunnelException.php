@@ -2,6 +2,11 @@
 
 namespace Testcontainers\SSH\Exceptions;
 
-final class TunnelException extends \RuntimeException
+use RuntimeException;
+
+/**
+ * An SSH tunnel could not be established or maintained.
+ */
+final class TunnelException extends RuntimeException
 {
 }
