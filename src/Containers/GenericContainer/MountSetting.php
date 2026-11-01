@@ -82,8 +82,8 @@ trait MountSetting
      */
     public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
+        self::ensureStringOrArrayOrInstanceOf($hostPath, Mount::class);
         self::ensureNullableString($containerPath);
-
         self::ensureNullableInstanceOf($mode, BindMode::class);
 
         if ($containerPath === null || $mode === null) {
@@ -91,20 +91,18 @@ trait MountSetting
                 $mount = Mount::fromString($hostPath);
             } elseif (is_array($hostPath)) {
                 $mount = Mount::fromArray($hostPath);
-            } elseif ($hostPath instanceof Mount) {
-                $mount = $hostPath;
             } else {
-                throw new \InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
+                $mount = $hostPath;
             }
-        } elseif (is_string($hostPath)) {
+        } else {
+            self::ensureString($hostPath);
+
             $mount = Mount::fromArray([
                 'type' => 'bind',
                 'source' => $hostPath,
                 'destination' => $containerPath,
                 'readonly' => $mode->isReadOnly(),
             ]);
-        } else {
-            throw new \InvalidArgumentException('Invalid hostPath provided. Expected a string, array, or Mount instance.');
         }
 
         $this->mounts[] = $mount;
@@ -274,11 +272,14 @@ trait MountSetting
      */
     protected function mounts()
     {
-        $mounts = self::ensureNullableStringList(static::$MOUNTS);
+        $mounts = static::$MOUNTS;
+        self::ensureNullableStringArray($mounts);
 
         if ($mounts === null || $mounts === []) {
-            $mounts = self::ensureNullableStringList(static::$VOLUMES);
+            $fallback = static::$VOLUMES;
+            self::ensureNullableStringArray($fallback);
 
+            $mounts = $fallback;
         }
         if ($mounts !== null && count($mounts) > 0) {
             $m = [];

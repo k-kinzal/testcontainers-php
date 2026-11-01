@@ -2,8 +2,9 @@
 
 namespace Testcontainers\Containers\Types;
 
-use Testcontainers\Utility\Ensure;
+use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -72,6 +73,8 @@ class Mount implements Stringable
     private $opt;
 
     /**
+     * Create a Mount instance.
+     *
      * @param null|string                $type
      * @param null|string                $source
      * @param string                     $destination
@@ -90,18 +93,16 @@ class Mount implements Stringable
     public function __construct($type, $source, $destination, $subpath, $readonly, $nocopy, $opt)
     {
         self::ensureNullableString($type);
-
         self::ensureNullableString($source);
-
         self::ensureNonEmptyString($destination);
-
         self::ensureNullableString($subpath);
+        self::ensureNullableBool($readonly);
+        self::ensureNullableBool($nocopy);
+        self::ensureNullableStringMap($opt);
 
-        $readonly = self::ensureBool($readonly === null ? false : $readonly);
-
-        $nocopy = self::ensureBool($nocopy === null ? false : $nocopy);
-
-        $opt = self::ensureStringMap($opt === null ? [] : $opt);
+        $readonly = $readonly === null ? false : $readonly;
+        $nocopy = $nocopy === null ? false : $nocopy;
+        $opt = $opt === null ? [] : $opt;
 
         $this->type = $type;
         $this->source = $source;
@@ -148,7 +149,7 @@ class Mount implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('Mount::'.$name.' does not exist');
+            throw new LogicException('Mount::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -231,31 +232,33 @@ class Mount implements Stringable
         $opt = [];
         foreach ($parts as $part) {
             $subParts = explode('=', $part, 2);
-            if (in_array($subParts[0], ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath'], true) && !isset($subParts[1])) {
-                throw new InvalidFormatException($part, 'key=value');
-            }
+            self::ensureOneOf($subParts[0], ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath', 'readonly', 'ro', 'volume-nocopy', 'volume-opt']);
 
             switch ($subParts[0]) {
                 case 'type':
-                    $type = self::ensureString(isset($subParts[1]) ? $subParts[1] : null);
+                    $type = isset($subParts[1]) ? $subParts[1] : null;
+                    self::ensureString($type);
 
                     break;
 
                 case 'source':
                 case 'src':
-                    $source = self::ensureString(isset($subParts[1]) ? $subParts[1] : null);
+                    $source = isset($subParts[1]) ? $subParts[1] : null;
+                    self::ensureString($source);
 
                     break;
 
                 case 'destination':
                 case 'dst':
                 case 'target':
-                    $destination = self::ensureString(isset($subParts[1]) ? $subParts[1] : null);
+                    $destination = isset($subParts[1]) ? $subParts[1] : null;
+                    self::ensureString($destination);
 
                     break;
 
                 case 'volume-subpath':
-                    $subpath = self::ensureString(isset($subParts[1]) ? $subParts[1] : null);
+                    $subpath = isset($subParts[1]) ? $subParts[1] : null;
+                    self::ensureString($subpath);
 
                     break;
 
@@ -272,16 +275,11 @@ class Mount implements Stringable
 
                 case 'volume-opt':
                     // TODO: Implement volume-opt on Mount
-                    throw new \LogicException('unimplemented');
-
-                default:
-                    throw new InvalidFormatException($subParts[0], ['type', 'source', 'src', 'destination', 'dst', 'target', 'volume-subpath', 'readonly', 'ro', 'volume-nocopy', 'volume-opt']);
+                    throw new LogicException('unimplemented');
             }
         }
 
-        if ($destination === null) {
-            throw new InvalidFormatException($v, 'type=<type>[,src=<volume-name>],dst=<mount-path>[,<key>=<value>...]');
-        }
+        self::ensureNonEmptyString($destination);
 
         return new self($type, $source, $destination, $subpath, $readonly, $nocopy, $opt);
     }
@@ -310,48 +308,30 @@ class Mount implements Stringable
     {
         self::ensureArray($v);
 
-        $type = self::ensureNullableString(isset($v['type']) ? $v['type'] : null);
+        $v += [
+            'type' => null, 'source' => null, 'src' => null,
+            'destination' => null, 'dst' => null, 'target' => null,
+            'subpath' => null, 'readonly' => false, 'ro' => false,
+            'nocopy' => false, 'opt' => [],
+        ];
+        self::ensureNullableString($v['type']);
+        self::ensureNullableString($v['source']);
+        self::ensureNullableString($v['src']);
+        self::ensureNullableString($v['destination']);
+        self::ensureNullableString($v['dst']);
+        self::ensureNullableString($v['target']);
+        self::ensureNullableString($v['subpath']);
+        self::ensureBool($v['readonly']);
+        self::ensureBool($v['ro']);
+        self::ensureBool($v['nocopy']);
+        self::ensureStringMap($v['opt']);
 
-        $source = self::ensureNullableString(isset($v['source']) ? $v['source'] : null);
+        $source = $v['source'] === null ? $v['src'] : $v['source'];
+        $destination = $v['destination'] === null ? $v['dst'] : $v['destination'];
+        $destination = $destination === null ? $v['target'] : $destination;
+        self::ensureNonEmptyString($destination);
 
-        if ($source === null) {
-            $source = self::ensureNullableString(isset($v['src']) ? $v['src'] : null);
-
-        }
-        $destination = self::ensureNullableString(isset($v['destination']) ? $v['destination'] : null);
-
-        if ($destination === null) {
-            $destination = self::ensureNullableString(isset($v['dst']) ? $v['dst'] : null);
-
-        }
-        if ($destination === null) {
-            $destination = self::ensureNullableString(isset($v['target']) ? $v['target'] : null);
-
-        }
-        if ($destination === null) {
-            throw new \InvalidArgumentException('Invalid mount configuration: destination is required');
-        }
-        $subpath = self::ensureNullableString(isset($v['subpath']) ? $v['subpath'] : null);
-
-        $readonly = self::ensureBool(isset($v['readonly']) ? $v['readonly'] : false);
-
-        if ($readonly === false) {
-            $readonly = self::ensureBool(isset($v['ro']) ? $v['ro'] : false);
-
-        }
-        $nocopy = self::ensureBool(isset($v['nocopy']) ? $v['nocopy'] : false);
-
-        $opt = self::ensureStringMap(isset($v['opt']) ? $v['opt'] : []);
-
-        return new self(
-            $type,
-            $source,
-            $destination,
-            $subpath,
-            $readonly,
-            $nocopy,
-            $opt
-        );
+        return new self($v['type'], $source, $destination, $v['subpath'], $v['readonly'] || $v['ro'], $v['nocopy'], $v['opt']);
     }
 
     /**

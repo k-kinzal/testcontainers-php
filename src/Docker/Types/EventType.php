@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Docker\Types;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -110,16 +110,14 @@ class EventType implements Stringable
     private $type;
 
     /**
+     * Create a EventType instance.
+     *
      * @param string $type
      * @psalm-param mixed $type
      */
     public function __construct($type)
     {
-        self::ensureString($type);
-
-        if (!in_array($type, self::values(), true)) {
-            throw new InvalidFormatException($type, self::values());
-        }
+        self::ensureOneOf($type, self::values());
 
         $this->type = $type;
     }
@@ -251,11 +249,7 @@ class EventType implements Stringable
      */
     public static function fromString($type)
     {
-        self::ensureString($type);
-
-        if (!in_array($type, self::values(), true)) {
-            throw new InvalidFormatException($type, self::values());
-        }
+        self::ensureOneOf($type, self::values());
 
         return new self($type);
     }
@@ -267,7 +261,7 @@ class EventType implements Stringable
      */
     public static function values()
     {
-        return self::ensureStringList([
+        $values = [
             static::$BUILDER,
             static::$CONFIG,
             static::$CONTAINER,
@@ -279,7 +273,10 @@ class EventType implements Stringable
             static::$SECRET,
             static::$SERVICE,
             static::$VOLUME,
-        ]);
+        ];
+        self::ensureStringArray($values);
+
+        return $values;
     }
 
     /**

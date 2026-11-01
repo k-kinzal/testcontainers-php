@@ -5,6 +5,9 @@ namespace Testcontainers\Logger\ConsoleLogger;
 use Psr\Log\AbstractLogger;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
+use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
+use Testcontainers\Utility\Stringable;
 
 /**
  * A simple PSR-3 logger that writes formatted messages to a stream.
@@ -20,7 +23,11 @@ use Psr\Log\LogLevel;
  */
 class ConsoleLogger56 extends AbstractLogger
 {
+    use Ensure;
+
     /**
+     * The severity of each supported PSR-3 log level.
+     *
      * @var array<string, int>
      */
     private static $LOG_LEVELS = array(
@@ -35,16 +42,22 @@ class ConsoleLogger56 extends AbstractLogger
     );
 
     /**
+     * The output stream for formatted log messages.
+     *
      * @var resource
      */
     private $stream;
 
     /**
+     * The minimum log level to write to the output stream.
+     *
      * @var string
      */
     private $minLevel;
 
     /**
+     * Write messages at or above the given level to the supplied stream.
+     *
      * @param resource|null $stream   Stream to write to. Defaults to STDERR.
      * @param string        $minLevel Minimum PSR-3 log level to output. Defaults to DEBUG (all messages).
      * @psalm-param mixed $stream
@@ -52,32 +65,32 @@ class ConsoleLogger56 extends AbstractLogger
      */
     public function __construct($stream = null, $minLevel = LogLevel::DEBUG)
     {
+        self::ensureNullableStream($stream);
+        self::ensureOneOf($minLevel, array_keys(self::$LOG_LEVELS));
+
         if ($stream === null) {
             $stream = defined('STDERR') ? STDERR : fopen('php://stderr', 'w');
+            self::ensureStream($stream);
         }
-        if (!is_resource($stream) || get_resource_type($stream) !== 'stream') {
-            throw new InvalidArgumentException('stream must be an open stream resource');
-        }
+
         $this->stream = $stream;
-
-        if (!is_string($minLevel) || !isset(self::$LOG_LEVELS[$minLevel])) {
-            throw new InvalidArgumentException(sprintf('Invalid minimum log level: %s', var_export($minLevel, true)));
-        }
-
         $this->minLevel = $minLevel;
     }
 
     /**
      * Logs with an arbitrary level.
      *
-     * @param mixed  $level
-     * @param string|\Testcontainers\Utility\Stringable $message
-     * @param array  $context
+     * @param string            $level
+     * @param string|Stringable $message
+     * @param array             $context
+     * @psalm-param mixed $level
      */
     public function log($level, $message, array $context = array())
     {
-        if (!is_string($level) || !isset(self::$LOG_LEVELS[$level])) {
-            throw new InvalidArgumentException(sprintf('Invalid log level: %s', var_export($level, true)));
+        try {
+            self::ensureOneOf($level, array_keys(self::$LOG_LEVELS));
+        } catch (InvalidFormatException $e) {
+            throw new InvalidArgumentException(sprintf('Invalid log level: %s', var_export($level, true)), 0, $e);
         }
 
         if (self::$LOG_LEVELS[$level] < self::$LOG_LEVELS[$this->minLevel]) {

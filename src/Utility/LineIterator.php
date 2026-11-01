@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Utility;
 
+use Generator;
 use Symfony\Component\Process\Process;
 
 /**
@@ -20,6 +21,8 @@ class LineIterator
     private $process;
 
     /**
+     * Read complete lines from the supplied process.
+     *
      * @param Process $process the process to read the output from
      * @psalm-param mixed $process
      */
@@ -40,7 +43,7 @@ class LineIterator
      * @param int $flags a bit field of Process::ITER_* flags
      * @psalm-param mixed $flags
      *
-     * @return \Generator<string, null|string> an iterator to traverse the lines without newlines
+     * @return Generator<string, null|string> an iterator to traverse the lines without newlines
      */
     public function getIterator($flags = 0)
     {

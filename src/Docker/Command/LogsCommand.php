@@ -39,11 +39,9 @@ trait LogsCommand
 
         if (!$containerId instanceof ContainerId) {
             self::ensureNonEmptyString($containerId);
-
         }
         if (isset($options['follow'])) {
             self::ensureBool($options['follow']);
-
         }
 
         $follow = isset($options['follow']) && $options['follow'] === true;

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\NetworkModeSetting;
 use Testcontainers\Containers\Types\NetworkMode;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -44,6 +45,14 @@ class NetworkModeSettingTest extends TestCase
 
         $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
+
+    public function testStartRejectsInvalidNetworkMode()
+    {
+        $container = new NetworkModeSettingWithInvalidNetworkModeContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
@@ -51,4 +60,9 @@ class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
     protected static $NETWORK_MODE = 'none';
+}
+
+class NetworkModeSettingWithInvalidNetworkModeContainer extends GenericContainer
+{
+    protected static $NETWORK_MODE = [];
 }

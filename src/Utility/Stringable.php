@@ -8,6 +8,8 @@ namespace Testcontainers\Utility;
 interface Stringable
 {
     /**
+     * Return the string representation of this value.
+     *
      * @return string
      */
     public function __toString();

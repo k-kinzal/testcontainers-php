@@ -61,12 +61,9 @@ trait RunCommand
     public function run($image, $command = null, $args = [], $options = [])
     {
         self::ensureStringKeyedArray($options);
-
         self::ensureNonEmptyString($image);
-
         self::ensureNullableString($command);
-
-        $args = self::ensureStringList($args);
+        self::ensureStringArray($args);
 
         $process = $this->execute(
             'run',

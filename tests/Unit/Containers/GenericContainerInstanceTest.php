@@ -443,9 +443,9 @@ class GenericContainerInstanceTest extends TestCase
     }
 
     /**
-     * @param string   $status  the status of the container returned by `docker inspect`
-     * @param int      $count   the number of times `docker inspect` has been executed
-     * @param string[] $actions the actions of the events emitted every two seconds
+     * @param string   $status
+     * @param int      $count
+     * @param string[] $actions
      *
      * @return DockerClient
      */
@@ -483,7 +483,7 @@ class GenericContainerInstanceTest extends TestCase
     }
 
     /**
-     * @param string[] $actions the actions of the events emitted every two seconds
+     * @param string[] $actions
      *
      * @return DockerEventsOutput
      */

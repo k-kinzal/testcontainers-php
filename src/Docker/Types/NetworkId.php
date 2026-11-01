@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
@@ -23,17 +24,19 @@ class NetworkId implements Stringable
     private $data;
 
     /**
+     * Create a NetworkId instance.
+     *
      * @param string $v
      * @psalm-param mixed $v
      *
-     * @throws \InvalidArgumentException if the network ID is not a valid 64-character hexadecimal string
+     * @throws InvalidFormatException if the network ID is not a valid 64-character hexadecimal string
      */
     public function __construct($v)
     {
         self::ensureString($v);
 
         if (!self::isValid($v)) {
-            throw new \LogicException('Invalid network ID: `'.$v.'`');
+            throw new InvalidFormatException($v, '12 or 64 hexadecimal characters');
         }
 
         $this->data = $v;
@@ -73,7 +76,7 @@ class NetworkId implements Stringable
      * @param string $v the network ID
      * @psalm-param mixed $v
      *
-     * @throws \InvalidArgumentException if the network ID is not valid
+     * @throws InvalidFormatException if the network ID is not valid
      *
      * @return NetworkId the NetworkId object
      */
@@ -82,7 +85,7 @@ class NetworkId implements Stringable
         self::ensureString($v);
 
         if (!self::isValid($v)) {
-            throw new \InvalidArgumentException('Invalid network ID: `'.$v.'`');
+            throw new InvalidFormatException($v, '12 or 64 hexadecimal characters');
         }
 
         return new self($v);

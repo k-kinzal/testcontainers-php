@@ -66,7 +66,6 @@ trait BuildCommand
     public function build($path, $options = [])
     {
         self::ensureStringKeyedArray($options);
-
         self::ensureNonEmptyString($path);
 
         $process = $this->execute('build', null, [$path], $options);

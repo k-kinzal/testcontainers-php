@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Containers\Types;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -46,6 +46,8 @@ class ImagePullPolicy implements Stringable
     private $policy;
 
     /**
+     * Create a ImagePullPolicy instance.
+     *
      * @param string $policy
      * @psalm-param mixed $policy
      */
@@ -53,11 +55,9 @@ class ImagePullPolicy implements Stringable
     {
         self::ensureString($policy);
 
-        $values = self::ensureStringList([static::$ALWAYS, static::$MISSING, static::$NEVER]);
-
-        if (!in_array($policy, $values, true)) {
-            throw new InvalidFormatException($policy, $values);
-        }
+        $values = [static::$ALWAYS, static::$MISSING, static::$NEVER];
+        self::ensureStringArray($values);
+        self::ensureOneOf($policy, $values);
 
         $this->policy = $policy;
     }
@@ -111,11 +111,9 @@ class ImagePullPolicy implements Stringable
     {
         self::ensureString($policy);
 
-        $values = self::ensureStringList([static::$ALWAYS, static::$MISSING, static::$NEVER]);
-
-        if (!in_array($policy, $values, true)) {
-            throw new InvalidFormatException($policy, $values);
-        }
+        $values = [static::$ALWAYS, static::$MISSING, static::$NEVER];
+        self::ensureStringArray($values);
+        self::ensureOneOf($policy, $values);
 
         return new self($policy);
     }

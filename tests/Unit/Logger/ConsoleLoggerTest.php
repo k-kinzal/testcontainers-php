@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Logger\ConsoleLogger;
 
 /**
@@ -133,14 +134,14 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(strpos($output, '"nested":{"a":1}') !== false);
     }
 
-    public function testInvalidMinLevelThrowsException()
+    public function test__constructRejectsInvalidMinimumLevel()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidFormatException::class);
 
         new ConsoleLogger($this->createStream(), 'invalid');
     }
 
-    public function testInvalidLogLevelThrowsException()
+    public function testLogRejectsInvalidLevel()
     {
         $this->expectException(InvalidArgumentException::class);
 

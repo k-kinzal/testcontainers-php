@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -47,6 +47,8 @@ class ConflictBehavior implements Stringable
     private $action;
 
     /**
+     * Create a ConflictBehavior instance.
+     *
      * @param string $action
      * @psalm-param mixed $action
      */
@@ -54,11 +56,9 @@ class ConflictBehavior implements Stringable
     {
         self::ensureString($action);
 
-        $values = self::ensureStringList([static::$RETRY, static::$FAIL]);
-
-        if (!in_array($action, $values, true)) {
-            throw new InvalidFormatException($action, $values);
-        }
+        $values = [static::$RETRY, static::$FAIL];
+        self::ensureStringArray($values);
+        self::ensureOneOf($action, $values);
 
         $this->action = $action;
     }
@@ -108,11 +108,9 @@ class ConflictBehavior implements Stringable
     {
         self::ensureString($action);
 
-        $values = self::ensureStringList([static::$RETRY, static::$FAIL]);
-
-        if (!in_array($action, $values, true)) {
-            throw new InvalidFormatException($action, $values);
-        }
+        $values = [static::$RETRY, static::$FAIL];
+        self::ensureStringArray($values);
+        self::ensureOneOf($action, $values);
 
         return new self($action);
     }

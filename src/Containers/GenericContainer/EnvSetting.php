@@ -64,7 +64,6 @@ trait EnvSetting
     public function withEnv($key, $value)
     {
         self::ensureString($key);
-
         self::ensureString($value);
 
         $this->env[$key] = $value;
@@ -101,10 +100,14 @@ trait EnvSetting
     protected function env()
     {
         if (static::$ENVIRONMENTS !== null) {
-            return self::ensureStringMap(static::$ENVIRONMENTS);
+            self::ensureStringMap(static::$ENVIRONMENTS);
+
+            return static::$ENVIRONMENTS;
         }
         if (static::$ENV !== null) {
-            return self::ensureStringMap(static::$ENV);
+            self::ensureStringMap(static::$ENV);
+
+            return static::$ENV;
         }
         if ($this->env) {
             return $this->env;

@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
+use LogicException;
 use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
@@ -50,7 +51,12 @@ class MySQLDSN implements DSN, Stringable
     }
 
     /**
+     * Set the host used by the connection.
+     *
+     * @param string $host the host
      * @psalm-param mixed $host
+     *
+     * @return static
      */
     public function withHost($host)
     {
@@ -67,15 +73,17 @@ class MySQLDSN implements DSN, Stringable
     }
 
     /**
+     * Set the port used by the connection.
+     *
+     * @param int|string $port the port
      * @psalm-param mixed $port
+     *
+     * @return static
      */
     public function withPort($port)
     {
-        self::ensureIntOrDigitString($port);
+        self::ensureIntOrDigitStringRange($port, 1, 65535);
 
-        if ($port < 1 || $port > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $port = (int) $port;
 
         $this->port = $port;
@@ -125,7 +133,7 @@ class MySQLDSN implements DSN, Stringable
     public function toString()
     {
         if ($this->host === null) {
-            throw new \LogicException('Host is required');
+            throw new LogicException('Host is required');
         }
         $dsn = sprintf('mysql:host=%s;', $this->host);
         if ($this->port !== null) {

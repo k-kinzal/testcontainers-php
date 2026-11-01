@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\HostSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -62,8 +63,8 @@ class HostSettingTest extends TestCase
 
     public function testStartWithInvalidCall()
     {
-        $this->expectExceptionMessage('Invalid arguments: withExtraHost(`{"hostname":"example.com","ipAddress":"127.0.0.1"}`, `"192.168.0.1"`)');
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected null');
+        $this->expectException(UnexpectedValueException::class);
 
         (new GenericContainer('alpine:latest'))
             ->withExtraHost(['hostname' => 'example.com', 'ipAddress' => '127.0.0.1'], '192.168.0.1')
@@ -85,6 +86,36 @@ class HostSettingTest extends TestCase
 
         $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
     }
+
+    /**
+     * @dataProvider provideWithExtraHostsInvalidInputs
+     * @param mixed $extraHosts
+     */
+    public function testWithExtraHostsRejectsInvalidInputs($extraHosts)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withExtraHosts($extraHosts);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithExtraHostsInvalidInputs()
+    {
+        return [
+            'case 1' => [false],
+        ];
+    }
+
+    public function testStartRejectsInvalidExtraHosts()
+    {
+        $container = new HostSettingWithInvalidExtraHostsContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class HostSettingWithExtraHostsContainer extends GenericContainer
@@ -99,4 +130,9 @@ class HostSettingWithHostsContainer extends GenericContainer
     public static $HOSTS = [
         ['hostname' => 'example.org', 'ipAddress' => '127.0.0.1'],
     ];
+}
+
+class HostSettingWithInvalidExtraHostsContainer extends GenericContainer
+{
+    protected static $EXTRA_HOSTS = false;
 }

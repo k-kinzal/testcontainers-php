@@ -3,7 +3,6 @@
 namespace Tests\Unit\Docker\Command;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Docker\Command\BaseCommand;
 use Testcontainers\Docker\DockerClient;
 
 /**
@@ -13,16 +12,17 @@ use Testcontainers\Docker\DockerClient;
  */
 class BaseCommandTest extends TestCase
 {
-    public function testExecutesWithProcessOptions()
+    public function testWithProcOptionsExecutesCommand()
     {
-        $command = (new BaseCommandHarness())
+        $client = (new DockerClient())
             ->withCommand(PHP_BINARY)
+            ->withGlobalOptions(['version' => true])
             ->withProcOptions(['blocking_pipes' => false])
         ;
+        $output = $client->version();
 
-        $process = $command->execute('-r', null, ['echo "options-ok";']);
-
-        $this->assertSame('options-ok', $process->getOutput());
+        $this->assertSame(0, $output->getExitCode());
+        $this->assertSame(0, strpos($output->getOutput(), 'PHP '));
     }
 
     public function testGetHostFromDefault()
@@ -35,7 +35,7 @@ class BaseCommandTest extends TestCase
 
             $this->assertSame('unix:///var/run/docker.sock', $client->getHost());
         } finally {
-            putenv('DOCKER_HOST='.$backup);
+            putenv($backup === false ? 'DOCKER_HOST' : 'DOCKER_HOST='.$backup);
         }
     }
 
@@ -71,14 +71,7 @@ class BaseCommandTest extends TestCase
 
             $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
         } finally {
-            putenv('DOCKER_HOST='.$backup);
+            putenv($backup === false ? 'DOCKER_HOST' : 'DOCKER_HOST='.$backup);
         }
-    }
-}
-
-class BaseCommandHarness
-{
-    use BaseCommand {
-        execute as public;
     }
 }

@@ -6,6 +6,7 @@ namespace Tests\Unit\Containers\Types;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\Mount;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -121,5 +122,12 @@ class MountTest extends TestCase
         );
 
         $this->assertSame('type=bind,source=/host/path,destination=/container/path,volume-subpath=/sub/path,readonly,volume-nocopy', (string) $mount);
+    }
+
+    public function testFromArrayRejectsStringReadonlyFlag()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        Mount::fromArray(['target' => '/data', 'readonly' => 'false']);
     }
 }

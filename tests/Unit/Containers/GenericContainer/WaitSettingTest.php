@@ -5,9 +5,11 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\WaitSetting;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -40,6 +42,28 @@ class WaitSettingTest extends TestCase
         $container->start();
 
         $this->assertTrue(true);
+    }
+
+    /**
+     * @dataProvider provideWithWaitStrategyInvalidInputs
+     * @param mixed $waitStrategy
+     */
+    public function testWithWaitStrategyRejectsInvalidInputs($waitStrategy)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withWaitStrategy($waitStrategy);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithWaitStrategyInvalidInputs()
+    {
+        return [
+            'case 1' => [new stdClass()],
+        ];
     }
 }
 

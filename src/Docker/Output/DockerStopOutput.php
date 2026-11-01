@@ -24,6 +24,8 @@ class DockerStopOutput extends DockerOutput
     private $containerIds;
 
     /**
+     * Read the identifiers returned by the stop command.
+     *
      * @param Process $process
      */
     public function __construct($process)

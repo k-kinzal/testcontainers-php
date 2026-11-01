@@ -14,18 +14,18 @@ class PortProbeTcp implements PortProbe
     use Ensure;
 
     /**
+     * Check whether the endpoint is available.
+     *
+     * @param string     $host the host
+     * @param int|string $port the port
      * @psalm-param mixed $host
      * @psalm-param mixed $port
      */
     public function available($host, $port)
     {
         self::ensureString($host);
+        self::ensureIntOrDigitStringRange($port, 1, 65535);
 
-        self::ensureIntOrDigitString($port);
-
-        if ($port < 1 || $port > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $port = (int) $port;
 
         $fp = @fsockopen($host, $port);

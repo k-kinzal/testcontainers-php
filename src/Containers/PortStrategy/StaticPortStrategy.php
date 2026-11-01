@@ -21,16 +21,15 @@ class StaticPortStrategy implements PortStrategy
     private $port;
 
     /**
+     * Create a StaticPortStrategy instance.
+     *
      * @param int $port the port to return
      * @psalm-param mixed $port
      */
     public function __construct($port)
     {
-        self::ensureIntOrDigitString($port);
+        self::ensureIntOrDigitStringRange($port, 1, 65535);
 
-        if ($port < 1 || $port > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $port = (int) $port;
 
         $this->port = $port;

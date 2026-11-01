@@ -38,6 +38,8 @@ trait SSHPortForwardSetting
     protected static $SSH_PORT_FORWARD;
 
     /**
+     * The SSH connection settings, or whether to use the default connection.
+     *
      * @var null|array{
      *                  sshUser?: null|string,
      *                  sshHost: string,
@@ -61,17 +63,12 @@ trait SSHPortForwardSetting
     public function withSSHPortForward($sshHost, $sshPort = null, $sshUser = null)
     {
         self::ensureNonEmptyString($sshHost);
-
         self::ensureNullableString($sshUser);
 
         if ($sshPort !== null) {
-            self::ensureIntOrDigitString($sshPort);
+            self::ensureIntOrDigitStringRange($sshPort, 1, 65535);
 
-            if ($sshPort < 1 || $sshPort > 65535) {
-                throw new \InvalidArgumentException('Port must be between 1 and 65535');
-            }
             $sshPort = (int) $sshPort;
-
         }
 
         $this->sshPortForward = [
@@ -94,7 +91,8 @@ trait SSHPortForwardSetting
      */
     protected function sshPortForward()
     {
-        $sshPortForward = self::ensureNullableBoolOrString(static::$SSH_PORT_FORWARD);
+        $sshPortForward = static::$SSH_PORT_FORWARD;
+        self::ensureNullableBoolOrString($sshPortForward);
 
         if ($sshPortForward !== null) {
             if (is_bool($sshPortForward)) {
@@ -142,13 +140,9 @@ trait SSHPortForwardSetting
             $parts = explode(':', $parts[1], 2);
             if (count($parts) === 2) {
                 $sshHost = $parts[0];
-                self::ensureDigitString($parts[1]);
+                self::ensureDigitStringRange($parts[1], 1, 65535);
 
-                if ($parts[1] < 1 || $parts[1] > 65535) {
-                    throw new \InvalidArgumentException('Port must be between 1 and 65535');
-                }
                 $sshPort = (int) $parts[1];
-
             } else {
                 $sshHost = $parts[0];
                 $sshPort = null;
@@ -158,13 +152,9 @@ trait SSHPortForwardSetting
             $parts = explode(':', $s, 2);
             if (count($parts) === 2) {
                 $sshHost = $parts[0];
-                self::ensureDigitString($parts[1]);
+                self::ensureDigitStringRange($parts[1], 1, 65535);
 
-                if ($parts[1] < 1 || $parts[1] > 65535) {
-                    throw new \InvalidArgumentException('Port must be between 1 and 65535');
-                }
                 $sshPort = (int) $parts[1];
-
             } else {
                 $sshHost = $s;
                 $sshPort = null;
@@ -175,7 +165,6 @@ trait SSHPortForwardSetting
 
         if ($sshUser !== null) {
             self::ensureNonEmptyString($sshUser);
-
         }
 
         return [

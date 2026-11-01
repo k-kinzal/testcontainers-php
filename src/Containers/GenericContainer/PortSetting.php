@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\GenericContainer;
 
+use LogicException;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
 use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
@@ -94,11 +95,8 @@ trait PortSetting
      */
     public function withExposedPort($port)
     {
-        self::ensureIntOrDigitString($port);
+        self::ensureIntOrDigitStringRange($port, 1, 65535);
 
-        if ($port < 1 || $port > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $port = (int) $port;
 
         $this->exposedPorts[] = $port;
@@ -146,11 +144,8 @@ trait PortSetting
 
         $normalizedPorts = [];
         foreach (array_keys($ports) as $key) {
-            self::ensureIntOrDigitString($ports[$key]);
+            self::ensureIntOrDigitStringRange($ports[$key], 1, 65535);
 
-            if ($ports[$key] < 1 || $ports[$key] > 65535) {
-                throw new \InvalidArgumentException('Port must be between 1 and 65535');
-            }
             $normalizedPorts[] = (int) $ports[$key];
         }
         $ports = $normalizedPorts;
@@ -217,24 +212,27 @@ trait PortSetting
     protected function exposedPorts()
     {
         if (static::$EXPOSED_PORTS !== null) {
-            $ports = self::ensureArray(static::$EXPOSED_PORTS);
+            $defaultPorts = static::$EXPOSED_PORTS;
+            self::ensureArray($defaultPorts);
 
+            $ports = $defaultPorts;
         } elseif (static::$EXPOSE !== null) {
-            $ports = self::ensureArray(static::$EXPOSE);
+            $expose = static::$EXPOSE;
+            self::ensureArray($expose);
 
+            $ports = $expose;
         } elseif (static::$PORTS !== null) {
-            $ports = self::ensureArray(static::$PORTS);
+            $portsAlias = static::$PORTS;
+            self::ensureArray($portsAlias);
 
+            $ports = $portsAlias;
         } else {
             $ports = $this->exposedPorts;
         }
         $normalizedPorts = [];
         foreach (array_keys($ports) as $key) {
-            self::ensureIntOrDigitString($ports[$key]);
+            self::ensureIntOrDigitStringRange($ports[$key], 1, 65535);
 
-            if ($ports[$key] < 1 || $ports[$key] > 65535) {
-                throw new \InvalidArgumentException('Port must be between 1 and 65535');
-            }
             $normalizedPorts[] = (int) $ports[$key];
         }
 
@@ -257,11 +255,12 @@ trait PortSetting
             $this->registerPortStrategy($this->portStrategyProvider);
         }
         if (static::$PORT_STRATEGY !== null) {
-            $name = self::ensureString(static::$PORT_STRATEGY);
+            $name = static::$PORT_STRATEGY;
+            self::ensureString($name);
 
             $strategy = $this->portStrategyProvider->get($name);
             if (!$strategy) {
-                throw new \LogicException('Port strategy not found: '.$name);
+                throw new LogicException('Port strategy not found: '.$name);
             }
 
             return $strategy;
@@ -303,7 +302,7 @@ trait PortSetting
     /**
      * Register a port strategy.
      *
-     * @param PortStrategyProvider $provider the port strategy provider
+     * @param  PortStrategyProvider $provider the port strategy provider
      * @return void
      */
     protected function registerPortStrategy($provider)
@@ -311,7 +310,7 @@ trait PortSetting
         try {
             $provider->register('random', new RandomPortStrategy());
         } catch (AlreadyExistsPortStrategyException $e) {
-            throw new \LogicException('Port strategy already registered: random', 0, $e);
+            throw new LogicException('Port strategy already registered: random', 0, $e);
         }
     }
 }

@@ -24,6 +24,8 @@ class DockerNetworkCreateOutput extends DockerOutput
     private $networkId;
 
     /**
+     * Read the identifier of the network created by Docker.
+     *
      * @param Process $process the Symfony Process instance that executed the `docker network create` command
      */
     public function __construct($process)

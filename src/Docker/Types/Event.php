@@ -2,9 +2,10 @@
 
 namespace Testcontainers\Docker\Types;
 
-use Testcontainers\Utility\Ensure;
+use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents an event emitted by the Docker daemon.
@@ -101,7 +102,7 @@ class Event
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('Event::'.$name.' does not exist');
+            throw new LogicException('Event::'.$name.' does not exist');
         }
 
         return $this->{$name};

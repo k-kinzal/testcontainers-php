@@ -69,7 +69,9 @@ trait StopTimeoutSetting
     protected function stopTimeout()
     {
         if (static::$STOP_TIMEOUT !== null) {
-            return self::ensureIntRange(static::$STOP_TIMEOUT, -1);
+            self::ensureIntRange(static::$STOP_TIMEOUT, -1);
+
+            return static::$STOP_TIMEOUT;
         }
 
         return $this->stopTimeout;

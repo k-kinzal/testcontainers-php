@@ -2,15 +2,17 @@
 
 namespace Testcontainers;
 
-use Testcontainers\Utility\Ensure;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Exceptions\ContainerStopException;
 use Testcontainers\Lifecycle\ContainerReaper;
 use Testcontainers\Lifecycle\ShutdownHandler;
 use Testcontainers\Logger\LoggerFactory;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Class Testcontainers.
@@ -84,10 +86,7 @@ class Testcontainers
      */
     public static function setLogger($logger)
     {
-        if ($logger !== null) {
-            self::ensureInstanceOf($logger, LoggerInterface::class);
-
-        }
+        self::ensureNullableInstanceOf($logger, LoggerInterface::class);
 
         self::$logger = $logger;
     }
@@ -107,12 +106,12 @@ class Testcontainers
      */
     public static function run($containerClass)
     {
-        if (is_string($containerClass) && is_a($containerClass, Container::class, true)) {
+        self::ensureClassStringOrInstanceOf($containerClass, Container::class);
+
+        if (is_string($containerClass)) {
             $container = new $containerClass();
-        } elseif ($containerClass instanceof Container) {
-            $container = $containerClass;
         } else {
-            throw new \LogicException('The container class must be a valid class name or an instance of `Container`');
+            $container = $containerClass;
         }
 
         $identifier = is_string($containerClass)
@@ -170,7 +169,7 @@ class Testcontainers
             try {
                 $instance->stop();
                 $stopped[] = $key;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $errors[$key] = $e;
             }
         }
@@ -178,8 +177,7 @@ class Testcontainers
             unset(self::$instances[$key]);
         }
         if (!empty($errors)) {
-            throw new \Testcontainers\Exceptions\ContainerStopException($errors);
+            throw new ContainerStopException($errors);
         }
     }
-
 }

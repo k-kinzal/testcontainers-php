@@ -2,11 +2,13 @@
 
 namespace Testcontainers\Containers\Types;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
+ * The read-only or read-write access mode for a bind mount.
+ *
  * @api
  */
 class BindMode implements Stringable
@@ -37,6 +39,8 @@ class BindMode implements Stringable
     private $mode;
 
     /**
+     * Create a BindMode instance.
+     *
      * @param string $mode
      * @psalm-param mixed $mode
      */
@@ -44,11 +48,9 @@ class BindMode implements Stringable
     {
         self::ensureString($mode);
 
-        $values = self::ensureStringList([static::$READ_ONLY, static::$READ_WRITE]);
-
-        if (!in_array($mode, $values, true)) {
-            throw new InvalidFormatException($mode, $values);
-        }
+        $values = [static::$READ_ONLY, static::$READ_WRITE];
+        self::ensureStringArray($values);
+        self::ensureOneOf($mode, $values);
 
         $this->mode = $mode;
     }
@@ -92,11 +94,9 @@ class BindMode implements Stringable
     {
         self::ensureString($mode);
 
-        $values = self::ensureStringList([static::$READ_ONLY, static::$READ_WRITE]);
-
-        if (!in_array($mode, $values, true)) {
-            throw new InvalidFormatException($mode, $values);
-        }
+        $values = [static::$READ_ONLY, static::$READ_WRITE];
+        self::ensureStringArray($values);
+        self::ensureOneOf($mode, $values);
 
         return new self($mode);
     }

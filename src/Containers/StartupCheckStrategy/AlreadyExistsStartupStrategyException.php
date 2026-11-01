@@ -8,9 +8,11 @@ use Exception;
  * An exception thrown when a startup strategy with the same name already exists.
  * @api
  */
-class AlreadyExistsStartupStrategyException extends \Exception
+class AlreadyExistsStartupStrategyException extends Exception
 {
     /**
+     * Report a duplicate startup strategy registration.
+     *
      * @param string $name the name of the startup strategy that already exists
      */
     public function __construct($name)

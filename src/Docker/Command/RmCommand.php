@@ -39,8 +39,9 @@ trait RmCommand
 
         $containerIds = [];
         foreach (is_array($containerId) ? $containerId : [$containerId] as $id) {
-            $containerIds[] = $id instanceof ContainerId ? (string) $id : self::ensureNonEmptyString($id);
+            self::ensureNonEmptyStringOrInstanceOf($id, ContainerId::class);
 
+            $containerIds[] = (string) $id;
         }
 
         $process = $this->execute(

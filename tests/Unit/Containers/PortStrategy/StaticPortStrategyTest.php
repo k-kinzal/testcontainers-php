@@ -3,6 +3,7 @@
 namespace Tests\Unit\Containers\PortStrategy;
 
 use Testcontainers\Containers\PortStrategy\StaticPortStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -40,5 +41,12 @@ class StaticPortStrategyTest extends PortStrategyTestCase
 
         $this->assertTrue($behavior->isFail());
         $this->assertFalse($behavior->isRetry());
+    }
+
+    public function test__constructRejectsBooleanPort()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        new StaticPortStrategy(false);
     }
 }

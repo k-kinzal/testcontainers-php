@@ -37,7 +37,6 @@ class StartupCheckStrategyProvider
     public function register($name, $strategy)
     {
         self::ensureNonEmptyString($name);
-
         self::ensureInstanceOf($strategy, StartupCheckStrategy::class);
 
         if (isset($this->strategies[$name])) {

@@ -2,8 +2,9 @@
 
 namespace Testcontainers\Docker\Types;
 
-use Testcontainers\Utility\Ensure;
+use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents a container object returned by the Docker API.
@@ -36,7 +37,7 @@ class ContainerObject
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('ContainerObject::'.$name.' does not exist');
+            throw new LogicException('ContainerObject::'.$name.' does not exist');
         }
 
         return $this->{$name};

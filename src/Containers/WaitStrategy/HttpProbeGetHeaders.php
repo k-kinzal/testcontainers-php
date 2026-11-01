@@ -16,13 +16,16 @@ class HttpProbeGetHeaders implements HttpProbe
     use Ensure;
 
     /**
+     * Check whether the endpoint is available.
+     *
+     * @param string $endpoint     the endpoint
+     * @param int    $responseCode the response code
      * @psalm-param mixed $endpoint
      * @psalm-param mixed $responseCode
      */
     public function available($endpoint, $responseCode = 200)
     {
         self::ensureString($endpoint);
-
         self::ensureIntRange($responseCode, 100, 599);
 
         $headers = @get_headers($endpoint);

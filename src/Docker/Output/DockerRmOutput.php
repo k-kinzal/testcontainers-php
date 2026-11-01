@@ -24,6 +24,8 @@ class DockerRmOutput extends DockerOutput
     private $containerIds;
 
     /**
+     * Read the identifiers returned by the remove command.
+     *
      * @param Process $process the Symfony Process instance that executed the `docker rm` command
      */
     public function __construct($process)

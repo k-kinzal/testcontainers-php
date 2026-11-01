@@ -23,6 +23,8 @@ class DockerPsOutput extends DockerOutput
     private $containers;
 
     /**
+     * Read the containers listed by Docker.
+     *
      * @param Process $process the Symfony Process instance that executed the `docker ps` command
      */
     public function __construct($process)

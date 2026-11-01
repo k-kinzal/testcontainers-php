@@ -3,8 +3,8 @@
 namespace Testcontainers\SSH;
 
 use Symfony\Component\Process\Process;
-use Testcontainers\SSH\Exceptions\TunnelException;
 use Testcontainers\Logger\WithLogger;
+use Testcontainers\SSH\Exceptions\TunnelException;
 
 /**
  * A tunnel for forwarding connections over SSH.
@@ -87,6 +87,8 @@ class Tunnel
     protected $sshOptions = [];
 
     /**
+     * Create a Tunnel instance.
+     *
      * @param int    $localPort  the local port to bind to
      * @param string $remoteHost the remote host to connect to
      * @param int    $remotePort the remote port to connect to
@@ -102,22 +104,12 @@ class Tunnel
         $remotePort,
         $sshHost
     ) {
-        self::ensureIntOrDigitString($localPort);
-
-        self::ensureIntOrDigitString($remotePort);
-
+        self::ensureIntOrDigitStringRange($localPort, 1, 65535);
         self::ensureNonEmptyString($remoteHost);
-
+        self::ensureIntOrDigitStringRange($remotePort, 1, 65535);
         self::ensureNonEmptyString($sshHost);
 
-        if ($localPort < 1 || $localPort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $localPort = (int) $localPort;
-
-        if ($remotePort < 1 || $remotePort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $remotePort = (int) $remotePort;
 
         $this->localPort = $localPort;
@@ -153,11 +145,8 @@ class Tunnel
      */
     public function withSshPort($sshPort)
     {
-        self::ensureIntOrDigitString($sshPort);
+        self::ensureIntOrDigitStringRange($sshPort, 1, 65535);
 
-        if ($sshPort < 1 || $sshPort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $sshPort = (int) $sshPort;
 
         $this->sshPort = $sshPort;
@@ -229,10 +218,10 @@ class Tunnel
     public function withSshOption($option, $value)
     {
         self::ensureString($option);
-
         self::ensureString($value);
+        self::ensureStringMap($this->sshOptions);
 
-        $options = self::ensureStringMap($this->sshOptions);
+        $options = $this->sshOptions;
 
         $options[$option] = $value;
         $this->sshOptions = $options;
@@ -247,41 +236,23 @@ class Tunnel
      */
     public function open()
     {
-        self::ensureIntOrDigitString($this->localPort);
-
-        if ($this->localPort < 1 || $this->localPort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
-        $this->localPort = (int) $this->localPort;
-
-        self::ensureIntOrDigitString($this->remotePort);
-
-        if ($this->remotePort < 1 || $this->remotePort > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
-        $this->remotePort = (int) $this->remotePort;
-
-        $this->remoteHost = self::ensureNonEmptyString($this->remoteHost);
-
-        $this->sshHost = self::ensureNonEmptyString($this->sshHost);
-
-        $this->user = self::ensureNullableString($this->user);
-
-        $this->localBindAddress = self::ensureNullableString($this->localBindAddress);
-
-        $this->identityFile = self::ensureNullableString($this->identityFile);
-
-        $this->sshOptions = self::ensureStringMap($this->sshOptions);
+        self::ensureIntOrDigitStringRange($this->localPort, 1, 65535);
+        self::ensureIntOrDigitStringRange($this->remotePort, 1, 65535);
+        self::ensureNonEmptyString($this->remoteHost);
+        self::ensureNonEmptyString($this->sshHost);
+        self::ensureNullableString($this->user);
+        self::ensureNullableString($this->localBindAddress);
+        self::ensureNullableString($this->identityFile);
+        self::ensureStringMap($this->sshOptions);
 
         if ($this->sshPort !== null) {
-            self::ensureIntOrDigitString($this->sshPort);
+            self::ensureIntOrDigitStringRange($this->sshPort, 1, 65535);
 
-            if ($this->sshPort < 1 || $this->sshPort > 65535) {
-                throw new \InvalidArgumentException('Port must be between 1 and 65535');
-            }
             $this->sshPort = (int) $this->sshPort;
-
         }
+
+        $this->localPort = (int) $this->localPort;
+        $this->remotePort = (int) $this->remotePort;
 
         $commandParts = [
             'ssh',

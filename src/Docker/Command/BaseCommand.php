@@ -2,9 +2,9 @@
 
 namespace Testcontainers\Docker\Command;
 
-use Testcontainers\Utility\Ensure;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use ReflectionClass;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\BindAddressAlreadyUseException;
 use Testcontainers\Docker\Exception\DockerException;
@@ -13,6 +13,8 @@ use Testcontainers\Docker\Exception\NoSuchObjectException;
 use Testcontainers\Docker\Exception\PortAlreadyAllocatedException;
 use Testcontainers\Environments;
 use function Testcontainers\kebab;
+use Testcontainers\Utility\Ensure;
+use Traversable;
 
 /**
  * Base command for Docker commands.
@@ -64,9 +66,9 @@ trait BaseCommand
     /**
      * The input for Docker commands.
      *
-     * This can be a stream resource, scalar value, `\Traversable`, or null if no input is provided.
+     * This can be a stream resource, scalar value, `Traversable`, or null if no input is provided.
      *
-     * @var null|mixed
+     * @var null|scalar|resource|Traversable
      */
     private $input;
 
@@ -184,19 +186,17 @@ trait BaseCommand
      * Set the input for Docker commands.
      *
      * This method allows you to specify the input that will be passed to the Docker process
-     * when executing commands. The input can be a stream resource, a scalar value, a `\Traversable`,
+     * when executing commands. The input can be a stream resource, a scalar value, a `Traversable`,
      * or `null` if no input is provided.
      *
-     * @param null|mixed $input the input for the Docker process
+     * @param null|scalar|resource|Traversable $input the input for the Docker process
      * @psalm-param mixed $input
      *
      * @return self
      */
     public function withInput($input)
     {
-        if ($input !== null && !is_scalar($input) && !is_resource($input) && !$input instanceof \Traversable) {
-            throw new \InvalidArgumentException('input must be a scalar, stream, Traversable or null');
-        }
+        self::ensureNullableScalarOrStreamOrTraversable($input);
 
         $this->input = $input;
 
@@ -226,10 +226,7 @@ trait BaseCommand
      */
     public function withTimeout($timeout)
     {
-        if ($timeout !== null) {
-            self::ensureNonNegativeNumber($timeout);
-
-        }
+        self::ensureNullableNonNegativeNumber($timeout);
 
         $this->timeout = $timeout;
 
@@ -281,32 +278,31 @@ trait BaseCommand
      */
     public function getHost()
     {
-        // Check if the host is set in the global options
         $host = isset($this->options['host']) ? $this->options['host'] : null;
-        if (is_array($host)) {
-            $hosts = self::ensureStringList($host);
+        self::ensureNullableStringOrStringArray($host);
 
-            if (count($hosts) === 0) {
-                throw new \InvalidArgumentException('host must not be an empty array');
-            }
+        if (is_array($host)) {
+            self::ensureNonEmptyArray($host);
+
+            $hosts = array_values($host);
 
             return $hosts[0];
         }
         if ($host !== null) {
-            return self::ensureString($host);
-        }
-        // Check if the host is set in the environment variables
-        $host = isset($this->env['DOCKER_HOST']) ? $this->env['DOCKER_HOST'] : null;
-        if (is_string($host)) {
-            return $host;
-        }
-        // Check if the host is set in the DOCKER_HOST environment variable
-        $host = Environments::DOCKER_HOST();
-        if ($host !== null && $host !== '') {
             return $host;
         }
 
-        return 'unix:///var/run/docker.sock';
+        $host = isset($this->env['DOCKER_HOST']) ? $this->env['DOCKER_HOST'] : null;
+        self::ensureNullableString($host);
+
+        if ($host !== null) {
+            return $host;
+        }
+
+        $host = Environments::DOCKER_HOST();
+        self::ensureNullableNonEmptyString($host);
+
+        return $host === null ? 'unix:///var/run/docker.sock' : $host;
     }
 
     /**
@@ -379,13 +375,9 @@ trait BaseCommand
     protected function execute($command, $subcommand = null, $args = [], $options = [], $wait = true)
     {
         self::ensureString($command);
-
         self::ensureNullableString($subcommand);
-
-        $args = self::ensureStringList($args);
-
+        self::ensureStringArray($args);
         self::ensureStringKeyedArray($options);
-
         self::ensureBool($wait);
 
         // docker [global options] command [subcommand] [options] [args]
@@ -411,14 +403,13 @@ trait BaseCommand
             'proc_options' => $this->proc_options,
         ]);
         $processArgs = [$commandLine, $this->cwd, $this->env, $this->input, $this->timeout];
-        $processClass = new \ReflectionClass(Process::class);
+        $processClass = new ReflectionClass(Process::class);
         $constructor = $processClass->getConstructor();
         $constructorAcceptsOptions = $constructor !== null && $constructor->getNumberOfParameters() >= 6;
         if ($constructorAcceptsOptions) {
             $processArgs[] = $this->proc_options === [] ? null : $this->proc_options;
         }
         $process = $processClass->newInstanceArgs($processArgs);
-        // Symfony 4.x supports neither constructor options nor setOptions().
         if (!$constructorAcceptsOptions && $processClass->hasMethod('setOptions') && $this->proc_options !== []) {
             $processClass->getMethod('setOptions')->invoke($process, $this->proc_options);
         }
@@ -459,11 +450,10 @@ trait BaseCommand
     {
         $result = [];
         foreach ($options as $key => $value) {
+            self::ensureNullableScalarOrStringableOrArray($value);
+
             $key = kebab($key);
-            if ($value === null) {
-                continue;
-            }
-            if ($value === false) {
+            if ($value === null || $value === false) {
                 continue;
             }
             if ($value === true) {
@@ -471,48 +461,16 @@ trait BaseCommand
 
                 continue;
             }
-            if (is_scalar($value)) {
-                $result[] = "--{$key}";
-                if (is_string($value)) {
-                    $result[] = $this->expandEnv($value);
-                } else {
-                    $result[] = (string) $value;
-                }
-
-                continue;
-            }
-            if (is_object($value) && method_exists($value, '__toString')) {
+            if (!is_array($value)) {
                 $result[] = "--{$key}";
                 $result[] = $this->expandEnv((string) $value);
 
                 continue;
             }
-            if (!is_array($value)) {
-                throw new \InvalidArgumentException('Unsupported Docker option value');
-            }
-            foreach (array_keys($value) as $k) {
+            foreach ($value as $k => $item) {
                 $result[] = "--{$key}";
-                if (is_string($k)) {
-                    if (is_string($value[$k])) {
-                        $result[] = $k.'='.$this->expandEnv($value[$k]);
-                    } elseif (is_scalar($value[$k])) {
-                        $result[] = $k.'='.(string) $value[$k];
-                    } elseif (is_object($value[$k]) && method_exists($value[$k], '__toString')) {
-                        $result[] = $k.'='.$this->expandEnv((string) $value[$k]);
-                    } else {
-                        throw new \LogicException('Unsupported value type: `'.var_export($value[$k], true).'`');
-                    }
-                } else {
-                    if (is_string($value[$k])) {
-                        $result[] = $this->expandEnv($value[$k]);
-                    } elseif (is_scalar($value[$k])) {
-                        $result[] = (string) $value[$k];
-                    } elseif (is_object($value[$k]) && method_exists($value[$k], '__toString')) {
-                        $result[] = $this->expandEnv((string) $value[$k]);
-                    } else {
-                        throw new \LogicException('Unsupported value type: `'.var_export($value[$k], true).'`');
-                    }
-                }
+                $rendered = $this->expandEnv((string) $item);
+                $result[] = is_string($k) ? $k.'='.$rendered : $rendered;
             }
         }
 

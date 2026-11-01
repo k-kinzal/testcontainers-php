@@ -39,7 +39,6 @@ class PortStrategyProvider
     public function register($name, $strategy)
     {
         self::ensureNonEmptyString($name);
-
         self::ensureInstanceOf($strategy, PortStrategy::class);
 
         if (isset($this->strategies[$name])) {

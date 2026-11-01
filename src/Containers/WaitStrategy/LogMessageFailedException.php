@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Exception;
+use RuntimeException;
+
 /**
  * Exception thrown when a container log message matches the failure pattern.
  *
@@ -10,12 +13,14 @@ namespace Testcontainers\Containers\WaitStrategy;
  * entered an error state.
  * @api
  */
-class LogMessageFailedException extends \RuntimeException
+class LogMessageFailedException extends RuntimeException
 {
     /**
+     * Report that the expected log message was not found.
+     *
      * @param string         $logLine  the log line that matched the failure pattern
      * @param int            $code     the exception code
-     * @param null|\Exception $previous the previous exception
+     * @param null|Exception $previous the previous exception
      */
     public function __construct($logLine, $code = 0, $previous = null)
     {

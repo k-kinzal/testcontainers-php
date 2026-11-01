@@ -5,11 +5,13 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\PortStrategy\StaticPortStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Docker\Exception\PortConflictException;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -66,11 +68,44 @@ class GenericContainerTest extends TestCase
             $this->assertTrue(strpos($e->getMessage(), 'timed out') !== false);
         }
     }
+
+    /**
+     * @dataProvider provideWithDockerClientInvalidInputs
+     * @param mixed $client
+     */
+    public function testWithDockerClientRejectsInvalidInputs($client)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withDockerClient($client);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithDockerClientInvalidInputs()
+    {
+        return [
+            'case 1' => [new stdClass()],
+        ];
+    }
+
+    public function test__constructRejectsArrayImage()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        new GenericContainer([]);
+    }
+
+    public function test__constructRejectsEmptyImage()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        new GenericContainer('');
+    }
 }
 
-/**
- * A wait strategy that always throws WaitingTimeoutException for testing.
- */
 class FailingWaitStrategy implements \Testcontainers\Containers\WaitStrategy\WaitStrategy
 {
     use \Testcontainers\Logger\WithLogger;

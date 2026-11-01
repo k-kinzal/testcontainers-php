@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use LogicException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Logger\WithLogger;
 
@@ -94,6 +95,8 @@ class HttpWaitStrategy implements WaitStrategy
     private $retryInterval = 100000;
 
     /**
+     * Create a HttpWaitStrategy instance.
+     *
      * @param null|HttpProbe $probe
      * @psalm-param mixed $probe
      */
@@ -101,7 +104,6 @@ class HttpWaitStrategy implements WaitStrategy
     {
         if ($probe !== null) {
             self::ensureInstanceOf($probe, HttpProbe::class);
-
         }
 
         $this->probe = $probe ?: new HttpProbeGetHeaders();
@@ -185,11 +187,8 @@ class HttpWaitStrategy implements WaitStrategy
      */
     public function withPort($port)
     {
-        self::ensureIntOrDigitString($port);
+        self::ensureIntOrDigitStringRange($port, 1, 65535);
 
-        if ($port < 1 || $port > 65535) {
-            throw new \InvalidArgumentException('Port must be between 1 and 65535');
-        }
         $port = (int) $port;
 
         $this->port = $port;
@@ -268,11 +267,11 @@ class HttpWaitStrategy implements WaitStrategy
             if ($port === null) {
                 $ports = $instance->getExposedPorts();
                 if (count($ports) === 0) {
-                    throw new \LogicException('HTTP wait strategy requires an exposed port');
+                    throw new LogicException('HTTP wait strategy requires an exposed port');
                 }
                 $port = $instance->getMappedPort($ports[0]);
                 if ($port === null) {
-                    throw new \LogicException('HTTP wait strategy requires a mapped port');
+                    throw new LogicException('HTTP wait strategy requires a mapped port');
                 }
             }
             $path = $this->path !== null && $this->path !== '' ? $this->path : '/';

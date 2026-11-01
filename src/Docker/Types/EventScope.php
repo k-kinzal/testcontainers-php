@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Docker\Types;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -38,16 +38,14 @@ class EventScope implements Stringable
     private $scope;
 
     /**
+     * Create a EventScope instance.
+     *
      * @param string $scope
      * @psalm-param mixed $scope
      */
     public function __construct($scope)
     {
-        self::ensureString($scope);
-
-        if (!in_array($scope, self::values(), true)) {
-            throw new InvalidFormatException($scope, self::values());
-        }
+        self::ensureOneOf($scope, self::values());
 
         $this->scope = $scope;
     }
@@ -89,11 +87,7 @@ class EventScope implements Stringable
      */
     public static function fromString($scope)
     {
-        self::ensureString($scope);
-
-        if (!in_array($scope, self::values(), true)) {
-            throw new InvalidFormatException($scope, self::values());
-        }
+        self::ensureOneOf($scope, self::values());
 
         return new self($scope);
     }
@@ -105,10 +99,13 @@ class EventScope implements Stringable
      */
     public static function values()
     {
-        return self::ensureStringList([
+        $values = [
             static::$LOCAL,
             static::$SWARM,
-        ]);
+        ];
+        self::ensureStringArray($values);
+
+        return $values;
     }
 
     /**

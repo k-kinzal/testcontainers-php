@@ -11,9 +11,11 @@ use Exception;
  * a wait strategy with a name that is already in use.
  * @api
  */
-class AlreadyExistsWaitStrategyException extends \Exception
+class AlreadyExistsWaitStrategyException extends Exception
 {
     /**
+     * Report a duplicate wait strategy registration.
+     *
      * @param string $name the name of the wait strategy that already exists
      */
     public function __construct($name)

@@ -44,8 +44,9 @@ trait NetworkCreateCommand
     public function networkCreate($network, $options = [])
     {
         self::ensureStringKeyedArray($options);
+        self::ensureNonEmptyStringOrInstanceOf($network, Stringable::class);
 
-        $network = self::ensureNonEmptyString($network instanceof Stringable ? (string) $network : $network);
+        $network = (string) $network;
 
         $process = $this->execute(
             'network',

@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Containers;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -52,6 +52,8 @@ class ReuseMode implements Stringable
     private $mode;
 
     /**
+     * Create a ReuseMode instance.
+     *
      * @param string $mode
      * @psalm-param mixed $mode
      */
@@ -59,11 +61,9 @@ class ReuseMode implements Stringable
     {
         self::ensureString($mode);
 
-        $values = self::ensureStringList([static::$ADD, static::$RESTART, static::$REUSE]);
-
-        if (!in_array($mode, $values, true)) {
-            throw new InvalidFormatException($mode, $values);
-        }
+        $values = [static::$ADD, static::$RESTART, static::$REUSE];
+        self::ensureStringArray($values);
+        self::ensureOneOf($mode, $values);
 
         $this->mode = $mode;
     }
@@ -117,11 +117,9 @@ class ReuseMode implements Stringable
     {
         self::ensureString($mode);
 
-        $values = self::ensureStringList([static::$ADD, static::$RESTART, static::$REUSE]);
-
-        if (!in_array($mode, $values, true)) {
-            throw new InvalidFormatException($mode, $values);
-        }
+        $values = [static::$ADD, static::$RESTART, static::$REUSE];
+        self::ensureStringArray($values);
+        self::ensureOneOf($mode, $values);
 
         return new self($mode);
     }

@@ -39,7 +39,6 @@ class WaitStrategyProvider
     public function register($name, $strategy)
     {
         self::ensureNonEmptyString($name);
-
         self::ensureInstanceOf($strategy, WaitStrategy::class);
 
         if (isset($this->strategies[$name])) {

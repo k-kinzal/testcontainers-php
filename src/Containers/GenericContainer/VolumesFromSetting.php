@@ -60,7 +60,6 @@ trait VolumesFromSetting
     public function withVolumesFrom($container, $mode)
     {
         self::ensureInstanceOf($container, ContainerInstance::class);
-
         self::ensureInstanceOf($mode, BindMode::class);
 
         $this->volumesFrom[] = new VolumeFrom((string) $container->getContainerId(), $mode);
@@ -83,12 +82,13 @@ trait VolumesFromSetting
         $targets = static::$VOLUMES_FROM;
         if ($targets !== null) {
             self::ensureArray($targets);
-
         }
         if ($targets !== null && count($targets) > 0) {
             $volumesFrom = [];
             foreach (array_keys($targets) as $key) {
-                $volume = self::ensureStringOrArray($targets[$key]);
+                self::ensureStringOrArray($targets[$key]);
+
+                $volume = $targets[$key];
 
                 if (is_string($volume)) {
                     $volumesFrom[] = VolumeFrom::fromString($volume);

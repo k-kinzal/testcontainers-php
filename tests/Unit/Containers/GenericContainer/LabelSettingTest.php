@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\LabelSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -59,6 +60,59 @@ class LabelSettingTest extends TestCase
         $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
         $this->assertSame(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'], $instance->getLabels());
     }
+
+    /**
+     * @dataProvider provideWithLabelInvalidInputs
+     * @param mixed $key
+     * @param mixed $value
+     */
+    public function testWithLabelRejectsInvalidInputs($key, $value)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withLabel($key, $value);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithLabelInvalidInputs()
+    {
+        return [
+            'case 1' => [[], 'value'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideWithLabelsInvalidInputs
+     * @param mixed $labels
+     */
+    public function testWithLabelsRejectsInvalidInputs($labels)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withLabels($labels);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithLabelsInvalidInputs()
+    {
+        return [
+            'case 1' => ['not an array'],
+        ];
+    }
+
+    public function testStartRejectsInvalidLabels()
+    {
+        $container = new LabelSettingWithInvalidLabelsContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class LabelSettingWithStaticLabelsContainer extends GenericContainer
@@ -67,4 +121,9 @@ class LabelSettingWithStaticLabelsContainer extends GenericContainer
         'KEY1' => 'VALUE1',
         'KEY2' => 'VALUE2',
     ];
+}
+
+class LabelSettingWithInvalidLabelsContainer extends GenericContainer
+{
+    protected static $LABELS = [1 => 'value'];
 }

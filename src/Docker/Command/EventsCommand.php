@@ -31,13 +31,10 @@ trait EventsCommand
     {
         self::ensureStringKeyedArray($options);
 
-        if (isset($options['timeout'])) {
-            self::ensureNonNegativeNumber($options['timeout']);
-
-        }
-
         $hasTimeout = array_key_exists('timeout', $options);
         $timeout = isset($options['timeout']) ? $options['timeout'] : null;
+        self::ensureNullableNonNegativeNumber($timeout);
+
         unset($options['timeout']);
 
         $options['format'] = '{{json .}}';
@@ -50,8 +47,7 @@ trait EventsCommand
             false
         );
         if ($hasTimeout) {
-            $process->setTimeout($timeout === null ? null : self::ensureNonNegativeNumber($timeout));
-
+            $process->setTimeout($timeout);
         }
 
         return new DockerEventsOutput($process, !isset($options['until']));

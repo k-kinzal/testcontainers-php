@@ -2,8 +2,9 @@
 
 namespace Testcontainers\Docker\Types;
 
-use Testcontainers\Utility\Ensure;
+use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents a container entry from the `docker ps` command output.
@@ -11,20 +12,20 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  * This class is a value object that holds the parsed data from a single
  * container listing in JSON format.
  *
- * @property ContainerId                 $id           The container ID
- * @property string                      $command      The command running in the container
- * @property string                      $createdAt    The creation timestamp
- * @property string                      $image        The image used to create the container
- * @property array<string, string>       $labels       The container labels as key-value pairs
- * @property int                         $localVolumes The number of local volumes
- * @property string[]                    $mounts       The mount points
- * @property string                      $names        The container name
- * @property string[]                    $networks     The networks the container is connected to
- * @property string                      $ports        The port mappings
- * @property string                      $runningFor   The human-readable duration since creation
- * @property string                      $size         The container size
- * @property string                      $state        The container state (created, running, paused, restarting, removing, exited, dead)
- * @property string                      $status       The human-readable status string
+ * @property ContainerId           $id           The container ID
+ * @property string                $command      The command running in the container
+ * @property string                $createdAt    The creation timestamp
+ * @property string                $image        The image used to create the container
+ * @property array<string, string> $labels       The container labels as key-value pairs
+ * @property int                   $localVolumes The number of local volumes
+ * @property string[]              $mounts       The mount points
+ * @property string                $names        The container name
+ * @property string[]              $networks     The networks the container is connected to
+ * @property string                $ports        The port mappings
+ * @property string                $runningFor   The human-readable duration since creation
+ * @property string                $size         The container size
+ * @property string                $state        The container state (created, running, paused, restarting, removing, exited, dead)
+ * @property string                $status       The human-readable status string
  * @api
  */
 class ContainerListItem
@@ -32,71 +33,99 @@ class ContainerListItem
     use Ensure;
 
     /**
+     * The container identifier.
+     *
      * @var ContainerId
      */
     private $id;
 
     /**
+     * The command running in the container.
+     *
      * @var string
      */
     private $command;
 
     /**
+     * The creation time reported by Docker.
+     *
      * @var string
      */
     private $createdAt;
 
     /**
+     * The image used by the container.
+     *
      * @var string
      */
     private $image;
 
     /**
+     * The labels attached to the container.
+     *
      * @var array<string, string>
      */
     private $labels;
 
     /**
+     * The number of local volumes attached to the container.
+     *
      * @var int
      */
     private $localVolumes;
 
     /**
+     * The mounts listed for the container.
+     *
      * @var string[]
      */
     private $mounts;
 
     /**
+     * The names assigned to the container.
+     *
      * @var string
      */
     private $names;
 
     /**
+     * The networks connected to the container.
+     *
      * @var string[]
      */
     private $networks;
 
     /**
+     * The port mappings reported by Docker.
+     *
      * @var string
      */
     private $ports;
 
     /**
+     * The running duration reported by Docker.
+     *
      * @var string
      */
     private $runningFor;
 
     /**
+     * The filesystem size reported by Docker.
+     *
      * @var string
      */
     private $size;
 
     /**
+     * The current container state.
+     *
      * @var string
      */
     private $state;
 
     /**
+     * The human-readable container status.
+     *
      * @var string
      */
     private $status;
@@ -115,7 +144,7 @@ class ContainerListItem
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('ContainerListItem::'.$name.' does not exist');
+            throw new LogicException('ContainerListItem::'.$name.' does not exist');
         }
 
         return $this->{$name};

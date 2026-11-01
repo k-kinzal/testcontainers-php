@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
@@ -25,17 +26,19 @@ class ContainerId implements Stringable
     private $data;
 
     /**
+     * Create a ContainerId instance.
+     *
      * @param string $v
      * @psalm-param mixed $v
      *
-     * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
+     * @throws InvalidFormatException if the container ID is not a valid 64-character hexadecimal string
      */
     public function __construct($v)
     {
         self::ensureString($v);
 
         if (!self::isValid($v)) {
-            throw new \LogicException('Invalid container ID: `'.$v.'`');
+            throw new InvalidFormatException($v, '12 or 64 hexadecimal characters');
         }
 
         $this->data = $v;
@@ -75,7 +78,7 @@ class ContainerId implements Stringable
      * @param string $v the container ID
      * @psalm-param mixed $v
      *
-     * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
+     * @throws InvalidFormatException if the container ID is not a valid 64-character hexadecimal string
      *
      * @return ContainerId the ContainerId object
      */
@@ -84,7 +87,7 @@ class ContainerId implements Stringable
         self::ensureString($v);
 
         if (!self::isValid($v)) {
-            throw new \InvalidArgumentException('Invalid container ID: `'.$v.'`');
+            throw new InvalidFormatException($v, '12 or 64 hexadecimal characters');
         }
 
         return new self($v);

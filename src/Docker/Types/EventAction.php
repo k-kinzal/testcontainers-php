@@ -2,8 +2,8 @@
 
 namespace Testcontainers\Docker\Types;
 
-use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -405,6 +405,8 @@ class EventAction implements Stringable
     private $detail;
 
     /**
+     * Create a EventAction instance.
+     *
      * @param string      $name   the name of the action
      * @param null|string $detail the detail following the action name
      * @psalm-param mixed $name
@@ -412,13 +414,11 @@ class EventAction implements Stringable
      */
     public function __construct($name, $detail = null)
     {
+        self::ensureOneOf($name, self::values());
         self::ensureNullableString($detail);
 
-        if (!in_array($name, self::values(), true)) {
-            throw new InvalidFormatException($name, self::values());
-        }
-        if ($detail !== null && !in_array($name, self::detailedValues(), true)) {
-            throw new InvalidFormatException($name, self::detailedValues());
+        if ($detail !== null) {
+            self::ensureOneOf($name, self::detailedValues());
         }
 
         $this->name = $name;
@@ -926,18 +926,9 @@ class EventAction implements Stringable
     {
         self::ensureString($action);
 
-        if (in_array($action, self::values(), true)) {
-            return new self($action);
-        }
-        $pos = strpos($action, ': ');
-        if ($pos !== false) {
-            $name = substr($action, 0, $pos);
-            if (in_array($name, self::detailedValues(), true)) {
-                return new self($name, substr($action, $pos + 2));
-            }
-        }
+        $parts = explode(': ', $action, 2);
 
-        throw new InvalidFormatException($action, self::values());
+        return new self($parts[0], isset($parts[1]) ? $parts[1] : null);
     }
 
     /**
@@ -947,7 +938,7 @@ class EventAction implements Stringable
      */
     public static function values()
     {
-        return self::ensureStringList([
+        $values = [
             static::$CREATE,
             static::$START,
             static::$RESTART,
@@ -992,7 +983,10 @@ class EventAction implements Stringable
             static::$EXEC_DIE,
             static::$EXEC_DETACH,
             static::$HEALTH_STATUS,
-        ]);
+        ];
+        self::ensureStringArray($values);
+
+        return $values;
     }
 
     /**
@@ -1002,11 +996,14 @@ class EventAction implements Stringable
      */
     public static function detailedValues()
     {
-        return self::ensureStringList([
+        $values = [
             static::$EXEC_CREATE,
             static::$EXEC_START,
             static::$HEALTH_STATUS,
-        ]);
+        ];
+        self::ensureStringArray($values);
+
+        return $values;
     }
 
     /**

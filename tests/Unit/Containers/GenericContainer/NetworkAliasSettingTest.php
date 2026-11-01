@@ -11,6 +11,7 @@ use Testcontainers\Containers\Types\NetworkMode;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -98,6 +99,36 @@ class NetworkAliasSettingTest extends TestCase
 
         $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
+
+    /**
+     * @dataProvider provideWithNetworkAliasesInvalidInputs
+     * @param mixed $aliases
+     */
+    public function testWithNetworkAliasesRejectsInvalidInputs($aliases)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withNetworkAliases($aliases);
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideWithNetworkAliasesInvalidInputs()
+    {
+        return [
+            'case 1' => [['ok', []]],
+        ];
+    }
+
+    public function testStartRejectsInvalidNetworkAliases()
+    {
+        $container = new NetworkAliasSettingWithInvalidNetworkAliasesContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class NetworkAliasSettingWithStaticNetworkAliasContainer extends GenericContainer
@@ -105,4 +136,9 @@ class NetworkAliasSettingWithStaticNetworkAliasContainer extends GenericContaine
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
     protected static $NETWORK_ALIASES = ['my-service'];
+}
+
+class NetworkAliasSettingWithInvalidNetworkAliasesContainer extends GenericContainer
+{
+    protected static $NETWORK_ALIASES = [false];
 }
