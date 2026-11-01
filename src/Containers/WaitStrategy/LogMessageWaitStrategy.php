@@ -125,6 +125,9 @@ class LogMessageWaitStrategy implements WaitStrategy
 
         try {
             foreach ($iter as $line) {
+                if ($line === null) {
+                    continue;
+                }
                 $this->logger()->debug(trim($line));
                 if ($failurePattern !== null && preg_match($failurePattern, trim($line))) {
                     throw new LogMessageFailedException(trim($line));
