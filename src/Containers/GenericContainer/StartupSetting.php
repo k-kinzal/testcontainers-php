@@ -171,10 +171,11 @@ trait StartupSetting
      * attempt to retrieve the default startup check strategy from the provider.
      *
      * @param ContainerInstance $instance the container instance for which to get the startup check strategy
+     * @psalm-param mixed $instance
      *
      * @return null|StartupCheckStrategy the startup check strategy to be used, or null if none is set
      */
-    protected function startupCheckStrategy(/* @noinspection PhpUnusedParameterInspection */ $instance)
+    protected function startupCheckStrategy($instance)
     {
         self::ensureInstanceOf($instance, ContainerInstance::class);
 
