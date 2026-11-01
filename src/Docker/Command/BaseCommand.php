@@ -411,13 +411,16 @@ trait BaseCommand
             'proc_options' => $this->proc_options,
         ]);
         $processArgs = [$commandLine, $this->cwd, $this->env, $this->input, $this->timeout];
-        $supportsOptions = method_exists(Process::class, 'setOptions');
-        if (!$supportsOptions) {
-            $processArgs[] = $this->proc_options;
+        $processClass = new \ReflectionClass(Process::class);
+        $constructor = $processClass->getConstructor();
+        $constructorAcceptsOptions = $constructor !== null && $constructor->getNumberOfParameters() >= 6;
+        if ($constructorAcceptsOptions) {
+            $processArgs[] = $this->proc_options === [] ? null : $this->proc_options;
         }
-        $process = (new \ReflectionClass(Process::class))->newInstanceArgs($processArgs);
-        if ($supportsOptions) {
-            $process->setOptions($this->proc_options);
+        $process = $processClass->newInstanceArgs($processArgs);
+        // Symfony 4.x supports neither constructor options nor setOptions().
+        if (!$constructorAcceptsOptions && $processClass->hasMethod('setOptions') && $this->proc_options !== []) {
+            $processClass->getMethod('setOptions')->invoke($process, $this->proc_options);
         }
         if ($wait) {
             $process->run();

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Docker\Command;
 
 use PHPUnit\Framework\TestCase;
+use Testcontainers\Docker\Command\BaseCommand;
 use Testcontainers\Docker\DockerClient;
 
 /**
@@ -12,6 +13,18 @@ use Testcontainers\Docker\DockerClient;
  */
 class BaseCommandTest extends TestCase
 {
+    public function testExecutesWithProcessOptions()
+    {
+        $command = (new BaseCommandHarness())
+            ->withCommand(PHP_BINARY)
+            ->withProcOptions(['blocking_pipes' => false])
+        ;
+
+        $process = $command->execute('-r', null, ['echo "options-ok";']);
+
+        $this->assertSame('options-ok', $process->getOutput());
+    }
+
     public function testGetHostFromDefault()
     {
         $backup = getenv('DOCKER_HOST');
@@ -60,5 +73,12 @@ class BaseCommandTest extends TestCase
         } finally {
             putenv('DOCKER_HOST='.$backup);
         }
+    }
+}
+
+class BaseCommandHarness
+{
+    use BaseCommand {
+        execute as public;
     }
 }
