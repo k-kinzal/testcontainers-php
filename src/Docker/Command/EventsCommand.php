@@ -37,7 +37,7 @@ trait EventsCommand
         }
 
         $hasTimeout = array_key_exists('timeout', $options);
-        $timeout = $hasTimeout ? $options['timeout'] : null;
+        $timeout = isset($options['timeout']) ? $options['timeout'] : null;
         unset($options['timeout']);
 
         $options['format'] = '{{json .}}';
