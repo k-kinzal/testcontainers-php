@@ -14,7 +14,7 @@ class DockerFollowLogsOutput extends DockerOutput
     /**
      * Returns an iterator for the Docker logs output line by line.
      *
-     * @return \Generator<string, string> an iterator to traverse the lines of the Docker logs output
+     * @return \Generator<string, null|string> an iterator to traverse the lines of the Docker logs output
      */
     public function getIterator()
     {
