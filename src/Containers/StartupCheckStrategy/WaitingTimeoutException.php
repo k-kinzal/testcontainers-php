@@ -4,6 +4,7 @@ namespace Testcontainers\Containers\StartupCheckStrategy;
 
 /**
  * WaitingTimeoutException is thrown when a container fails to start within the specified timeout period.
+ * @api
  */
 class WaitingTimeoutException extends \RuntimeException
 {

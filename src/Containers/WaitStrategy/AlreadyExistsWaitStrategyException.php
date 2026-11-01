@@ -9,6 +9,7 @@ use Exception;
  *
  * This exception is used to indicate that an attempt was made to register
  * a wait strategy with a name that is already in use.
+ * @api
  */
 class AlreadyExistsWaitStrategyException extends \Exception
 {

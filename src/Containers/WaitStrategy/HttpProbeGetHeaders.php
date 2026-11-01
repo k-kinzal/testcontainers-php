@@ -9,6 +9,7 @@ use Testcontainers\Utility\Ensure;
  *
  * This class implements the HttpProbe interface and provides a method to check if the specified
  * HTTP endpoint is available by checking its response headers.
+ * @api
  */
 class HttpProbeGetHeaders implements HttpProbe
 {

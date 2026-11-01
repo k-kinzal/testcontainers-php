@@ -6,6 +6,7 @@ use Exception;
 
 /**
  * An exception thrown when a port strategy with the same name already exists.
+ * @api
  */
 class AlreadyExistsPortStrategyException extends \Exception
 {

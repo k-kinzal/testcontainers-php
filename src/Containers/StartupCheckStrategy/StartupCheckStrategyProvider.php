@@ -8,6 +8,7 @@ use Testcontainers\Utility\Ensure;
  * A provider for startup check strategies.
  *
  * This class provides a way to register and retrieve startup check strategies by their name.
+ * @api
  */
 class StartupCheckStrategyProvider
 {

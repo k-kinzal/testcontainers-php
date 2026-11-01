@@ -12,6 +12,7 @@ use Testcontainers\Environments;
  *
  * This class provides a static method for creating a logger based on the
  * `TESTCONTAINERS_LOGGER` and `TESTCONTAINERS_LOG_LEVEL` environment variables.
+ * @api
  */
 class LoggerFactory
 {

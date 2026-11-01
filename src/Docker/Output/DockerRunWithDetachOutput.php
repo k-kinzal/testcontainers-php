@@ -10,6 +10,7 @@ use Testcontainers\Docker\Types\ContainerId;
  *
  * This class extends DockerRunOutput to include the container ID of the Docker container
  * that was started by the `docker run` command.
+ * @api
  */
 class DockerRunWithDetachOutput extends DockerRunOutput
 {

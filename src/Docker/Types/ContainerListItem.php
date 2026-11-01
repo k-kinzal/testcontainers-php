@@ -25,6 +25,7 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  * @property string                      $size         The container size
  * @property string                      $state        The container state (created, running, paused, restarting, removing, exited, dead)
  * @property string                      $status       The human-readable status string
+ * @api
  */
 class ContainerListItem
 {

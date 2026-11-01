@@ -9,6 +9,7 @@ use Testcontainers\Docker\Types\NetworkId;
  * Represents the output of a Docker `network create` command executed via Symfony Process.
  *
  * This class extends DockerOutput to provide specific handling for network creation.
+ * @api
  */
 class DockerNetworkCreateOutput extends DockerOutput
 {

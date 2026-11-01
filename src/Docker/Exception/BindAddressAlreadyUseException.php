@@ -8,6 +8,7 @@ namespace Testcontainers\Docker\Exception;
  * This exception is used to indicate that an attempt to bind an address
  * has failed because the address is already in use. It extends the PortConflictException
  * class to provide additional context specific to address binding and port conflicts.
+ * @api
  */
 class BindAddressAlreadyUseException extends PortConflictException
 {

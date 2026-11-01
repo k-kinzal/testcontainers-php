@@ -11,6 +11,7 @@ use Testcontainers\Utility\Stringable;
  * This class is a value object that represents the ID of a Docker container.
  * The container ID is a 64-character hexadecimal string that uniquely identifies
  * a Docker container on the host system.
+ * @api
  */
 class ContainerId implements Stringable
 {

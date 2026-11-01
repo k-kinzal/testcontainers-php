@@ -18,6 +18,7 @@ use Testcontainers\SSH\Session;
 
 /**
  * GenericContainerInstance is a generic implementation of docker container.
+ * @api
  */
 class GenericContainerInstance implements ContainerInstance
 {

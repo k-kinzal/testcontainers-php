@@ -12,6 +12,7 @@ use Testcontainers\Utility\Ensure;
  * Represents the output of a Docker `events` command executed via Symfony Process.
  *
  * The process is stopped when this output is released.
+ * @api
  */
 class DockerEventsOutput
 {

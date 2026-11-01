@@ -45,6 +45,7 @@ use Testcontainers\Logger\LoggerFactory;
  *     protected static $IMAGE = 'alpine:3.10';
  * }
  * ```
+ * @api
  */
 class Testcontainers
 {

@@ -4,6 +4,7 @@ namespace Testcontainers\Containers\PortStrategy;
 
 /**
  * A port strategy that selects a random port from the ephemeral port range.
+ * @api
  */
 class RandomPortStrategy implements PortStrategy
 {

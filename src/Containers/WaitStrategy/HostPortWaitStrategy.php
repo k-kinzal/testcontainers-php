@@ -9,6 +9,7 @@ use Testcontainers\Logger\WithLogger;
  * HostPortWaitStrategy waits until the specified ports on the container instance are available.
  *
  * This strategy continuously checks the readiness of the specified ports on the container instance until they are available or a timeout occurs.
+ * @api
  */
 class HostPortWaitStrategy implements WaitStrategy
 {

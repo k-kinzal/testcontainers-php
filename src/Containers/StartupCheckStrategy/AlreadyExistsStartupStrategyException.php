@@ -6,6 +6,7 @@ use Exception;
 
 /**
  * An exception thrown when a startup strategy with the same name already exists.
+ * @api
  */
 class AlreadyExistsStartupStrategyException extends \Exception
 {

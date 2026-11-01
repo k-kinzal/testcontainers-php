@@ -8,6 +8,7 @@ use Testcontainers\Utility\LineIterator;
  * Represents the output of a Docker `logs` command executed via Symfony Process.
  *
  * This class extends DockerOutput to provide specific handling for container logs.
+ * @api
  */
 class DockerFollowLogsOutput extends DockerOutput
 {

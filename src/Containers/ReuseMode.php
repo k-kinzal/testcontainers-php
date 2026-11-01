@@ -14,6 +14,7 @@ use Testcontainers\Utility\Stringable;
  * - ADD: Always start a new container (default behavior)
  * - RESTART: Stop existing container and start a new one
  * - REUSE: Reuse existing container if it's still running
+ * @api
  */
 class ReuseMode implements Stringable
 {

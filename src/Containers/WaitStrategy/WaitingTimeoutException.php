@@ -7,6 +7,7 @@ namespace Testcontainers\Containers\WaitStrategy;
  *
  * This exception is used to indicate that the specified timeout duration
  * has been exceeded while waiting for the container to be ready.
+ * @api
  */
 class WaitingTimeoutException extends \RuntimeException
 {

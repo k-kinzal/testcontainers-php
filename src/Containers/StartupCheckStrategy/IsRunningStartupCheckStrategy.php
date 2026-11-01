@@ -9,6 +9,7 @@ use Testcontainers\Logger\WithLogger;
 
 /**
  * StartupCheckStrategy that waits until a container is running.
+ * @api
  */
 class IsRunningStartupCheckStrategy implements StartupCheckStrategy
 {

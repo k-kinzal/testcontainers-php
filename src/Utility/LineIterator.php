@@ -6,6 +6,7 @@ use Symfony\Component\Process\Process;
 
 /**
  * LineIterator iterates over the output of a process line by line.
+ * @api
  */
 class LineIterator
 {

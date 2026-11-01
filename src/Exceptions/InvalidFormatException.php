@@ -6,6 +6,7 @@ use Exception;
 
 /**
  * Exception thrown when an invalid format is encountered.
+ * @api
  */
 class InvalidFormatException extends \Exception
 {

@@ -7,6 +7,7 @@ use Testcontainers\Utility\Ensure;
 /**
  * A port strategy that returns a fixed port.
  * When a port conflict occurs, it fails (does not retry).
+ * @api
  */
 class StaticPortStrategy implements PortStrategy
 {

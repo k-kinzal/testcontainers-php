@@ -16,6 +16,7 @@ use Psr\Log\LogLevel;
  *   $container->withLogger(new ConsoleLogger());
  *   $container->withLogger(new ConsoleLogger(null, LogLevel::WARNING));
  *   $container->withLogger(new ConsoleLogger(fopen('/tmp/tc.log', 'a')));
+ * @api
  */
 class ConsoleLogger extends AbstractLogger
 {

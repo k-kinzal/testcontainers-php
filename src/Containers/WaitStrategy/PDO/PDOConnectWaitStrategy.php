@@ -13,6 +13,7 @@ use Testcontainers\Logger\WithLogger;
  * This strategy continuously checks the readiness of the PDO connection until it is successfully established or a timeout occurs.
  *
  * Note: Do not use this strategy in PHP 5.6 as it may cause a Fatal error due to memory leaks.
+ * @api
  */
 class PDOConnectWaitStrategy implements WaitStrategy
 {

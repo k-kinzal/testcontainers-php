@@ -9,6 +9,7 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  * Represents a container object returned by the Docker API.
  *
  * @property State $state The state of the container.
+ * @api
  */
 class ContainerObject
 {

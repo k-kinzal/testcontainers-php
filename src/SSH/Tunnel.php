@@ -8,6 +8,7 @@ use Testcontainers\Logger\WithLogger;
 
 /**
  * A tunnel for forwarding connections over SSH.
+ * @api
  */
 class Tunnel
 {

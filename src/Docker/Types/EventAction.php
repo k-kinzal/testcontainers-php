@@ -8,6 +8,7 @@ use Testcontainers\Utility\Stringable;
 
 /**
  * Represents the action of a Docker event.
+ * @api
  */
 class EventAction implements Stringable
 {

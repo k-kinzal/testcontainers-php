@@ -11,6 +11,7 @@ use Testcontainers\Utility\Stringable;
  *
  * @property string $host The host name.
  * @property string $ip   The IP address.
+ * @api
  */
 class HostToIp implements Stringable
 {

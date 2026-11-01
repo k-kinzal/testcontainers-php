@@ -9,6 +9,7 @@ use Testcontainers\Docker\Types\ContainerId;
  * Represents the output of a Docker `rm` command executed via Symfony Process.
  *
  * This class extends DockerOutput to include the container IDs of the Docker containers that were removed.
+ * @api
  */
 class DockerRmOutput extends DockerOutput
 {

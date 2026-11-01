@@ -8,6 +8,7 @@ use Testcontainers\Utility\Stringable;
 
 /**
  * Defines the policy for determining when to pull a container image.
+ * @api
  */
 class ImagePullPolicy implements Stringable
 {

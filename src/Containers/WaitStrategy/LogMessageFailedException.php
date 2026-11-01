@@ -8,6 +8,7 @@ namespace Testcontainers\Containers\WaitStrategy;
  * This exception is used to indicate that the container has produced a log message
  * that matches the specified failure pattern, signaling that the container has
  * entered an error state.
+ * @api
  */
 class LogMessageFailedException extends \RuntimeException
 {

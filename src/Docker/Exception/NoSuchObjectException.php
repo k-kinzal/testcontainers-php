@@ -2,6 +2,9 @@
 
 namespace Testcontainers\Docker\Exception;
 
+/**
+ * @api
+ */
 class NoSuchObjectException extends DockerException
 {
     /**

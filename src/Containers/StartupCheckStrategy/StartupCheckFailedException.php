@@ -4,6 +4,7 @@ namespace Testcontainers\Containers\StartupCheckStrategy;
 
 /**
  * StartupCheckFailedException is thrown when a container's startup check strategy reports failure.
+ * @api
  */
 class StartupCheckFailedException extends \RuntimeException
 {

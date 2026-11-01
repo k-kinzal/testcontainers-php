@@ -10,6 +10,7 @@ use Testcontainers\Utility\Ensure;
  * This class allows for the registration and retrieval of different wait strategies
  * by their unique names. It maintains an associative array that maps strategy names
  * to their corresponding `WaitStrategy` instances.
+ * @api
  */
 class WaitStrategyProvider
 {

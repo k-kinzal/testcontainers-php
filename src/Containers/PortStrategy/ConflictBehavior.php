@@ -11,6 +11,7 @@ use Testcontainers\Utility\Stringable;
  *
  * This class defines the actions that can be taken when a port conflict is detected,
  * such as retrying the operation or failing immediately.
+ * @api
  */
 class ConflictBehavior implements Stringable
 {

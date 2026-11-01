@@ -8,6 +8,7 @@ namespace Testcontainers\Docker\Exception;
  * This exception is used to indicate that an operation attempted to interact
  * with a Docker container that could not be found. It extends the DockerException
  * class to provide additional context specific to missing containers.
+ * @api
  */
 class NoSuchContainerException extends DockerException
 {

@@ -4,6 +4,7 @@ namespace Testcontainers\Lifecycle;
 
 /**
  * Registers shutdown functions and signal handlers to run a callback once on process exit.
+ * @api
  */
 class ShutdownHandler
 {
