@@ -79,10 +79,11 @@ trait WaitSetting
      * attempt to retrieve the default wait strategy from the provider.
      *
      * @param ContainerInstance $instance the container instance for which to get the wait strategy
+     * @psalm-param mixed $instance
      *
      * @return null|WaitStrategy the wait strategy to be used, or null if none is set
      */
-    protected function waitStrategy(/* @noinspection PhpUnusedParameterInspection */ $instance)
+    protected function waitStrategy($instance)
     {
         self::ensureInstanceOf($instance, ContainerInstance::class);
 

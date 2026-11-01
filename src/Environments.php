@@ -27,6 +27,10 @@ class Environments
      */
     public static function __callStatic($name, $arguments)
     {
+        if ($arguments !== []) {
+            throw new \InvalidArgumentException('Environment getters do not accept arguments');
+        }
+
         $value = getenv($name);
         if (is_string($value)) {
             return $value;
