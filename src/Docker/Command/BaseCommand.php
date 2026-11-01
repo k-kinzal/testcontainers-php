@@ -405,14 +405,14 @@ trait BaseCommand
             'timeout' => $this->timeout,
             'proc_options' => $this->proc_options,
         ]);
-        $process = new Process(
-            $commandLine,
-            $this->cwd,
-            $this->env,
-            $this->input,
-            $this->timeout,
-            $this->proc_options
-        );
+        $processArgs = [$commandLine, $this->cwd, $this->env, $this->input, $this->timeout];
+        if (!method_exists(Process::class, 'setOptions')) {
+            $processArgs[] = $this->proc_options;
+        }
+        $process = (new \ReflectionClass(Process::class))->newInstanceArgs($processArgs);
+        if (method_exists($process, 'setOptions')) {
+            $process->setOptions($this->proc_options);
+        }
         if ($wait) {
             $process->run();
             if (!$process->isSuccessful()) {
