@@ -47,16 +47,17 @@ class ConsoleLogger56 extends AbstractLogger
     /**
      * @param resource|null $stream   Stream to write to. Defaults to STDERR.
      * @param string        $minLevel Minimum PSR-3 log level to output. Defaults to DEBUG (all messages).
+     * @psalm-param mixed $stream
      */
     public function __construct($stream = null, $minLevel = LogLevel::DEBUG)
     {
-        if ($stream !== null) {
-            $this->stream = $stream;
-        } elseif (defined('STDERR')) {
-            $this->stream = STDERR;
-        } else {
-            $this->stream = fopen('php://stderr', 'w');
+        if ($stream === null) {
+            $stream = defined('STDERR') ? STDERR : fopen('php://stderr', 'w');
         }
+        if (!is_resource($stream) || get_resource_type($stream) !== 'stream') {
+            throw new InvalidArgumentException('stream must be an open stream resource');
+        }
+        $this->stream = $stream;
 
         if (!isset(self::$LOG_LEVELS[$minLevel])) {
             throw new InvalidArgumentException(sprintf('Invalid minimum log level: "%s"', $minLevel));
