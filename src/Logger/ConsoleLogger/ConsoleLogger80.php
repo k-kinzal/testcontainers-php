@@ -81,7 +81,7 @@ class ConsoleLogger extends AbstractLogger
             return;
         }
 
-        $message = $this->interpolate($message, $context);
+        $message = $this->interpolate((string) $message, $context);
         $contextStr = !empty($context) ? ' ' . json_encode($context, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : '';
         $line = sprintf("[%s] [%s] %s%s\n", date('Y-m-d H:i:s'), strtoupper($level), $message, $contextStr);
 

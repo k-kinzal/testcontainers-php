@@ -350,7 +350,7 @@ class GenericContainerInstance implements ContainerInstance
                 $output = $client->events([
                     'filter' => [
                         'type=container',
-                        'container='.$this->containerDef['containerId'],
+                        'container='.(string) $this->containerDef['containerId'],
                         'event='.EventAction::CREATE()->toString(),
                         'event='.EventAction::START()->toString(),
                         'event='.EventAction::RESTART()->toString(),
