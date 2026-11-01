@@ -42,6 +42,8 @@ class DockerEventsOutput
     /**
      * @param Process $process   the Docker events process
      * @param bool    $reconnect whether the process is restarted when it terminates
+     * @psalm-param mixed $process
+     * @psalm-param mixed $reconnect
      */
     public function __construct($process, $reconnect)
     {

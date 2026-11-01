@@ -21,6 +21,7 @@ class LineIterator
 
     /**
      * @param Process $process the process to read the output from
+     * @psalm-param mixed $process
      */
     public function __construct($process)
     {
@@ -37,6 +38,7 @@ class LineIterator
      * The last line is yielded even if it does not end with a newline.
      *
      * @param int $flags a bit field of Process::ITER_* flags
+     * @psalm-param mixed $flags
      *
      * @return \Generator<string, null|string> an iterator to traverse the lines without newlines
      */
