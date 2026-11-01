@@ -234,7 +234,7 @@ final class PDOConnectWaitStrategy implements WaitStrategy
                 ]);
                 $this->logger()->debug('Pinging PDO connection');
                 $pdo->query('SELECT 1');
-                $pdo = null;
+                unset($pdo);
 
                 break;
             } catch (\PDOException $e) {
