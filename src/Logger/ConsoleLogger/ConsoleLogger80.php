@@ -1,6 +1,6 @@
 <?php
 
-namespace Testcontainers\Logger;
+namespace Testcontainers\Logger\ConsoleLogger;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\InvalidArgumentException;
@@ -17,7 +17,7 @@ use Psr\Log\LogLevel;
  *   $container->withLogger(new ConsoleLogger(null, LogLevel::WARNING));
  *   $container->withLogger(new ConsoleLogger(fopen('/tmp/tc.log', 'a')));
  */
-class ConsoleLogger extends AbstractLogger
+abstract class ConsoleLogger80 extends AbstractLogger
 {
     /**
      * @var array<string, int>
