@@ -48,6 +48,7 @@ class ConsoleLogger80 extends AbstractLogger
      * @param resource|null $stream   Stream to write to. Defaults to STDERR.
      * @param string        $minLevel Minimum PSR-3 log level to output. Defaults to DEBUG (all messages).
      * @psalm-param mixed $stream
+     * @psalm-param mixed $minLevel
      */
     public function __construct($stream = null, $minLevel = LogLevel::DEBUG)
     {
@@ -59,8 +60,8 @@ class ConsoleLogger80 extends AbstractLogger
         }
         $this->stream = $stream;
 
-        if (!isset(self::$LOG_LEVELS[$minLevel])) {
-            throw new InvalidArgumentException(sprintf('Invalid minimum log level: "%s"', $minLevel));
+        if (!is_string($minLevel) || !isset(self::$LOG_LEVELS[$minLevel])) {
+            throw new InvalidArgumentException(sprintf('Invalid minimum log level: %s', var_export($minLevel, true)));
         }
 
         $this->minLevel = $minLevel;
@@ -75,8 +76,8 @@ class ConsoleLogger80 extends AbstractLogger
      */
     public function log($level, string|\Stringable $message, array $context = []): void
     {
-        if (!isset(self::$LOG_LEVELS[$level])) {
-            throw new InvalidArgumentException(sprintf('Invalid log level: "%s"', $level));
+        if (!is_string($level) || !isset(self::$LOG_LEVELS[$level])) {
+            throw new InvalidArgumentException(sprintf('Invalid log level: %s', var_export($level, true)));
         }
 
         if (self::$LOG_LEVELS[$level] < self::$LOG_LEVELS[$this->minLevel]) {
