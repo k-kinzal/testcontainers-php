@@ -7,6 +7,7 @@ use Testcontainers\Docker\Types\ContainerId;
 
 /**
  * An interface representing an instance of a container.
+ * @api
  */
 interface ContainerInstance
 {

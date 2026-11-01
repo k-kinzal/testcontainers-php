@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * An interface representing the definition of a container.
+ * @api
  */
 interface Container
 {

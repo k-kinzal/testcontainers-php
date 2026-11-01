@@ -10,6 +10,7 @@ use Symfony\Component\Process\Process;
  *
  * This class provides methods to retrieve the standard output, error output,
  * and exit code of the Docker command.
+ * @api
  */
 class DockerOutput
 {

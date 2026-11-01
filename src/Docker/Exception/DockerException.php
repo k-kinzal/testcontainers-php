@@ -11,6 +11,7 @@ use Symfony\Component\Process\Process;
  * executed via the Symfony Process component has failed. It provides
  * detailed information about the command that was executed and the
  * exit code returned by the Docker process.
+ * @api
  */
 class DockerException extends \RuntimeException
 {
