@@ -9,6 +9,7 @@ use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Containers\Types\NetworkMode;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
+use Psr\Log\LoggerInterface;
 
 /**
  * An interface representing the definition of a container.
@@ -290,6 +291,22 @@ interface Container
      * @return self
      */
     public function withEntrypoint($entrypoint);
+
+    /**
+     * Set the logger for the container.
+     *
+     * @param LoggerInterface $logger the logger instance
+     *
+     * @return self
+     */
+    public function withLogger($logger);
+
+    /**
+     * Retrieve the logger for the container.
+     *
+     * @return LoggerInterface
+     */
+    public function logger();
 
     /**
      * Starts the container.

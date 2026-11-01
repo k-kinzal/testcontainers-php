@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\ReuseMode;
+use Testcontainers\Logger\ConsoleLogger;
 use Testcontainers\Testcontainers;
 use Tests\Images\AlpineContainer;
 
@@ -112,6 +113,89 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    public function testLoggerIsPassedToContainersWithoutTheirOwn()
+    {
+        $stream = fopen('php://memory', 'w+');
+
+        try {
+            Testcontainers::setLogger(new ConsoleLogger($stream));
+            Testcontainers::run(new AlpineContainer());
+
+            rewind($stream);
+            $this->assertTrue(strpos(stream_get_contents($stream), 'Starting container') !== false);
+        } finally {
+            Testcontainers::stop();
+            Testcontainers::setLogger(null);
+        }
+    }
+
+    public function testContainerLoggerTakesPrecedenceOverTestcontainersLogger()
+    {
+        $globalStream = fopen('php://memory', 'w+');
+        $containerStream = fopen('php://memory', 'w+');
+
+        try {
+            Testcontainers::setLogger(new ConsoleLogger($globalStream));
+            Testcontainers::run((new AlpineContainer())->withLogger(new ConsoleLogger($containerStream)));
+
+            rewind($globalStream);
+            rewind($containerStream);
+            $this->assertSame('', stream_get_contents($globalStream));
+            $this->assertTrue(strpos(stream_get_contents($containerStream), 'Starting container') !== false);
+        } finally {
+            Testcontainers::stop();
+            Testcontainers::setLogger(null);
+        }
+    }
+
+    public function testEnvironmentLoggerIsPassedToContainersWithoutLogger()
+    {
+        $container = new AlpineContainer();
+
+        try {
+            putenv('TESTCONTAINERS_LOG_LEVEL=error');
+            Testcontainers::run($container);
+
+            $this->assertInstanceOf(ConsoleLogger::class, $container->logger());
+        } finally {
+            Testcontainers::stop();
+            putenv('TESTCONTAINERS_LOG_LEVEL');
+        }
+    }
+
+    public function testContainerLoggerTakesPrecedenceOverEnvironmentLogger()
+    {
+        $containerLogger = new ConsoleLogger(fopen('php://memory', 'w+'));
+        $container = (new AlpineContainer())->withLogger($containerLogger);
+
+        try {
+            putenv('TESTCONTAINERS_LOG_LEVEL=error');
+            Testcontainers::run($container);
+
+            $this->assertSame($containerLogger, $container->logger());
+        } finally {
+            Testcontainers::stop();
+            putenv('TESTCONTAINERS_LOG_LEVEL');
+        }
+    }
+
+    public function testTestcontainersLoggerTakesPrecedenceOverEnvironmentLogger()
+    {
+        $logger = new ConsoleLogger(fopen('php://memory', 'w+'));
+        $container = new AlpineContainer();
+
+        try {
+            putenv('TESTCONTAINERS_LOG_LEVEL=error');
+            Testcontainers::setLogger($logger);
+            Testcontainers::run($container);
+
+            $this->assertSame($logger, $container->logger());
+        } finally {
+            Testcontainers::stop();
+            Testcontainers::setLogger(null);
+            putenv('TESTCONTAINERS_LOG_LEVEL');
+        }
+    }
 }
 
 class AlpineContainerWithAddMode extends GenericContainer

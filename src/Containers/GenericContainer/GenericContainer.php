@@ -14,7 +14,7 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Environments;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\SSH\Tunnel;
-use Testcontainers\Utility\WithLogger;
+use Testcontainers\Logger\WithLogger;
 
 /**
  * GenericContainer is a generic implementation of docker container.

@@ -962,44 +962,36 @@ This setting is particularly useful when you need to access container ports from
 
 ### Logging Settings
 
-testcontainers-php supports PSR-3 compatible logging, allowing you to gain insights into the library's internal operations and troubleshoot issues more effectively. Many core components, including `GenericContainer`, various wait strategies, and startup check strategies, utilize the `WithLogger` trait and provide a `withLogger()` method to inject your logger instance.
+Logging settings allow you to set a PSR-3 logger for the container. This is useful when you need to troubleshoot the startup of the container, such as a wait strategy that does not complete.
 
-By configuring a logger, you can receive detailed information about container lifecycle events, strategy executions, and potential errors.
+| Static Property | Method | Description |
+|-----------------|--------|-------------|
+| - | `logger()` | The PSR-3 logger for the container. The logger receives logs of the container lifecycle, and is also passed to the `docker run` command, the startup check strategy, and the wait strategy of the container. If not specified, no logs are output. |
 
-#### Example: Using a Logger with a Container and Wait Strategy
+#### Example
 
 ```php
-use Psr\\Log\\AbstractLogger;
-use Testcontainers\\GenericContainer;
-use Testcontainers\\Containers\\WaitStrategy\\HttpWaitStrategy;
+use Testcontainers\Logger\ConsoleLogger;
+use Testcontainers\Testcontainers;
 
-// Implement a simple PSR-3 logger (e.g., for demonstration)
-class MyLogger extends AbstractLogger
+// Method Override
+class MyContainer extends GenericContainer
 {
-    public function log($level, $message, array $context = [])
+    public function logger()
     {
-        echo sprintf("[%s] %s %s\\n", $level, $message, json_encode($context));
+        return new ConsoleLogger();
     }
 }
 
-$logger = new MyLogger();
-
+// Fluent API
 $container = (new GenericContainer('nginx:latest'))
-    ->withLogger($logger) // Set logger for the container itself
-    ->withExposedPorts([80])
-    ->withWaitStrategy(
-        (new HttpWaitStrategy())
-            ->withLogger($logger) // Set logger for the wait strategy
-            ->withPort(80)
-            ->withPath('/')
-            ->withExpectedResponseCode(200)
-            ->withTimeoutSeconds(10)
-    );
+    ->withLogger(new ConsoleLogger());
 
-// When Testcontainers::run($container) is called, both the container and its strategy will use the provided logger.
+// Global logging
+Testcontainers::setLogger(new ConsoleLogger());
 ```
 
-This allows you to centralize logging from different parts of testcontainers-php into your application's logging system.
+> **Note**: The logger can also be configured using the `TESTCONTAINERS_LOGGER` and `TESTCONTAINERS_LOG_LEVEL` environment variables. See the [Environments](environments.md) documentation for more information.
 
 ## Docker Client Configuration
 

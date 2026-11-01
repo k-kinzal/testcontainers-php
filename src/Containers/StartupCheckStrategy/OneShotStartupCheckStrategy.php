@@ -5,7 +5,7 @@ namespace Testcontainers\Containers\StartupCheckStrategy;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
-use Testcontainers\Utility\WithLogger;
+use Testcontainers\Logger\WithLogger;
 
 /**
  * StartupCheckStrategy that waits until a container has exited with code 0.

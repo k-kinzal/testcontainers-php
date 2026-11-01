@@ -141,3 +141,23 @@ $instance = Testcontainers::run(
 ```
 
 For more information about environment variables, see the [Environments](environments.md) documentation.
+
+## Debug Logging
+
+When the debug logging of the CI service is enabled and no logger is set in the test code, testcontainers-php outputs debug logs to STDERR.
+
+- GitHub Actions: Re-run the job with debug logging enabled, or set the `ACTIONS_STEP_DEBUG` secret or variable to `true`
+- GitLab CI: Set the `CI_DEBUG_TRACE` variable to `true`
+- Azure Pipelines: Set the `System.Debug` variable to `true`
+
+For CI services that do not provide debug logging, such as CircleCI, set the `TESTCONTAINERS_LOG_LEVEL` environment variable:
+
+```yaml
+      - run:
+          name: Run tests
+          environment:
+            TESTCONTAINERS_LOG_LEVEL: debug
+          command: vendor/bin/phpunit
+```
+
+For more information about environment variables, see the [Environments](environments.md) documentation.

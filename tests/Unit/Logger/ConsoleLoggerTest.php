@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Unit\Utility;
+namespace Tests\Unit\Logger;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Testcontainers\Utility\ConsoleLogger;
+use Testcontainers\Logger\ConsoleLogger;
 
 /**
  * @internal

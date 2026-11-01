@@ -2,11 +2,14 @@
 
 namespace Testcontainers;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Testcontainers\Containers\Container;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Lifecycle\ContainerReaper;
 use Testcontainers\Lifecycle\ShutdownHandler;
+use Testcontainers\Logger\LoggerFactory;
 
 /**
  * Class Testcontainers.
@@ -59,11 +62,32 @@ class Testcontainers
     private static $cleanupDone = false;
 
     /**
+     * Logger to be passed to started containers.
+     *
+     * @var null|LoggerInterface
+     */
+    private static $logger;
+
+    /**
+     * Set the logger for containers.
+     *
+     * This method sets the logger that is passed to containers started by the `run` method.
+     * The logger is not passed to containers that have their own logger.
+     *
+     * @param null|LoggerInterface $logger the logger instance
+     */
+    public static function setLogger($logger)
+    {
+        self::$logger = $logger;
+    }
+
+    /**
      * Run a container.
      *
      *　This method initializes and starts a container of the specified class.
      *  The container class must extend GenericContainer.
      *  If the container class has `beforeStart` and `afterStart` methods, they will be called appropriately.
+     *  If the container has no logger, the logger set by `setLogger` or specified by environment variables is passed to the container.
      *
      * @param class-string<Container>|Container $containerClass the class name of the container to run
      *
@@ -91,6 +115,10 @@ class Testcontainers
         }
         if ($reuseMode->isRestart() && isset(self::$instances[$identifier])) {
             self::$instances[$identifier]->stop();
+        }
+
+        if ($container->logger() instanceof NullLogger) {
+            $container->withLogger(self::$logger ?: LoggerFactory::create());
         }
 
         ShutdownHandler::register([self::class, 'stop']);

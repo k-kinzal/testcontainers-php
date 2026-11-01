@@ -1,6 +1,6 @@
 <?php
 
-namespace Testcontainers\Utility;
+namespace Testcontainers\Logger;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
