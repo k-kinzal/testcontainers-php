@@ -3,7 +3,7 @@
 namespace Testcontainers\Containers\WaitStrategy;
 
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Utility\WithLogger;
+use Testcontainers\Logger\WithLogger;
 
 /**
  * HostPortWaitStrategy waits until the specified ports on the container instance are available.

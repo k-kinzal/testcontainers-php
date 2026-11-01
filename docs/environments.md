@@ -20,6 +20,19 @@ These environment variables control how testcontainers-php handles host resoluti
 | `TESTCONTAINERS_SSH_FEEDFORWARDING` | Enable SSH port forwarding to the remote host that starts the container. The value should be a string in the format `[sshUser@]sshHost[:sshPort]`. This is useful when Docker is running on a remote machine and you need to access the container's ports from your local machine. |
 | `TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE` | The remote host to which the SSH port forwarding should be enabled. If not specified, `127.0.0.1` is used. |
 
+## Logging Environment Variables
+
+These environment variables control the logger that testcontainers-php passes to containers started by `Testcontainers::run()`.
+
+| Environment Variable | Description |
+|----------------------|-------------|
+| `TESTCONTAINERS_LOGGER` | The class name of the PSR-3 logger to be passed to the container. For example, `Testcontainers\Logger\ConsoleLogger`. The class is instantiated without constructor arguments. This is used only when no logger is set in code. |
+| `TESTCONTAINERS_LOG_LEVEL` | The minimum log level of `ConsoleLogger`. For example, `debug` or `warning`. If `TESTCONTAINERS_LOGGER` is not specified, `ConsoleLogger` writing to STDERR is used. This is used only when no logger is set in code. |
+| `RUNNER_DEBUG` | Set by GitHub Actions when debug logging is enabled. If `TESTCONTAINERS_LOG_LEVEL` is not specified, `debug` is used. |
+| `ACTIONS_STEP_DEBUG` | Set by GitHub Actions when step debug logging is enabled. If `TESTCONTAINERS_LOG_LEVEL` is not specified, `debug` is used. |
+| `CI_DEBUG_TRACE` | Set by GitLab CI when debug logging is enabled. If `TESTCONTAINERS_LOG_LEVEL` is not specified, `debug` is used. |
+| `SYSTEM_DEBUG` | Set by Azure Pipelines when debug logging is enabled. If `TESTCONTAINERS_LOG_LEVEL` is not specified, `debug` is used. |
+
 ## Using Environment Variables
 
 You can set these environment variables in your system or in your test setup code:

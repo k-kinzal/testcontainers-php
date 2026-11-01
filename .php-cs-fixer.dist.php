@@ -10,9 +10,9 @@ $finder = Finder::create()->in([
 
 // ConsoleLogger has version-specific files with incompatible syntax
 if (PHP_VERSION_ID < 80000) {
-    $finder->notPath('Utility/ConsoleLogger/ConsoleLogger80.php');
+    $finder->notPath('Logger/ConsoleLogger/ConsoleLogger80.php');
 } else {
-    $finder->notPath('Utility/ConsoleLogger/ConsoleLogger56.php');
+    $finder->notPath('Logger/ConsoleLogger/ConsoleLogger56.php');
 }
 
 return (new Config())

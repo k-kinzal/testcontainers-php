@@ -3,7 +3,7 @@
 namespace Testcontainers\Containers\WaitStrategy;
 
 use Testcontainers\Containers\ContainerInstance;
-use Testcontainers\Utility\WithLogger;
+use Testcontainers\Logger\WithLogger;
 
 /**
  * HttpWaitStrategy waits until a specified HTTP endpoint is reachable.

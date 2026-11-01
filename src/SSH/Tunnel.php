@@ -4,7 +4,7 @@ namespace Testcontainers\SSH;
 
 use Symfony\Component\Process\Process;
 use Testcontainers\SSH\Exceptions\TunnelException;
-use Testcontainers\Utility\WithLogger;
+use Testcontainers\Logger\WithLogger;
 
 /**
  * A tunnel for forwarding connections over SSH.

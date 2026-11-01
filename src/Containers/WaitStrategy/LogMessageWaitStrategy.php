@@ -6,7 +6,7 @@ use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Output\DockerFollowLogsOutput;
-use Testcontainers\Utility\WithLogger;
+use Testcontainers\Logger\WithLogger;
 
 /**
  * LogMessageWaitStrategy waits until a specified log message is found in the container logs.

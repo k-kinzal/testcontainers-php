@@ -6,7 +6,7 @@ use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Containers\WaitStrategy\WaitStrategy;
-use Testcontainers\Utility\WithLogger;
+use Testcontainers\Logger\WithLogger;
 
 /**
  * PDOConnectWaitStrategy ensures that a PDO connection is established before proceeding.

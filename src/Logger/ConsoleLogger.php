@@ -1,6 +1,6 @@
 <?php
 
-namespace Testcontainers\Utility;
+namespace Testcontainers\Logger;
 
 if (PHP_VERSION_ID >= 80000) {
     require_once __DIR__ . '/ConsoleLogger/ConsoleLogger80.php';

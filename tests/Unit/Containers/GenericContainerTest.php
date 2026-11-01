@@ -73,7 +73,7 @@ class GenericContainerTest extends TestCase
  */
 class FailingWaitStrategy implements \Testcontainers\Containers\WaitStrategy\WaitStrategy
 {
-    use \Testcontainers\Utility\WithLogger;
+    use \Testcontainers\Logger\WithLogger;
 
     public function waitUntilReady($instance)
     {
