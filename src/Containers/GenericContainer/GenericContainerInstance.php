@@ -203,7 +203,7 @@ final class GenericContainerInstance implements ContainerInstance
         }
 
         $override = Environments::TESTCONTAINERS_HOST_OVERRIDE();
-        if ($override) {
+        if ($override !== null && $override !== '') {
             return $override;
         }
 

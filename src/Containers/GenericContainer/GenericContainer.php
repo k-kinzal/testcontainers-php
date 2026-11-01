@@ -261,9 +261,9 @@ class GenericContainer implements Container
 
             if (count($ports) > 0) {
                 $sshPortForward = $this->sshPortForward();
-                if ($sshPortForward) {
+                if ($sshPortForward !== null) {
                     $port = $instance->getMappedPort(array_keys($ports)[0]);
-                    if ($port) {
+                    if ($port !== null && $port !== 0) {
                         $remoteHost = Environments::TESTCONTAINERS_SSH_FEEDFORWARDING_REMOTE_HOST_OVERRIDE();
                         if ($remoteHost === null) {
                             $remoteHost = '127.0.0.1';
@@ -272,10 +272,10 @@ class GenericContainer implements Container
                         $sshUser = isset($sshPortForward['sshUser']) ? $sshPortForward['sshUser'] : null;
                         $sshPort = isset($sshPortForward['sshPort']) ? $sshPortForward['sshPort'] : null;
                         $tunnel = (new Tunnel($port, $remoteHost, $port, $sshHost));
-                        if ($sshUser) {
+                        if ($sshUser !== null && $sshUser !== '') {
                             $tunnel->withUser($sshUser);
                         }
-                        if ($sshPort) {
+                        if ($sshPort !== null && $sshPort !== 0) {
                             $tunnel->withSshPort($sshPort);
                         }
                         $this->logger()->debug('Opening SSH tunnel');

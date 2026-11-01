@@ -261,8 +261,8 @@ final class HttpWaitStrategy implements WaitStrategy
         $now = time();
         $endpoint = $this->endpoint;
         if ($endpoint === null) {
-            $schema = $this->schema ?: 'http';
-            $host = $this->host ?: $instance->getHost();
+            $schema = $this->schema !== null && $this->schema !== '' ? $this->schema : 'http';
+            $host = $this->host !== null && $this->host !== '' ? $this->host : $instance->getHost();
             $port = $this->port;
             if ($port === null) {
                 $ports = $instance->getExposedPorts();
@@ -274,7 +274,7 @@ final class HttpWaitStrategy implements WaitStrategy
                     throw new \LogicException('HTTP wait strategy requires a mapped port');
                 }
             }
-            $path = $this->path ?: '/';
+            $path = $this->path !== null && $this->path !== '' ? $this->path : '/';
             $endpoint = sprintf('%s://%s:%s%s', $schema, $host, $port, $path);
         }
 
