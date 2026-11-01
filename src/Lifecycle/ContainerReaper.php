@@ -95,16 +95,13 @@ class ContainerReaper
             return true;
         }
 
-        if (!function_exists('shell_exec')) {
+        try {
+            $process = new \Symfony\Component\Process\Process(['kill', '-0', (string) $pid]);
+            $process->run();
+
+            return $process->isSuccessful();
+        } catch (\Exception $e) {
             return true;
         }
-
-        $result = @shell_exec("kill -0 {$pid} 2>/dev/null && echo 1 || echo 0");
-
-        if (!is_string($result)) {
-            return true;
-        }
-
-        return trim($result) === '1';
     }
 }
