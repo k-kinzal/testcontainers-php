@@ -80,7 +80,7 @@ trait PortSetting
     /**
      * The port strategy provider.
      *
-     * @var PortStrategyProvider
+     * @var null|PortStrategyProvider
      */
     private $portStrategyProvider;
 

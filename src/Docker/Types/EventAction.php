@@ -928,7 +928,7 @@ class EventAction implements Stringable
         if (in_array($action, self::values(), true)) {
             return new self($action);
         }
-        $pos = is_string($action) ? strpos($action, ': ') : false;
+        $pos = strpos($action, ': ');
         if ($pos !== false) {
             $name = substr($action, 0, $pos);
             if (in_array($name, self::detailedValues(), true)) {
