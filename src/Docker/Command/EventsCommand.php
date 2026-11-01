@@ -23,11 +23,19 @@ trait EventsCommand
      *     timeout?: null|float|int,
      *     until?: null|int|string|Stringable,
      * } $options Additional options for the Docker events command, and `timeout` to override the timeout of the client
+     * @psalm-param mixed $options
      *
      * @return DockerEventsOutput the output of the Docker events command
      */
     public function events($options = [])
     {
+        self::ensureStringKeyedArray($options);
+
+        if (isset($options['timeout'])) {
+            self::ensureNonNegativeNumber($options['timeout']);
+
+        }
+
         $hasTimeout = array_key_exists('timeout', $options);
         $timeout = $hasTimeout ? $options['timeout'] : null;
         unset($options['timeout']);
@@ -42,7 +50,8 @@ trait EventsCommand
             false
         );
         if ($hasTimeout) {
-            $process->setTimeout($timeout);
+            $process->setTimeout($timeout === null ? null : self::ensureNonNegativeNumber($timeout));
+
         }
 
         return new DockerEventsOutput($process, !isset($options['until']));

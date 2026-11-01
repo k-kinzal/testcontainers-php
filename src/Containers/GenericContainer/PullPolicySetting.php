@@ -31,6 +31,7 @@ trait PullPolicySetting
      * Define the default image pull policy to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $PULL_POLICY;
 
@@ -45,11 +46,14 @@ trait PullPolicySetting
      * Set the image pull policy of the container.
      *
      * @param ImagePullPolicy $policy the image pull policy to set
+     * @psalm-param mixed $policy
      *
      * @return self
      */
     public function withImagePullPolicy($policy)
     {
+        self::ensureInstanceOf($policy, ImagePullPolicy::class);
+
         $this->pullPolicy = $policy;
 
         return $this;
@@ -59,6 +63,7 @@ trait PullPolicySetting
      * Set the image pull policy of the container. (Alias for `withImagePullPolicy`).
      *
      * @param ImagePullPolicy $policy the image pull policy to set
+     * @psalm-param mixed $policy
      *
      * @return self
      */
@@ -81,6 +86,8 @@ trait PullPolicySetting
     protected function pullPolicy()
     {
         if (static::$PULL_POLICY !== null) {
+            self::ensureString(static::$PULL_POLICY);
+
             return ImagePullPolicy::fromString(static::$PULL_POLICY);
         }
 

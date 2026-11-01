@@ -18,7 +18,7 @@ class DockerFollowLogsOutput extends DockerOutput
      */
     public function getIterator()
     {
-        $lines = new LineIterator($this->process);
+        $lines = new LineIterator(self::ensureInstanceOf($this->process, \Symfony\Component\Process\Process::class));
 
         return $lines->getIterator();
     }

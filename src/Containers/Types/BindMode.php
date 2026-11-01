@@ -2,15 +2,19 @@
 
 namespace Testcontainers\Containers\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
 class BindMode implements Stringable
 {
+    use Ensure;
+
     /**
      * The mode for read-only bind.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $READ_ONLY = 'ro';
 
@@ -18,6 +22,7 @@ class BindMode implements Stringable
      * The mode for read-write bind.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $READ_WRITE = 'rw';
 
@@ -30,10 +35,17 @@ class BindMode implements Stringable
 
     /**
      * @param string $mode
+     * @psalm-param mixed $mode
      */
     public function __construct($mode)
     {
-        assert(in_array($mode, [static::$READ_ONLY, static::$READ_WRITE]));
+        self::ensureString($mode);
+
+        $values = self::ensureStringList([static::$READ_ONLY, static::$READ_WRITE]);
+
+        if (!in_array($mode, $values, true)) {
+            throw new InvalidFormatException($mode, $values);
+        }
 
         $this->mode = $mode;
     }
@@ -67,6 +79,7 @@ class BindMode implements Stringable
      * Create a new instance of `BindMode` from a string representation.
      *
      * @param string $mode the string representation of the bind mode
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the provided mode is not valid
      *
@@ -74,8 +87,12 @@ class BindMode implements Stringable
      */
     public static function fromString($mode)
     {
-        if (!in_array($mode, [static::$READ_ONLY, static::$READ_WRITE])) {
-            throw new InvalidFormatException($mode, [static::$READ_ONLY, static::$READ_WRITE]);
+        self::ensureString($mode);
+
+        $values = self::ensureStringList([static::$READ_ONLY, static::$READ_WRITE]);
+
+        if (!in_array($mode, $values, true)) {
+            throw new InvalidFormatException($mode, $values);
         }
 
         return new self($mode);

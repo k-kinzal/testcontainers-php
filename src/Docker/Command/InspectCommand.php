@@ -20,6 +20,7 @@ trait InspectCommand
      * This method wraps the `docker inspect` command to retrieve detailed information about the specified container.
      *
      * @param ContainerId $containerId the ID of the container to inspect
+     * @psalm-param mixed $containerId
      *
      * @throws DockerException       if the Docker command fails for any other reason
      * @throws NoSuchObjectException if the specified container does not exist
@@ -28,6 +29,8 @@ trait InspectCommand
      */
     public function inspect($containerId)
     {
+        self::ensureInstanceOf($containerId, ContainerId::class);
+
         $process = $this->execute('inspect', null, [(string) $containerId], [
             'format' => 'json',
         ]);

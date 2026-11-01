@@ -49,6 +49,7 @@ class GenericContainer implements Container
      * Unique session ID for the current PHP process.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $sessionId;
 
@@ -61,25 +62,32 @@ class GenericContainer implements Container
 
     /**
      * @param null|string $image the image to be used for the container
+     * @psalm-param mixed $image
      */
     public function __construct($image = null)
     {
+        self::ensureNullableString($image);
+
         if ($image === null && static::$IMAGE === null) {
             throw new \InvalidArgumentException('Unexpectedly image and static::$IMAGE are both null');
         }
 
-        $this->image = $image ?: static::$IMAGE;
+        $this->image = self::ensureNonEmptyString($image !== null ? $image : static::$IMAGE);
+
     }
 
     /**
      * Set the Docker client.
      *
      * @param DockerClient $client the Docker client
+     * @psalm-param mixed $client
      *
      * @return self
      */
     public function withDockerClient($client)
     {
+        self::ensureInstanceOf($client, DockerClient::class);
+
         $this->client = $client;
 
         return $this;
@@ -92,6 +100,10 @@ class GenericContainer implements Container
     public function start()
     {
         $client = $this->client();
+
+        $stopTimeout = $this->stopTimeout();
+        $stopSignal = $this->stopSignal();
+        $inspectInterval = $this->inspectInterval();
 
         $portStrategy = $this->portStrategy();
 
@@ -222,9 +234,9 @@ class GenericContainer implements Container
             'ports' => $ports,
             'pull' => $this->pullPolicy(),
             'privileged' => $this->privileged(),
-            'stopTimeout' => $this->stopTimeout(),
-            'stopSignal' => $this->stopSignal(),
-            'inspectInterval' => $this->inspectInterval(),
+            'stopTimeout' => $stopTimeout,
+            'stopSignal' => $stopSignal,
+            'inspectInterval' => $inspectInterval,
         ];
         $instance = new GenericContainerInstance($containerDef);
         $instance->setDockerClient($client);
@@ -324,6 +336,6 @@ class GenericContainer implements Container
             }
         }
 
-        return self::$sessionId;
+        return self::ensureString(self::$sessionId);
     }
 }

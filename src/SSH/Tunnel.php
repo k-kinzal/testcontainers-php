@@ -17,6 +17,7 @@ class Tunnel
      * The local port to bind to.
      *
      * @var int
+     * @psalm-var mixed
      */
     protected $localPort;
 
@@ -24,6 +25,7 @@ class Tunnel
      * The remote host to connect to.
      *
      * @var string
+     * @psalm-var mixed
      */
     protected $remoteHost;
 
@@ -31,6 +33,7 @@ class Tunnel
      * The remote port to connect to.
      *
      * @var int
+     * @psalm-var mixed
      */
     protected $remotePort;
 
@@ -38,6 +41,7 @@ class Tunnel
      * The SSH host to connect to.
      *
      * @var string
+     * @psalm-var mixed
      */
     protected $sshHost;
 
@@ -45,6 +49,7 @@ class Tunnel
      * The user to connect as.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected $user;
 
@@ -52,6 +57,7 @@ class Tunnel
      * The SSH port to connect to.
      *
      * @var null|int
+     * @psalm-var mixed
      */
     protected $sshPort;
 
@@ -59,6 +65,7 @@ class Tunnel
      * The local bind address.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected $localBindAddress;
 
@@ -66,6 +73,7 @@ class Tunnel
      * The identity file to use.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected $identityFile;
 
@@ -73,6 +81,7 @@ class Tunnel
      * The SSH options to use.
      *
      * @var array<string, string>
+     * @psalm-var mixed
      */
     protected $sshOptions = [];
 
@@ -81,6 +90,10 @@ class Tunnel
      * @param string $remoteHost the remote host to connect to
      * @param int    $remotePort the remote port to connect to
      * @param string $sshHost    the SSH host to connect to
+     * @psalm-param mixed $localPort
+     * @psalm-param mixed $remoteHost
+     * @psalm-param mixed $remotePort
+     * @psalm-param mixed $sshHost
      */
     public function __construct(
         $localPort,
@@ -88,6 +101,24 @@ class Tunnel
         $remotePort,
         $sshHost
     ) {
+        self::ensureIntOrDigitString($localPort);
+
+        self::ensureIntOrDigitString($remotePort);
+
+        self::ensureNonEmptyString($remoteHost);
+
+        self::ensureNonEmptyString($sshHost);
+
+        if ($localPort < 1 || $localPort > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
+        }
+        $localPort = (int) $localPort;
+
+        if ($remotePort < 1 || $remotePort > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
+        }
+        $remotePort = (int) $remotePort;
+
         $this->localPort = $localPort;
         $this->remoteHost = $remoteHost;
         $this->remotePort = $remotePort;
@@ -98,11 +129,14 @@ class Tunnel
      * Set the user to connect as.
      *
      * @param string $user the user to connect as
+     * @psalm-param mixed $user
      *
      * @return self
      */
     public function withUser($user)
     {
+        self::ensureString($user);
+
         $this->user = $user;
 
         return $this;
@@ -112,11 +146,19 @@ class Tunnel
      * Set the SSH port to connect to.
      *
      * @param int $sshPort the SSH port to connect to
+     * @psalm-param mixed $sshPort
      *
      * @return self
      */
     public function withSshPort($sshPort)
     {
+        self::ensureIntOrDigitString($sshPort);
+
+        if ($sshPort < 1 || $sshPort > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
+        }
+        $sshPort = (int) $sshPort;
+
         $this->sshPort = $sshPort;
 
         return $this;
@@ -126,11 +168,14 @@ class Tunnel
      * Set the local bind address.
      *
      * @param string $localBindAddress the local bind address
+     * @psalm-param mixed $localBindAddress
      *
      * @return self
      */
     public function withLocalBindAddress($localBindAddress)
     {
+        self::ensureString($localBindAddress);
+
         $this->localBindAddress = $localBindAddress;
 
         return $this;
@@ -140,11 +185,14 @@ class Tunnel
      * Set the identity file to use.
      *
      * @param string $identityFile the identity file to use
+     * @psalm-param mixed $identityFile
      *
      * @return self
      */
     public function withIdentityFile($identityFile)
     {
+        self::ensureString($identityFile);
+
         $this->identityFile = $identityFile;
 
         return $this;
@@ -154,11 +202,14 @@ class Tunnel
      * Set the SSH options to use.
      *
      * @param array<string, string> $sshOptions the SSH options to use
+     * @psalm-param mixed $sshOptions
      *
      * @return self
      */
     public function withSshOptions($sshOptions)
     {
+        self::ensureStringMap($sshOptions);
+
         $this->sshOptions = $sshOptions;
 
         return $this;
@@ -169,12 +220,21 @@ class Tunnel
      *
      * @param string $option the SSH option to use
      * @param string $value  the value of the SSH option
+     * @psalm-param mixed $option
+     * @psalm-param mixed $value
      *
      * @return self
      */
     public function withSshOption($option, $value)
     {
-        $this->sshOptions[$option] = $value;
+        self::ensureString($option);
+
+        self::ensureString($value);
+
+        $options = self::ensureStringMap($this->sshOptions);
+
+        $options[$option] = $value;
+        $this->sshOptions = $options;
 
         return $this;
     }
@@ -186,6 +246,42 @@ class Tunnel
      */
     public function open()
     {
+        self::ensureIntOrDigitString($this->localPort);
+
+        if ($this->localPort < 1 || $this->localPort > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
+        }
+        $this->localPort = (int) $this->localPort;
+
+        self::ensureIntOrDigitString($this->remotePort);
+
+        if ($this->remotePort < 1 || $this->remotePort > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
+        }
+        $this->remotePort = (int) $this->remotePort;
+
+        $this->remoteHost = self::ensureNonEmptyString($this->remoteHost);
+
+        $this->sshHost = self::ensureNonEmptyString($this->sshHost);
+
+        $this->user = self::ensureNullableString($this->user);
+
+        $this->localBindAddress = self::ensureNullableString($this->localBindAddress);
+
+        $this->identityFile = self::ensureNullableString($this->identityFile);
+
+        $this->sshOptions = self::ensureStringMap($this->sshOptions);
+
+        if ($this->sshPort !== null) {
+            self::ensureIntOrDigitString($this->sshPort);
+
+            if ($this->sshPort < 1 || $this->sshPort > 65535) {
+                throw new \InvalidArgumentException('Port must be between 1 and 65535');
+            }
+            $this->sshPort = (int) $this->sshPort;
+
+        }
+
         $commandParts = [
             'ssh',
             '-v',

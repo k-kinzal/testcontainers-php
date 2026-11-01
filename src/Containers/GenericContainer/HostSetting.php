@@ -39,6 +39,7 @@ trait HostSetting
      *             hostname: string,
      *             ipAddress: string
      *             }[]|string[]
+     * @psalm-var mixed
      */
     protected static $EXTRA_HOSTS = [];
 
@@ -49,6 +50,7 @@ trait HostSetting
      *             hostname: string,
      *             ipAddress: string
      *             }[]|string[]
+     * @psalm-var mixed
      */
     protected static $HOSTS = [];
 
@@ -67,6 +69,8 @@ trait HostSetting
      *      ipAddress: string
      *  }|HostToIp|string $hostname The hostname to add
      * @param null|string $ipAddress the IP address associated with the hostname
+     * @psalm-param mixed $hostname
+     * @psalm-param mixed $ipAddress
      *
      * @throws \InvalidArgumentException if the arguments are invalid
      *
@@ -76,15 +80,18 @@ trait HostSetting
      */
     public function withExtraHost($hostname, $ipAddress = null)
     {
+        self::ensureNullableString($ipAddress);
+
         if (($hostname instanceof HostToIp) && $ipAddress === null) {
             $hostToIp = $hostname;
+
         } elseif (is_array($hostname) && $ipAddress === null) {
             $hostToIp = HostToIp::fromArray($hostname);
         } elseif (is_string($hostname) && is_string($ipAddress)) {
             $hostToIp = new HostToIp($hostname, $ipAddress);
         } else {
             throw new \InvalidArgumentException(
-                'Invalid arguments: withExtraHost(`'.json_encode($hostname).'`, `'.json_encode($ipAddress).'`)'
+                'Invalid arguments: withExtraHost(`'.(string) json_encode($hostname).'`, `'.(string) json_encode($ipAddress).'`)'
             );
         }
 
@@ -100,6 +107,7 @@ trait HostSetting
      *      hostname: string,
      *      ipAddress: string
      *  }[]|HostToIp[]|string[] $extraHosts The extra hosts to add
+     * @psalm-param mixed $extraHosts
      *
      * @throws \InvalidArgumentException if the arguments are invalid
      *
@@ -109,9 +117,11 @@ trait HostSetting
      */
     public function withExtraHosts($extraHosts)
     {
+        self::ensureArray($extraHosts);
+
         $this->extraHosts = [];
-        foreach ($extraHosts as $extraHost) {
-            $this->withExtraHost($extraHost);
+        foreach (array_keys($extraHosts) as $key) {
+            $this->withExtraHost($extraHosts[$key]);
         }
 
         return $this;
@@ -126,13 +136,17 @@ trait HostSetting
      */
     protected function extraHosts()
     {
-        $static = static::$EXTRA_HOSTS;
-        if (empty($static)) {
-            $static = static::$HOSTS;
+        $static = self::ensureNullableArray(static::$EXTRA_HOSTS);
+
+        if ($static === null || $static === []) {
+            $static = self::ensureNullableArray(static::$HOSTS);
+
         }
-        if (count($static) > 0) {
+        if ($static !== null && count($static) > 0) {
             $extraHosts = [];
-            foreach ($static as $extraHost) {
+            foreach (array_keys($static) as $key) {
+                $extraHost = self::ensureStringOrArray($static[$key]);
+
                 if (is_string($extraHost)) {
                     $extraHosts[] = HostToIp::fromString($extraHost);
                 } else {

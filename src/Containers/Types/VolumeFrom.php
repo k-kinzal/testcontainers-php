@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -13,6 +14,8 @@ use Testcontainers\Utility\Stringable;
  */
 class VolumeFrom implements Stringable
 {
+    use Ensure;
+
     /**
      * The name of the container to mount volumes from.
      *
@@ -30,9 +33,15 @@ class VolumeFrom implements Stringable
     /**
      * @param string   $name
      * @param BindMode $mode
+     * @psalm-param mixed $name
+     * @psalm-param mixed $mode
      */
     public function __construct($name, $mode)
     {
+        self::ensureNonEmptyString($name);
+
+        self::ensureInstanceOf($mode, BindMode::class);
+
         $this->name = $name;
         $this->mode = $mode;
     }
@@ -60,6 +69,7 @@ class VolumeFrom implements Stringable
      * Get the name of the container to mount volumes from.
      *
      * @param string $v the volume from string
+     * @psalm-param mixed $v
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -67,6 +77,8 @@ class VolumeFrom implements Stringable
      */
     public static function fromString($v)
     {
+        self::ensureString($v);
+
         if (strpos($v, ':') === false) {
             return new VolumeFrom($v, BindMode::READ_WRITE());
         }
@@ -80,11 +92,18 @@ class VolumeFrom implements Stringable
      *    name: string,
      *    mode: BindMode
      * } $arr The array representation of the volume from
+     * @psalm-param mixed $arr
      *
      * @return VolumeFrom
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
+        if (!isset($arr['name'], $arr['mode'])) {
+            throw new \InvalidArgumentException('Volume requires name and mode');
+        }
+
         return new VolumeFrom($arr['name'], $arr['mode']);
     }
 

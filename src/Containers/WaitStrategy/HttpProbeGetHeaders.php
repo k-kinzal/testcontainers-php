@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\WaitStrategy;
 
+use Testcontainers\Utility\Ensure;
+
 /**
  * HttpProbeGetHeaders checks the availability of a specific HTTP endpoint by retrieving its headers.
  *
@@ -10,8 +12,14 @@ namespace Testcontainers\Containers\WaitStrategy;
  */
 class HttpProbeGetHeaders implements HttpProbe
 {
+    use Ensure;
+
     public function available($endpoint, $responseCode = 200)
     {
+        self::ensureString($endpoint);
+
+        self::ensureIntRange($responseCode, 100, 599);
+
         $headers = @get_headers($endpoint);
         if ($headers === false) {
             return false;

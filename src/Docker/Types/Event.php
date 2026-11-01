@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Exceptions\InvalidFormatException;
 
@@ -20,6 +21,8 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class Event
 {
+    use Ensure;
+
     /**
      * The type of the object that generated the event.
      *
@@ -107,6 +110,7 @@ class Event
      * Create an Event from a JSON-decoded array.
      *
      * @param array $arr the decoded JSON object of a Docker event
+     * @psalm-param mixed $arr
      *
      * @throws InvalidValueException if the array does not contain the expected properties
      *
@@ -114,15 +118,25 @@ class Event
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
         $event = new self();
         $event->type = self::ensureTypeFromArray($arr);
+
         $event->action = self::ensureActionFromArray($arr);
+
         $event->actor = self::ensureActorFromArray($arr);
+
         $event->scope = self::ensureScopeFromArray($arr);
+
         $event->time = self::ensureOptionalIntFromArray($arr, 'time');
+
         $event->timeNano = self::ensureOptionalIntFromArray($arr, 'timeNano');
+
         $event->status = self::ensureOptionalStringFromArray($arr, 'status');
+
         $event->id = self::ensureOptionalStringFromArray($arr, 'id');
+
         $event->from = self::ensureOptionalStringFromArray($arr, 'from');
 
         return $event;
@@ -132,6 +146,7 @@ class Event
      * Deserialize an Event from a JSON string.
      *
      * @param string $s the JSON representation of a Docker event
+     * @psalm-param mixed $s
      *
      * @throws InvalidValueException if the string is not a valid event
      *
@@ -139,6 +154,8 @@ class Event
      */
     public static function deserialize($s)
     {
+        self::ensureString($s);
+
         $decoded = json_decode($s, true);
         if (!is_array($decoded)) {
             throw new InvalidValueException(sprintf('Event expects a JSON object, but received `%s`', $s), ['data' => $s]);
@@ -232,6 +249,7 @@ class Event
     private static function ensureScopeFromArray($arr)
     {
         $scope = self::ensureOptionalStringFromArray($arr, 'scope');
+
         if ($scope === null) {
             return null;
         }

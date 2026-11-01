@@ -30,6 +30,7 @@ trait GeneralSetting
      * Define the default image to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $IMAGE;
 
@@ -37,6 +38,7 @@ trait GeneralSetting
      * The commands to be executed in the container.
      *
      * @var null|string|string[]
+     * @psalm-var mixed
      */
     protected static $COMMANDS;
 
@@ -44,6 +46,7 @@ trait GeneralSetting
      * Define the default name to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $NAME;
 
@@ -68,15 +71,25 @@ trait GeneralSetting
      */
     private $name;
 
+    /**
+     * @psalm-param mixed $cmd
+     */
     public function withCommand($cmd)
     {
+        self::ensureString($cmd);
+
         $this->commands = [$cmd];
 
         return $this;
     }
 
+    /**
+     * @psalm-param mixed $commandParts
+     */
     public function withCommands($commandParts)
     {
+        $commandParts = self::ensureStringList($commandParts);
+
         $this->commands = $commandParts;
 
         return $this;
@@ -86,11 +99,14 @@ trait GeneralSetting
      * Set the name for this container, similar to the `--name <name>` option on the Docker CLI.
      *
      * @param string $name the name to set
+     * @psalm-param mixed $name
      *
      * @return self
      */
     public function withName($name)
     {
+        self::ensureNullableString($name);
+
         $this->name = $name;
 
         return $this;
@@ -117,8 +133,10 @@ trait GeneralSetting
      */
     protected function commands()
     {
-        if (static::$COMMANDS !== null) {
-            return static::$COMMANDS;
+        $commands = self::ensureNullableStringOrStringList(static::$COMMANDS);
+
+        if ($commands !== null) {
+            return $commands;
         }
         if ($this->commands) {
             return $this->commands;
@@ -170,6 +188,8 @@ trait GeneralSetting
      */
     protected function name()
     {
+        self::ensureNullableString(static::$NAME);
+
         if (static::$NAME !== null) {
             return static::$NAME;
         }

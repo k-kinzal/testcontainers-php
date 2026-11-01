@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -11,6 +12,8 @@ use Testcontainers\Utility\Stringable;
  */
 class NetworkId implements Stringable
 {
+    use Ensure;
+
     /**
      * The ID of the Docker container.
      *
@@ -20,11 +23,14 @@ class NetworkId implements Stringable
 
     /**
      * @param string $v
+     * @psalm-param mixed $v
      *
      * @throws \InvalidArgumentException if the network ID is not a valid 64-character hexadecimal string
      */
     public function __construct($v)
     {
+        self::ensureString($v);
+
         if (!self::isValid($v)) {
             throw new \LogicException('Invalid network ID: `'.$v.'`');
         }
@@ -64,6 +70,7 @@ class NetworkId implements Stringable
      * Create a NetworkId object from a string.
      *
      * @param string $v the network ID
+     * @psalm-param mixed $v
      *
      * @throws \InvalidArgumentException if the network ID is not valid
      *
@@ -71,6 +78,8 @@ class NetworkId implements Stringable
      */
     public static function fromString($v)
     {
+        self::ensureString($v);
+
         if (!self::isValid($v)) {
             throw new \InvalidArgumentException('Invalid network ID: `'.$v.'`');
         }

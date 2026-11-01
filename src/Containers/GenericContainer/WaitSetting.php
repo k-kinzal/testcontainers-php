@@ -36,6 +36,7 @@ trait WaitSetting
      * Define the default wait strategy to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $WAIT_STRATEGY;
 
@@ -57,11 +58,14 @@ trait WaitSetting
      * Set the wait strategy used for waiting for the container to start.
      *
      * @param WaitStrategy $waitStrategy the wait strategy to use
+     * @psalm-param mixed $waitStrategy
      *
      * @return self
      */
     public function withWaitStrategy($waitStrategy)
     {
+        self::ensureInstanceOf($waitStrategy, WaitStrategy::class);
+
         $this->waitStrategy = $waitStrategy;
 
         return $this;
@@ -80,14 +84,18 @@ trait WaitSetting
      */
     protected function waitStrategy(/* @noinspection PhpUnusedParameterInspection */ $instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         if ($this->waitStrategyProvider === null) {
             $this->waitStrategyProvider = new WaitStrategyProvider();
             $this->registerWaitStrategy($this->waitStrategyProvider);
         }
         if (static::$WAIT_STRATEGY !== null) {
-            $strategy = $this->waitStrategyProvider->get(static::$WAIT_STRATEGY);
+            $name = self::ensureString(static::$WAIT_STRATEGY);
+
+            $strategy = $this->waitStrategyProvider->get($name);
             if (!$strategy) {
-                throw new \LogicException('Wait strategy not found: '.static::$WAIT_STRATEGY);
+                throw new \LogicException('Wait strategy not found: '.$name);
             }
 
             return $strategy;

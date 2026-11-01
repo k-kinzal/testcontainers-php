@@ -35,6 +35,7 @@ trait MountSetting
      * Define the default mounts to be used for the container.
      *
      * @var null|string[]
+     * @psalm-var mixed
      */
     protected static $MOUNTS;
 
@@ -42,6 +43,7 @@ trait MountSetting
      * Define the default volumes to be used for the container. (Alias for $MOUNTS).
      *
      * @var null|string[]
+     * @psalm-var mixed
      */
     protected static $VOLUMES;
 
@@ -70,6 +72,9 @@ trait MountSetting
      * }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
+     * @psalm-param mixed $hostPath
+     * @psalm-param mixed $containerPath
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -77,6 +82,10 @@ trait MountSetting
      */
     public function withFileSystemBind($hostPath, $containerPath = null, $mode = null)
     {
+        self::ensureNullableString($containerPath);
+
+        self::ensureNullableInstanceOf($mode, BindMode::class);
+
         if ($containerPath === null || $mode === null) {
             if (is_string($hostPath)) {
                 $mount = Mount::fromString($hostPath);
@@ -119,6 +128,7 @@ trait MountSetting
      *      nocopy?: bool,
      *      opt?: array<string, string>
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     * @psalm-param mixed $mounts
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -126,9 +136,11 @@ trait MountSetting
      */
     public function withFileSystemBinds($mounts)
     {
+        self::ensureArray($mounts);
+
         $this->mounts = [];
-        foreach ($mounts as $mount) {
-            $this->withFileSystemBind($mount);
+        foreach (array_keys($mounts) as $key) {
+            $this->withFileSystemBind($mounts[$key]);
         }
 
         return $this;
@@ -152,6 +164,9 @@ trait MountSetting
      *  }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
+     * @psalm-param mixed $hostPath
+     * @psalm-param mixed $containerPath
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -178,6 +193,7 @@ trait MountSetting
      *      nocopy?: bool,
      *      opt?: array<string, string>
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     * @psalm-param mixed $mounts
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -206,6 +222,9 @@ trait MountSetting
      *  }|Mount|string $hostPath The path on the host machine. or a string/array/Mount instance representing the mount configuration.
      * @param null|string   $containerPath the path inside the container
      * @param null|BindMode $mode          The mode of the bind (e.g., read-only or read-write).
+     * @psalm-param mixed $hostPath
+     * @psalm-param mixed $containerPath
+     * @psalm-param mixed $mode
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -232,6 +251,7 @@ trait MountSetting
      *      nocopy?: bool,
      *      opt?: array<string, string>
      *  }[]|Mount[]|string[] $mounts An array of mounts, where each mount is a string, array, or Mount instance representing the mount configuration
+     * @psalm-param mixed $mounts
      *
      * @throws InvalidFormatException if the mount format is invalid
      *
@@ -254,9 +274,11 @@ trait MountSetting
      */
     protected function mounts()
     {
-        $mounts = static::$MOUNTS;
-        if (empty($mounts)) {
-            $mounts = static::$VOLUMES;
+        $mounts = self::ensureNullableStringList(static::$MOUNTS);
+
+        if ($mounts === null || $mounts === []) {
+            $mounts = self::ensureNullableStringList(static::$VOLUMES);
+
         }
         if (!empty($mounts)) {
             $m = [];

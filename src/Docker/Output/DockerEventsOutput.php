@@ -6,6 +6,7 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\Event;
 use Testcontainers\Utility\LineIterator;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents the output of a Docker `events` command executed via Symfony Process.
@@ -14,6 +15,8 @@ use Testcontainers\Utility\LineIterator;
  */
 class DockerEventsOutput
 {
+    use Ensure;
+
     /**
      * The running Docker events process.
      *
@@ -41,6 +44,10 @@ class DockerEventsOutput
      */
     public function __construct($process, $reconnect)
     {
+        self::ensureInstanceOf($process, Process::class);
+
+        self::ensureBool($reconnect);
+
         $this->process = $process;
         $this->reconnect = $reconnect;
     }

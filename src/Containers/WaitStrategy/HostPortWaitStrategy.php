@@ -45,9 +45,15 @@ class HostPortWaitStrategy implements WaitStrategy
 
     /**
      * @param PortProbeTcp $probe
+     * @psalm-param mixed $probe
      */
     public function __construct($probe = null)
     {
+        if ($probe !== null) {
+            self::ensureInstanceOf($probe, PortProbe::class);
+
+        }
+
         $this->probe = $probe ?: new PortProbeTcp();
     }
 
@@ -55,11 +61,25 @@ class HostPortWaitStrategy implements WaitStrategy
      * Sets the ports to be checked for readiness.
      *
      * @param int[] $ports an array of port numbers
+     * @psalm-param mixed $ports
      *
      * @return $this the current instance for method chaining
      */
     public function withPorts($ports)
     {
+        self::ensureArray($ports);
+
+        $normalizedPorts = [];
+        foreach (array_keys($ports) as $key) {
+            self::ensureIntOrDigitString($ports[$key]);
+
+            if ($ports[$key] < 1 || $ports[$key] > 65535) {
+                throw new \InvalidArgumentException('Port must be between 1 and 65535');
+            }
+            $normalizedPorts[] = (int) $ports[$key];
+        }
+        $ports = $normalizedPorts;
+
         $this->ports = $ports;
 
         return $this;
@@ -69,11 +89,14 @@ class HostPortWaitStrategy implements WaitStrategy
      * Sets the timeout duration for waiting until the container instance is ready.
      *
      * @param int $seconds the number of seconds to wait before timing out
+     * @psalm-param mixed $seconds
      *
      * @return $this the current instance for method chaining
      */
     public function withTimeoutSeconds($seconds)
     {
+        self::ensureIntRange($seconds, 0);
+
         $this->timeout = $seconds;
 
         return $this;
@@ -83,11 +106,14 @@ class HostPortWaitStrategy implements WaitStrategy
      * Sets the interval duration between each retry attempt.
      *
      * @param int $interval the interval duration in microseconds
+     * @psalm-param mixed $interval
      *
      * @return $this the current instance for method chaining
      */
     public function withRetryInterval($interval)
     {
+        self::ensureIntRange($interval, 0);
+
         $this->retryInterval = $interval;
 
         return $this;
@@ -97,9 +123,12 @@ class HostPortWaitStrategy implements WaitStrategy
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
+     * @psalm-param mixed $instance
      */
     public function waitUntilReady($instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         $now = time();
 
         $host = $instance->getHost();

@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Docker\Exception\InvalidValueException;
 
 /**
@@ -11,6 +12,8 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  */
 class ContainerObject
 {
+    use Ensure;
+
     /**
      * The state of the container.
      *
@@ -42,6 +45,7 @@ class ContainerObject
      * Create a ContainerObject from an array.
      *
      * @param array $arr the array to create the ContainerObject from
+     * @psalm-param mixed $arr
      *
      * @throws InvalidValueException if the array does not contain the expected properties
      *
@@ -49,6 +53,8 @@ class ContainerObject
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
         $object = new ContainerObject();
         $object->state = self::ensureStateFromArray($arr);
 

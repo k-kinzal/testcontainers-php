@@ -39,11 +39,14 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      * Sets the docker client.
      *
      * @param DockerClient $client the docker client
+     * @psalm-param mixed $client
      *
      * @return self
      */
     public function withDockerClient($client)
     {
+        self::ensureInstanceOf($client, DockerClient::class);
+
         $this->client = $client;
 
         return $this;
@@ -53,11 +56,14 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      * Sets the timeout duration for waiting until the container instance is ready.
      *
      * @param int $seconds the number of seconds to wait before timing out
+     * @psalm-param mixed $seconds
      *
      * @return $this the current instance for method chaining
      */
     public function withTimeoutSeconds($seconds)
     {
+        self::ensureIntRange($seconds, 0);
+
         $this->timeout = $seconds;
 
         return $this;
@@ -67,11 +73,14 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      * Sets the interval in microseconds to wait before retrying the check.
      *
      * @param int $interval the interval in microseconds
+     * @psalm-param mixed $interval
      *
      * @return $this the current instance for method chaining
      */
     public function withRetryInterval($interval)
     {
+        self::ensureIntRange($interval, 0);
+
         $this->retryInterval = $interval;
 
         return $this;
@@ -81,11 +90,14 @@ class IsRunningStartupCheckStrategy implements StartupCheckStrategy
      * Wait until the container startup is successful.
      *
      * @param ContainerInstance $instance the container instance to check
+     * @psalm-param mixed $instance
      *
      * @return bool
      */
     public function waitUntilStartupSuccessful($instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         $now = time();
 
         $client = $this->client ?: DockerClientFactory::create();

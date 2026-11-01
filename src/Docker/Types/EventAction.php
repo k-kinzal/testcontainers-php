@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Utility\Stringable;
 
@@ -10,10 +11,13 @@ use Testcontainers\Utility\Stringable;
  */
 class EventAction implements Stringable
 {
+    use Ensure;
+
     /**
      * The action emitted when an object is created.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $CREATE = 'create';
 
@@ -21,6 +25,7 @@ class EventAction implements Stringable
      * The action emitted when a container is started.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $START = 'start';
 
@@ -28,6 +33,7 @@ class EventAction implements Stringable
      * The action emitted when a container is restarted.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $RESTART = 'restart';
 
@@ -35,6 +41,7 @@ class EventAction implements Stringable
      * The action emitted when a container is stopped.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $STOP = 'stop';
 
@@ -42,6 +49,7 @@ class EventAction implements Stringable
      * The action emitted when a checkpoint of a container is created.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $CHECKPOINT = 'checkpoint';
 
@@ -49,6 +57,7 @@ class EventAction implements Stringable
      * The action emitted when a container is paused.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $PAUSE = 'pause';
 
@@ -56,6 +65,7 @@ class EventAction implements Stringable
      * The action emitted when a container is unpaused.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $UNPAUSE = 'unpause';
 
@@ -63,6 +73,7 @@ class EventAction implements Stringable
      * The action emitted when a client attaches to a container.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $ATTACH = 'attach';
 
@@ -70,6 +81,7 @@ class EventAction implements Stringable
      * The action emitted when a client detaches from a container.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $DETACH = 'detach';
 
@@ -77,6 +89,7 @@ class EventAction implements Stringable
      * The action emitted when the TTY of a container is resized.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $RESIZE = 'resize';
 
@@ -84,6 +97,7 @@ class EventAction implements Stringable
      * The action emitted when an object is updated.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $UPDATE = 'update';
 
@@ -91,6 +105,7 @@ class EventAction implements Stringable
      * The action emitted when a container is renamed.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $RENAME = 'rename';
 
@@ -98,6 +113,7 @@ class EventAction implements Stringable
      * The action emitted when a signal is sent to a container.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $KILL = 'kill';
 
@@ -105,6 +121,7 @@ class EventAction implements Stringable
      * The action emitted when the main process of a container exits.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $DIE = 'die';
 
@@ -112,6 +129,7 @@ class EventAction implements Stringable
      * The action emitted when a container runs out of memory.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $OOM = 'oom';
 
@@ -119,6 +137,7 @@ class EventAction implements Stringable
      * The action emitted when an object is destroyed.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $DESTROY = 'destroy';
 
@@ -126,6 +145,7 @@ class EventAction implements Stringable
      * The action emitted when an object is removed.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $REMOVE = 'remove';
 
@@ -133,6 +153,7 @@ class EventAction implements Stringable
      * The action emitted when a container is committed to an image.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $COMMIT = 'commit';
 
@@ -140,6 +161,7 @@ class EventAction implements Stringable
      * The action emitted when the processes of a container are listed.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $TOP = 'top';
 
@@ -147,6 +169,7 @@ class EventAction implements Stringable
      * The action emitted when files are copied from or to a container.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $COPY = 'copy';
 
@@ -154,6 +177,7 @@ class EventAction implements Stringable
      * The action emitted when a path of a container is archived.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $ARCHIVE_PATH = 'archive-path';
 
@@ -161,6 +185,7 @@ class EventAction implements Stringable
      * The action emitted when an archive is extracted into a container.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $EXTRACT_TO_DIR = 'extract-to-dir';
 
@@ -168,6 +193,7 @@ class EventAction implements Stringable
      * The action emitted when a container is exported.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $EXPORT = 'export';
 
@@ -175,6 +201,7 @@ class EventAction implements Stringable
      * The action emitted when an image is imported.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $IMPORT = 'import';
 
@@ -182,6 +209,7 @@ class EventAction implements Stringable
      * The action emitted when an image is saved.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $SAVE = 'save';
 
@@ -189,6 +217,7 @@ class EventAction implements Stringable
      * The action emitted when an image is loaded.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $LOAD = 'load';
 
@@ -196,6 +225,7 @@ class EventAction implements Stringable
      * The action emitted when an image is tagged.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $TAG = 'tag';
 
@@ -203,6 +233,7 @@ class EventAction implements Stringable
      * The action emitted when an image is untagged.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $UNTAG = 'untag';
 
@@ -210,6 +241,7 @@ class EventAction implements Stringable
      * The action emitted when an image is pushed.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $PUSH = 'push';
 
@@ -217,6 +249,7 @@ class EventAction implements Stringable
      * The action emitted when an image is pulled.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $PULL = 'pull';
 
@@ -224,6 +257,7 @@ class EventAction implements Stringable
      * The action emitted when objects are pruned.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $PRUNE = 'prune';
 
@@ -231,6 +265,7 @@ class EventAction implements Stringable
      * The action emitted when an image is deleted.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $DELETE = 'delete';
 
@@ -238,6 +273,7 @@ class EventAction implements Stringable
      * The action emitted when a plugin is enabled.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $ENABLE = 'enable';
 
@@ -245,6 +281,7 @@ class EventAction implements Stringable
      * The action emitted when a plugin is disabled.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $DISABLE = 'disable';
 
@@ -252,6 +289,7 @@ class EventAction implements Stringable
      * The action emitted when a container is connected to a network.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $CONNECT = 'connect';
 
@@ -259,6 +297,7 @@ class EventAction implements Stringable
      * The action emitted when a container is disconnected from a network.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $DISCONNECT = 'disconnect';
 
@@ -266,6 +305,7 @@ class EventAction implements Stringable
      * The action emitted when the daemon configuration is reloaded.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $RELOAD = 'reload';
 
@@ -273,6 +313,7 @@ class EventAction implements Stringable
      * The action emitted when a volume is mounted.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $MOUNT = 'mount';
 
@@ -280,6 +321,7 @@ class EventAction implements Stringable
      * The action emitted when a volume is unmounted.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $UNMOUNT = 'unmount';
 
@@ -287,6 +329,7 @@ class EventAction implements Stringable
      * The action emitted when an exec instance is created. It is commonly followed by `: ` and the command of the exec.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $EXEC_CREATE = 'exec_create';
 
@@ -294,6 +337,7 @@ class EventAction implements Stringable
      * The action emitted when an exec instance is started. It is commonly followed by `: ` and the command of the exec.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $EXEC_START = 'exec_start';
 
@@ -301,6 +345,7 @@ class EventAction implements Stringable
      * The action emitted when the process of an exec instance exits.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $EXEC_DIE = 'exec_die';
 
@@ -308,6 +353,7 @@ class EventAction implements Stringable
      * The action emitted when a client detaches from an exec instance.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $EXEC_DETACH = 'exec_detach';
 
@@ -315,6 +361,7 @@ class EventAction implements Stringable
      * The action emitted when the health status of a container changes. It is followed by `: ` and the health status.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $HEALTH_STATUS = 'health_status';
 
@@ -322,6 +369,7 @@ class EventAction implements Stringable
      * The health status reported when the health check is running.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $HEALTH_STATUS_RUNNING = 'running';
 
@@ -329,6 +377,7 @@ class EventAction implements Stringable
      * The health status reported when the container is healthy.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $HEALTH_STATUS_HEALTHY = 'healthy';
 
@@ -336,6 +385,7 @@ class EventAction implements Stringable
      * The health status reported when the container is unhealthy.
      *
      * @var string
+     * @psalm-var mixed
      */
     public static $HEALTH_STATUS_UNHEALTHY = 'unhealthy';
 
@@ -356,11 +406,19 @@ class EventAction implements Stringable
     /**
      * @param string      $name   the name of the action
      * @param null|string $detail the detail following the action name
+     * @psalm-param mixed $name
+     * @psalm-param mixed $detail
      */
     public function __construct($name, $detail = null)
     {
-        assert(in_array($name, self::values()));
-        assert($detail === null || in_array($name, self::detailedValues()));
+        self::ensureNullableString($detail);
+
+        if (!in_array($name, self::values(), true)) {
+            throw new InvalidFormatException($name, self::values());
+        }
+        if ($detail !== null && !in_array($name, self::detailedValues(), true)) {
+            throw new InvalidFormatException($name, self::detailedValues());
+        }
 
         $this->name = $name;
         $this->detail = $detail;
@@ -768,6 +826,7 @@ class EventAction implements Stringable
      * Create a new instance of `EventAction` with the `EXEC_CREATE` action.
      *
      * @param null|string $command the command following the action name
+     * @psalm-param mixed $command
      *
      * @return self
      */
@@ -780,6 +839,7 @@ class EventAction implements Stringable
      * Create a new instance of `EventAction` with the `EXEC_START` action.
      *
      * @param null|string $command the command following the action name
+     * @psalm-param mixed $command
      *
      * @return self
      */
@@ -812,6 +872,7 @@ class EventAction implements Stringable
      * Create a new instance of `EventAction` with the `HEALTH_STATUS` action.
      *
      * @param null|string $status the status following the action name
+     * @psalm-param mixed $status
      *
      * @return self
      */
@@ -854,6 +915,7 @@ class EventAction implements Stringable
      * Create a new instance of `EventAction` from a string representation.
      *
      * @param string $action the string representation of the action (e.g. `die`, `health_status: healthy`)
+     * @psalm-param mixed $action
      *
      * @throws InvalidFormatException if the provided action is not valid
      *
@@ -861,6 +923,8 @@ class EventAction implements Stringable
      */
     public static function fromString($action)
     {
+        self::ensureString($action);
+
         if (in_array($action, self::values(), true)) {
             return new self($action);
         }
@@ -882,7 +946,7 @@ class EventAction implements Stringable
      */
     public static function values()
     {
-        return [
+        return self::ensureStringList([
             static::$CREATE,
             static::$START,
             static::$RESTART,
@@ -927,7 +991,7 @@ class EventAction implements Stringable
             static::$EXEC_DIE,
             static::$EXEC_DETACH,
             static::$HEALTH_STATUS,
-        ];
+        ]);
     }
 
     /**
@@ -937,11 +1001,11 @@ class EventAction implements Stringable
      */
     public static function detailedValues()
     {
-        return [
+        return self::ensureStringList([
             static::$EXEC_CREATE,
             static::$EXEC_START,
             static::$HEALTH_STATUS,
-        ];
+        ]);
     }
 
     /**

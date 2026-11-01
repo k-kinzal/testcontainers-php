@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Docker\Exception\InvalidValueException;
 
 /**
@@ -12,6 +13,8 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  */
 class State
 {
+    use Ensure;
+
     /**
      * Container status of "created", "running", "paused", "restarting", "removing", "exited", or "dead".
      *
@@ -50,6 +53,7 @@ class State
      * Create a State object from an array.
      *
      * @param array $arr the array to create the State object from
+     * @psalm-param mixed $arr
      *
      * @throws InvalidValueException if the array does not contain the expected properties
      *
@@ -57,8 +61,11 @@ class State
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
         $state = new State();
         $state->status = self::ensureStatusFromArray($arr);
+
         $state->exitCode = self::ensureExitCodeFromArray($arr);
 
         return $state;
@@ -68,6 +75,7 @@ class State
      * Ensure that the 'Status' property is a string and is one of the expected values.
      *
      * @param array $arr the array to check
+     * @psalm-param mixed $arr
      *
      * @throws InvalidValueException if the 'Status' property is missing, not a string, or not one of the expected values
      *
@@ -75,6 +83,8 @@ class State
      */
     public static function ensureStatusFromArray($arr)
     {
+        self::ensureArray($arr);
+
         if (!isset($arr['Status'])) {
             throw new InvalidValueException("State expects a string 'Status' property, but 'Status' is missing", ['data' => $arr]);
         }
@@ -104,6 +114,7 @@ class State
      * Ensure that the 'ExitCode' property is an integer.
      *
      * @param array $arr the array to check
+     * @psalm-param mixed $arr
      *
      * @throws InvalidValueException if the 'ExitCode' property is missing or not an integer
      *
@@ -111,6 +122,8 @@ class State
      */
     public static function ensureExitCodeFromArray($arr)
     {
+        self::ensureArray($arr);
+
         if (!isset($arr['ExitCode'])) {
             throw new InvalidValueException("State expects a integer 'ExitCode' property, but 'ExitCode' is missing", ['data' => $arr]);
         }

@@ -43,6 +43,8 @@ trait StopCommand
      *     time?: null|int,
      *     timeout?: null|int,
      * } $options Additional options for the Docker stop command
+     * @psalm-param mixed $containerId
+     * @psalm-param mixed $options
      *
      * @throws NoSuchContainerException if the specified container does not exist
      * @throws DockerException          if the Docker command fails for any other reason
@@ -51,16 +53,20 @@ trait StopCommand
      */
     public function stop($containerId, $options = [])
     {
-        if (is_array($containerId)) {
-            $containerIds = array_map('strval', $containerId);
-        } else {
-            $containerIds = [(string) $containerId];
+        self::ensureStringKeyedArray($options);
+
+        $containerIds = [];
+        foreach (is_array($containerId) ? $containerId : [$containerId] as $id) {
+            $containerIds[] = $id instanceof ContainerId ? (string) $id : self::ensureNonEmptyString($id);
+
         }
 
         // Normalize timeout option key based on Docker client version
         $timeoutValue = isset($options['timeout']) ? $options['timeout'] : (isset($options['time']) ? $options['time'] : null);
         unset($options['timeout'], $options['time']);
         if ($timeoutValue !== null) {
+            self::ensureIntRange($timeoutValue, -1);
+
             if ($this->stopTimeoutOption === null) {
                 try {
                     $clientVersion = $this->version()->getClientVersion();

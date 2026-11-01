@@ -46,11 +46,14 @@ class LogMessageWaitStrategy implements WaitStrategy
      * Sets the pattern to be used for matching log messages.
      *
      * @param string $pattern the regex pattern to match against log messages
+     * @psalm-param mixed $pattern
      *
      * @return $this the current instance for method chaining
      */
     public function withPattern($pattern)
     {
+        self::ensureString($pattern);
+
         $this->pattern = $pattern;
 
         return $this;
@@ -63,11 +66,14 @@ class LogMessageWaitStrategy implements WaitStrategy
      * a LogMessageFailedException instead of waiting until timeout.
      *
      * @param string $pattern the regex pattern to match against log messages
+     * @psalm-param mixed $pattern
      *
      * @return $this the current instance for method chaining
      */
     public function withFailurePattern($pattern)
     {
+        self::ensureNullableString($pattern);
+
         $this->failurePattern = $pattern;
 
         return $this;
@@ -77,11 +83,14 @@ class LogMessageWaitStrategy implements WaitStrategy
      * Sets the timeout duration for waiting until the container instance is ready.
      *
      * @param int $seconds the number of seconds to wait before timing out
+     * @psalm-param mixed $seconds
      *
      * @return $this the current instance for method chaining
      */
     public function withTimeoutSeconds($seconds)
     {
+        self::ensureIntRange($seconds, 0);
+
         $this->timeout = $seconds;
 
         return $this;
@@ -91,9 +100,12 @@ class LogMessageWaitStrategy implements WaitStrategy
      * Waits until the container instance is ready.
      *
      * @param ContainerInstance $instance the container instance to check
+     * @psalm-param mixed $instance
      */
     public function waitUntilReady($instance)
     {
+        self::ensureInstanceOf($instance, ContainerInstance::class);
+
         $containerId = $instance->getContainerId();
 
         $client = DockerClientFactory::create();

@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -13,6 +14,8 @@ use Testcontainers\Utility\Stringable;
  */
 class ContainerId implements Stringable
 {
+    use Ensure;
+
     /**
      * The ID of the Docker container.
      *
@@ -22,11 +25,14 @@ class ContainerId implements Stringable
 
     /**
      * @param string $v
+     * @psalm-param mixed $v
      *
      * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
      */
     public function __construct($v)
     {
+        self::ensureString($v);
+
         if (!self::isValid($v)) {
             throw new \LogicException('Invalid container ID: `'.$v.'`');
         }
@@ -66,6 +72,7 @@ class ContainerId implements Stringable
      * Create a ContainerId object from a string.
      *
      * @param string $v the container ID
+     * @psalm-param mixed $v
      *
      * @throws \InvalidArgumentException if the container ID is not a valid 64-character hexadecimal string
      *
@@ -73,6 +80,8 @@ class ContainerId implements Stringable
      */
     public static function fromString($v)
     {
+        self::ensureString($v);
+
         if (!self::isValid($v)) {
             throw new \InvalidArgumentException('Invalid container ID: `'.$v.'`');
         }

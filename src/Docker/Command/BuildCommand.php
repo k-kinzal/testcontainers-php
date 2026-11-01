@@ -56,6 +56,8 @@ trait BuildCommand
      *     target?: null|string|Stringable,
      *     ulimit?: null|string|Stringable,
      * } $options Additional options for the Docker command
+     * @psalm-param mixed $path
+     * @psalm-param mixed $options
      *
      * @throws DockerException if the Docker command fails for any other reason
      *
@@ -63,6 +65,10 @@ trait BuildCommand
      */
     public function build($path, $options = [])
     {
+        self::ensureStringKeyedArray($options);
+
+        self::ensureNonEmptyString($path);
+
         $process = $this->execute('build', null, [$path], $options);
 
         return new DockerBuildOutput($process);

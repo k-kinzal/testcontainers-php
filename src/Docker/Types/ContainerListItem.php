@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Docker\Exception\InvalidValueException;
 
 /**
@@ -27,6 +28,8 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  */
 class ContainerListItem
 {
+    use Ensure;
+
     /**
      * @var ContainerId
      */
@@ -121,6 +124,7 @@ class ContainerListItem
      * Create a ContainerListItem from a JSON-decoded array.
      *
      * @param array $arr the decoded JSON array from `docker ps --format json`
+     * @psalm-param mixed $arr
      *
      * @throws InvalidValueException if the array does not contain the expected properties
      *
@@ -128,20 +132,34 @@ class ContainerListItem
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
         $item = new self();
         $item->id = self::ensureIdFromArray($arr);
+
         $item->command = self::ensureStringFromArray($arr, 'Command');
+
         $item->createdAt = self::ensureStringFromArray($arr, 'CreatedAt');
+
         $item->image = self::ensureStringFromArray($arr, 'Image');
+
         $item->labels = self::parseLabels(self::ensureStringFromArray($arr, 'Labels'));
+
         $item->localVolumes = (int) self::ensureStringFromArray($arr, 'LocalVolumes');
+
         $item->mounts = self::parseCsvString(self::ensureStringFromArray($arr, 'Mounts'));
+
         $item->names = self::ensureStringFromArray($arr, 'Names');
+
         $item->networks = self::parseCsvString(self::ensureStringFromArray($arr, 'Networks'));
+
         $item->ports = self::ensureStringFromArray($arr, 'Ports');
+
         $item->runningFor = self::ensureStringFromArray($arr, 'RunningFor');
+
         $item->size = isset($arr['Size']) && is_string($arr['Size']) ? $arr['Size'] : '';
         $item->state = self::ensureStringFromArray($arr, 'State');
+
         $item->status = self::ensureStringFromArray($arr, 'Status');
 
         return $item;
@@ -151,11 +169,14 @@ class ContainerListItem
      * Get a label value by key.
      *
      * @param string $key the label key
+     * @psalm-param mixed $key
      *
      * @return null|string the label value, or null if not found
      */
     public function getLabel($key)
     {
+        self::ensureString($key);
+
         return isset($this->labels[$key]) ? $this->labels[$key] : null;
     }
 

@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Logger;
 
+use Testcontainers\Utility\Ensure;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -10,6 +11,9 @@ use Psr\Log\NullLogger;
  */
 trait WithLogger
 {
+    // Import Ensure once through this shared trait; PHP 5.6 rejects duplicate imports.
+    use Ensure;
+
     /**
      * @var LoggerInterface
      */
@@ -19,11 +23,14 @@ trait WithLogger
      * Set Logger instance.
      *
      * @param LoggerInterface $logger the logger instance
+     * @psalm-param mixed $logger
      *
      * @return self
      */
     public function withLogger($logger)
     {
+        self::ensureInstanceOf($logger, LoggerInterface::class);
+
         $this->logger = $logger;
 
         return $this;

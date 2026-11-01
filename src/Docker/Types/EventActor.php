@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Docker\Exception\InvalidValueException;
 
 /**
@@ -12,6 +13,8 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  */
 class EventActor
 {
+    use Ensure;
+
     /**
      * The ID of the object that generated the event.
      *
@@ -50,6 +53,7 @@ class EventActor
      * Create an EventActor from a JSON-decoded array.
      *
      * @param array $arr the decoded `Actor` object of a Docker event
+     * @psalm-param mixed $arr
      *
      * @throws InvalidValueException if the array does not contain the expected properties
      *
@@ -57,8 +61,11 @@ class EventActor
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
         $actor = new self();
         $actor->id = self::ensureIdFromArray($arr);
+
         $actor->attributes = self::ensureAttributesFromArray($arr);
 
         return $actor;
@@ -68,11 +75,14 @@ class EventActor
      * Get an attribute value by key.
      *
      * @param string $key the attribute key
+     * @psalm-param mixed $key
      *
      * @return null|string the attribute value, or null if not found
      */
     public function getAttribute($key)
     {
+        self::ensureString($key);
+
         return isset($this->attributes[$key]) ? $this->attributes[$key] : null;
     }
 

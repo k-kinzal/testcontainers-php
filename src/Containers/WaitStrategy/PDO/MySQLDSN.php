@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\WaitStrategy\PDO;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -12,6 +13,8 @@ use Testcontainers\Utility\Stringable;
  */
 class MySQLDSN implements DSN, Stringable
 {
+    use Ensure;
+
     /**
      * The hostname for the DSN.
      *
@@ -45,8 +48,13 @@ class MySQLDSN implements DSN, Stringable
         return $this->toString();
     }
 
+    /**
+     * @psalm-param mixed $host
+     */
     public function withHost($host)
     {
+        self::ensureString($host);
+
         $this->host = $host;
 
         return $this;
@@ -57,8 +65,18 @@ class MySQLDSN implements DSN, Stringable
         return $this->host;
     }
 
+    /**
+     * @psalm-param mixed $port
+     */
     public function withPort($port)
     {
+        self::ensureIntOrDigitString($port);
+
+        if ($port < 1 || $port > 65535) {
+            throw new \InvalidArgumentException('Port must be between 1 and 65535');
+        }
+        $port = (int) $port;
+
         $this->port = $port;
 
         return $this;
@@ -73,11 +91,14 @@ class MySQLDSN implements DSN, Stringable
      * Set the database name for the DSN.
      *
      * @param string $dbname the name of the database
+     * @psalm-param mixed $dbname
      *
      * @return $this
      */
     public function withDbname($dbname)
     {
+        self::ensureString($dbname);
+
         $this->dbname = $dbname;
 
         return $this;
@@ -87,11 +108,14 @@ class MySQLDSN implements DSN, Stringable
      * Set the character set for the DSN.
      *
      * @param string $charset the character set to use
+     * @psalm-param mixed $charset
      *
      * @return $this
      */
     public function withCharset($charset)
     {
+        self::ensureString($charset);
+
         $this->charset = $charset;
 
         return $this;
