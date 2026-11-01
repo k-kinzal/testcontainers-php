@@ -334,7 +334,7 @@ class Tunnel
             }
             if (!$process->isRunning()) {
                 $err = trim($process->getErrorOutput());
-                $lastLine = substr($err, strrpos($err, "\n") + 1);
+                $lastLine = implode("\n", array_slice(explode("\n", $err), -1));
 
                 throw new TunnelException('Failed to start SSH tunnel: '.implode(' ', $commandParts).': '.$lastLine);
             }
