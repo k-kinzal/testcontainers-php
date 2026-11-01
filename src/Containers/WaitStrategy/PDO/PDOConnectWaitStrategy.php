@@ -203,7 +203,7 @@ class PDOConnectWaitStrategy implements WaitStrategy
         if ($defaultSocketTimeout === false) {
             throw new \RuntimeException('Unable to read default_socket_timeout');
         }
-        ini_set('default_socket_timeout', 1);
+        ini_set('default_socket_timeout', '1');
 
         $now = time();
         $ex = null;
