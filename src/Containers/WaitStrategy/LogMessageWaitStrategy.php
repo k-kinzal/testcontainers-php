@@ -101,6 +101,7 @@ final class LogMessageWaitStrategy implements WaitStrategy
      *
      * @param ContainerInstance $instance the container instance to check
      * @psalm-param mixed $instance
+     * @return void
      */
     public function waitUntilReady($instance)
     {

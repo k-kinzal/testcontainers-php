@@ -42,6 +42,7 @@ final class Session
 
     /**
      * Stops the SSH session.
+     * @return void
      */
     public function stop()
     {

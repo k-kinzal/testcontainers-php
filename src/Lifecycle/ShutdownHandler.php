@@ -25,6 +25,7 @@ final class ShutdownHandler
      * Register a callback to be executed once on shutdown and on SIGTERM/SIGINT.
      *
      * @param callable $callback
+     * @return void
      */
     public static function register(callable $callback)
     {

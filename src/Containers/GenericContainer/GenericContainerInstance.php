@@ -156,6 +156,7 @@ final class GenericContainerInstance implements ContainerInstance
      *
      * @param DockerClient $client
      * @psalm-param mixed $client
+     * @return void
      */
     public function setDockerClient($client)
     {
@@ -289,6 +290,7 @@ final class GenericContainerInstance implements ContainerInstance
 
     /**
      * @psalm-param mixed $value
+     * @return void
      */
     public function setData($value)
     {
@@ -437,6 +439,9 @@ final class GenericContainerInstance implements ContainerInstance
         return isset($this->containerDef['inspectInterval']) ? $this->containerDef['inspectInterval'] : 10;
     }
 
+    /**
+     * @return void
+     */
     public function stop()
     {
         try {

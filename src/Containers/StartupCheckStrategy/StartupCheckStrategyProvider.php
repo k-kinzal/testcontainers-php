@@ -31,6 +31,7 @@ final class StartupCheckStrategyProvider
      * @psalm-param mixed $strategy
      *
      * @throws AlreadyExistsStartupStrategyException if a strategy with the same name already exists
+     * @return void
      */
     public function register($name, $strategy)
     {
