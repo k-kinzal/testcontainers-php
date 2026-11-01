@@ -47,7 +47,7 @@ class LoggerFactory
             return new NullLogger();
         }
         if ($class === null || ltrim($class, '\\') === ConsoleLogger::class) {
-            return new ConsoleLogger(null, $level ?: LogLevel::DEBUG);
+            return new ConsoleLogger(null, $level !== null && $level !== '' ? $level : LogLevel::DEBUG);
         }
         if (!is_subclass_of($class, LoggerInterface::class)) {
             throw new \InvalidArgumentException(sprintf('TESTCONTAINERS_LOGGER must be a class implementing %s: "%s"', LoggerInterface::class, $class));

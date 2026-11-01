@@ -280,7 +280,7 @@ trait MountSetting
             $mounts = self::ensureNullableStringList(static::$VOLUMES);
 
         }
-        if (!empty($mounts)) {
+        if ($mounts !== null && count($mounts) > 0) {
             $m = [];
             foreach ($mounts as $mount) {
                 $m[] = Mount::fromString($mount);

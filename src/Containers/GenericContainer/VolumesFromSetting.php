@@ -85,7 +85,7 @@ trait VolumesFromSetting
             self::ensureArray($targets);
 
         }
-        if (!empty($targets)) {
+        if ($targets !== null && count($targets) > 0) {
             $volumesFrom = [];
             foreach (array_keys($targets) as $key) {
                 $volume = self::ensureStringOrArray($targets[$key]);

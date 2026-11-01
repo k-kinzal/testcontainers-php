@@ -302,7 +302,7 @@ trait BaseCommand
         }
         // Check if the host is set in the DOCKER_HOST environment variable
         $host = Environments::DOCKER_HOST();
-        if ($host) {
+        if ($host !== null && $host !== '') {
             return $host;
         }
 
@@ -325,7 +325,7 @@ trait BaseCommand
     {
         self::ensureString($s);
 
-        $env = $this->env ? $this->env : [];
+        $env = $this->env !== null ? $this->env : [];
 
         $expanded = preg_replace_callback('/\$\{([a-zA-Z_][a-zA-Z0-9_]*)}/', function ($m) use ($env) {
             if (empty($env)) {
@@ -389,7 +389,7 @@ trait BaseCommand
             $commandLine = array_merge($commandLine, $this->arrayToArgs($this->options));
         }
         $commandLine[] = $command;
-        if ($subcommand) {
+        if ($subcommand !== null && $subcommand !== '') {
             $commandLine[] = $subcommand;
         }
         if (count($options) > 0) {
