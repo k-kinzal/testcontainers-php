@@ -15,7 +15,7 @@ trait WithLogger
     use Ensure;
 
     /**
-     * @var LoggerInterface
+     * @var null|LoggerInterface
      */
     private $logger;
 
