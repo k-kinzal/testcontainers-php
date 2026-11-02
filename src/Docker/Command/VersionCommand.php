@@ -18,9 +18,9 @@ trait VersionCommand
      * This method wraps the `docker version` command to retrieve version information
      * about the Docker client and server.
      *
-     * @throws DockerException if the Docker command fails
-     *
      * @return DockerVersionOutput the output of the Docker version command
+     *
+     * @throws DockerException if the Docker command fails
      */
     public function version()
     {

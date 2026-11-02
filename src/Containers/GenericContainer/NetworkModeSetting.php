@@ -30,6 +30,7 @@ trait NetworkModeSetting
      * Define the default network mode to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $NETWORK_MODE;
 
@@ -44,11 +45,14 @@ trait NetworkModeSetting
      * Set the network mode for this container, similar to the `--net <name>` option on the Docker CLI.
      *
      * @param NetworkMode $networkMode The network mode, e.g., 'host', 'bridge', 'none', or the name of an existing named network.
+     * @psalm-param mixed $networkMode
      *
      * @return self
      */
     public function withNetworkMode($networkMode)
     {
+        self::ensureInstanceOf($networkMode, NetworkMode::class);
+
         $this->networkMode = $networkMode;
 
         return $this;
@@ -62,6 +66,8 @@ trait NetworkModeSetting
     protected function networkMode()
     {
         if (static::$NETWORK_MODE !== null) {
+            self::ensureString(static::$NETWORK_MODE);
+
             return NetworkMode::fromString(static::$NETWORK_MODE);
         }
         if ($this->networkMode) {

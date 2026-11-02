@@ -2,6 +2,8 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
+use Testcontainers\Utility\Ensure;
+
 /**
  * Provides a registry for port strategies.
  *
@@ -9,8 +11,10 @@ namespace Testcontainers\Containers\PortStrategy;
  * by their unique names. It maintains an associative array that maps strategy names
  * to their corresponding `PortStrategy` instances.
  */
-class PortStrategyProvider
+final class PortStrategyProvider
 {
+    use Ensure;
+
     /**
      * An associative array that maps strategy names to their corresponding PortStrategy instances.
      *
@@ -25,11 +29,18 @@ class PortStrategyProvider
      *
      * @param string       $name     the name of the port strategy to register
      * @param PortStrategy $strategy the port strategy to register
+     * @psalm-param mixed $name
+     * @psalm-param mixed $strategy
+     *
+     * @return void
      *
      * @throws AlreadyExistsPortStrategyException if a strategy with the same name already exists
      */
     public function register($name, $strategy)
     {
+        self::ensureNonEmptyString($name);
+        self::ensureInstanceOf($strategy, PortStrategy::class);
+
         if (isset($this->strategies[$name])) {
             throw new AlreadyExistsPortStrategyException($name);
         }
@@ -44,11 +55,14 @@ class PortStrategyProvider
      * it returns null.
      *
      * @param string $name the name of the port strategy to retrieve
+     * @psalm-param mixed $name
      *
      * @return null|PortStrategy the PortStrategy instance if found, or null if not found
      */
     public function get($name)
     {
+        self::ensureString($name);
+
         return isset($this->strategies[$name]) ? $this->strategies[$name] : null;
     }
 }

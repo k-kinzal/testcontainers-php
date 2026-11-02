@@ -33,10 +33,13 @@ trait SSHPortForwardSetting
      * Define the default SSH port forwarding to be used for the container.
      *
      * @var null|bool|string
+     * @psalm-var mixed
      */
     protected static $SSH_PORT_FORWARD;
 
     /**
+     * The SSH connection settings, or whether to use the default connection.
+     *
      * @var null|array{
      *                  sshUser?: null|string,
      *                  sshHost: string,
@@ -51,11 +54,23 @@ trait SSHPortForwardSetting
      * @param string      $sshHost the SSH host to forward to
      * @param null|int    $sshPort the SSH port to forward to
      * @param null|string $sshUser the SSH user to use for the connection
+     * @psalm-param mixed $sshHost
+     * @psalm-param mixed $sshPort
+     * @psalm-param mixed $sshUser
      *
      * @return $this
      */
     public function withSSHPortForward($sshHost, $sshPort = null, $sshUser = null)
     {
+        self::ensureNonEmptyString($sshHost);
+        self::ensureNullableString($sshUser);
+
+        if ($sshPort !== null) {
+            self::ensureIntOrDigitStringRange($sshPort, 1, 65535);
+
+            $sshPort = (int) $sshPort;
+        }
+
         $this->sshPortForward = [
             'sshUser' => $sshUser,
             'sshHost' => $sshHost,
@@ -76,16 +91,19 @@ trait SSHPortForwardSetting
      */
     protected function sshPortForward()
     {
-        if (self::$SSH_PORT_FORWARD !== null) {
-            if (is_bool(self::$SSH_PORT_FORWARD)) {
-                return self::$SSH_PORT_FORWARD ? [
+        $sshPortForward = static::$SSH_PORT_FORWARD;
+        self::ensureNullableBoolOrString($sshPortForward);
+
+        if ($sshPortForward !== null) {
+            if (is_bool($sshPortForward)) {
+                return $sshPortForward ? [
                     'sshUser' => null,
                     'sshHost' => null,
                     'sshPort' => null,
                 ] : null;
             }
 
-            return $this->parseSSHString(self::$SSH_PORT_FORWARD);
+            return $this->parseSSHString($sshPortForward);
         }
         if ($this->sshPortForward !== null) {
             if (is_bool($this->sshPortForward)) {
@@ -112,11 +130,7 @@ trait SSHPortForwardSetting
      *
      * @param string $s the SSH string to parse
      *
-     * @return null|array{
-     *                     sshUser?: null|string,
-     *                     sshHost?: null|string,
-     *                     sshPort?: null|int,
-     *                     }
+     * @return array{sshUser: null|non-empty-string, sshHost: non-empty-string, sshPort: null|int}
      */
     private function parseSSHString($s)
     {
@@ -126,6 +140,8 @@ trait SSHPortForwardSetting
             $parts = explode(':', $parts[1], 2);
             if (count($parts) === 2) {
                 $sshHost = $parts[0];
+                self::ensureDigitStringRange($parts[1], 1, 65535);
+
                 $sshPort = (int) $parts[1];
             } else {
                 $sshHost = $parts[0];
@@ -136,11 +152,19 @@ trait SSHPortForwardSetting
             $parts = explode(':', $s, 2);
             if (count($parts) === 2) {
                 $sshHost = $parts[0];
+                self::ensureDigitStringRange($parts[1], 1, 65535);
+
                 $sshPort = (int) $parts[1];
             } else {
                 $sshHost = $s;
                 $sshPort = null;
             }
+        }
+
+        self::ensureNonEmptyString($sshHost);
+
+        if ($sshUser !== null) {
+            self::ensureNonEmptyString($sshUser);
         }
 
         return [

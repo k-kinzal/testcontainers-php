@@ -2,9 +2,11 @@
 
 namespace Testcontainers\Docker\Output;
 
+use Generator;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\Event;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\LineIterator;
 
 /**
@@ -12,8 +14,10 @@ use Testcontainers\Utility\LineIterator;
  *
  * The process is stopped when this output is released.
  */
-class DockerEventsOutput
+final class DockerEventsOutput
 {
+    use Ensure;
+
     /**
      * The running Docker events process.
      *
@@ -38,9 +42,14 @@ class DockerEventsOutput
     /**
      * @param Process $process   the Docker events process
      * @param bool    $reconnect whether the process is restarted when it terminates
+     * @psalm-param mixed $process
+     * @psalm-param mixed $reconnect
      */
     public function __construct($process, $reconnect)
     {
+        self::ensureInstanceOf($process, Process::class);
+        self::ensureBool($reconnect);
+
         $this->process = $process;
         $this->reconnect = $reconnect;
     }
@@ -56,9 +65,9 @@ class DockerEventsOutput
      * `null` is yielded when no event is available at the moment.
      * When the process terminates, it is restarted and the events older than the last event are skipped.
      *
-     * @throws InvalidValueException if the output contains a line that is not a valid event
+     * @return Generator<null|Event> an iterator to traverse the events
      *
-     * @return \Generator<null|Event> an iterator to traverse the events
+     * @throws InvalidValueException if the output contains a line that is not a valid event
      */
     public function getIterator()
     {

@@ -28,6 +28,7 @@ trait StopSignalSetting
      * Define the default stop signal to be used for the container.
      *
      * @var null|string
+     * @psalm-var mixed
      */
     protected static $STOP_SIGNAL;
 
@@ -48,11 +49,14 @@ trait StopSignalSetting
      * Note: The `--signal` option requires Docker 23.0+ (API 1.42+).
      *
      * @param string $signal the signal name (e.g. 'KILL', 'TERM', 'INT')
+     * @psalm-param mixed $signal
      *
      * @return self
      */
     public function withStopSignal($signal)
     {
+        self::ensureNullableString($signal);
+
         $this->stopSignal = $signal;
 
         return $this;
@@ -68,6 +72,8 @@ trait StopSignalSetting
      */
     protected function stopSignal()
     {
+        self::ensureNullableString(static::$STOP_SIGNAL);
+
         if (static::$STOP_SIGNAL !== null) {
             return static::$STOP_SIGNAL;
         }

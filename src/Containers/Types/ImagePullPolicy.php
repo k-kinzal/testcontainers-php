@@ -3,13 +3,18 @@
 namespace Testcontainers\Containers\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
  * Defines the policy for determining when to pull a container image.
+ *
+ * @api
  */
-class ImagePullPolicy implements Stringable
+final class ImagePullPolicy implements Stringable
 {
+    use Ensure;
+
     /**
      * The policy to always pull the image.
      *
@@ -40,10 +45,14 @@ class ImagePullPolicy implements Stringable
 
     /**
      * @param string $policy
+     * @psalm-param mixed $policy
      */
     public function __construct($policy)
     {
-        assert(in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]));
+        self::ensureString($policy);
+
+        $values = [static::$ALWAYS, static::$MISSING, static::$NEVER];
+        self::ensureOneOf($policy, $values);
 
         $this->policy = $policy;
     }
@@ -87,16 +96,18 @@ class ImagePullPolicy implements Stringable
      * Create a new instance of `PullPolicy` from a string representation.
      *
      * @param string $policy the string representation of the pull policy
-     *
-     * @throws InvalidFormatException if the provided policy is not valid
+     * @psalm-param mixed $policy
      *
      * @return self
+     *
+     * @throws InvalidFormatException if the provided policy is not valid
      */
     public static function fromString($policy)
     {
-        if (!in_array($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER])) {
-            throw new InvalidFormatException($policy, [static::$ALWAYS, static::$MISSING, static::$NEVER]);
-        }
+        self::ensureString($policy);
+
+        $values = [static::$ALWAYS, static::$MISSING, static::$NEVER];
+        self::ensureOneOf($policy, $values);
 
         return new self($policy);
     }

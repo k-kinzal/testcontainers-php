@@ -2,7 +2,9 @@
 
 namespace Testcontainers\Containers\Types;
 
+use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -10,9 +12,13 @@ use Testcontainers\Utility\Stringable;
  *
  * @property string $host The host name.
  * @property string $ip   The IP address.
+ *
+ * @api
  */
-class HostToIp implements Stringable
+final class HostToIp implements Stringable
 {
+    use Ensure;
+
     /**
      * The host name.
      *
@@ -30,9 +36,14 @@ class HostToIp implements Stringable
     /**
      * @param string $host
      * @param string $ip
+     * @psalm-param mixed $host
+     * @psalm-param mixed $ip
      */
     public function __construct($host, $ip)
     {
+        self::ensureNonEmptyString($host);
+        self::ensureNonEmptyString($ip);
+
         $this->host = $host;
         $this->ip = $ip;
     }
@@ -43,8 +54,6 @@ class HostToIp implements Stringable
     }
 
     /**
-     * Get the value of a property.
-     *
      * @param string $name the name of the property
      *
      * @return mixed the value of the property
@@ -52,7 +61,7 @@ class HostToIp implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('HostToIp::'.$name.' does not exist');
+            throw new LogicException('HostToIp::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -62,17 +71,17 @@ class HostToIp implements Stringable
      * Create a HostToIp object from a string.
      *
      * @param string $v the host-to-IP mapping
-     *
-     * @throws InvalidFormatException if the format is invalid
+     * @psalm-param mixed $v
      *
      * @return HostToIp the HostToIp object
+     *
+     * @throws InvalidFormatException if the format is invalid
      */
     public static function fromString($v)
     {
+        self::ensureMatches($v, '/^[^:]+:[^:]+$/D', 'host:ip');
+
         $parts = explode(':', $v);
-        if (count($parts) !== 2) {
-            throw new InvalidFormatException($v, 'host:ip');
-        }
 
         return new self($parts[0], $parts[1]);
     }
@@ -84,11 +93,16 @@ class HostToIp implements Stringable
      *     hostname: string,
      *     ipAddress: string
      * } $v The host-to-IP mapping
+     * @psalm-param mixed $v
      *
      * @return HostToIp the HostToIp object
      */
     public static function fromArray($v)
     {
+        self::ensureArray($v);
+        self::ensureArrayHasKey($v, 'hostname');
+        self::ensureArrayHasKey($v, 'ipAddress');
+
         return new self($v['hostname'], $v['ipAddress']);
     }
 

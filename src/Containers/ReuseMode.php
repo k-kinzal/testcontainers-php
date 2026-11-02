@@ -3,6 +3,7 @@
 namespace Testcontainers\Containers;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -13,9 +14,13 @@ use Testcontainers\Utility\Stringable;
  * - ADD: Always start a new container (default behavior)
  * - RESTART: Stop existing container and start a new one
  * - REUSE: Reuse existing container if it's still running
+ *
+ * @api
  */
-class ReuseMode implements Stringable
+final class ReuseMode implements Stringable
 {
+    use Ensure;
+
     /**
      * Add mode: always start a new container.
      *
@@ -46,10 +51,14 @@ class ReuseMode implements Stringable
 
     /**
      * @param string $mode
+     * @psalm-param mixed $mode
      */
     public function __construct($mode)
     {
-        assert(in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE]));
+        self::ensureString($mode);
+
+        $values = [static::$ADD, static::$RESTART, static::$REUSE];
+        self::ensureOneOf($mode, $values);
 
         $this->mode = $mode;
     }
@@ -93,16 +102,18 @@ class ReuseMode implements Stringable
      * Creates a ReuseMode instance from a string.
      *
      * @param string $mode The reuse mode. Valid values are 'add', 'restart', or 'reuse'.
-     *
-     * @throws InvalidFormatException if the mode is invalid
+     * @psalm-param mixed $mode
      *
      * @return ReuseMode
+     *
+     * @throws InvalidFormatException if the mode is invalid
      */
     public static function fromString($mode)
     {
-        if (!in_array($mode, [static::$ADD, static::$RESTART, static::$REUSE])) {
-            throw new InvalidFormatException($mode, [static::$ADD, static::$RESTART, static::$REUSE]);
-        }
+        self::ensureString($mode);
+
+        $values = [static::$ADD, static::$RESTART, static::$REUSE];
+        self::ensureOneOf($mode, $values);
 
         return new self($mode);
     }

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Containers\WaitStrategy\PDO;
 
+use stdClass;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
@@ -9,6 +10,7 @@ use Testcontainers\Containers\WaitStrategy\PDO\PDOConnectWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\PDO\SQLiteDSN;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Tests\Unit\Containers\WaitStrategy\WaitStrategyTestCase;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -59,5 +61,12 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 
         $strategy = (new PDOConnectWaitStrategy())->withDsn(new MySQLDSN('test'));
         $strategy->waitUntilReady($instance);
+    }
+
+    public function testWithDsnRejectsUnrelatedObject()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        (new PDOConnectWaitStrategy())->withDsn(new stdClass());
     }
 }

@@ -7,15 +7,13 @@ use Exception;
 /**
  * Exception thrown when an invalid format is encountered.
  */
-class InvalidFormatException extends \Exception
+final class InvalidFormatException extends Exception
 {
     /**
-     * InvalidFormatException constructor.
-     *
      * @param mixed           $actual   the actual format encountered
      * @param string|string[] $expects  an array of expected formats
      * @param int             $code     the exception code
-     * @param null|\Exception $previous the previous exception used for exception chaining
+     * @param null|Exception  $previous the previous exception used for exception chaining
      */
     public function __construct($actual, $expects = [], $code = 0, $previous = null)
     {

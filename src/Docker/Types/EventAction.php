@@ -3,13 +3,18 @@
 namespace Testcontainers\Docker\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
  * Represents the action of a Docker event.
+ *
+ * @api
  */
-class EventAction implements Stringable
+final class EventAction implements Stringable
 {
+    use Ensure;
+
     /**
      * The action emitted when an object is created.
      *
@@ -356,11 +361,17 @@ class EventAction implements Stringable
     /**
      * @param string      $name   the name of the action
      * @param null|string $detail the detail following the action name
+     * @psalm-param mixed $name
+     * @psalm-param mixed $detail
      */
     public function __construct($name, $detail = null)
     {
-        assert(in_array($name, self::values()));
-        assert($detail === null || in_array($name, self::detailedValues()));
+        self::ensureOneOf($name, self::values());
+        self::ensureNullableString($detail);
+
+        if ($detail !== null) {
+            self::ensureOneOf($name, self::detailedValues());
+        }
 
         $this->name = $name;
         $this->detail = $detail;
@@ -768,6 +779,7 @@ class EventAction implements Stringable
      * Create a new instance of `EventAction` with the `EXEC_CREATE` action.
      *
      * @param null|string $command the command following the action name
+     * @psalm-param mixed $command
      *
      * @return self
      */
@@ -780,6 +792,7 @@ class EventAction implements Stringable
      * Create a new instance of `EventAction` with the `EXEC_START` action.
      *
      * @param null|string $command the command following the action name
+     * @psalm-param mixed $command
      *
      * @return self
      */
@@ -812,6 +825,7 @@ class EventAction implements Stringable
      * Create a new instance of `EventAction` with the `HEALTH_STATUS` action.
      *
      * @param null|string $status the status following the action name
+     * @psalm-param mixed $status
      *
      * @return self
      */
@@ -854,25 +868,19 @@ class EventAction implements Stringable
      * Create a new instance of `EventAction` from a string representation.
      *
      * @param string $action the string representation of the action (e.g. `die`, `health_status: healthy`)
-     *
-     * @throws InvalidFormatException if the provided action is not valid
+     * @psalm-param mixed $action
      *
      * @return self
+     *
+     * @throws InvalidFormatException if the provided action is not valid
      */
     public static function fromString($action)
     {
-        if (in_array($action, self::values(), true)) {
-            return new self($action);
-        }
-        $pos = is_string($action) ? strpos($action, ': ') : false;
-        if ($pos !== false) {
-            $name = substr($action, 0, $pos);
-            if (in_array($name, self::detailedValues(), true)) {
-                return new self($name, (string) substr($action, $pos + 2));
-            }
-        }
+        self::ensureString($action);
 
-        throw new InvalidFormatException($action, self::values());
+        $parts = explode(': ', $action, 2);
+
+        return new self($parts[0], isset($parts[1]) ? $parts[1] : null);
     }
 
     /**

@@ -6,6 +6,8 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 use Testcontainers\Environments;
+use Testcontainers\Utility\Ensure;
+use UnexpectedValueException;
 
 /**
  * A factory for creating logger instances from environment variables.
@@ -13,8 +15,10 @@ use Testcontainers\Environments;
  * This class provides a static method for creating a logger based on the
  * `TESTCONTAINERS_LOGGER` and `TESTCONTAINERS_LOG_LEVEL` environment variables.
  */
-class LoggerFactory
+final class LoggerFactory
 {
+    use Ensure;
+
     /**
      * Create and return a new logger instance.
      *
@@ -26,7 +30,7 @@ class LoggerFactory
      *
      * @return LoggerInterface the logger instance
      *
-     * @throws \InvalidArgumentException if `TESTCONTAINERS_LOGGER` is not a class implementing `LoggerInterface`
+     * @throws UnexpectedValueException if `TESTCONTAINERS_LOGGER` is not a class implementing `LoggerInterface`
      */
     public static function create()
     {
@@ -46,11 +50,13 @@ class LoggerFactory
             return new NullLogger();
         }
         if ($class === null || ltrim($class, '\\') === ConsoleLogger::class) {
-            return new ConsoleLogger(null, $level ?: LogLevel::DEBUG);
+            return new ConsoleLogger(null, $level !== null && $level !== '' ? $level : LogLevel::DEBUG);
         }
-        if (!is_subclass_of($class, LoggerInterface::class)) {
-            throw new \InvalidArgumentException(sprintf('TESTCONTAINERS_LOGGER must be a class implementing %s: "%s"', LoggerInterface::class, $class));
-        }
+        self::ensureClassStringOf(
+            $class,
+            LoggerInterface::class,
+            sprintf('TESTCONTAINERS_LOGGER must be a class implementing %s: "%s"', LoggerInterface::class, $class)
+        );
 
         return new $class();
     }

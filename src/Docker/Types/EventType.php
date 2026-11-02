@@ -3,13 +3,18 @@
 namespace Testcontainers\Docker\Types;
 
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
  * Represents the type of the object that generated a Docker event.
+ *
+ * @api
  */
-class EventType implements Stringable
+final class EventType implements Stringable
 {
+    use Ensure;
+
     /**
      * The event type that the builder generates.
      *
@@ -96,10 +101,11 @@ class EventType implements Stringable
 
     /**
      * @param string $type
+     * @psalm-param mixed $type
      */
     public function __construct($type)
     {
-        assert(in_array($type, self::values()));
+        self::ensureOneOf($type, self::values());
 
         $this->type = $type;
     }
@@ -223,16 +229,15 @@ class EventType implements Stringable
      * Create a new instance of `EventType` from a string representation.
      *
      * @param string $type the string representation of the type
-     *
-     * @throws InvalidFormatException if the provided type is not valid
+     * @psalm-param mixed $type
      *
      * @return self
+     *
+     * @throws InvalidFormatException if the provided type is not valid
      */
     public static function fromString($type)
     {
-        if (!in_array($type, self::values(), true)) {
-            throw new InvalidFormatException($type, self::values());
-        }
+        self::ensureOneOf($type, self::values());
 
         return new self($type);
     }

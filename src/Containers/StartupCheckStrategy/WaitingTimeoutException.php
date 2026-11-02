@@ -2,16 +2,19 @@
 
 namespace Testcontainers\Containers\StartupCheckStrategy;
 
+use Exception;
+use RuntimeException;
+
 /**
  * WaitingTimeoutException is thrown when a container fails to start within the specified timeout period.
  */
-class WaitingTimeoutException extends \RuntimeException
+final class WaitingTimeoutException extends RuntimeException
 {
     /**
-     * @param int             $timeout  the timeout in seconds
-     * @param null|string     $message  the exception message
-     * @param int             $code     the exception code
-     * @param null|\Exception $previous the previous exception
+     * @param int            $timeout  the timeout in seconds
+     * @param null|string    $message  the exception message
+     * @param int            $code     the exception code
+     * @param null|Exception $previous the previous exception
      */
     public function __construct($timeout, $message = null, $code = 0, $previous = null)
     {
@@ -19,7 +22,7 @@ class WaitingTimeoutException extends \RuntimeException
             sprintf(
                 'Waiting for container to be ready timed out after %d seconds: %s',
                 $timeout,
-                $message
+                $message === null ? '' : $message
             ),
             $code,
             $previous

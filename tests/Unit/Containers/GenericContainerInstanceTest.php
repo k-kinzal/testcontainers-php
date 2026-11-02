@@ -5,6 +5,7 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
@@ -12,10 +13,9 @@ use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\DockerException;
-use Testcontainers\Docker\Output\DockerEventsOutput;
-use Testcontainers\Docker\Output\DockerInspectOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Types\ContainerId;
+use Testcontainers\Logger\ConsoleLogger;
 use Testcontainers\SSH\Session;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
@@ -206,91 +206,121 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testIsRunningReusesInspectedStateUntilEventIsEmitted()
     {
-        $status = 'running';
-        $count = 0;
-        $instance = new GenericContainerInstance([
-            'containerId' => new ContainerId('8188d93d8a27'),
-        ]);
-        $instance->setDockerClient($this->createDockerClient($status, $count, ['create', 'die']));
-
-        $deadline = time() + 10;
+        $stream = fopen('php://memory', 'w+');
+        $logger = new ConsoleLogger($stream);
+        $client = (new DockerClient())->withLogger($logger);
+        $container = (new GenericContainer('alpine:latest'))
+            ->withLogger($logger)
+            ->withDockerClient($client)
+            ->withCommands(['sleep', '300'])
+            ->withInspectInterval(300)
+            ->withStopTimeout(0)
+        ;
+        $instance = $container->start();
+        $deadline = microtime(true) + 10;
         do {
-            $inspected = $count;
+            rewind($stream);
+            $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
             $this->assertTrue($instance->isRunning());
             usleep(10000);
-        } while ($count !== $inspected && time() < $deadline);
+            rewind($stream);
+            $observed = substr_count(stream_get_contents($stream), 'docker inspect ');
+        } while ($observed !== $inspected && microtime(true) < $deadline);
 
-        for ($i = 0; $i < 100; ++$i) {
-            $this->assertTrue($instance->isRunning());
-        }
-        $this->assertSame($inspected, $count);
+        $this->assertTrue($instance->isRunning());
+        $this->assertTrue($instance->isRunning());
+        rewind($stream);
+        $this->assertSame($inspected, substr_count(stream_get_contents($stream), 'docker inspect '));
 
-        $status = 'exited';
+        $client->stop($instance->getContainerId(), ['timeout' => 0]);
         $deadline = time() + 5;
         while ($instance->isRunning() && time() < $deadline) {
             usleep(10000);
         }
+
         $this->assertFalse($instance->isRunning());
         $this->assertTrue($instance->isStopped());
-        $this->assertGreaterThan($inspected, $count);
+        rewind($stream);
+        $this->assertGreaterThan($inspected, substr_count(stream_get_contents($stream), 'docker inspect '));
     }
 
     public function testIsRunningInspectsWithoutEvents()
     {
-        $status = 'running';
-        $count = 0;
-        $instance = new GenericContainerInstance([
-            'containerId' => new ContainerId('8188d93d8a27'),
-        ]);
-        $instance->setDockerClient($this->createDockerClient($status, $count, []));
+        $stream = fopen('php://memory', 'w+');
+        $logger = new ConsoleLogger($stream);
+        $client = (new DockerClient())->withLogger($logger);
+        $container = (new GenericContainer('alpine:latest'))
+            ->withLogger($logger)
+            ->withDockerClient($client)
+            ->withCommands(['sleep', '300'])
+            ->withInspectInterval(10)
+            ->withStopTimeout(0)
+        ;
+        $instance = $container->start();
+        $events = new ReflectionProperty(GenericContainerInstance::class, 'events');
+        if (PHP_VERSION_ID < 80100) {
+            $events->setAccessible(true);
+        }
+        $events->setValue($instance, null);
+        rewind($stream);
+        $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
 
         $this->assertTrue($instance->isRunning());
         $this->assertTrue($instance->isRunning());
-        $this->assertSame(2, $count);
+        rewind($stream);
+        $this->assertSame($inspected + 2, substr_count(stream_get_contents($stream), 'docker inspect '));
     }
 
     public function testIsRunningInspectsAfterInspectIntervalElapses()
     {
-        $status = 'running';
-        $count = 0;
-        $instance = new GenericContainerInstance([
-            'containerId' => new ContainerId('8188d93d8a27'),
-            'inspectInterval' => 0.5,
-        ]);
-        $instance->setDockerClient($this->createDockerClient($status, $count, ['create']));
-
-        $deadline = time() + 10;
+        $stream = fopen('php://memory', 'w+');
+        $logger = new ConsoleLogger($stream);
+        $client = (new DockerClient())->withLogger($logger);
+        $container = (new GenericContainer('alpine:latest'))
+            ->withLogger($logger)
+            ->withDockerClient($client)
+            ->withCommands(['sleep', '300'])
+            ->withInspectInterval(0.5)
+            ->withStopTimeout(0)
+        ;
+        $instance = $container->start();
+        $deadline = microtime(true) + 10;
         do {
-            $inspected = $count;
+            rewind($stream);
+            $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
             $this->assertTrue($instance->isRunning());
             usleep(10000);
-        } while ($count !== $inspected && time() < $deadline);
+            rewind($stream);
+            $observed = substr_count(stream_get_contents($stream), 'docker inspect ');
+        } while ($observed !== $inspected && microtime(true) < $deadline);
 
         usleep(500000);
+
         $this->assertTrue($instance->isRunning());
-        $this->assertSame($inspected + 1, $count);
+        rewind($stream);
+        $this->assertSame($inspected + 1, substr_count(stream_get_contents($stream), 'docker inspect '));
     }
 
     public function testIsRunningInspectsEveryTimeWithInspectIntervalOfZero()
     {
-        $status = 'running';
-        $count = 0;
-        $instance = new GenericContainerInstance([
-            'containerId' => new ContainerId('8188d93d8a27'),
-            'inspectInterval' => 0,
-        ]);
-        $instance->setDockerClient($this->createDockerClient($status, $count, ['create']));
-
-        $deadline = microtime(true) + 0.3;
-        while (microtime(true) < $deadline) {
-            $this->assertTrue($instance->isRunning());
-            usleep(10000);
-        }
-        $inspected = $count;
+        $stream = fopen('php://memory', 'w+');
+        $logger = new ConsoleLogger($stream);
+        $client = (new DockerClient())->withLogger($logger);
+        $container = (new GenericContainer('alpine:latest'))
+            ->withLogger($logger)
+            ->withDockerClient($client)
+            ->withCommands(['sleep', '300'])
+            ->withInspectInterval(0)
+            ->withStopTimeout(0)
+        ;
+        $instance = $container->start();
+        rewind($stream);
+        $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
 
         $this->assertTrue($instance->isRunning());
         $this->assertTrue($instance->isRunning());
-        $this->assertSame($inspected + 2, $count);
+        rewind($stream);
+        $this->assertSame($inspected + 2, substr_count(stream_get_contents($stream), 'docker inspect '));
     }
 
     public function testIsStopped()
@@ -318,12 +348,14 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testGetState()
     {
-        $status = 'running';
-        $count = 0;
-        $instance = new GenericContainerInstance([
-            'containerId' => new ContainerId('8188d93d8a27'),
-        ]);
-        $instance->setDockerClient($this->createDockerClient($status, $count, []));
+        $client = new DockerClient();
+        $container = (new GenericContainer('alpine:latest'))
+            ->withDockerClient($client)
+            ->withCommands(['sleep', '300'])
+            ->withInspectInterval(10)
+            ->withStopTimeout(0)
+        ;
+        $instance = $container->start();
 
         $this->assertSame('running', $instance->getState()->status);
     }
@@ -348,48 +380,49 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testGetStateSubscribesEventsOfContainer()
     {
-        $options = null;
-        $client = $this->createMock(DockerClient::class);
-        $client->expects($this->once())->method('events')->willReturnCallback(function ($arg) use (&$options) {
-            $options = $arg;
-
-            return self::createEventsOutput([]);
-        });
-        $client->method('inspect')->willReturn(self::createInspectOutput('running'));
-        $instance = new GenericContainerInstance([
-            'containerId' => new ContainerId('8188d93d8a27'),
-        ]);
-        $instance->setDockerClient($client);
+        $stream = fopen('php://memory', 'w+');
+        $logger = new ConsoleLogger($stream);
+        $client = (new DockerClient())->withLogger($logger);
+        $container = (new GenericContainer('alpine:latest'))
+            ->withLogger($logger)
+            ->withDockerClient($client)
+            ->withCommands(['sleep', '300'])
+            ->withInspectInterval(10)
+            ->withStopTimeout(0)
+        ;
+        $instance = $container->start();
 
         $instance->getState();
         $instance->getState();
 
-        $this->assertContains('container=8188d93d8a27', $options['filter']);
-        $this->assertContains('event=die', $options['filter']);
-        $this->assertSame('0', $options['since']);
-        $this->assertNull($options['timeout']);
+        rewind($stream);
+        $log = stream_get_contents($stream);
+        $this->assertSame(1, substr_count($log, 'docker events '));
+        $this->assertNotFalse(strpos($log, 'container='.$instance->getContainerId()));
+        $this->assertNotFalse(strpos($log, 'event=die'));
+        $this->assertNotFalse(strpos($log, '--since 0'));
     }
 
     public function testStopStopsObservingEvents()
     {
-        $process = new Process(['sleep', '30']);
-        $process->start();
-        $client = $this->createMock(DockerClient::class);
-        $client->expects($this->once())->method('events')->willReturnCallback(function () use ($process) {
-            return new DockerEventsOutput($process, true);
-        });
-        $client->method('inspect')->willReturn(self::createInspectOutput('running'));
-        $instance = new GenericContainerInstance([
-            'containerId' => new ContainerId('8188d93d8a27'),
-        ]);
-        $instance->setDockerClient($client);
-
+        $client = new DockerClient();
+        $container = (new GenericContainer('alpine:latest'))
+            ->withDockerClient($client)
+            ->withCommands(['sleep', '300'])
+            ->withInspectInterval(10)
+            ->withStopTimeout(0)
+        ;
+        $instance = $container->start();
         $this->assertTrue($instance->isRunning());
-        $this->assertTrue($process->isRunning());
+        $events = new ReflectionProperty(GenericContainerInstance::class, 'events');
+        if (PHP_VERSION_ID < 80100) {
+            $events->setAccessible(true);
+        }
+        $this->assertNotNull($events->getValue($instance));
 
         $instance->stop();
 
-        $this->assertFalse($process->isRunning());
+        $this->assertNull($events->getValue($instance));
     }
 
     public function testStop()
@@ -404,107 +437,31 @@ class GenericContainerInstanceTest extends TestCase
 
     public function testStopThrowsDockerException()
     {
-        $process = $this->createMock(Process::class);
-        $process->method('getCommandLine')->willReturn('docker stop test');
-        $process->method('getExitCode')->willReturn(1);
-        $process->method('getErrorOutput')->willReturn('connection refused');
-
-        $client = $this->createMock(DockerClient::class);
-        $client->method('stop')->willThrowException(new DockerException($process));
-
+        $client = (new DockerClient())->withGlobalOptions([
+            'host' => 'unix://'.__DIR__.'/missing-docker.sock',
+        ]);
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
         $instance->setDockerClient($client);
-
         $this->expectException(DockerException::class);
+
         $instance->stop();
     }
 
-    public function testDestructorSwallowsDockerException()
+    public function testDestructSwallowsDockerException()
     {
-        $process = $this->createMock(Process::class);
-        $process->method('getCommandLine')->willReturn('docker stop test');
-        $process->method('getExitCode')->willReturn(1);
-        $process->method('getErrorOutput')->willReturn('connection refused');
-
-        $client = $this->createMock(DockerClient::class);
-        $client->method('stop')->willThrowException(new DockerException($process));
-
+        $client = (new DockerClient())->withGlobalOptions([
+            'host' => 'unix://'.__DIR__.'/missing-docker.sock',
+        ]);
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
         $instance->setDockerClient($client);
 
-        // Should not throw -- destructor catches all exceptions
         unset($instance);
 
-        $this->assertTrue(true);
-    }
-
-    /**
-     * @param string   $status  the status of the container returned by `docker inspect`
-     * @param int      $count   the number of times `docker inspect` has been executed
-     * @param string[] $actions the actions of the events emitted every two seconds
-     *
-     * @return DockerClient
-     */
-    private function createDockerClient(&$status, &$count, $actions)
-    {
-        $outputs = [
-            'running' => self::createInspectOutput('running'),
-            'exited' => self::createInspectOutput('exited'),
-        ];
-        $client = $this->createMock(DockerClient::class);
-        $client->expects($this->atLeastOnce())->method('inspect')->willReturnCallback(function () use (&$status, &$count, $outputs) {
-            ++$count;
-
-            return $outputs[$status];
-        });
-        $client->method('events')->willReturnCallback(function () use ($actions) {
-            return self::createEventsOutput($actions);
-        });
-
-        return $client;
-    }
-
-    /**
-     * @param string $status
-     *
-     * @return DockerInspectOutput
-     */
-    private static function createInspectOutput($status)
-    {
-        $output = json_encode([['State' => ['Status' => $status, 'ExitCode' => 0]]]);
-        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($output, true).';']);
-        $process->run();
-
-        return new DockerInspectOutput($process);
-    }
-
-    /**
-     * @param string[] $actions the actions of the events emitted every two seconds
-     *
-     * @return DockerEventsOutput
-     */
-    private static function createEventsOutput($actions)
-    {
-        $script = '';
-        foreach ($actions as $i => $action) {
-            $event = json_encode([
-                'Type' => 'container',
-                'Action' => $action,
-                'Actor' => ['ID' => '8188d93d8a27', 'Attributes' => null],
-                'scope' => 'local',
-                'time' => 1700000000 + $i,
-                'timeNano' => (1700000000 + $i) * 1000000000,
-            ]);
-            $script .= 'echo '.var_export($event."\n", true).'; flush(); usleep(2000000);';
-        }
-        $process = new Process([PHP_BINARY, '-r', $script.'sleep(30);']);
-        $process->start();
-
-        return new DockerEventsOutput($process, true);
+        $this->assertFalse(isset($instance));
     }
 }
 

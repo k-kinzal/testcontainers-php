@@ -3,31 +3,53 @@
 namespace Testcontainers\Docker\Output;
 
 use Symfony\Component\Process\Process;
+use Testcontainers\Docker\Exception\InvalidValueException;
 
 /**
  * Represents the output of a Docker `version` command executed via Symfony Process.
  *
  * This class extends DockerOutput to parse the JSON output from `docker version --format json`
  * and provide access to version information.
+ *
+ * @api
  */
-class DockerVersionOutput extends DockerOutput
+final class DockerVersionOutput extends DockerOutput
 {
     /**
      * The parsed version data.
      *
-     * @var array
+     * @var array{Client?: array{Version: string}, Server?: array{Version: string}}
      */
     private $data;
 
     /**
      * @param Process $process the Symfony Process instance that executed the `docker version` command
+     *
+     * @throws InvalidValueException if a version value is not a string
      */
     public function __construct($process)
     {
         parent::__construct($process);
 
         $output = json_decode($process->getOutput(), true);
-        $this->data = is_array($output) ? $output : [];
+        $this->data = [];
+        if (!is_array($output)) {
+            return;
+        }
+
+        foreach (['Client', 'Server'] as $component) {
+            if (!isset($output[$component]['Version'])) {
+                continue;
+            }
+            if (!is_string($output[$component]['Version'])) {
+                throw new InvalidValueException(
+                    sprintf('Docker %s version is not a string', $component),
+                    ['output' => $output]
+                );
+            }
+
+            $this->data[$component] = ['Version' => $output[$component]['Version']];
+        }
     }
 
     /**

@@ -2,13 +2,16 @@
 
 namespace Testcontainers\Utility;
 
+use Generator;
 use Symfony\Component\Process\Process;
 
 /**
  * LineIterator iterates over the output of a process line by line.
  */
-class LineIterator
+final class LineIterator
 {
+    use Ensure;
+
     /**
      * The process to read the output from.
      *
@@ -18,9 +21,12 @@ class LineIterator
 
     /**
      * @param Process $process the process to read the output from
+     * @psalm-param mixed $process
      */
     public function __construct($process)
     {
+        self::ensureInstanceOf($process, Process::class);
+
         $this->process = $process;
     }
 
@@ -32,11 +38,14 @@ class LineIterator
      * The last line is yielded even if it does not end with a newline.
      *
      * @param int $flags a bit field of Process::ITER_* flags
+     * @psalm-param mixed $flags
      *
-     * @return \Generator<string, null|string> an iterator to traverse the lines without newlines
+     * @return Generator<string, null|string> an iterator to traverse the lines without newlines
      */
     public function getIterator($flags = 0)
     {
+        self::ensureIntRange($flags, 0);
+
         $blocking = !(Process::ITER_NON_BLOCKING & $flags);
         $buffers = [Process::OUT => '', Process::ERR => ''];
         foreach ($this->process->getIterator($flags) as $type => $chunk) {

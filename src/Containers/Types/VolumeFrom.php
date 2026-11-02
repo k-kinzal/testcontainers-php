@@ -2,7 +2,9 @@
 
 namespace Testcontainers\Containers\Types;
 
+use LogicException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -10,9 +12,13 @@ use Testcontainers\Utility\Stringable;
  *
  * @property string   $name The name of the container to mount volumes from.
  * @property BindMode $mode The mode of the bind (e.g., read-only or read-write).
+ *
+ * @api
  */
-class VolumeFrom implements Stringable
+final class VolumeFrom implements Stringable
 {
+    use Ensure;
+
     /**
      * The name of the container to mount volumes from.
      *
@@ -30,9 +36,14 @@ class VolumeFrom implements Stringable
     /**
      * @param string   $name
      * @param BindMode $mode
+     * @psalm-param mixed $name
+     * @psalm-param mixed $mode
      */
     public function __construct($name, $mode)
     {
+        self::ensureNonEmptyString($name);
+        self::ensureInstanceOf($mode, BindMode::class);
+
         $this->name = $name;
         $this->mode = $mode;
     }
@@ -50,7 +61,7 @@ class VolumeFrom implements Stringable
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('VolumeFrom::'.$name.' does not exist');
+            throw new LogicException('VolumeFrom::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -60,13 +71,16 @@ class VolumeFrom implements Stringable
      * Get the name of the container to mount volumes from.
      *
      * @param string $v the volume from string
-     *
-     * @throws InvalidFormatException if the mount format is invalid
+     * @psalm-param mixed $v
      *
      * @return VolumeFrom
+     *
+     * @throws InvalidFormatException if the mount format is invalid
      */
     public static function fromString($v)
     {
+        self::ensureString($v);
+
         if (strpos($v, ':') === false) {
             return new VolumeFrom($v, BindMode::READ_WRITE());
         }
@@ -76,15 +90,22 @@ class VolumeFrom implements Stringable
     }
 
     /**
+     * Create an instance from the supplied configuration array.
+     *
      * @param array{
      *    name: string,
      *    mode: BindMode
      * } $arr The array representation of the volume from
+     * @psalm-param mixed $arr
      *
      * @return VolumeFrom
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+        self::ensureArrayHasKey($arr, 'name');
+        self::ensureArrayHasKey($arr, 'mode');
+
         return new VolumeFrom($arr['name'], $arr['mode']);
     }
 

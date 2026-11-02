@@ -19,8 +19,10 @@ use Testcontainers\Docker\Command\VersionCommand;
  *
  * This client provides a simple interface for executing Docker commands from PHP.
  * It allows you to run containers, stop containers, and retrieve the status of running containers.
+ *
+ * @api
  */
-class DockerClient
+final class DockerClient
 {
     use BaseCommand;
     use BuildCommand;

@@ -2,16 +2,22 @@
 
 namespace Testcontainers\Docker\Types;
 
+use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents the object that generated a Docker event.
  *
  * @property string                $id         The ID of the object that generated the event
  * @property array<string, string> $attributes The attributes of the object that generated the event
+ *
+ * @api
  */
-class EventActor
+final class EventActor
 {
+    use Ensure;
+
     /**
      * The ID of the object that generated the event.
      *
@@ -31,8 +37,6 @@ class EventActor
     }
 
     /**
-     * Retrieve the value of a property.
-     *
      * @param string $name the name of the property to retrieve
      *
      * @return mixed
@@ -40,7 +44,7 @@ class EventActor
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('EventActor::'.$name.' does not exist');
+            throw new LogicException('EventActor::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -50,13 +54,16 @@ class EventActor
      * Create an EventActor from a JSON-decoded array.
      *
      * @param array $arr the decoded `Actor` object of a Docker event
-     *
-     * @throws InvalidValueException if the array does not contain the expected properties
+     * @psalm-param mixed $arr
      *
      * @return self
+     *
+     * @throws InvalidValueException if the array does not contain the expected properties
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
         $actor = new self();
         $actor->id = self::ensureIdFromArray($arr);
         $actor->attributes = self::ensureAttributesFromArray($arr);
@@ -68,11 +75,14 @@ class EventActor
      * Get an attribute value by key.
      *
      * @param string $key the attribute key
+     * @psalm-param mixed $key
      *
      * @return null|string the attribute value, or null if not found
      */
     public function getAttribute($key)
     {
+        self::ensureString($key);
+
         return isset($this->attributes[$key]) ? $this->attributes[$key] : null;
     }
 
@@ -81,9 +91,9 @@ class EventActor
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'ID' property is missing or not a string
-     *
      * @return string
+     *
+     * @throws InvalidValueException if the 'ID' property is missing or not a string
      */
     private static function ensureIdFromArray($arr)
     {
@@ -108,9 +118,9 @@ class EventActor
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'Attributes' property is not a map of strings
-     *
      * @return array<string, string>
+     *
+     * @throws InvalidValueException if the 'Attributes' property is not a map of strings
      */
     private static function ensureAttributesFromArray($arr)
     {

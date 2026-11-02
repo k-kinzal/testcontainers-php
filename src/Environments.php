@@ -15,16 +15,18 @@ namespace Testcontainers;
  * @method static string|null ACTIONS_STEP_DEBUG()                                     Set by GitHub Actions when step debug logging is enabled
  * @method static string|null CI_DEBUG_TRACE()                                         Set by GitLab CI when debug logging is enabled
  * @method static string|null SYSTEM_DEBUG()                                           Set by Azure Pipelines when debug logging is enabled
+ *
+ * @api
  */
-class Environments
+final class Environments
 {
     /**
      * @param string $name
-     * @param array  $arguments
+     * @param array  $_arguments
      *
      * @return null|string
      */
-    public static function __callStatic($name, $arguments)
+    public static function __callStatic($name, $_arguments)
     {
         $value = getenv($name);
         if (is_string($value)) {

@@ -9,6 +9,7 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\UserSetting;
 use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -50,9 +51,22 @@ class UserSettingTest extends TestCase
 
         $this->assertSame("nobody\n", $instance->getOutput());
     }
+
+    public function testStartRejectsInvalidUser()
+    {
+        $container = new UserSettingWithInvalidUserContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class UserSettingWithStaticUserContainer extends GenericContainer
 {
     protected static $USER = 'nobody';
+}
+
+class UserSettingWithInvalidUserContainer extends GenericContainer
+{
+    protected static $USER = [];
 }

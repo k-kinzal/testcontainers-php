@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\Types;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Exceptions\InvalidFormatException;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -52,5 +53,12 @@ class HostToIpTest extends TestCase
         $value = new HostToIp('docker.internal', '127.0.0.1');
 
         $this->assertSame('docker.internal:127.0.0.1', (string) $value);
+    }
+
+    public function testFromArrayRejectsMissingIpAddress()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        HostToIp::fromArray(['hostname' => 'host']);
     }
 }

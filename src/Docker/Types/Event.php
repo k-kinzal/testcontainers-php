@@ -2,8 +2,10 @@
 
 namespace Testcontainers\Docker\Types;
 
+use LogicException;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Exceptions\InvalidFormatException;
+use Testcontainers\Utility\Ensure;
 
 /**
  * Represents an event emitted by the Docker daemon.
@@ -17,9 +19,13 @@ use Testcontainers\Exceptions\InvalidFormatException;
  * @property null|string     $status   Deprecated status of the event
  * @property null|string     $id       Deprecated ID of the object that generated the event
  * @property null|string     $from     Deprecated image of the container that generated the event
+ *
+ * @api
  */
-class Event
+final class Event
 {
+    use Ensure;
+
     /**
      * The type of the object that generated the event.
      *
@@ -88,8 +94,6 @@ class Event
     }
 
     /**
-     * Retrieve the value of a property.
-     *
      * @param string $name the name of the property to retrieve
      *
      * @return mixed
@@ -97,7 +101,7 @@ class Event
     public function __get($name)
     {
         if (!property_exists($this, $name)) {
-            throw new \LogicException('Event::'.$name.' does not exist');
+            throw new LogicException('Event::'.$name.' does not exist');
         }
 
         return $this->{$name};
@@ -107,13 +111,16 @@ class Event
      * Create an Event from a JSON-decoded array.
      *
      * @param array $arr the decoded JSON object of a Docker event
-     *
-     * @throws InvalidValueException if the array does not contain the expected properties
+     * @psalm-param mixed $arr
      *
      * @return self
+     *
+     * @throws InvalidValueException if the array does not contain the expected properties
      */
     public static function fromArray($arr)
     {
+        self::ensureArray($arr);
+
         $event = new self();
         $event->type = self::ensureTypeFromArray($arr);
         $event->action = self::ensureActionFromArray($arr);
@@ -132,13 +139,16 @@ class Event
      * Deserialize an Event from a JSON string.
      *
      * @param string $s the JSON representation of a Docker event
-     *
-     * @throws InvalidValueException if the string is not a valid event
+     * @psalm-param mixed $s
      *
      * @return self
+     *
+     * @throws InvalidValueException if the string is not a valid event
      */
     public static function deserialize($s)
     {
+        self::ensureString($s);
+
         $decoded = json_decode($s, true);
         if (!is_array($decoded)) {
             throw new InvalidValueException(sprintf('Event expects a JSON object, but received `%s`', $s), ['data' => $s]);
@@ -152,9 +162,9 @@ class Event
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'Type' property is missing, not a string, or not a known event type
-     *
      * @return EventType
+     *
+     * @throws InvalidValueException if the 'Type' property is missing, not a string, or not a known event type
      */
     private static function ensureTypeFromArray($arr)
     {
@@ -175,9 +185,9 @@ class Event
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'Action' property is missing, not a string, or not a known event action
-     *
      * @return EventAction
+     *
+     * @throws InvalidValueException if the 'Action' property is missing, not a string, or not a known event action
      */
     private static function ensureActionFromArray($arr)
     {
@@ -198,9 +208,9 @@ class Event
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'Actor' property is missing or invalid
-     *
      * @return EventActor
+     *
+     * @throws InvalidValueException if the 'Actor' property is missing or invalid
      */
     private static function ensureActorFromArray($arr)
     {
@@ -225,13 +235,14 @@ class Event
      *
      * @param array $arr the array to check
      *
-     * @throws InvalidValueException if the 'scope' property is not a known event scope
-     *
      * @return null|EventScope
+     *
+     * @throws InvalidValueException if the 'scope' property is not a known event scope
      */
     private static function ensureScopeFromArray($arr)
     {
         $scope = self::ensureOptionalStringFromArray($arr, 'scope');
+
         if ($scope === null) {
             return null;
         }
@@ -252,9 +263,9 @@ class Event
      * @param array  $arr  the array to check
      * @param string $name the property name
      *
-     * @throws InvalidValueException if the property is missing or not a string
-     *
      * @return string
+     *
+     * @throws InvalidValueException if the property is missing or not a string
      */
     private static function ensureStringFromArray($arr, $name)
     {
@@ -284,9 +295,9 @@ class Event
      * @param array  $arr  the array to check
      * @param string $name the property name
      *
-     * @throws InvalidValueException if the property is present but not a string
-     *
      * @return null|string
+     *
+     * @throws InvalidValueException if the property is present but not a string
      */
     private static function ensureOptionalStringFromArray($arr, $name)
     {
@@ -313,9 +324,9 @@ class Event
      * @param array  $arr  the array to check
      * @param string $name the property name
      *
-     * @throws InvalidValueException if the property is present but not an integer
-     *
      * @return null|int
+     *
+     * @throws InvalidValueException if the property is present but not an integer
      */
     private static function ensureOptionalIntFromArray($arr, $name)
     {

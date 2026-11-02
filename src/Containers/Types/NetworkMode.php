@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Containers\Types;
 
+use Testcontainers\Utility\Ensure;
 use Testcontainers\Utility\Stringable;
 
 /**
@@ -10,9 +11,13 @@ use Testcontainers\Utility\Stringable;
  * This class encapsulates the network name or driver used by a container and provides
  * convenient access to common network modes (`host`, `bridge`), as well as supporting
  * custom network modes.
+ *
+ * @api
  */
-class NetworkMode implements Stringable
+final class NetworkMode implements Stringable
 {
+    use Ensure;
+
     /**
      * Host network mode.
      *
@@ -52,12 +57,13 @@ class NetworkMode implements Stringable
     private $mode;
 
     /**
-     * Initializes a NetworkMode object.
-     *
      * @param string $mode The network mode (e.g., 'host', 'bridge', or a custom network name).
+     * @psalm-param mixed $mode
      */
     public function __construct($mode)
     {
+        self::ensureNonEmptyString($mode);
+
         $this->mode = $mode;
     }
 
@@ -100,6 +106,7 @@ class NetworkMode implements Stringable
      * Creates a NetworkMode object from a string.
      *
      * @param string $s the network mode string
+     * @psalm-param mixed $s
      *
      * @return NetworkMode a NetworkMode object representing the given network mode
      */

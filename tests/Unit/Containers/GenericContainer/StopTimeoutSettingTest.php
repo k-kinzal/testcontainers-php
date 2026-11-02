@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StopTimeoutSetting;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -47,9 +48,44 @@ class StopTimeoutSettingTest extends TestCase
 
         $this->assertNull($instance->getStopTimeout());
     }
+
+    /**
+     * @dataProvider providerWithStopTimeoutInvalidInputs
+     * @param int $seconds
+     */
+    public function testWithStopTimeoutRejectsInvalidInputs($seconds)
+    {
+        $container = new GenericContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->withStopTimeout($seconds);
+    }
+
+    /**
+     * @return array<string, array{int}>
+     */
+    public static function providerWithStopTimeoutInvalidInputs()
+    {
+        return [
+            'case 1' => [-2],
+        ];
+    }
+
+    public function testStartRejectsInvalidStopTimeout()
+    {
+        $container = new StopTimeoutSettingWithInvalidStopTimeoutContainer('alpine');
+        $this->expectException(UnexpectedValueException::class);
+
+        $container->start();
+    }
 }
 
 class StopTimeoutSettingWithStaticContainer extends GenericContainer
 {
     protected static $STOP_TIMEOUT = 5;
+}
+
+class StopTimeoutSettingWithInvalidStopTimeoutContainer extends GenericContainer
+{
+    protected static $STOP_TIMEOUT = -2;
 }

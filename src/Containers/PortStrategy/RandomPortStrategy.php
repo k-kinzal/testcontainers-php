@@ -2,10 +2,12 @@
 
 namespace Testcontainers\Containers\PortStrategy;
 
+use RuntimeException;
+
 /**
  * A port strategy that selects a random port from the ephemeral port range.
  */
-class RandomPortStrategy implements PortStrategy
+final class RandomPortStrategy implements PortStrategy
 {
     public function getPort()
     {
@@ -16,7 +18,7 @@ class RandomPortStrategy implements PortStrategy
             }
         }
 
-        throw new \RuntimeException('Could not find an available port');
+        throw new RuntimeException('Could not find an available port');
     }
 
     public function conflictBehavior()

@@ -32,6 +32,7 @@ trait EnvSetting
      * Define the default environment variables to be used for the container.
      *
      * @var null|array<string, string>
+     * @psalm-var mixed
      */
     protected static $ENVIRONMENTS;
 
@@ -39,6 +40,7 @@ trait EnvSetting
      * Define the default environment variables to be used for the container. Alias for `ENVIRONMENTS`.
      *
      * @var null|array<string, string>
+     * @psalm-var mixed
      */
     protected static $ENV;
 
@@ -54,11 +56,16 @@ trait EnvSetting
      *
      * @param string $key   the name of the environment variable
      * @param string $value the value of the environment variable
+     * @psalm-param mixed $key
+     * @psalm-param mixed $value
      *
      * @return self
      */
     public function withEnv($key, $value)
     {
+        self::ensureString($key);
+        self::ensureString($value);
+
         $this->env[$key] = $value;
 
         return $this;
@@ -68,11 +75,14 @@ trait EnvSetting
      * Add multiple environment variables to the container.
      *
      * @param array<string, string> $env an associative array where the key is the environment variable name and the value is the environment variable value
+     * @psalm-param mixed $env
      *
      * @return self
      */
     public function withEnvs($env)
     {
+        self::ensureStringMap($env);
+
         $this->env = $env;
 
         return $this;
@@ -90,9 +100,13 @@ trait EnvSetting
     protected function env()
     {
         if (static::$ENVIRONMENTS !== null) {
+            self::ensureStringMap(static::$ENVIRONMENTS);
+
             return static::$ENVIRONMENTS;
         }
         if (static::$ENV !== null) {
+            self::ensureStringMap(static::$ENV);
+
             return static::$ENV;
         }
         if ($this->env) {

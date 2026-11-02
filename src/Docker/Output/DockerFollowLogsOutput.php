@@ -2,6 +2,7 @@
 
 namespace Testcontainers\Docker\Output;
 
+use Generator;
 use Testcontainers\Utility\LineIterator;
 
 /**
@@ -9,12 +10,12 @@ use Testcontainers\Utility\LineIterator;
  *
  * This class extends DockerOutput to provide specific handling for container logs.
  */
-class DockerFollowLogsOutput extends DockerOutput
+final class DockerFollowLogsOutput extends DockerOutput
 {
     /**
      * Returns an iterator for the Docker logs output line by line.
      *
-     * @return \Generator<string, string> an iterator to traverse the lines of the Docker logs output
+     * @return Generator<string, null|string> an iterator to traverse the lines of the Docker logs output
      */
     public function getIterator()
     {

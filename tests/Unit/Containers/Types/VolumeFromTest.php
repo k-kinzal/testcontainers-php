@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Containers\Types\VolumeFrom;
 use Testcontainers\Exceptions\InvalidFormatException;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -63,5 +64,12 @@ class VolumeFromTest extends TestCase
         $volumeFrom = new VolumeFrom('name', BindMode::READ_ONLY());
 
         $this->assertSame('name:ro', (string) $volumeFrom);
+    }
+
+    public function testFromArrayRejectsBooleanMode()
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        VolumeFrom::fromArray(['name' => 'volume', 'mode' => false]);
     }
 }

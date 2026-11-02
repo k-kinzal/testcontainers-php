@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Testcontainers\Logger\ConsoleLogger;
 use Testcontainers\Logger\LoggerFactory;
+use UnexpectedValueException;
 
 /**
  * @internal
@@ -54,8 +55,8 @@ class LoggerFactoryTest extends TestCase
             putenv('TESTCONTAINERS_LOGGER=stdClass');
 
             LoggerFactory::create();
-            $this->fail('Expected InvalidArgumentException');
-        } catch (\InvalidArgumentException $e) {
+            $this->fail('Expected UnexpectedValueException');
+        } catch (UnexpectedValueException $e) {
             $this->assertTrue(strpos($e->getMessage(), 'stdClass') !== false);
         } finally {
             putenv('TESTCONTAINERS_LOGGER');
@@ -68,8 +69,8 @@ class LoggerFactoryTest extends TestCase
             putenv('TESTCONTAINERS_LOGGER=Undefined\Logger');
 
             LoggerFactory::create();
-            $this->fail('Expected InvalidArgumentException');
-        } catch (\InvalidArgumentException $e) {
+            $this->fail('Expected UnexpectedValueException');
+        } catch (UnexpectedValueException $e) {
             $this->assertTrue(strpos($e->getMessage(), 'Undefined\Logger') !== false);
         } finally {
             putenv('TESTCONTAINERS_LOGGER');
