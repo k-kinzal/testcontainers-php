@@ -30,6 +30,11 @@ jobs:
       fail-fast: false
       matrix:
         php-version: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+        include:
+          - php-version: '8.1'
+            ini-values: opcache.enable_cli=1, opcache.jit=tracing
+          - php-version: '8.2'
+            ini-values: opcache.enable_cli=1, opcache.jit=tracing
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -54,7 +59,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
-          ini-values: opcache.enable_cli=1
+          ini-values: ${{ matrix.ini-values || 'opcache.enable_cli=1' }}
 
       - name: Use Composer lock for PHP ${{ matrix.php-version }}
         run: cp composer-${{ matrix.php-version }}.lock composer.lock
