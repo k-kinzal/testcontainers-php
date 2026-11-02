@@ -47,6 +47,8 @@ use Testcontainers\Utility\Ensure;
  *     protected static $IMAGE = 'alpine:3.10';
  * }
  * ```
+ *
+ * @api
  */
 final class Testcontainers
 {
