@@ -14,4 +14,7 @@
             <file name="src/Logger/ConsoleLogger/ConsoleLogger56.php" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <PossiblyUnusedReturnValue errorLevel="suppress" />
+    </issueHandlers>
 </psalm>
