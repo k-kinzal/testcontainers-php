@@ -19,6 +19,8 @@ use Testcontainers\Utility\Ensure;
  * @property null|string     $status   Deprecated status of the event
  * @property null|string     $id       Deprecated ID of the object that generated the event
  * @property null|string     $from     Deprecated image of the container that generated the event
+ *
+ * @api
  */
 final class Event
 {

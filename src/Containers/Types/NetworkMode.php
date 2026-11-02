@@ -11,6 +11,8 @@ use Testcontainers\Utility\Stringable;
  * This class encapsulates the network name or driver used by a container and provides
  * convenient access to common network modes (`host`, `bridge`), as well as supporting
  * custom network modes.
+ *
+ * @api
  */
 final class NetworkMode implements Stringable
 {

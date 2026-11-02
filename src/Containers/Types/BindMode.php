@@ -8,6 +8,8 @@ use Testcontainers\Utility\Stringable;
 
 /**
  * The read-only or read-write access mode for a bind mount.
+ *
+ * @api
  */
 final class BindMode implements Stringable
 {

@@ -56,6 +56,8 @@ abstract class ConsoleLogger80 extends AbstractLogger
     private $minLevel;
 
     /**
+     * @api
+     *
      * @param resource|null $stream   Stream to write to. Defaults to STDERR.
      * @param string        $minLevel Minimum PSR-3 log level to output. Defaults to DEBUG (all messages).
      * @psalm-param mixed $stream

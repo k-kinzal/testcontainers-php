@@ -11,6 +11,8 @@ use Testcontainers\Utility\Stringable;
  * It allows setting the host, port, database name, and character set for the DSN.
  *
  * @see https://www.php.net/manual/en/ref.pdo-mysql.connection.php
+ *
+ * @api
  */
 final class MySQLDSN implements DSN, Stringable
 {

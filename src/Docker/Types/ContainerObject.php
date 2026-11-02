@@ -10,6 +10,8 @@ use Testcontainers\Utility\Ensure;
  * Represents a container object returned by the Docker API.
  *
  * @property State $state The state of the container.
+ *
+ * @api
  */
 final class ContainerObject
 {

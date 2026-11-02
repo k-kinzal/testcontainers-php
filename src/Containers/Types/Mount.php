@@ -17,6 +17,8 @@ use Testcontainers\Utility\Stringable;
  * @property bool                  $readonly    Whether the mount should be read-only.
  * @property bool                  $nocopy      Whether the mount should be created with a nocopy option.
  * @property array<string, string> $opt         An array of key-value pairs that define options for the mount.
+ *
+ * @api
  */
 final class Mount implements Stringable
 {

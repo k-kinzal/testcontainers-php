@@ -12,6 +12,8 @@ use Testcontainers\Logger\WithLogger;
  * StartupCheckStrategy that waits until a container has exited with code 0.
  *
  * Useful for one-shot containers that run a command and exit (e.g. echo, printenv).
+ *
+ * @api
  */
 final class OneShotStartupCheckStrategy implements StartupCheckStrategy
 {

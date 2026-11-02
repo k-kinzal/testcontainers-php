@@ -10,6 +10,8 @@ use Testcontainers\Docker\Exception\InvalidValueException;
  *
  * This class extends DockerOutput to parse the JSON output from `docker version --format json`
  * and provide access to version information.
+ *
+ * @api
  */
 final class DockerVersionOutput extends DockerOutput
 {

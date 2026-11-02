@@ -10,6 +10,8 @@ use Testcontainers\Utility\Stringable;
  * Represents a Docker network ID.
  *
  * A network ID is a 64-character hexadecimal string.
+ *
+ * @api
  */
 final class NetworkId implements Stringable
 {

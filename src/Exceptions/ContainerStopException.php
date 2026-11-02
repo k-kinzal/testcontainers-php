@@ -7,6 +7,8 @@ use RuntimeException;
 
 /**
  * One or more containers could not be stopped.
+ *
+ * @api
  */
 final class ContainerStopException extends RuntimeException
 {

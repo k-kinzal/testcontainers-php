@@ -13,6 +13,8 @@ use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 
 /**
  * An interface representing the definition of a container.
+ *
+ * @api
  */
 interface Container
 {

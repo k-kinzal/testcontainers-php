@@ -26,6 +26,8 @@ use Testcontainers\Utility\Ensure;
  * @property string                $size         The container size
  * @property string                $state        The container state (created, running, paused, restarting, removing, exited, dead)
  * @property string                $status       The human-readable status string
+ *
+ * @api
  */
 final class ContainerListItem
 {

@@ -8,6 +8,8 @@ use Testcontainers\Utility\Stringable;
 
 /**
  * Represents the scope of a Docker event.
+ *
+ * @api
  */
 final class EventScope implements Stringable
 {

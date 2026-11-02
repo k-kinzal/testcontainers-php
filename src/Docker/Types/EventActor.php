@@ -11,6 +11,8 @@ use Testcontainers\Utility\Ensure;
  *
  * @property string                $id         The ID of the object that generated the event
  * @property array<string, string> $attributes The attributes of the object that generated the event
+ *
+ * @api
  */
 final class EventActor
 {

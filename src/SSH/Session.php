@@ -8,6 +8,8 @@ use Testcontainers\Utility\Ensure;
 /**
  * This class represents an SSH session managed by a Symfony Process.
  * It provides methods to check if the session is running and to stop the session.
+ *
+ * @api
  */
 final class Session
 {

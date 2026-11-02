@@ -12,6 +12,8 @@ use Testcontainers\Docker\Types\State;
  * Represents the output of a Docker `inspect` command executed via Symfony Process.
  *
  * @property State $state
+ *
+ * @api
  */
 final class DockerInspectOutput extends DockerOutput
 {

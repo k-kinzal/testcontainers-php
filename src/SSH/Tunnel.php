@@ -8,6 +8,8 @@ use Testcontainers\SSH\Exceptions\TunnelException;
 
 /**
  * A tunnel for forwarding connections over SSH.
+ *
+ * @api
  */
 final class Tunnel
 {

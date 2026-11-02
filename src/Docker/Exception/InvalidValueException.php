@@ -8,6 +8,8 @@ use Exception;
  * Exception thrown when a value is invalid.
  *
  * @template T
+ *
+ * @api
  */
 final class InvalidValueException extends Exception
 {
