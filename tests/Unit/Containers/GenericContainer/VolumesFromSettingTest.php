@@ -46,7 +46,7 @@ final class VolumesFromSettingTest extends TestCase
             ->withFileSystemBind($path, $path, BindMode::READ_WRITE())
         ;
 
-        $instance1 = $container->start();
+        $container->start();
 
         $container = (new VolumesFromSettingWithStaticVolumesFromContainer('alpine:latest'))
             ->withDockerClient($client)
@@ -54,15 +54,10 @@ final class VolumesFromSettingTest extends TestCase
             ->withCommands(['cat', $path])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
-        $instance2 = $container->start();
+        $instance = $container->start();
 
-        try {
-            self::assertSame('', $instance2->getErrorOutput());
-            self::assertSame('Hello, World!', $instance2->getOutput());
-        } finally {
-            $instance2->stop();
-            $instance1->stop();
-        }
+        self::assertSame('', $instance->getErrorOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**

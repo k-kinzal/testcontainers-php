@@ -27,13 +27,9 @@ final class ContainerReaperTest extends TestCase
         self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
-        try {
-            (new ContainerReaper($client))->execute();
+        (new ContainerReaper($client))->execute();
 
-            self::assertSame('running', $client->inspect($id)->state->status);
-        } finally {
-            $client->rm($id, ['force' => true]);
-        }
+        self::assertSame('running', $client->inspect($id)->state->status);
     }
 
     /**
@@ -77,13 +73,9 @@ final class ContainerReaperTest extends TestCase
         self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
-        try {
-            (new ContainerReaper($client))->execute();
+        (new ContainerReaper($client))->execute();
 
-            self::assertSame('exited', $client->inspect($id)->state->status);
-        } finally {
-            $client->rm($id, ['force' => true]);
-        }
+        self::assertSame('exited', $client->inspect($id)->state->status);
     }
 
     /**
@@ -111,7 +103,6 @@ final class ContainerReaperTest extends TestCase
 
             self::assertSame('running', $client->inspect($id)->state->status);
         } finally {
-            $client->rm($id, ['force' => true]);
             $process->stop();
         }
     }

@@ -128,14 +128,10 @@ final class RunCommandTest extends TestCase
         ]);
         self::assertInstanceOf(DockerRunWithDetachOutput::class, $output);
 
-        try {
-            $this->expectException(PortConflictException::class);
-            $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
-                'detach' => true,
-                'publish' => ['38793:80'],
-            ]);
-        } finally {
-            $client->rm($output->getContainerId(), ['force' => true]);
-        }
+        $this->expectException(PortConflictException::class);
+        $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
+            'detach' => true,
+            'publish' => ['38793:80'],
+        ]);
     }
 }

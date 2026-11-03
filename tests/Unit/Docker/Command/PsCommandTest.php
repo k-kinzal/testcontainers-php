@@ -45,8 +45,6 @@ final class PsCommandTest extends TestCase
         $containers = $output->getContainers();
         self::assertCount(1, $containers);
         self::assertSame((string) $runOutput->getContainerId(), (string) $containers[0]->id);
-
-        $client->stop($runOutput->getContainerId(), ['timeout' => 0]);
     }
 
     /**
