@@ -1555,7 +1555,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerInstanceOfValidValues
      * @param stdClass $value
-     * @param string   $class
+     * @param class-string   $class
      * @param stdClass $expected
      * @return void
      */
@@ -1581,7 +1581,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerInstanceOfInvalidValues
      * @param array{}|null|stdClass $value
-     * @param string                $class
+     * @param class-string                $class
      * @return void
      */
     public function testEnsureInstanceOfRejectsInvalidValues($value, $class)
@@ -1606,7 +1606,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableInstanceOfValidValues
      * @param null|stdClass $value
-     * @param string        $class
+     * @param class-string        $class
      * @param null|stdClass $expected
      * @return void
      */
@@ -1633,7 +1633,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableInstanceOfInvalidValues
      * @param array{}|bool $value
-     * @param string       $class
+     * @param class-string       $class
      * @return void
      * @psalm-param mixed $value
      */
@@ -1658,7 +1658,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerNonEmptyStringOrInstanceOfValidValues
      * @param stdClass|string $value
-     * @param string          $class
+     * @param class-string          $class
      * @param stdClass|string $expected
      * @return void
      */
@@ -1685,7 +1685,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerNonEmptyStringOrInstanceOfInvalidValues
      * @param bool|null|string $value
-     * @param string           $class
+     * @param class-string           $class
      * @return void
      */
     public function testEnsureNonEmptyStringOrInstanceOfRejectsInvalidValues($value, $class)
@@ -1710,7 +1710,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerStringOrArrayOrInstanceOfValidValues
      * @param array{}|stdClass|string $value
-     * @param string                  $class
+     * @param class-string                  $class
      * @param array{}|stdClass|string $expected
      * @return void
      */
@@ -1738,7 +1738,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerStringOrArrayOrInstanceOfInvalidValues
      * @param bool|null $value
-     * @param string    $class
+     * @param class-string    $class
      * @return void
      * @psalm-param mixed $value
      */
@@ -1860,7 +1860,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerMatchesValidValues
      * @param string $value
-     * @param string $pattern
+     * @param non-empty-string $pattern
      * @param string $expected
      * @return void
      * @psalm-param mixed $value
@@ -1885,7 +1885,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerMatchesInvalidValues
      * @param string $value
-     * @param string $pattern
+     * @param non-empty-string $pattern
      * @return void
      * @psalm-param mixed $value
      */
@@ -2067,7 +2067,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerClassStringOfValidValues
      * @param string $value
-     * @param string $class
+     * @param class-string $class
      * @param string $expected
      * @return void
      */
@@ -2091,7 +2091,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerClassStringOfInvalidValues
      * @param bool|string $value
-     * @param string      $class
+     * @param class-string      $class
      * @return void
      */
     public function testEnsureClassStringOfRejectsInvalidValues($value, $class)
@@ -2116,7 +2116,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerClassStringOrInstanceOfValidValues
      * @param ArrayIterator<never, never>|string $value
-     * @param string                             $class
+     * @param class-string                             $class
      * @param ArrayIterator<never, never>|string $expected
      * @return void
      */
@@ -2143,7 +2143,7 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerClassStringOrInstanceOfInvalidValues
      * @param bool|stdClass|string $value
-     * @param string               $class
+     * @param class-string               $class
      * @return void
      */
     public function testEnsureClassStringOrInstanceOfRejectsInvalidValues($value, $class)
