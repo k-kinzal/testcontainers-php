@@ -20,6 +20,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 10']);
         $instance = $container->start();
 
@@ -37,6 +38,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(WaitingTimeoutException::class);
 
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 10']);
         $container->withExposedPort(3306);
         $instance = $container->start();
@@ -54,6 +56,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(ContainerStoppedException::class);
 
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
         $container->withExposedPort(3306);
         $instance = $container->start();

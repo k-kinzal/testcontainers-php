@@ -407,6 +407,7 @@ final class GenericContainerInstanceTest extends TestCase
         ]);
         $instance = new GenericContainerInstance([
             'containerId' => $output->getContainerId(),
+            'stopTimeout' => 0,
         ]);
 
         self::assertFalse($instance->isStopped());

@@ -17,6 +17,8 @@ final class DinD extends GenericContainer
 
     protected static $AUTO_REMOVE_ON_EXIT = true;
 
+    protected static $STOP_TIMEOUT = 0;
+
     protected static $IMAGE = 'docker:27.4.1-dind';
 
     protected static $COMMANDS = [

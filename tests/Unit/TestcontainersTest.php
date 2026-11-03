@@ -111,6 +111,7 @@ final class TestcontainersTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['tail', '-f', '/dev/null'])
+            ->withStopTimeout(0)
             ->withReuseMode(ReuseMode::REUSE());
 
         $instance1 = Testcontainers::run($container);
@@ -237,6 +238,8 @@ final class AlpineContainerWithAddMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
 
+    protected static $STOP_TIMEOUT = 0;
+
     protected static $COMMANDS = ['tail', '-f', '/dev/null'];
 
     protected static $REUSE_MODE = 'add';
@@ -246,6 +249,8 @@ final class AlpineContainerWithReuseMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
 
+    protected static $STOP_TIMEOUT = 0;
+
     protected static $COMMANDS = ['tail', '-f', '/dev/null'];
 
     protected static $REUSE_MODE = 'reuse';
@@ -254,6 +259,8 @@ final class AlpineContainerWithReuseMode extends GenericContainer
 final class AlpineContainerWithRestartMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
+
+    protected static $STOP_TIMEOUT = 0;
 
     protected static $COMMANDS = ['tail', '-f', '/dev/null'];
 

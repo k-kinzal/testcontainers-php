@@ -15,6 +15,7 @@ final class HostPortWaitStrategyTest extends WaitStrategyTestCase
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('nginx:alpine');
+        $container->withStopTimeout(0);
         $container->withExposedPort(80);
         $instance = $container->start();
 
@@ -32,6 +33,7 @@ final class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(WaitingTimeoutException::class);
 
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 10']);
         $instance = $container->start();
 
@@ -50,6 +52,7 @@ final class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(ContainerStoppedException::class);
 
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
         $instance = $container->start();
 
