@@ -89,20 +89,16 @@ final class BaseCommandTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      * @return void
      */
     public function testGetHostFromDefault()
     {
-        $backup = getenv('DOCKER_HOST');
+        putenv('DOCKER_HOST');
+        $client = new DockerClient();
 
-        try {
-            putenv('DOCKER_HOST');
-            $client = new DockerClient();
-
-            $this->assertSame('unix:///var/run/docker.sock', $client->getHost());
-        } finally {
-            putenv($backup === false ? 'DOCKER_HOST' : 'DOCKER_HOST='.$backup);
-        }
+        $this->assertSame('unix:///var/run/docker.sock', $client->getHost());
     }
 
     /**
@@ -134,19 +130,15 @@ final class BaseCommandTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      * @return void
      */
     public function testGetHostFromGlobalEnv()
     {
-        $backup = getenv('DOCKER_HOST');
+        putenv('DOCKER_HOST=tcp://127.0.0.1:2375');
+        $client = new DockerClient();
 
-        try {
-            putenv('DOCKER_HOST=tcp://127.0.0.1:2375');
-            $client = new DockerClient();
-
-            $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
-        } finally {
-            putenv($backup === false ? 'DOCKER_HOST' : 'DOCKER_HOST='.$backup);
-        }
+        $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 }

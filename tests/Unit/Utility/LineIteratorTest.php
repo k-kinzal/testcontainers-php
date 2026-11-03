@@ -17,12 +17,18 @@ final class LineIteratorTest extends TestCase
         $process->start();
         $lines = new LineIterator($process);
 
-        $actual = [];
-        foreach ($lines->getIterator() as $type => $line) {
-            $actual[] = [$type, $line];
-        }
+        $iterator = $lines->getIterator();
+        $this->assertSame(Process::OUT, $iterator->key());
+        $this->assertSame('a', $iterator->current());
+        $iterator->next();
+        $this->assertSame(Process::OUT, $iterator->key());
+        $this->assertSame('bc', $iterator->current());
+        $iterator->next();
+        $this->assertSame(Process::OUT, $iterator->key());
+        $this->assertSame('d', $iterator->current());
+        $iterator->next();
+        $this->assertFalse($iterator->valid());
 
-        $this->assertSame([[Process::OUT, 'a'], [Process::OUT, 'bc'], [Process::OUT, 'd']], $actual);
     }
 
     /**
@@ -34,12 +40,15 @@ final class LineIteratorTest extends TestCase
         $process->start();
         $lines = new LineIterator($process);
 
-        $actual = [];
-        foreach ($lines->getIterator() as $type => $line) {
-            $actual[] = [$type, $line];
-        }
+        $iterator = $lines->getIterator();
+        $this->assertSame(Process::ERR, $iterator->key());
+        $this->assertSame('b', $iterator->current());
+        $iterator->next();
+        $this->assertSame(Process::OUT, $iterator->key());
+        $this->assertSame('ac', $iterator->current());
+        $iterator->next();
+        $this->assertFalse($iterator->valid());
 
-        $this->assertSame([[Process::ERR, 'b'], [Process::OUT, 'ac']], $actual);
     }
 
     /**
@@ -51,10 +60,7 @@ final class LineIteratorTest extends TestCase
         $process->start();
         $lines = new LineIterator($process);
 
-        $actual = [];
-        foreach ($lines->getIterator(Process::ITER_SKIP_ERR) as $line) {
-            $actual[] = $line;
-        }
+        $actual = iterator_to_array($lines->getIterator(Process::ITER_SKIP_ERR), false);
 
         $this->assertSame(['b'], $actual);
     }

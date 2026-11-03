@@ -66,9 +66,7 @@ abstract class DSNTestCase extends TestCase
         try {
             new \PDO($dsn->toString());
         } catch (\PDOException $e) {
-            if ($e->getMessage() === 'could not find driver') {
-                throw $e;
-            }
+            $this->assertNotSame('could not find driver', $e->getMessage());
         }
 
         $this->assertTrue(true);

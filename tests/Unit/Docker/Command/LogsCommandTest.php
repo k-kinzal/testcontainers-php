@@ -81,10 +81,11 @@ final class LogsCommandTest extends TestCase
 
         $iter = $logsOutput->getIterator();
         $lines = [];
-        for ($i = 0; $i < 3; ++$i) {
-            $lines[] = $iter->current();
-            $iter->next();
-        }
+        $lines[] = $iter->current();
+        $iter->next();
+        $lines[] = $iter->current();
+        $iter->next();
+        $lines[] = $iter->current();
 
         $this->assertNotNull($lines[0]);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);

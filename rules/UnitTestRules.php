@@ -37,6 +37,7 @@ final class UnitTestRules
             UnitTestRules\UnitTestProviderRule::class,
             UnitTestRules\UnitTestHelperClassRule::class,
             UnitTestRules\UnitTestNoMockRule::class,
+            UnitTestRules\UnitTestNoControlFlowRule::class,
         ] as $rule) {
             $rule::check($source, $nodes, $test, $codebase);
         }

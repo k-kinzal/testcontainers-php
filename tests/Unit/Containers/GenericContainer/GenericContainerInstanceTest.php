@@ -7,6 +7,7 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Closure;
+use Testcontainers\Docker\Types\Event;
 use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
@@ -194,9 +195,8 @@ final class GenericContainerInstanceTest extends TestCase
         ;
         $instance = $container->start();
 
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
+        $wait = new Process(['docker', 'wait', $instance->getContainerId()->toString()]);
+        $this->assertSame(0, $wait->run());
 
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
@@ -212,9 +212,8 @@ final class GenericContainerInstanceTest extends TestCase
         ;
         $instance = $container->start();
 
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
+        $wait = new Process(['docker', 'wait', $instance->getContainerId()->toString()]);
+        $this->assertSame(0, $wait->run());
 
         $this->assertSame("ls: /not-exist-dir: No such file or directory\n", $instance->getErrorOutput());
     }
@@ -263,19 +262,26 @@ final class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $deadline = microtime(true) + 10.0;
-        do {
-            rewind($stream);
-            $contents = stream_get_contents($stream);
-            self::assertNotFalse($contents);
-            $inspected = substr_count($contents, 'docker inspect ');
-            $this->assertTrue($instance->isRunning());
-            usleep(10000);
-            rewind($stream);
-            $contents = stream_get_contents($stream);
-            self::assertNotFalse($contents);
-            $observed = substr_count($contents, 'docker inspect ');
-        } while ($observed !== $inspected && microtime(true) < $deadline);
+        $this->assertTrue($instance->isRunning());
+        $events = call_user_func(function () {
+            yield null;
+            yield null;
+            yield null;
+            yield Event::fromArray(['Type' => 'container', 'Action' => 'die', 'Actor' => ['ID' => 'fixture', 'Attributes' => null]]);
+            yield null;
+            yield null;
+        });
+        $useEvents = Closure::bind(function () use ($events) {
+            /** @psalm-scope-this GenericContainerInstance */
+            $this->events = $events;
+            $this->eventObserved = true;
+        }, $instance, GenericContainerInstance::class);
+        $this->assertNotNull($useEvents);
+        $useEvents();
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $inspected = substr_count($contents, 'docker inspect ');
 
         $this->assertTrue($instance->isRunning());
         $this->assertTrue($instance->isRunning());
@@ -285,11 +291,6 @@ final class GenericContainerInstanceTest extends TestCase
         $this->assertSame($inspected, substr_count($contents, 'docker inspect '));
 
         $client->stop($instance->getContainerId(), ['timeout' => 0]);
-        $deadline = time() + 5;
-        while ($instance->isRunning() && time() < $deadline) {
-            usleep(10000);
-        }
-
         $this->assertFalse($instance->isRunning());
         $this->assertTrue($instance->isStopped());
         rewind($stream);
@@ -351,19 +352,25 @@ final class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $deadline = microtime(true) + 10.0;
-        do {
-            rewind($stream);
-            $contents = stream_get_contents($stream);
-            self::assertNotFalse($contents);
-            $inspected = substr_count($contents, 'docker inspect ');
-            $this->assertTrue($instance->isRunning());
-            usleep(10000);
-            rewind($stream);
-            $contents = stream_get_contents($stream);
-            self::assertNotFalse($contents);
-            $observed = substr_count($contents, 'docker inspect ');
-        } while ($observed !== $inspected && microtime(true) < $deadline);
+        $this->assertTrue($instance->isRunning());
+        $events = call_user_func(function () {
+            yield null;
+            yield null;
+            yield null;
+            yield null;
+            yield null;
+        });
+        $useEvents = Closure::bind(function () use ($events) {
+            /** @psalm-scope-this GenericContainerInstance */
+            $this->events = $events;
+            $this->eventObserved = true;
+        }, $instance, GenericContainerInstance::class);
+        $this->assertNotNull($useEvents);
+        $useEvents();
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $inspected = substr_count($contents, 'docker inspect ');
 
         usleep(500000);
 

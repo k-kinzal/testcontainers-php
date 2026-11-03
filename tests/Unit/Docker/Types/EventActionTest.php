@@ -59,16 +59,16 @@ final class EventActionTest extends TestCase
     }
 
     /**
+     * @dataProvider providerFromString
+     * @param string $value
      * @return void
      */
-    public function testFromString()
+    public function testFromString($value)
     {
-        foreach (EventAction::values() as $value) {
-            $action = EventAction::fromString($value);
+        $action = EventAction::fromString($value);
 
-            $this->assertSame($value, $action->toString());
-            $this->assertNull($action->getDetail());
-        }
+        $this->assertSame($value, $action->toString());
+        $this->assertNull($action->getDetail());
     }
 
     /**
@@ -125,4 +125,12 @@ final class EventActionTest extends TestCase
         $this->assertFalse($action->isStart());
         $this->assertFalse($action->isDestroy());
     }
+    /**
+     * @return array<array<string>>
+     */
+    public static function providerFromString()
+    {
+        return array_chunk(EventAction::values(), 1);
+    }
+
 }

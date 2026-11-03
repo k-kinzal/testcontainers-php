@@ -5,6 +5,9 @@
 namespace Tests\Unit\Docker\Output;
 
 use PHPUnit\Framework\TestCase;
+use CallbackFilterIterator;
+use LimitIterator;
+use Testcontainers\Docker\Types\Event;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Output\DockerEventsOutput;
@@ -22,12 +25,10 @@ final class DockerEventsOutputTest extends TestCase
         $process->start();
         $output = new DockerEventsOutput($process, false);
 
-        $actions = [];
-        foreach ($output->getIterator() as $event) {
-            if ($event !== null) {
-                $actions[] = $event->action->toString();
-            }
-        }
+        $events = array_values(array_filter(iterator_to_array($output->getIterator(), false)));
+        $actions = array_map(function (Event $event) {
+            return $event->action->toString();
+        }, $events);
 
         $this->assertSame(['create', 'start'], $actions);
     }
@@ -55,16 +56,15 @@ final class DockerEventsOutputTest extends TestCase
         $process->start();
         $output = new DockerEventsOutput($process, true);
 
-        $actions = [];
-        $deadline = time() + 10;
-        foreach ($output->getIterator() as $event) {
-            if ($event !== null) {
-                $actions[] = $event->action->toString();
-            }
-            if (count($actions) === 3 || time() > $deadline) {
-                break;
-            }
-        }
+        $events = new CallbackFilterIterator($output->getIterator(), function ($event) {
+            return $event !== null;
+        });
+        $firstThree = iterator_to_array(new LimitIterator($events, 0, 3), false);
+        $this->assertCount(3, $firstThree);
+        $this->assertInstanceOf(Event::class, $firstThree[0]);
+        $this->assertInstanceOf(Event::class, $firstThree[1]);
+        $this->assertInstanceOf(Event::class, $firstThree[2]);
+        $actions = [$firstThree[0]->action->toString(), $firstThree[1]->action->toString(), $firstThree[2]->action->toString()];
 
         $this->assertSame(['create', 'start', 'start'], $actions);
     }

@@ -23,13 +23,15 @@ final class EventTypeTest extends TestCase
     }
 
     /**
+     * @dataProvider providerFromString
+     * @param string $value
      * @return void
      */
-    public function testFromString()
+    public function testFromString($value)
     {
-        foreach (EventType::values() as $value) {
-            $this->assertSame($value, EventType::fromString($value)->toString());
-        }
+        $action = EventType::fromString($value);
+
+        $this->assertSame($value, $action->toString());
     }
 
     /**
@@ -40,6 +42,14 @@ final class EventTypeTest extends TestCase
         $this->expectException(InvalidFormatException::class);
 
         EventType::fromString('invalid');
+    }
+
+    /**
+     * @return array<array<string>>
+     */
+    public static function providerFromString()
+    {
+        return array_chunk(EventType::values(), 1);
     }
 
 }

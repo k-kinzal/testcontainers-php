@@ -47,18 +47,19 @@ final class EventsCommandTest extends TestCase
 
         $this->assertInstanceOf(DockerEventsOutput::class, $eventsOutput);
 
-        $actions = [];
-        foreach ($eventsOutput->getIterator() as $event) {
-            if ($event === null) {
-                continue;
-            }
-            $this->assertInstanceOf(Event::class, $event);
-            $this->assertSame((string) $containerId, $event->actor->id);
-            $actions[] = $event->action->toString();
-            if ($event->action->isDie()) {
-                $this->assertSame('3', $event->actor->getAttribute('exitCode'));
-            }
-        }
+        $events = array_values(array_filter(iterator_to_array($eventsOutput->getIterator(), false)));
+        $containerIds = array_unique(array_map(function (Event $event) {
+            return $event->actor->id;
+        }, $events));
+        $this->assertSame([$containerId->toString()], array_values($containerIds));
+        $actions = array_map(function (Event $event) {
+            return $event->action->toString();
+        }, $events);
+        $deaths = array_values(array_filter($events, function (Event $event) {
+            return $event->action->isDie();
+        }));
+        $this->assertNotEmpty($deaths);
+        $this->assertSame('3', $deaths[0]->actor->getAttribute('exitCode'));
 
         $this->assertSame(['create', 'start', 'die'], array_values(array_intersect($actions, ['create', 'start', 'die'])));
     }
