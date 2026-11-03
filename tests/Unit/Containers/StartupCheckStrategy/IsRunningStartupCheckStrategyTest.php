@@ -6,8 +6,11 @@ use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy
 
 final class IsRunningStartupCheckStrategyTest extends StartupCheckStrategyTestCase
 {
-    public function resolveStartupCheckStrategy()
+    /**
+     * @return array<array{IsRunningStartupCheckStrategy}>
+     */
+    public static function providerWaitUntilStartupSuccessful()
     {
-        return new IsRunningStartupCheckStrategy();
+        return [[new IsRunningStartupCheckStrategy()]];
     }
 }

@@ -16,7 +16,7 @@ final class WaitSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasWaitSettingTrait()
+    public function testWaitStrategyIsProvidedByWaitSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -27,7 +27,7 @@ final class WaitSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticWaitStrategy()
+    public function testWaitStrategyFromStaticWaitStrategy()
     {
         $container = new WaitSettingWithStaticWaitStrategyContainer();
         $container->start();
@@ -38,7 +38,7 @@ final class WaitSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithWaitStrategy()
+    public function testWithWaitStrategy()
     {
         $container = (new GenericContainer('nginx:latest'))
             ->withExposedPort(80)

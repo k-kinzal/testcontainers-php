@@ -13,7 +13,7 @@ final class BindModeTest extends TestCase
     /**
      * @return void
      */
-    public function testBindModeReadOnly()
+    public function testConstructReadOnly()
     {
         $bindMode = new BindMode(BindMode::$READ_ONLY);
 
@@ -23,7 +23,7 @@ final class BindModeTest extends TestCase
     /**
      * @return void
      */
-    public function testBindModeReadWrite()
+    public function testConstructReadWrite()
     {
         $bindMode = new BindMode(BindMode::$READ_WRITE);
 

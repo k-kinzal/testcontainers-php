@@ -10,7 +10,7 @@ final class NetworkModeTest extends TestCase
     /**
      * @return void
      */
-    public function testNetworkModeHost()
+    public function testConstructHost()
     {
         $mode = new NetworkMode(NetworkMode::$HOST);
 
@@ -20,7 +20,7 @@ final class NetworkModeTest extends TestCase
     /**
      * @return void
      */
-    public function testNetworkModeBridge()
+    public function testConstructBridge()
     {
         $mode = new NetworkMode(NetworkMode::$BRIDGE);
 
@@ -30,7 +30,7 @@ final class NetworkModeTest extends TestCase
     /**
      * @return void
      */
-    public function testNetworkModeNone()
+    public function testConstructNone()
     {
         $mode = new NetworkMode(NetworkMode::$NONE);
 
@@ -40,7 +40,7 @@ final class NetworkModeTest extends TestCase
     /**
      * @return void
      */
-    public function testNetworkModeCustom()
+    public function testConstructCustom()
     {
         $mode = new NetworkMode('custom');
 

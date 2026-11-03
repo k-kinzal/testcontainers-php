@@ -18,7 +18,7 @@ final class NetworkAliasSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasNetworkAliasSettingTrait()
+    public function testNetworkAliasesIsProvidedByNetworkAliasSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -29,7 +29,7 @@ final class NetworkAliasSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticNetworkAlias()
+    public function testNetworkAliasesFromStaticNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
@@ -57,7 +57,7 @@ final class NetworkAliasSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithNetworkAlias()
+    public function testWithNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
@@ -87,7 +87,7 @@ final class NetworkAliasSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithNetworkAliases()
+    public function testWithNetworkAliases()
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
@@ -140,7 +140,7 @@ final class NetworkAliasSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidNetworkAliases()
+    public function testNetworkAliasesRejectsInvalidStaticConfiguration()
     {
         $container = new NetworkAliasSettingWithInvalidNetworkAliasesContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

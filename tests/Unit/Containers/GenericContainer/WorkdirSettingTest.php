@@ -15,7 +15,7 @@ final class WorkdirSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasWorkdirSettingTrait()
+    public function testWorkDirIsProvidedByWorkdirSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -26,7 +26,7 @@ final class WorkdirSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticWorkdir()
+    public function testWorkdirFromStaticWorkdir()
     {
         $container = (new WorkdirSettingWithStaticWorkdirContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -41,7 +41,7 @@ final class WorkdirSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithWorkingDirectory()
+    public function testWithWorkingDirectory()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -80,7 +80,7 @@ final class WorkdirSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidWorkdir()
+    public function testWorkdirRejectsInvalidStaticConfiguration()
     {
         $container = new WorkdirSettingWithInvalidWorkdirContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

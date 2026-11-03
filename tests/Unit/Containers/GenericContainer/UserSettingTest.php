@@ -16,7 +16,7 @@ final class UserSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasUserSettingTrait()
+    public function testUserIsProvidedByUserSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -27,7 +27,7 @@ final class UserSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticUser()
+    public function testUserFromStaticUser()
     {
         $container = (new UserSettingWithStaticUserContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -43,7 +43,7 @@ final class UserSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithUser()
+    public function testWithUser()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -60,7 +60,7 @@ final class UserSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidUser()
+    public function testUserRejectsInvalidStaticConfiguration()
     {
         $container = new UserSettingWithInvalidUserContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

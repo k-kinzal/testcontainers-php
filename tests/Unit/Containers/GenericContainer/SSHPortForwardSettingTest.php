@@ -36,7 +36,7 @@ final class SSHPortForwardSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidSshPortForwardBeforeRunningContainer()
+    public function testSshPortForwardRejectsInvalidStaticConfigurationBeforeRunningContainer()
     {
         $client = (new DockerClient())->withCommand(__DIR__.'/missing-docker');
         $container = (new SSHPortForwardSettingWithInvalidSshPortForwardContainer('alpine'))

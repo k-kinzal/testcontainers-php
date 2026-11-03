@@ -13,7 +13,7 @@ final class ImagePullPolicyTest extends TestCase
     /**
      * @return void
      */
-    public function testImagePullPolicyAlways()
+    public function testConstructAlways()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$ALWAYS);
 
@@ -23,7 +23,7 @@ final class ImagePullPolicyTest extends TestCase
     /**
      * @return void
      */
-    public function testImagePullPolicyMissing()
+    public function testConstructMissing()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$MISSING);
 
@@ -33,7 +33,7 @@ final class ImagePullPolicyTest extends TestCase
     /**
      * @return void
      */
-    public function testImagePullPolicyNever()
+    public function testConstructNever()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$NEVER);
 

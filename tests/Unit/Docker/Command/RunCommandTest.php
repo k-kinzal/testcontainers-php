@@ -16,7 +16,7 @@ final class RunCommandTest extends TestCase
     /**
      * @return void
      */
-    public function testHasRunCommandTrait()
+    public function testRunIsProvidedByRunCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);

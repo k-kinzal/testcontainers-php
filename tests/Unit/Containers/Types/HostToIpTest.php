@@ -14,7 +14,7 @@ final class HostToIpTest extends TestCase
     /**
      * @return void
      */
-    public function testHostToIp()
+    public function testConstruct()
     {
         $value = new HostToIp('docker.internal', '127.0.0.1');
 

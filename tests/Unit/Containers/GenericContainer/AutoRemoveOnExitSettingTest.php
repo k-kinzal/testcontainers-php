@@ -34,7 +34,7 @@ final class AutoRemoveOnExitSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidAutoRemoveOnExit()
+    public function testAutoRemoveOnExitRejectsInvalidStaticConfiguration()
     {
         $container = new AutoRemoveOnExitSettingWithInvalidAutoRemoveOnExitContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

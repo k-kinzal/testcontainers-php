@@ -14,7 +14,7 @@ final class PrivilegeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasPrivilegeSettingTrait()
+    public function testPrivilegedIsProvidedByPrivilegeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -25,7 +25,7 @@ final class PrivilegeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticPrivileged()
+    public function testPrivilegedFromStaticPrivileged()
     {
         $container = new PrivilegeSettingWithStaticPrivilegedContainer('alpine:latest');
         $instance = $container->start();
@@ -36,7 +36,7 @@ final class PrivilegeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithPrivilegedMode()
+    public function testWithPrivilegedMode()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPrivilegedMode(true)
@@ -72,7 +72,7 @@ final class PrivilegeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidPrivileged()
+    public function testPrivilegedRejectsInvalidStaticConfiguration()
     {
         $container = new PrivilegeSettingWithInvalidPrivilegedContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

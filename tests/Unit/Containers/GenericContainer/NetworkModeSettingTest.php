@@ -15,7 +15,7 @@ final class NetworkModeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasNetworkModeSettingTrait()
+    public function testNetworkModeIsProvidedByNetworkModeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -26,7 +26,7 @@ final class NetworkModeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticNetworkMode()
+    public function testNetworkModeFromStaticNetworkMode()
     {
         $container = (new NetworkModeSettingWithStaticNetworkModeContainer('alpine:latest'))
             ->withCommands(['sh', '-c', 'ls /sys/class/net'])
@@ -39,7 +39,7 @@ final class NetworkModeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithNetworkMode()
+    public function testWithNetworkMode()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -54,7 +54,7 @@ final class NetworkModeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidNetworkMode()
+    public function testNetworkModeRejectsInvalidStaticConfiguration()
     {
         $container = new NetworkModeSettingWithInvalidNetworkModeContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

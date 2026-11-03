@@ -13,7 +13,7 @@ final class InspectCommandTest extends TestCase
     /**
      * @return void
      */
-    public function testHasInspectCommandTrait()
+    public function testInspectIsProvidedByInspectCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);

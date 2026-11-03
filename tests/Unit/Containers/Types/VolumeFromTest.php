@@ -15,7 +15,7 @@ final class VolumeFromTest extends TestCase
     /**
      * @return void
      */
-    public function testVolumeFrom()
+    public function testConstruct()
     {
         $volumeFrom = new VolumeFrom('container', BindMode::READ_ONLY());
 

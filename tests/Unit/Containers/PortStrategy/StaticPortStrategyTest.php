@@ -7,17 +7,28 @@ use UnexpectedValueException;
 
 final class StaticPortStrategyTest extends PortStrategyTestCase
 {
-    public function resolvePortStrategy()
+    /**
+     * @return array<array{StaticPortStrategy}>
+     */
+    public static function providerGetPort()
     {
-        return new StaticPortStrategy(50000);
+        return [[new StaticPortStrategy(50000)]];
+    }
+
+    /**
+     * @return array<array{StaticPortStrategy}>
+     */
+    public static function providerConflictBehavior()
+    {
+        return [[new StaticPortStrategy(50000)]];
     }
 
     /**
      * @return void
      */
-    public function testInterfaceGetPort()
+    public function testGetPortUsesConfiguredValue()
     {
-        $strategy = $this->resolvePortStrategy();
+        $strategy = new StaticPortStrategy(50000);
         $port = $strategy->getPort();
 
         $this->assertSame(50000, $port);
@@ -26,7 +37,7 @@ final class StaticPortStrategyTest extends PortStrategyTestCase
     /**
      * @return void
      */
-    public function testReturnsSpecifiedPort()
+    public function testGetPortReturnsSpecifiedPort()
     {
         $strategy1 = new StaticPortStrategy(50001);
         $strategy2 = new StaticPortStrategy(50002);
@@ -40,7 +51,7 @@ final class StaticPortStrategyTest extends PortStrategyTestCase
      */
     public function testConflictBehaviorIsFail()
     {
-        $strategy = $this->resolvePortStrategy();
+        $strategy = new StaticPortStrategy(50000);
         $behavior = $strategy->conflictBehavior();
 
         $this->assertTrue($behavior->isFail());

@@ -16,7 +16,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasPortSettingTrait()
+    public function testPortsIsProvidedByPortSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -27,7 +27,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticExposedPorts()
+    public function testExposedPortsFromStaticExposedPorts()
     {
         $container = (new PortSettingWithExposedPortsContainer('alpine:latest'));
         $instance = $container->start();
@@ -38,7 +38,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticExpose()
+    public function testExposedPortsFromStaticExpose()
     {
         $container = (new PortSettingWithExposeContainer('alpine:latest'));
         $instance = $container->start();
@@ -49,7 +49,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticPorts()
+    public function testExposedPortsFromStaticPorts()
     {
         $container = (new PortSettingWithPortsContainer('alpine:latest'));
         $instance = $container->start();
@@ -60,7 +60,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithExposedPort()
+    public function testWithExposedPort()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExposedPort(80)
@@ -74,7 +74,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithExpose()
+    public function testWithExpose()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExpose(80)
@@ -88,7 +88,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithPort()
+    public function testWithPort()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPort(80)
@@ -102,7 +102,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithExposedPorts()
+    public function testWithExposedPorts()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExposedPorts([80])
@@ -116,7 +116,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithExposes()
+    public function testWithExposes()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withExposes([80])
@@ -130,7 +130,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithPorts()
+    public function testWithPorts()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPorts([80])
@@ -220,7 +220,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidExposedPorts()
+    public function testExposedPortsRejectsInvalidStaticConfiguration()
     {
         $container = new PortSettingWithInvalidExposedPortsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -231,7 +231,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidPorts()
+    public function testPortsRejectsInvalidStaticConfiguration()
     {
         $container = new PortSettingWithInvalidPortsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -242,7 +242,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidPortStrategy()
+    public function testPortStrategyRejectsInvalidStaticConfiguration()
     {
         $container = new PortSettingWithInvalidPortStrategyContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

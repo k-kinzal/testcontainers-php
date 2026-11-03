@@ -6,8 +6,11 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 
 final class OneShotStartupCheckStrategyTest extends StartupCheckStrategyTestCase
 {
-    public function resolveStartupCheckStrategy()
+    /**
+     * @return array<array{OneShotStartupCheckStrategy}>
+     */
+    public static function providerWaitUntilStartupSuccessful()
     {
-        return new OneShotStartupCheckStrategy();
+        return [[new OneShotStartupCheckStrategy()]];
     }
 }

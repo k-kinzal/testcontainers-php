@@ -11,17 +11,17 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 abstract class StartupCheckStrategyTestCase extends TestCase
 {
     /**
-     * @return StartupCheckStrategy
+     * @return array<array{StartupCheckStrategy}>
      */
-    abstract public function resolveStartupCheckStrategy();
+    abstract public static function providerWaitUntilStartupSuccessful();
 
     /**
+     * @dataProvider providerWaitUntilStartupSuccessful
+     * @param StartupCheckStrategy $strategy
      * @return void
      */
-    public function testWaitUntilStartupSuccessful()
+    public function testWaitUntilStartupSuccessful($strategy)
     {
-        $strategy = $this->resolveStartupCheckStrategy();
-
         $client = new DockerClient();
 
         /** @var DockerRunWithDetachOutput $output */

@@ -30,7 +30,7 @@ final class GenericContainerTest extends TestCase
     /**
      * @return void
      */
-    public function testContainerFailsOnPortConflictWithStaticPortStrategy()
+    public function testStartFailsOnPortConflictWithStaticPortStrategy()
     {
         $this->expectException(PortConflictException::class);
 

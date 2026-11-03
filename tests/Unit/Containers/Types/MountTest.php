@@ -13,7 +13,7 @@ final class MountTest extends TestCase
     /**
      * @return void
      */
-    public function testMount()
+    public function testConstruct()
     {
         $mount = new Mount(
             'bind',

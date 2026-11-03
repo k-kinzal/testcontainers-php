@@ -16,7 +16,7 @@ final class RmCommandTest extends TestCase
     /**
      * @return void
      */
-    public function testHasRmCommandTrait()
+    public function testRmIsProvidedByRmCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);

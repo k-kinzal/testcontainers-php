@@ -16,7 +16,7 @@ final class LogsCommandTest extends TestCase
     /**
      * @return void
      */
-    public function testHasLogsCommandTrait()
+    public function testLogsIsProvidedByLogsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);

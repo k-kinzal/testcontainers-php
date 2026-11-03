@@ -14,7 +14,7 @@ final class StopTimeoutSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasStopTimeoutSettingTrait()
+    public function testStopTimeoutIsProvidedByStopTimeoutSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -25,7 +25,7 @@ final class StopTimeoutSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticStopTimeout()
+    public function testStopTimeoutFromStaticStopTimeout()
     {
         $container = new StopTimeoutSettingWithStaticContainer('alpine:latest');
         $instance = $container->start();
@@ -36,7 +36,7 @@ final class StopTimeoutSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithStopTimeout()
+    public function testWithStopTimeout()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withStopTimeout(0)
@@ -49,7 +49,7 @@ final class StopTimeoutSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testDefaultStopTimeoutIsNull()
+    public function testStopTimeoutIsNullByDefault()
     {
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
@@ -83,7 +83,7 @@ final class StopTimeoutSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidStopTimeout()
+    public function testStopTimeoutRejectsInvalidStaticConfiguration()
     {
         $container = new StopTimeoutSettingWithInvalidStopTimeoutContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

@@ -19,7 +19,7 @@ final class VolumesFromSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasVolumesFromSettingTrait()
+    public function testVolumesFromIsProvidedByVolumesFromSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -30,7 +30,7 @@ final class VolumesFromSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticVolumesFrom()
+    public function testVolumesFromFromStaticVolumesFrom()
     {
         $fp = tmpfile();
         self::assertNotFalse($fp);
@@ -74,7 +74,7 @@ final class VolumesFromSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithVolumesFrom()
+    public function testWithVolumesFrom()
     {
         $fp = tmpfile();
         self::assertNotFalse($fp);
@@ -102,7 +102,7 @@ final class VolumesFromSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidVolumesFrom()
+    public function testVolumesFromRejectsInvalidStaticConfiguration()
     {
         $container = new VolumesFromSettingWithInvalidVolumesFromContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

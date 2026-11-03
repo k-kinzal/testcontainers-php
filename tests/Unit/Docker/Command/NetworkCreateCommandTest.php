@@ -14,7 +14,7 @@ final class NetworkCreateCommandTest extends TestCase
     /**
      * @return void
      */
-    public function testHasNetworkCreateCommandTrait()
+    public function testNetworkCreateIsProvidedByNetworkCreateCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);

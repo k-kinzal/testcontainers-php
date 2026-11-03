@@ -16,7 +16,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasStartupSettingTrait()
+    public function testStartupTimeoutIsProvidedByStartupSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -27,7 +27,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticStartupTimeout()
+    public function testStartupTimeoutFromStaticStartupTimeout()
     {
         $this->expectException(StartupCheckFailedException::class);
 
@@ -40,7 +40,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticStartupCheckStrategy()
+    public function testStartupCheckStrategyFromStaticStartupCheckStrategy()
     {
         $this->expectException(StartupCheckFailedException::class);
 
@@ -53,7 +53,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithStartupTimeout()
+    public function testWithStartupTimeout()
     {
         $this->expectException(StartupCheckFailedException::class);
 
@@ -67,7 +67,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithStartupCheckStrategy()
+    public function testWithStartupCheckStrategy()
     {
         $this->expectException(StartupCheckFailedException::class);
 
@@ -127,7 +127,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidStartupTimeout()
+    public function testStartupTimeoutRejectsInvalidStaticConfiguration()
     {
         $container = new StartupSettingWithInvalidStartupTimeoutContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -138,7 +138,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidStartupConflictRetryAttempts()
+    public function testStartupConflictRetryAttemptsRejectsInvalidStaticConfiguration()
     {
         $container = new StartupSettingWithInvalidStartupConflictRetryAttemptsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

@@ -14,9 +14,12 @@ final class ConsoleLoggerTest extends TestCase
     /**
      * @return void
      */
-    public function testImplementsLoggerInterface()
+    public function testConstructImplementsLoggerInterface()
     {
-        $logger = new ConsoleLogger($this->createStream());
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
+
+        $logger = new ConsoleLogger($stream);
 
         $this->assertInstanceOf(LoggerInterface::class, $logger);
     }
@@ -26,40 +29,52 @@ final class ConsoleLoggerTest extends TestCase
      */
     public function testDebugMessageWritesToStream()
     {
-        $stream = $this->createStream();
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
 
         $logger->debug('hello world');
 
-        $output = $this->readStream($stream);
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $output = $contents;
         $this->assertTrue(preg_match('/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[DEBUG\] hello world$/', trim($output)) === 1);
     }
 
     /**
      * @return void
      */
-    public function testMessageWithContext()
+    public function testInfoWithContext()
     {
-        $stream = $this->createStream();
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
 
         $logger->info('User logged in', array('name' => 'Alice'));
 
-        $output = $this->readStream($stream);
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $output = $contents;
         $this->assertTrue(strpos($output, '[INFO] User logged in {"name":"Alice"}') !== false);
     }
 
     /**
      * @return void
      */
-    public function testEmptyContextOmitsJson()
+    public function testWarningWithEmptyContextOmitsJson()
     {
-        $stream = $this->createStream();
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
 
         $logger->warning('something happened');
 
-        $output = trim($this->readStream($stream));
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $output = trim($contents);
         $this->assertStringEndsWith('something happened', $output);
         $this->assertTrue(strpos($output, '{}') === false);
     }
@@ -67,30 +82,38 @@ final class ConsoleLoggerTest extends TestCase
     /**
      * @return void
      */
-    public function testPlaceholderInterpolation()
+    public function testDebugInterpolatesPlaceholders()
     {
-        $stream = $this->createStream();
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
 
         $logger->debug('Connecting to {host}:{port}', array('host' => 'localhost', 'port' => 3306));
 
-        $output = $this->readStream($stream);
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $output = $contents;
         $this->assertTrue(strpos($output, 'Connecting to localhost:3306') !== false);
     }
 
     /**
      * @return void
      */
-    public function testMinLevelFiltering()
+    public function testLogFiltersBelowMinimumLevel()
     {
-        $stream = $this->createStream();
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream, LogLevel::WARNING);
 
         $logger->debug('hidden');
         $logger->info('also hidden');
         $logger->warning('visible');
 
-        $output = $this->readStream($stream);
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $output = $contents;
         $this->assertTrue(strpos($output, 'hidden') === false);
         $this->assertTrue(strpos($output, '[WARNING] visible') !== false);
     }
@@ -98,9 +121,10 @@ final class ConsoleLoggerTest extends TestCase
     /**
      * @return void
      */
-    public function testAllLevelsOutputWhenDebug()
+    public function testLogOutputsAllLevelsWhenDebug()
     {
-        $stream = $this->createStream();
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
 
         $logger->emergency('msg');
@@ -112,7 +136,10 @@ final class ConsoleLoggerTest extends TestCase
         $logger->info('msg');
         $logger->debug('msg');
 
-        $output = $this->readStream($stream);
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $output = $contents;
         $this->assertTrue(strpos($output, '[EMERGENCY]') !== false);
         $this->assertTrue(strpos($output, '[ALERT]') !== false);
         $this->assertTrue(strpos($output, '[CRITICAL]') !== false);
@@ -126,23 +153,28 @@ final class ConsoleLoggerTest extends TestCase
     /**
      * @return void
      */
-    public function testLevelDisplayedUppercase()
+    public function testErrorDisplaysLevelUppercase()
     {
-        $stream = $this->createStream();
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
 
         $logger->error('fail');
 
-        $output = $this->readStream($stream);
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $output = $contents;
         $this->assertTrue(strpos($output, '[ERROR]') !== false);
     }
 
     /**
      * @return void
      */
-    public function testContextWithNonStringableValues()
+    public function testErrorWithNonStringableContextValues()
     {
-        $stream = $this->createStream();
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
 
         $logger->error('Failed', array(
@@ -151,7 +183,10 @@ final class ConsoleLoggerTest extends TestCase
             'null_val' => null,
         ));
 
-        $output = $this->readStream($stream);
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $output = $contents;
         $this->assertTrue(strpos($output, '[ERROR] Failed') !== false);
         $this->assertTrue(strpos($output, '"nested":{"a":1}') !== false);
     }
@@ -161,9 +196,12 @@ final class ConsoleLoggerTest extends TestCase
      */
     public function testConstructRejectsInvalidMinimumLevel()
     {
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
+
         $this->expectException(InvalidFormatException::class);
 
-        new ConsoleLogger($this->createStream(), 'invalid');
+        new ConsoleLogger($stream, 'invalid');
     }
 
     /**
@@ -171,35 +209,13 @@ final class ConsoleLoggerTest extends TestCase
      */
     public function testLogRejectsInvalidLevel()
     {
-        $this->expectException(InvalidArgumentException::class);
-
-        $logger = new ConsoleLogger($this->createStream());
-        $logger->log('invalid', 'message');
-    }
-
-    /**
-     * @return resource
-     */
-    private function createStream()
-    {
         $stream = fopen('php://memory', 'r+');
         self::assertNotFalse($stream);
 
-        return $stream;
+        $this->expectException(InvalidArgumentException::class);
+
+        $logger = new ConsoleLogger($stream);
+        $logger->log('invalid', 'message');
     }
 
-    /**
-     * @param resource $stream
-     *
-     * @return string
-     */
-    private function readStream($stream)
-    {
-        rewind($stream);
-
-        $contents = stream_get_contents($stream);
-        self::assertNotFalse($contents);
-
-        return $contents;
-    }
 }

@@ -15,7 +15,7 @@ final class LabelSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasLabelSettingTrait()
+    public function testLabelsIsProvidedByLabelSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -26,7 +26,7 @@ final class LabelSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticLabels()
+    public function testLabelsFromStaticLabels()
     {
         $container = new LabelSettingWithStaticLabelsContainer('alpine:latest');
         $instance = $container->start();
@@ -38,7 +38,7 @@ final class LabelSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithLabel()
+    public function testWithLabel()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabel('KEY1', 'VALUE1')
@@ -55,7 +55,7 @@ final class LabelSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithLabels()
+    public function testWithLabels()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
@@ -119,7 +119,7 @@ final class LabelSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidLabels()
+    public function testLabelsRejectsInvalidStaticConfiguration()
     {
         $container = new LabelSettingWithInvalidLabelsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

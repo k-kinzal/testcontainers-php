@@ -16,7 +16,7 @@ final class EntrypointSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasEntrypointSettingTrait()
+    public function testEntrypointIsProvidedByEntrypointSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -27,7 +27,7 @@ final class EntrypointSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticEntrypoint()
+    public function testEntrypointFromStaticEntrypoint()
     {
         $container = (new EntrypointSettingWithStaticEntrypointContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -43,7 +43,7 @@ final class EntrypointSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithEntrypoint()
+    public function testWithEntrypoint()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -60,7 +60,7 @@ final class EntrypointSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidEntrypoint()
+    public function testEntrypointRejectsInvalidStaticConfiguration()
     {
         $container = new EntrypointSettingWithInvalidEntrypointContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

@@ -15,7 +15,7 @@ final class HostSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasHostSettingTrait()
+    public function testExtraHostsIsProvidedByHostSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -26,7 +26,7 @@ final class HostSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticExtraHosts()
+    public function testExtraHostsFromStaticExtraHosts()
     {
         $container = (new HostSettingWithExtraHostsContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -41,7 +41,7 @@ final class HostSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticHosts()
+    public function testExtraHostsFromStaticHosts()
     {
         $container = (new HostSettingWithHostsContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -56,7 +56,7 @@ final class HostSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithExtraHost()
+    public function testWithExtraHost()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -72,7 +72,7 @@ final class HostSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithInvalidCall()
+    public function testWithExtraHostRejectsInvalidCall()
     {
         $this->expectExceptionMessage('Expected null');
         $this->expectException(UnexpectedValueException::class);
@@ -85,7 +85,7 @@ final class HostSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithExtraHosts()
+    public function testWithExtraHosts()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -127,7 +127,7 @@ final class HostSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidExtraHosts()
+    public function testExtraHostsRejectsInvalidStaticConfiguration()
     {
         $container = new HostSettingWithInvalidExtraHostsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

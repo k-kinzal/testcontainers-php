@@ -13,7 +13,7 @@ final class ConflictBehaviorTest extends TestCase
     /**
      * @return void
      */
-    public function testConflictBehaviorRetry()
+    public function testConstructRetry()
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$RETRY);
 
@@ -23,7 +23,7 @@ final class ConflictBehaviorTest extends TestCase
     /**
      * @return void
      */
-    public function testConflictBehaviorFail()
+    public function testConstructFail()
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$FAIL);
 

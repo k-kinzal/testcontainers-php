@@ -14,7 +14,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testWithContainerClassString()
+    public function testRunWithContainerClassString()
     {
         try {
             $instance = Testcontainers::run(AlpineContainer::class);
@@ -29,7 +29,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testWithContainerInstance()
+    public function testRunWithContainerInstance()
     {
         try {
             $instance = Testcontainers::run(new AlpineContainer());
@@ -44,7 +44,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testReuseModeAddCreatesNewContainers()
+    public function testRunWithReuseModeAddCreatesNewContainers()
     {
         try {
             $instance1 = Testcontainers::run(AlpineContainerWithAddMode::class);
@@ -65,7 +65,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testReuseModeReuseReturnsSameContainer()
+    public function testRunWithReuseModeReuseReturnsSameContainer()
     {
         try {
             $instance1 = Testcontainers::run(AlpineContainerWithReuseMode::class);
@@ -85,7 +85,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testReuseModeRestartStopsExistingContainer()
+    public function testRunWithReuseModeRestartStopsExistingContainer()
     {
         try {
             $instance1 = Testcontainers::run(AlpineContainerWithRestartMode::class);
@@ -106,7 +106,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testReuseModeWithInstanceMethod()
+    public function testRunWithReuseModeFromInstanceMethod()
     {
         try {
             $container = (new GenericContainer('alpine:latest'))
@@ -129,7 +129,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testLoggerIsPassedToContainersWithoutTheirOwn()
+    public function testSetLoggerIsPassedToContainersWithoutTheirOwn()
     {
         $stream = fopen('php://memory', 'w+');
         self::assertNotFalse($stream);
@@ -151,7 +151,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testContainerLoggerTakesPrecedenceOverTestcontainersLogger()
+    public function testRunPrefersContainerLoggerOverTestcontainersLogger()
     {
         $globalStream = fopen('php://memory', 'w+');
         self::assertNotFalse($globalStream);
@@ -179,7 +179,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testEnvironmentLoggerIsPassedToContainersWithoutLogger()
+    public function testRunPassesEnvironmentLoggerToContainersWithoutLogger()
     {
         $container = new AlpineContainer();
 
@@ -197,7 +197,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testContainerLoggerTakesPrecedenceOverEnvironmentLogger()
+    public function testRunPrefersContainerLoggerOverEnvironmentLogger()
     {
         $containerLogger = new ConsoleLogger(fopen('php://memory', 'w+'));
         $container = (new AlpineContainer())->withLogger($containerLogger);
@@ -216,7 +216,7 @@ final class TestcontainersTest extends TestCase
     /**
      * @return void
      */
-    public function testTestcontainersLoggerTakesPrecedenceOverEnvironmentLogger()
+    public function testSetLoggerTakesPrecedenceOverEnvironmentLogger()
     {
         $logger = new ConsoleLogger(fopen('php://memory', 'w+'));
         $container = new AlpineContainer();

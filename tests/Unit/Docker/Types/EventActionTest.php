@@ -13,7 +13,7 @@ final class EventActionTest extends TestCase
     /**
      * @return void
      */
-    public function testEventAction()
+    public function testConstruct()
     {
         $action = new EventAction(EventAction::$START);
 
@@ -25,7 +25,7 @@ final class EventActionTest extends TestCase
     /**
      * @return void
      */
-    public function testEventActionWithDetail()
+    public function testConstructWithDetail()
     {
         $action = new EventAction(EventAction::$EXEC_START, "/bin/sh -c 'echo hello'");
 
@@ -117,7 +117,7 @@ final class EventActionTest extends TestCase
     /**
      * @return void
      */
-    public function testIsMethodsAreExclusive()
+    public function testIsDieIsExclusiveOfOtherActions()
     {
         $action = EventAction::CREATE();
 

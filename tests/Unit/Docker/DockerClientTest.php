@@ -10,12 +10,13 @@ final class DockerClientTest extends TestCase
     /**
      * @return void
      */
-    public function testClone()
+    public function testWithTimeoutConfigurationSurvivesCloning()
     {
-        $client = new DockerClient();
+        $client = (new DockerClient())->withTimeout(42);
         $cloned = clone $client;
 
         $this->assertNotSame($client, $cloned);
         $this->assertEquals($client, $cloned);
+        $this->assertSame(42, $cloned->getTimeout());
     }
 }

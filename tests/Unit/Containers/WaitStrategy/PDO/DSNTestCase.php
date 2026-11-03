@@ -8,28 +8,42 @@ use Testcontainers\Containers\WaitStrategy\PDO\DSN;
 abstract class DSNTestCase extends TestCase
 {
     /**
-     * @return DSN
+     * @return array<array{DSN}>
      */
-    abstract public function resolveDSN();
+    abstract public static function providerWithHost();
 
     /**
+     * @return array<array{DSN}>
+     */
+    abstract public static function providerWithPort();
+
+    /**
+     * @return array<array{DSN}>
+     */
+    abstract public static function providerToStringAcceptedByPDO();
+
+    /**
+     * @dataProvider providerWithHost
+     * @param DSN $dsn
      * @return void
      */
-    public function testWithHost()
+    public function testWithHost($dsn)
     {
         $hostname = 'localhost';
-        $dsn = $this->resolveDSN()->withHost($hostname);
+        $dsn = $dsn->withHost($hostname);
 
         $this->assertTrue(strpos($dsn->toString(), $hostname) !== false);
     }
 
     /**
+     * @dataProvider providerWithPort
+     * @param DSN $dsn
      * @return void
      */
-    public function testWithPort()
+    public function testWithPort($dsn)
     {
         $port = 3306;
-        $dsn = $this->resolveDSN()
+        $dsn = $dsn
             ->withHost('localhost')
             ->withPort($port)
         ;
@@ -38,11 +52,13 @@ abstract class DSNTestCase extends TestCase
     }
 
     /**
+     * @dataProvider providerToStringAcceptedByPDO
+     * @param DSN $dsn
      * @return void
      */
-    public function testPassPDO()
+    public function testToStringAcceptedByPDO($dsn)
     {
-        $dsn = $this->resolveDSN()
+        $dsn = $dsn
             ->withHost('localhost')
             ->withPort(3306)
         ;

@@ -5,7 +5,6 @@
 namespace Tests\Unit\Docker\Types;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Docker\Types\EventScope;
 use Testcontainers\Docker\Types\EventType;
 use Testcontainers\Exceptions\InvalidFormatException;
 
@@ -43,22 +42,4 @@ final class EventTypeTest extends TestCase
         EventType::fromString('invalid');
     }
 
-    /**
-     * @return void
-     */
-    public function testScopeFromString()
-    {
-        $this->assertTrue(EventScope::fromString('local')->isLocal());
-        $this->assertTrue(EventScope::fromString('swarm')->isSwarm());
-    }
-
-    /**
-     * @return void
-     */
-    public function testScopeFromStringWithInvalidValue()
-    {
-        $this->expectException(InvalidFormatException::class);
-
-        EventScope::fromString('invalid');
-    }
 }

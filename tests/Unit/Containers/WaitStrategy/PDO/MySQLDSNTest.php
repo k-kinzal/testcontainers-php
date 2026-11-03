@@ -6,9 +6,28 @@ use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 
 final class MySQLDSNTest extends DSNTestCase
 {
-    public function resolveDSN()
+    /**
+     * @return array<array{MySQLDSN}>
+     */
+    public static function providerWithHost()
     {
-        return new MySQLDSN();
+        return [[new MySQLDSN()]];
+    }
+
+    /**
+     * @return array<array{MySQLDSN}>
+     */
+    public static function providerWithPort()
+    {
+        return [[new MySQLDSN()]];
+    }
+
+    /**
+     * @return array<array{MySQLDSN}>
+     */
+    public static function providerToStringAcceptedByPDO()
+    {
+        return [[new MySQLDSN()]];
     }
 
     /**
@@ -42,7 +61,7 @@ final class MySQLDSNTest extends DSNTestCase
     /**
      * @return void
      */
-    public function testFullDSN()
+    public function testToStringWithAllComponents()
     {
         $dsn = (new MySQLDSN())
             ->withHost('localhost')

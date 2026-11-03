@@ -18,7 +18,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasMountSettingTrait()
+    public function testMountsIsProvidedByMountSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -29,7 +29,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticMounts()
+    public function testMountsFromStaticMounts()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -51,7 +51,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticVolumes()
+    public function testMountsFromStaticVolumes()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -73,7 +73,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithFileSystemBind()
+    public function testWithFileSystemBind()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -92,7 +92,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithFileSystemBinds()
+    public function testWithFileSystemBinds()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -113,7 +113,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithVolume()
+    public function testWithVolume()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -132,7 +132,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithVolumes()
+    public function testWithVolumes()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -158,7 +158,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithMount()
+    public function testWithMount()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -182,7 +182,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithMounts()
+    public function testWithMounts()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -226,7 +226,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidMounts()
+    public function testMountsRejectsInvalidStaticConfiguration()
     {
         $container = new MountSettingWithInvalidMountsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

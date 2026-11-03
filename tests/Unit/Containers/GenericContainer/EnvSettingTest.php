@@ -16,7 +16,7 @@ final class EnvSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasEnvSettingTrait()
+    public function testEnvIsProvidedByEnvSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -27,7 +27,7 @@ final class EnvSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticEnvironments()
+    public function testEnvFromStaticEnvironments()
     {
         $container = (new EnvSettingWithStaticEnvironmentsContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -41,7 +41,7 @@ final class EnvSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithEnv()
+    public function testWithEnv()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -58,7 +58,7 @@ final class EnvSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithEnvs()
+    public function testWithEnvs()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -124,7 +124,7 @@ final class EnvSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidEnv()
+    public function testEnvRejectsInvalidStaticConfiguration()
     {
         $container = new EnvSettingWithInvalidEnvContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

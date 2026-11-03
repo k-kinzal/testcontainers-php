@@ -15,7 +15,7 @@ final class ReuseModeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasReuseModeSetting()
+    public function testReuseModeIsProvidedByReuseModeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -26,7 +26,7 @@ final class ReuseModeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testDefaultReuseModeIsAdd()
+    public function testReuseModeIsAddByDefault()
     {
         $container = new GenericContainer('alpine:latest');
 
@@ -64,7 +64,7 @@ final class ReuseModeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticReuseMode()
+    public function testReuseModeFromStaticReuseMode()
     {
         $container = new ReuseModeSettingWithStaticReuseModeContainer('alpine:latest');
 
@@ -76,7 +76,7 @@ final class ReuseModeSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticReuseModeRestart()
+    public function testReuseModeFromStaticReuseModeRestart()
     {
         $container = new ReuseModeSettingWithStaticRestartModeContainer('alpine:latest');
 

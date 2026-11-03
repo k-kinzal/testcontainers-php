@@ -14,7 +14,7 @@ final class InspectIntervalSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasInspectIntervalSettingTrait()
+    public function testInspectIntervalIsProvidedByInspectIntervalSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -25,7 +25,7 @@ final class InspectIntervalSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticInspectInterval()
+    public function testInspectIntervalFromStaticInspectInterval()
     {
         $container = new InspectIntervalSettingWithStaticContainer('alpine:latest');
         $instance = $container->start();
@@ -36,7 +36,7 @@ final class InspectIntervalSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithInspectInterval()
+    public function testWithInspectInterval()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withInspectInterval(0.5)
@@ -49,7 +49,7 @@ final class InspectIntervalSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testDefaultInspectInterval()
+    public function testInspectIntervalByDefault()
     {
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
@@ -83,7 +83,7 @@ final class InspectIntervalSettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidInspectInterval()
+    public function testInspectIntervalRejectsInvalidStaticConfiguration()
     {
         $container = new InspectIntervalSettingWithInvalidInspectIntervalContainer('alpine');
         $this->expectException(UnexpectedValueException::class);

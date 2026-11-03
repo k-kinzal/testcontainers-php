@@ -16,10 +16,11 @@ final class DockerEventsOutputTest extends TestCase
      */
     public function testGetIterator()
     {
-        $output = new DockerEventsOutput(self::startProcess(
-            self::event('create', 1700000000000000001)."\n"
-            .self::event('start', 1700000000000000002)
-        ), false);
+        $payload = '{"Type":"container","Action":"create","Actor":{"ID":"abc","Attributes":null},"scope":"local","time":1700000000,"timeNano":1700000000000000001}'."\n"
+            .'{"Type":"container","Action":"start","Actor":{"ID":"abc","Attributes":null},"scope":"local","time":1700000000,"timeNano":1700000000000000002}';
+        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($payload, true).';']);
+        $process->start();
+        $output = new DockerEventsOutput($process, false);
 
         $actions = [];
         foreach ($output->getIterator() as $event) {
@@ -48,10 +49,11 @@ final class DockerEventsOutputTest extends TestCase
      */
     public function testGetIteratorRestartsFromLastEvent()
     {
-        $output = new DockerEventsOutput(self::startProcess(
-            self::event('create', 1700000000000000001)."\n"
-            .self::event('start', 1700000000000000002)."\n"
-        ), true);
+        $payload = '{"Type":"container","Action":"create","Actor":{"ID":"abc","Attributes":null},"scope":"local","time":1700000000,"timeNano":1700000000000000001}'."\n"
+            .'{"Type":"container","Action":"start","Actor":{"ID":"abc","Attributes":null},"scope":"local","time":1700000000,"timeNano":1700000000000000002}'."\n";
+        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($payload, true).';']);
+        $process->start();
+        $output = new DockerEventsOutput($process, true);
 
         $actions = [];
         $deadline = time() + 10;
@@ -72,7 +74,10 @@ final class DockerEventsOutputTest extends TestCase
      */
     public function testGetIteratorThrowsInvalidValueException()
     {
-        $output = new DockerEventsOutput(self::startProcess("invalid\n"), false);
+        $payload = "invalid\n";
+        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($payload, true).';']);
+        $process->start();
+        $output = new DockerEventsOutput($process, false);
 
         $this->expectException(InvalidValueException::class);
 
@@ -82,7 +87,7 @@ final class DockerEventsOutputTest extends TestCase
     /**
      * @return void
      */
-    public function testReleaseStopsProcess()
+    public function testDestructStopsProcess()
     {
         $process = new Process(['sleep', '30']);
         $process->start();
@@ -97,37 +102,4 @@ final class DockerEventsOutputTest extends TestCase
         $this->assertFalse($process->isRunning());
     }
 
-    /**
-     * @param string $action
-     * @param int    $timeNano
-     *
-     * @return string
-     */
-    private static function event($action, $timeNano)
-    {
-        $json = json_encode([
-            'Type' => 'container',
-            'Action' => $action,
-            'Actor' => ['ID' => 'abc', 'Attributes' => null],
-            'scope' => 'local',
-            'time' => (int) ($timeNano / 1000000000),
-            'timeNano' => $timeNano,
-        ]);
-        self::assertNotFalse($json);
-
-        return $json;
-    }
-
-    /**
-     * @param string $output
-     *
-     * @return Process
-     */
-    private static function startProcess($output)
-    {
-        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($output, true).';']);
-        $process->start();
-
-        return $process;
-    }
 }

@@ -15,7 +15,7 @@ final class PullPolicySettingTest extends TestCase
     /**
      * @return void
      */
-    public function testHasPullPolicySettingTrait()
+    public function testPullPolicyIsProvidedByPullPolicySettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
@@ -26,7 +26,7 @@ final class PullPolicySettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStaticPullPolicy()
+    public function testPullPolicyFromStaticPullPolicy()
     {
         $container = new PullPolicySettingWithStaticPullPolicyContainer('alpine:latest');
         $instance = $container->start();
@@ -40,7 +40,7 @@ final class PullPolicySettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartWithImagePullPolicy()
+    public function testWithImagePullPolicy()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withImagePullPolicy(ImagePullPolicy::MISSING())
@@ -56,7 +56,7 @@ final class PullPolicySettingTest extends TestCase
     /**
      * @return void
      */
-    public function testStartRejectsInvalidPullPolicy()
+    public function testPullPolicyRejectsInvalidStaticConfiguration()
     {
         $container = new PullPolicySettingWithInvalidPullPolicyContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
