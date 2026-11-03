@@ -20,6 +20,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         return new HttpWaitStrategy();
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('nginx:alpine');
@@ -32,6 +35,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);
@@ -46,6 +52,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsContainerStoppedException()
     {
         $this->expectException(ContainerStoppedException::class);
@@ -59,6 +68,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWithTimeoutSecondsRejectsNegativeTimeout()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -66,6 +78,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         (new HttpWaitStrategy())->withTimeoutSeconds(-1);
     }
 
+    /**
+     * @return void
+     */
     public function testWithRetryIntervalRejectsStringInterval()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -73,6 +88,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         (new HttpWaitStrategy())->withRetryInterval('1');
     }
 
+    /**
+     * @return void
+     */
     public function testWithExpectedResponseCodeRejectsOutOfRangeCode()
     {
         $this->expectException(UnexpectedValueException::class);

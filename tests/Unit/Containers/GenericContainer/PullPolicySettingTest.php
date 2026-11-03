@@ -17,6 +17,9 @@ use UnexpectedValueException;
  */
 class PullPolicySettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasPullPolicySettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -24,6 +27,9 @@ class PullPolicySettingTest extends TestCase
         $this->assertContains(PullPolicySetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticPullPolicy()
     {
         $container = new PullPolicySettingWithStaticPullPolicyContainer('alpine:latest');
@@ -35,6 +41,9 @@ class PullPolicySettingTest extends TestCase
         $this->assertSame(ImagePullPolicy::$ALWAYS, $pullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithImagePullPolicy()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -48,6 +57,9 @@ class PullPolicySettingTest extends TestCase
         $this->assertSame(ImagePullPolicy::$MISSING, $pullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidPullPolicy()
     {
         $container = new PullPolicySettingWithInvalidPullPolicyContainer('alpine');

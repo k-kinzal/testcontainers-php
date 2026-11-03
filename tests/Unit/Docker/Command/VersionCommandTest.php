@@ -14,6 +14,9 @@ use Testcontainers\Docker\Output\DockerVersionOutput;
  */
 class VersionCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasVersionCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -21,6 +24,9 @@ class VersionCommandTest extends TestCase
         $this->assertContains(VersionCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testVersion()
     {
         $client = new DockerClient();

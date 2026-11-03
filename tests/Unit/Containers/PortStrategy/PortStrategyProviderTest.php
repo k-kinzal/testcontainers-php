@@ -19,6 +19,9 @@ use UnexpectedValueException;
  */
 class PortStrategyProviderTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testRegister()
     {
         $provider = new PortStrategyProvider();
@@ -27,6 +30,9 @@ class PortStrategyProviderTest extends TestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterAlreadyExistsPortStrategyException()
     {
         $this->expectExceptionMessage('Port strategy with name test already exists.');
@@ -37,6 +43,9 @@ class PortStrategyProviderTest extends TestCase
         $provider->register('test', new TestPortStrategy());
     }
 
+    /**
+     * @return void
+     */
     public function testGet()
     {
         $strategy = new TestPortStrategy();
@@ -46,6 +55,9 @@ class PortStrategyProviderTest extends TestCase
         $this->assertSame($strategy, $provider->get('test'));
     }
 
+    /**
+     * @return void
+     */
     public function testGetNotFound()
     {
         $provider = new PortStrategyProvider();
@@ -53,6 +65,9 @@ class PortStrategyProviderTest extends TestCase
         $this->assertNull($provider->get('test'));
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterRejectsUnrelatedObject()
     {
         $this->expectException(UnexpectedValueException::class);

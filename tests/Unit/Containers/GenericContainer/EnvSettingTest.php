@@ -18,6 +18,9 @@ use UnexpectedValueException;
  */
 class EnvSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasEnvSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -25,6 +28,9 @@ class EnvSettingTest extends TestCase
         $this->assertContains(EnvSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticEnvironments()
     {
         $container = (new EnvSettingWithStaticEnvironmentsContainer('alpine:latest'))
@@ -36,6 +42,9 @@ class EnvSettingTest extends TestCase
         $this->assertSame("value1\nvalue2\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithEnv()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -50,6 +59,9 @@ class EnvSettingTest extends TestCase
         $this->assertSame("value1\nvalue2\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithEnvs()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -70,6 +82,7 @@ class EnvSettingTest extends TestCase
      * @dataProvider providerWithEnvInvalidInputs
      * @param string $key
      * @param bool   $value
+     * @return void
      */
     public function testWithEnvRejectsInvalidInputs($key, $value)
     {
@@ -92,6 +105,7 @@ class EnvSettingTest extends TestCase
     /**
      * @dataProvider providerWithEnvsInvalidInputs
      * @param array{'KEY': stdClass} $env
+     * @return void
      */
     public function testWithEnvsRejectsInvalidInputs($env)
     {
@@ -111,6 +125,9 @@ class EnvSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidEnv()
     {
         $container = new EnvSettingWithInvalidEnvContainer('alpine');

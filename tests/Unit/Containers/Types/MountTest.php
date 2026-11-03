@@ -15,6 +15,9 @@ use UnexpectedValueException;
  */
 class MountTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testMount()
     {
         $mount = new Mount(
@@ -36,6 +39,9 @@ class MountTest extends TestCase
         $this->assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringParsesTargetOnlyBindMountString()
     {
         $mount = Mount::fromString('/container/path');
@@ -49,6 +55,9 @@ class MountTest extends TestCase
         $this->assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringParsesCompleteBindMountString()
     {
         $mount = Mount::fromString('/host/path:/container/path:ro');
@@ -62,6 +71,9 @@ class MountTest extends TestCase
         $this->assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringParsesTargetOnlyMountString()
     {
         $mount = Mount::fromString('target=/container/path');
@@ -75,6 +87,9 @@ class MountTest extends TestCase
         $this->assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringParsesCompleteMountString()
     {
         $mount = Mount::fromString('type=volume,source=/host/path,destination=/container/path,volume-subpath=/sub/path,readonly,volume-nocopy');
@@ -88,6 +103,9 @@ class MountTest extends TestCase
         $this->assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArray()
     {
         $mount = Mount::fromArray([
@@ -109,6 +127,9 @@ class MountTest extends TestCase
         $this->assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testToString()
     {
         $mount = new Mount(
@@ -124,6 +145,9 @@ class MountTest extends TestCase
         $this->assertSame('type=bind,source=/host/path,destination=/container/path,volume-subpath=/sub/path,readonly,volume-nocopy', (string) $mount);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayRejectsStringReadonlyFlag()
     {
         $this->expectException(UnexpectedValueException::class);

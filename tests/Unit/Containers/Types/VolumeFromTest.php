@@ -17,6 +17,9 @@ use UnexpectedValueException;
  */
 class VolumeFromTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testVolumeFrom()
     {
         $volumeFrom = new VolumeFrom('container', BindMode::READ_ONLY());
@@ -25,6 +28,9 @@ class VolumeFromTest extends TestCase
         $this->assertSame(BindMode::$READ_ONLY, (string) $volumeFrom->mode);
     }
 
+    /**
+     * @return void
+     */
     public function testFromString()
     {
         $volumeFrom = VolumeFrom::fromString('name:ro');
@@ -33,6 +39,9 @@ class VolumeFromTest extends TestCase
         $this->assertSame(BindMode::$READ_ONLY, (string) $volumeFrom->mode);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringOnlyName()
     {
         $volumeFrom = VolumeFrom::fromString('name');
@@ -41,6 +50,9 @@ class VolumeFromTest extends TestCase
         $this->assertSame(BindMode::$READ_WRITE, (string) $volumeFrom->mode);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringFailedParsing()
     {
         $this->expectException(InvalidFormatException::class);
@@ -48,6 +60,9 @@ class VolumeFromTest extends TestCase
         VolumeFrom::fromString('name:foo');
     }
 
+    /**
+     * @return void
+     */
     public function testFromArray()
     {
         $volumeFrom = VolumeFrom::fromArray([
@@ -59,6 +74,9 @@ class VolumeFromTest extends TestCase
         $this->assertSame(BindMode::$READ_WRITE, (string) $volumeFrom->mode);
     }
 
+    /**
+     * @return void
+     */
     public function testToString()
     {
         $volumeFrom = new VolumeFrom('name', BindMode::READ_ONLY());
@@ -66,6 +84,9 @@ class VolumeFromTest extends TestCase
         $this->assertSame('name:ro', (string) $volumeFrom);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayRejectsBooleanMode()
     {
         $this->expectException(UnexpectedValueException::class);

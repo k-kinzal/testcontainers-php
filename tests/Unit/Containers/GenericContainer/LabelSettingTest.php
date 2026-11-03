@@ -17,6 +17,9 @@ use UnexpectedValueException;
  */
 class LabelSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasLabelSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -24,6 +27,9 @@ class LabelSettingTest extends TestCase
         $this->assertContains(LabelSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticLabels()
     {
         $container = new LabelSettingWithStaticLabelsContainer('alpine:latest');
@@ -33,6 +39,9 @@ class LabelSettingTest extends TestCase
         $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithLabel()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -47,6 +56,9 @@ class LabelSettingTest extends TestCase
         $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithLabels()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -65,6 +77,7 @@ class LabelSettingTest extends TestCase
      * @dataProvider providerWithLabelInvalidInputs
      * @param array{} $key
      * @param string  $value
+     * @return void
      */
     public function testWithLabelRejectsInvalidInputs($key, $value)
     {
@@ -87,6 +100,7 @@ class LabelSettingTest extends TestCase
     /**
      * @dataProvider providerWithLabelsInvalidInputs
      * @param string $labels
+     * @return void
      */
     public function testWithLabelsRejectsInvalidInputs($labels)
     {
@@ -106,6 +120,9 @@ class LabelSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidLabels()
     {
         $container = new LabelSettingWithInvalidLabelsContainer('alpine');

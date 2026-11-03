@@ -15,6 +15,9 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class ReuseModeTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testReuseModeAdd()
     {
         $reuseMode = new ReuseMode(ReuseMode::$ADD);
@@ -22,6 +25,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$ADD, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testReuseModeRestart()
     {
         $reuseMode = new ReuseMode(ReuseMode::$RESTART);
@@ -29,6 +35,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$RESTART, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testReuseModeReuse()
     {
         $reuseMode = new ReuseMode(ReuseMode::$REUSE);
@@ -36,6 +45,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$REUSE, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testAdd()
     {
         $reuseMode = ReuseMode::ADD();
@@ -43,6 +55,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$ADD, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testRestart()
     {
         $reuseMode = ReuseMode::RESTART();
@@ -50,6 +65,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$RESTART, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testReuse()
     {
         $reuseMode = ReuseMode::REUSE();
@@ -57,6 +75,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$REUSE, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithAdd()
     {
         $reuseMode = ReuseMode::fromString(ReuseMode::$ADD);
@@ -64,6 +85,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$ADD, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithRestart()
     {
         $reuseMode = ReuseMode::fromString(ReuseMode::$RESTART);
@@ -71,6 +95,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$RESTART, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithReuse()
     {
         $reuseMode = ReuseMode::fromString(ReuseMode::$REUSE);
@@ -78,6 +105,9 @@ class ReuseModeTest extends TestCase
         $this->assertSame(ReuseMode::$REUSE, $reuseMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithInvalidMode()
     {
         $this->expectException(InvalidFormatException::class);
@@ -86,6 +116,9 @@ class ReuseModeTest extends TestCase
         ReuseMode::fromString('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testIsAdd()
     {
         $reuseMode = new ReuseMode(ReuseMode::$ADD);
@@ -95,6 +128,9 @@ class ReuseModeTest extends TestCase
         $this->assertFalse($reuseMode->isReuse());
     }
 
+    /**
+     * @return void
+     */
     public function testIsRestart()
     {
         $reuseMode = new ReuseMode(ReuseMode::$RESTART);
@@ -104,6 +140,9 @@ class ReuseModeTest extends TestCase
         $this->assertFalse($reuseMode->isReuse());
     }
 
+    /**
+     * @return void
+     */
     public function testIsReuse()
     {
         $reuseMode = new ReuseMode(ReuseMode::$REUSE);
@@ -113,6 +152,9 @@ class ReuseModeTest extends TestCase
         $this->assertFalse($reuseMode->isRestart());
     }
 
+    /**
+     * @return void
+     */
     public function testToString()
     {
         $reuseMode = ReuseMode::ADD();

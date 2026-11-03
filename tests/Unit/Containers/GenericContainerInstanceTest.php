@@ -27,6 +27,9 @@ use Tests\Images\DinD;
  */
 class GenericContainerInstanceTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testGetContainerId()
     {
         $instance = new GenericContainerInstance([
@@ -36,6 +39,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('8188d93d8a27', (string) $instance->getContainerId());
     }
 
+    /**
+     * @return void
+     */
     public function testGetLabel()
     {
         $instance = new GenericContainerInstance([
@@ -48,6 +54,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('value', $instance->getLabel('com.example.label'));
     }
 
+    /**
+     * @return void
+     */
     public function testGetLabels()
     {
         $instance = new GenericContainerInstance([
@@ -60,6 +69,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame(['com.example.label' => 'value'], $instance->getLabels());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHost()
     {
         $instance = new GenericContainerInstance([
@@ -69,6 +81,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('localhost', $instance->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromDockerHost()
     {
         $dind = Testcontainers::run(DinD::class);
@@ -87,6 +102,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame($dind->getHost(), $instance->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromPortForward()
     {
         $dind = Testcontainers::run(DinD::class);
@@ -106,6 +124,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('localhost', $instance->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromOverride()
     {
         try {
@@ -120,6 +141,9 @@ class GenericContainerInstanceTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testGetMappedPort()
     {
         $instance = new GenericContainerInstance([
@@ -132,6 +156,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame(8080, $instance->getMappedPort(80));
     }
 
+    /**
+     * @return void
+     */
     public function testGetImagePullPolicy()
     {
         $pullPolicy = ImagePullPolicy::ALWAYS();
@@ -143,6 +170,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame($pullPolicy, $instance->getImagePullPolicy());
     }
 
+    /**
+     * @return void
+     */
     public function testGetPrivilegedMode()
     {
         $instance = new GenericContainerInstance([
@@ -153,6 +183,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertTrue($instance->getPrivilegedMode());
     }
 
+    /**
+     * @return void
+     */
     public function testGetOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -168,6 +201,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testGetErrorOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -183,6 +219,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame("ls: /not-exist-dir: No such file or directory\n", $instance->getErrorOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testSetDataAndGetData()
     {
         $data = new CustomData();
@@ -195,6 +234,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame($data, $instance->getData(CustomData::class));
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunning()
     {
         $instance = new GenericContainerInstance([
@@ -204,6 +246,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertFalse($instance->isRunning());
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunningReusesInspectedStateUntilEventIsEmitted()
     {
         $stream = fopen('php://memory', 'w+');
@@ -244,6 +289,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertGreaterThan($inspected, substr_count(stream_get_contents($stream), 'docker inspect '));
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunningInspectsWithoutEvents()
     {
         $stream = fopen('php://memory', 'w+');
@@ -271,6 +319,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame($inspected + 2, substr_count(stream_get_contents($stream), 'docker inspect '));
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunningInspectsAfterInspectIntervalElapses()
     {
         $stream = fopen('php://memory', 'w+');
@@ -301,6 +352,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame($inspected + 1, substr_count(stream_get_contents($stream), 'docker inspect '));
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunningInspectsEveryTimeWithInspectIntervalOfZero()
     {
         $stream = fopen('php://memory', 'w+');
@@ -323,6 +377,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame($inspected + 2, substr_count(stream_get_contents($stream), 'docker inspect '));
     }
 
+    /**
+     * @return void
+     */
     public function testIsStopped()
     {
         $client = new DockerClient();
@@ -346,6 +403,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertTrue($instance->isStopped());
     }
 
+    /**
+     * @return void
+     */
     public function testGetState()
     {
         $client = new DockerClient();
@@ -360,6 +420,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertSame('running', $instance->getState()->status);
     }
 
+    /**
+     * @return void
+     */
     public function testGetStateIfContainerDoesNotExist()
     {
         $instance = new GenericContainerInstance([
@@ -369,6 +432,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertNull($instance->getState());
     }
 
+    /**
+     * @return void
+     */
     public function testIsStoppedIfContainerDoesNotExist()
     {
         $instance = new GenericContainerInstance([
@@ -378,6 +444,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertTrue($instance->isStopped());
     }
 
+    /**
+     * @return void
+     */
     public function testGetStateSubscribesEventsOfContainer()
     {
         $stream = fopen('php://memory', 'w+');
@@ -403,6 +472,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertNotFalse(strpos($log, '--since 0'));
     }
 
+    /**
+     * @return void
+     */
     public function testStopStopsObservingEvents()
     {
         $client = new DockerClient();
@@ -425,6 +497,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertNull($events->getValue($instance));
     }
 
+    /**
+     * @return void
+     */
     public function testStop()
     {
         $instance = new GenericContainerInstance([
@@ -435,6 +510,9 @@ class GenericContainerInstanceTest extends TestCase
         $this->assertFalse($instance->isRunning());
     }
 
+    /**
+     * @return void
+     */
     public function testStopThrowsDockerException()
     {
         $client = (new DockerClient())->withGlobalOptions([
@@ -449,6 +527,9 @@ class GenericContainerInstanceTest extends TestCase
         $instance->stop();
     }
 
+    /**
+     * @return void
+     */
     public function testDestructSwallowsDockerException()
     {
         $client = (new DockerClient())->withGlobalOptions([

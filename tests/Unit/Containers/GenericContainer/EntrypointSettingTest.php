@@ -18,6 +18,9 @@ use UnexpectedValueException;
  */
 class EntrypointSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasEntrypointSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -25,6 +28,9 @@ class EntrypointSettingTest extends TestCase
         $this->assertContains(EntrypointSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticEntrypoint()
     {
         $container = (new EntrypointSettingWithStaticEntrypointContainer('alpine:latest'))
@@ -38,6 +44,9 @@ class EntrypointSettingTest extends TestCase
         $this->assertSame("hello\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithEntrypoint()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -52,6 +61,9 @@ class EntrypointSettingTest extends TestCase
         $this->assertSame("hello\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidEntrypoint()
     {
         $container = new EntrypointSettingWithInvalidEntrypointContainer('alpine');

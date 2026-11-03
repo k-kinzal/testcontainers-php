@@ -17,6 +17,9 @@ use Testcontainers\Logger\WithLogger;
  */
 class WaitStrategyProviderTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testRegister()
     {
         $provider = new WaitStrategyProvider();
@@ -25,6 +28,9 @@ class WaitStrategyProviderTest extends TestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterAlreadyExistsWaitStrategyException()
     {
         $this->expectExceptionMessage('Wait strategy with name test already exists.');
@@ -35,6 +41,9 @@ class WaitStrategyProviderTest extends TestCase
         $provider->register('test', new TestWaitStrategy());
     }
 
+    /**
+     * @return void
+     */
     public function testGet()
     {
         $strategy = new TestWaitStrategy();
@@ -44,6 +53,9 @@ class WaitStrategyProviderTest extends TestCase
         $this->assertSame($strategy, $provider->get('test'));
     }
 
+    /**
+     * @return void
+     */
     public function testGetNotFound()
     {
         $provider = new WaitStrategyProvider();

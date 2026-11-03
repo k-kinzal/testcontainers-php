@@ -17,6 +17,9 @@ use UnexpectedValueException;
  */
 class HostSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasHostSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -24,6 +27,9 @@ class HostSettingTest extends TestCase
         $this->assertContains(HostSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticExtraHosts()
     {
         $container = (new HostSettingWithExtraHostsContainer('alpine:latest'))
@@ -36,6 +42,9 @@ class HostSettingTest extends TestCase
         $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStaticHosts()
     {
         $container = (new HostSettingWithHostsContainer('alpine:latest'))
@@ -48,6 +57,9 @@ class HostSettingTest extends TestCase
         $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithExtraHost()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -61,6 +73,9 @@ class HostSettingTest extends TestCase
         $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithInvalidCall()
     {
         $this->expectExceptionMessage('Expected null');
@@ -71,6 +86,9 @@ class HostSettingTest extends TestCase
         ;
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithExtraHosts()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -90,6 +108,7 @@ class HostSettingTest extends TestCase
     /**
      * @dataProvider providerWithExtraHostsInvalidInputs
      * @param bool $extraHosts
+     * @return void
      */
     public function testWithExtraHostsRejectsInvalidInputs($extraHosts)
     {
@@ -109,6 +128,9 @@ class HostSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidExtraHosts()
     {
         $container = new HostSettingWithInvalidExtraHostsContainer('alpine');

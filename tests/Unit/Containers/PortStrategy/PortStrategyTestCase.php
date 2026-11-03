@@ -13,6 +13,9 @@ abstract class PortStrategyTestCase extends TestCase
      */
     abstract public function resolvePortStrategy();
 
+    /**
+     * @return void
+     */
     public function testInterfaceGetPort()
     {
         $strategy = $this->resolvePortStrategy();
@@ -22,6 +25,9 @@ abstract class PortStrategyTestCase extends TestCase
         $this->assertLessThanOrEqual(65535, $port);
     }
 
+    /**
+     * @return void
+     */
     public function testInterfaceConflictBehavior()
     {
         $strategy = $this->resolvePortStrategy();

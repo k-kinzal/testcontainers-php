@@ -15,6 +15,9 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class ImagePullPolicyTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testImagePullPolicyAlways()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$ALWAYS);
@@ -22,6 +25,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testImagePullPolicyMissing()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$MISSING);
@@ -29,6 +35,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testImagePullPolicyNever()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$NEVER);
@@ -36,6 +45,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testAlways()
     {
         $imagePullPolicy = ImagePullPolicy::ALWAYS();
@@ -43,6 +55,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testMissing()
     {
         $imagePullPolicy = ImagePullPolicy::MISSING();
@@ -50,6 +65,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testNever()
     {
         $imagePullPolicy = ImagePullPolicy::NEVER();
@@ -57,6 +75,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithAlways()
     {
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$ALWAYS);
@@ -64,6 +85,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithMissing()
     {
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$MISSING);
@@ -71,6 +95,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithNever()
     {
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$NEVER);
@@ -78,6 +105,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithInvalidPolicy()
     {
         $this->expectException(InvalidFormatException::class);
@@ -85,6 +115,9 @@ class ImagePullPolicyTest extends TestCase
         ImagePullPolicy::fromString('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testIsAlways()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$ALWAYS);
@@ -92,6 +125,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertTrue($imagePullPolicy->isAlways());
     }
 
+    /**
+     * @return void
+     */
     public function testIsMissing()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$MISSING);
@@ -99,6 +135,9 @@ class ImagePullPolicyTest extends TestCase
         $this->assertTrue($imagePullPolicy->isMissing());
     }
 
+    /**
+     * @return void
+     */
     public function testIsNever()
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$NEVER);

@@ -15,6 +15,9 @@ use Testcontainers\Docker\Types\Event;
  */
 class EventTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testFromArray()
     {
         $event = Event::fromArray(json_decode('{"Type":"container","Action":"die","Actor":{"ID":"713445482cc85d55d1df8adb30ea097a5884727c52d893c7e08978be3315909c","Attributes":{"execDuration":"0","exitCode":"2","image":"alpine","name":"clever_moser"}},"scope":"local","time":1793107853,"timeNano":1793107853987226709}', true));
@@ -33,6 +36,9 @@ class EventTest extends TestCase
         $this->assertNull($event->from);
     }
 
+    /**
+     * @return void
+     */
     public function testDeserialize()
     {
         $event = Event::deserialize('{"Type":"container","Action":"start","Actor":{"ID":"8188d93d8a27","Attributes":{"image":"alpine"}},"scope":"local","time":1,"timeNano":1000000000}');
@@ -43,6 +49,9 @@ class EventTest extends TestCase
         $this->assertSame(1000000000, $event->timeNano);
     }
 
+    /**
+     * @return void
+     */
     public function testDeserializeWithInvalidJson()
     {
         $this->expectException(InvalidValueException::class);
@@ -50,6 +59,9 @@ class EventTest extends TestCase
         Event::deserialize('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithDeprecatedProperties()
     {
         $event = Event::fromArray([
@@ -69,6 +81,9 @@ class EventTest extends TestCase
         $this->assertSame('alpine', $event->from);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithOmittedProperties()
     {
         $event = Event::fromArray([
@@ -85,6 +100,9 @@ class EventTest extends TestCase
         $this->assertNull($event->timeNano);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithUnknownType()
     {
         $this->expectException(InvalidValueException::class);
@@ -96,6 +114,9 @@ class EventTest extends TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithUnknownAction()
     {
         $this->expectException(InvalidValueException::class);
@@ -107,6 +128,9 @@ class EventTest extends TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithoutActor()
     {
         $this->expectException(InvalidValueException::class);
@@ -117,6 +141,9 @@ class EventTest extends TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithNonStringAttribute()
     {
         $this->expectException(InvalidValueException::class);
@@ -128,6 +155,9 @@ class EventTest extends TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithNonIntegerTime()
     {
         $this->expectException(InvalidValueException::class);

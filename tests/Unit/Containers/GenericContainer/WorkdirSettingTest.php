@@ -17,6 +17,9 @@ use UnexpectedValueException;
  */
 class WorkdirSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasWorkdirSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -24,6 +27,9 @@ class WorkdirSettingTest extends TestCase
         $this->assertContains(WorkdirSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticWorkdir()
     {
         $container = (new WorkdirSettingWithStaticWorkdirContainer('alpine:latest'))
@@ -36,6 +42,9 @@ class WorkdirSettingTest extends TestCase
         $this->assertSame("/tmp\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithWorkingDirectory()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -52,6 +61,7 @@ class WorkdirSettingTest extends TestCase
     /**
      * @dataProvider providerWithWorkingDirectoryInvalidInputs
      * @param array{} $workDir
+     * @return void
      */
     public function testWithWorkingDirectoryRejectsInvalidInputs($workDir)
     {
@@ -71,6 +81,9 @@ class WorkdirSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidWorkdir()
     {
         $container = new WorkdirSettingWithInvalidWorkdirContainer('alpine');

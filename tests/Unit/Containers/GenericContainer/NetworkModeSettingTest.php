@@ -17,6 +17,9 @@ use UnexpectedValueException;
  */
 class NetworkModeSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasNetworkModeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -24,6 +27,9 @@ class NetworkModeSettingTest extends TestCase
         $this->assertContains(NetworkModeSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticNetworkMode()
     {
         $container = (new NetworkModeSettingWithStaticNetworkModeContainer('alpine:latest'))
@@ -34,6 +40,9 @@ class NetworkModeSettingTest extends TestCase
         $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithNetworkMode()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -46,6 +55,9 @@ class NetworkModeSettingTest extends TestCase
         $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidNetworkMode()
     {
         $container = new NetworkModeSettingWithInvalidNetworkModeContainer('alpine');

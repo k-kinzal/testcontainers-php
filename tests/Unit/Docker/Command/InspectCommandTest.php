@@ -15,6 +15,9 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
  */
 class InspectCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasInspectCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -22,6 +25,9 @@ class InspectCommandTest extends TestCase
         $this->assertContains(InspectCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testInspect()
     {
         $client = new DockerClient();

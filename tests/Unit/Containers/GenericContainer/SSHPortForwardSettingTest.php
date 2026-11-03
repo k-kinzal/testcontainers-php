@@ -17,6 +17,7 @@ class SSHPortForwardSettingTest extends TestCase
      * @dataProvider providerWithSSHPortForwardInvalidInputs
      * @param string $sshHost
      * @param string $sshPort
+     * @return void
      */
     public function testWithSSHPortForwardRejectsInvalidInputs($sshHost, $sshPort)
     {
@@ -36,6 +37,9 @@ class SSHPortForwardSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidSshPortForwardBeforeRunningContainer()
     {
         $client = (new DockerClient())->withCommand(__DIR__.'/missing-docker');

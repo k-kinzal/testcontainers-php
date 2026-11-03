@@ -16,6 +16,7 @@ class WithLoggerTest extends TestCase
     /**
      * @dataProvider providerWithLoggerInvalidInputs
      * @param stdClass $logger
+     * @return void
      */
     public function testWithLoggerRejectsInvalidInputs($logger)
     {

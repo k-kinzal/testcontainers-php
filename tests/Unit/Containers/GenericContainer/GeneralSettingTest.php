@@ -19,6 +19,9 @@ use UnexpectedValueException;
  */
 class GeneralSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasGeneralSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -26,6 +29,9 @@ class GeneralSettingTest extends TestCase
         $this->assertContains(GeneralSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticCommands()
     {
         $container = new GeneralSettingWithStaticCommandsContainer('alpine:latest');
@@ -34,6 +40,9 @@ class GeneralSettingTest extends TestCase
         $this->assertSame("Hello, World!\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithCommand()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -46,6 +55,9 @@ class GeneralSettingTest extends TestCase
         $this->assertSame("/\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithCommands()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -61,6 +73,7 @@ class GeneralSettingTest extends TestCase
     /**
      * @dataProvider providerWithCommandsInvalidInputs
      * @param array{string, stdClass} $commandParts
+     * @return void
      */
     public function testWithCommandsRejectsInvalidInputs($commandParts)
     {
@@ -80,6 +93,9 @@ class GeneralSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidName()
     {
         $container = new GeneralSettingWithInvalidNameContainer('alpine');
@@ -88,6 +104,9 @@ class GeneralSettingTest extends TestCase
         $container->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidCommands()
     {
         $container = new GeneralSettingWithInvalidCommandsContainer('alpine');

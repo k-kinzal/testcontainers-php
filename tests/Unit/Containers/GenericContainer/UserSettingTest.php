@@ -18,6 +18,9 @@ use UnexpectedValueException;
  */
 class UserSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasUserSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -25,6 +28,9 @@ class UserSettingTest extends TestCase
         $this->assertContains(UserSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticUser()
     {
         $container = (new UserSettingWithStaticUserContainer('alpine:latest'))
@@ -38,6 +44,9 @@ class UserSettingTest extends TestCase
         $this->assertSame("nobody\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithUser()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -52,6 +61,9 @@ class UserSettingTest extends TestCase
         $this->assertSame("nobody\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidUser()
     {
         $container = new UserSettingWithInvalidUserContainer('alpine');

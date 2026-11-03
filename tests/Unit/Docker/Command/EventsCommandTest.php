@@ -19,6 +19,9 @@ use Testcontainers\Docker\Types\Event;
  */
 class EventsCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasEventsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -26,6 +29,9 @@ class EventsCommandTest extends TestCase
         $this->assertContains(EventsCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testEvents()
     {
         $client = new DockerClient();
@@ -61,6 +67,9 @@ class EventsCommandTest extends TestCase
         $this->assertSame(['create', 'start', 'die'], array_values(array_intersect($actions, ['create', 'start', 'die'])));
     }
 
+    /**
+     * @return void
+     */
     public function testEventsWithTimeout()
     {
         $client = new DockerClient();

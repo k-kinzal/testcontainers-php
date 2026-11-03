@@ -18,6 +18,9 @@ use UnexpectedValueException;
  */
 class StartupSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasStartupSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -25,6 +28,9 @@ class StartupSettingTest extends TestCase
         $this->assertContains(StartupSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticStartupTimeout()
     {
         $this->expectException(StartupCheckFailedException::class);
@@ -35,6 +41,9 @@ class StartupSettingTest extends TestCase
         $container->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStaticStartupCheckStrategy()
     {
         $this->expectException(StartupCheckFailedException::class);
@@ -45,6 +54,9 @@ class StartupSettingTest extends TestCase
         $container->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithStartupTimeout()
     {
         $this->expectException(StartupCheckFailedException::class);
@@ -56,6 +68,9 @@ class StartupSettingTest extends TestCase
         $container->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithStartupCheckStrategy()
     {
         $this->expectException(StartupCheckFailedException::class);
@@ -70,6 +85,7 @@ class StartupSettingTest extends TestCase
     /**
      * @dataProvider providerWithStartupTimeoutInvalidInputs
      * @param int $timeout
+     * @return void
      */
     public function testWithStartupTimeoutRejectsInvalidInputs($timeout)
     {
@@ -92,6 +108,7 @@ class StartupSettingTest extends TestCase
     /**
      * @dataProvider providerWithStartupConflictRetriesInvalidInputs
      * @param int $retryAttempts
+     * @return void
      */
     public function testWithStartupConflictRetriesRejectsInvalidInputs($retryAttempts)
     {
@@ -111,6 +128,9 @@ class StartupSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidStartupTimeout()
     {
         $container = new StartupSettingWithInvalidStartupTimeoutContainer('alpine');
@@ -119,6 +139,9 @@ class StartupSettingTest extends TestCase
         $container->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidStartupConflictRetryAttempts()
     {
         $container = new StartupSettingWithInvalidStartupConflictRetryAttemptsContainer('alpine');

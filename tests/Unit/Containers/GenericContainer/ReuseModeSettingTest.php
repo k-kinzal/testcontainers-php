@@ -17,6 +17,9 @@ use UnexpectedValueException;
  */
 class ReuseModeSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasReuseModeSetting()
     {
         $uses = class_uses(GenericContainer::class);
@@ -24,6 +27,9 @@ class ReuseModeSettingTest extends TestCase
         $this->assertContains(ReuseModeSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testDefaultReuseModeIsAdd()
     {
         $container = new GenericContainer('alpine:latest');
@@ -33,6 +39,9 @@ class ReuseModeSettingTest extends TestCase
         $this->assertTrue($reuseMode->isAdd());
     }
 
+    /**
+     * @return void
+     */
     public function testWithReuseModeRestart()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -43,6 +52,9 @@ class ReuseModeSettingTest extends TestCase
         $this->assertTrue($reuseMode->isRestart());
     }
 
+    /**
+     * @return void
+     */
     public function testWithReuseModeReuse()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -53,6 +65,9 @@ class ReuseModeSettingTest extends TestCase
         $this->assertTrue($reuseMode->isReuse());
     }
 
+    /**
+     * @return void
+     */
     public function testStaticReuseMode()
     {
         $container = new ReuseModeSettingWithStaticReuseModeContainer('alpine:latest');
@@ -62,6 +77,9 @@ class ReuseModeSettingTest extends TestCase
         $this->assertTrue($reuseMode->isReuse());
     }
 
+    /**
+     * @return void
+     */
     public function testStaticReuseModeRestart()
     {
         $container = new ReuseModeSettingWithStaticRestartModeContainer('alpine:latest');
@@ -71,6 +89,9 @@ class ReuseModeSettingTest extends TestCase
         $this->assertTrue($reuseMode->isRestart());
     }
 
+    /**
+     * @return void
+     */
     public function testReuseModeRejectsInvalidDefault()
     {
         $container = new ReuseModeSettingWithInvalidReuseModeContainer('alpine');

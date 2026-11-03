@@ -20,6 +20,9 @@ use UnexpectedValueException;
  */
 class GenericContainerTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testStart()
     {
         $container = new GenericContainer('alpine:latest');
@@ -29,6 +32,9 @@ class GenericContainerTest extends TestCase
         $this->assertNotEmpty($instance->getContainerId());
     }
 
+    /**
+     * @return void
+     */
     public function testContainerFailsOnPortConflictWithStaticPortStrategy()
     {
         $this->expectException(PortConflictException::class);
@@ -52,6 +58,9 @@ class GenericContainerTest extends TestCase
         $container2->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStartStopsContainerOnWaitStrategyFailure()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -72,6 +81,7 @@ class GenericContainerTest extends TestCase
     /**
      * @dataProvider providerWithDockerClientInvalidInputs
      * @param stdClass $client
+     * @return void
      */
     public function testWithDockerClientRejectsInvalidInputs($client)
     {
@@ -91,6 +101,9 @@ class GenericContainerTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testConstructRejectsArrayImage()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -98,6 +111,9 @@ class GenericContainerTest extends TestCase
         new GenericContainer([]);
     }
 
+    /**
+     * @return void
+     */
     public function testConstructRejectsEmptyImage()
     {
         $this->expectException(UnexpectedValueException::class);

@@ -16,6 +16,9 @@ use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
  */
 class StartupCheckStrategyProviderTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testRegister()
     {
         $provider = new StartupCheckStrategyProvider();
@@ -24,6 +27,9 @@ class StartupCheckStrategyProviderTest extends TestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterAlreadyExistsStartupStrategyException()
     {
         $this->expectExceptionMessage('Startup strategy with name is_running already exists.');
@@ -34,6 +40,9 @@ class StartupCheckStrategyProviderTest extends TestCase
         $provider->register('is_running', new IsRunningStartupCheckStrategy());
     }
 
+    /**
+     * @return void
+     */
     public function testGet()
     {
         $provider = new StartupCheckStrategyProvider();

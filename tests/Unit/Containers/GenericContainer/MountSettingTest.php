@@ -20,6 +20,9 @@ use UnexpectedValueException;
  */
 class MountSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasMountSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -27,6 +30,9 @@ class MountSettingTest extends TestCase
         $this->assertContains(MountSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticMounts()
     {
         $tmpdir = sys_get_temp_dir();
@@ -46,6 +52,9 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStaticVolumes()
     {
         $tmpdir = sys_get_temp_dir();
@@ -65,6 +74,9 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithFileSystemBind()
     {
         $tmpdir = sys_get_temp_dir();
@@ -81,6 +93,9 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithFileSystemBinds()
     {
         $tmpdir = sys_get_temp_dir();
@@ -99,6 +114,9 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithVolume()
     {
         $tmpdir = sys_get_temp_dir();
@@ -115,6 +133,9 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithVolumes()
     {
         $tmpdir = sys_get_temp_dir();
@@ -138,6 +159,9 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithMount()
     {
         $tmpdir = sys_get_temp_dir();
@@ -159,6 +183,9 @@ class MountSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithMounts()
     {
         $tmpdir = sys_get_temp_dir();
@@ -180,6 +207,7 @@ class MountSettingTest extends TestCase
     /**
      * @dataProvider providerWithMountsInvalidInputs
      * @param bool $mounts
+     * @return void
      */
     public function testWithMountsRejectsInvalidInputs($mounts)
     {
@@ -199,6 +227,9 @@ class MountSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidMounts()
     {
         $container = new MountSettingWithInvalidMountsContainer('alpine');

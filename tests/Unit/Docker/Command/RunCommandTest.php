@@ -18,6 +18,9 @@ use Tests\Images\DinD;
  */
 class RunCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasRunCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -25,6 +28,9 @@ class RunCommandTest extends TestCase
         $this->assertContains(RunCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testRun()
     {
         $client = new DockerClient();
@@ -35,6 +41,9 @@ class RunCommandTest extends TestCase
         $this->assertSame("Hello, World!\n", $output->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testRunWithDetach()
     {
         $client = new DockerClient();
@@ -48,6 +57,9 @@ class RunCommandTest extends TestCase
         $this->assertNotEmpty($output->getContainerId());
     }
 
+    /**
+     * @return void
+     */
     public function testRunWithTrueOptions()
     {
         $client = new DockerClient();
@@ -60,6 +72,9 @@ class RunCommandTest extends TestCase
         $this->assertSame("Hello, World!\n", $output->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testRunWithFalseOptions()
     {
         $client = new DockerClient();
@@ -72,6 +87,9 @@ class RunCommandTest extends TestCase
         $this->assertSame("Hello, World!\n", $output->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testRunWithArrayOptions()
     {
         $client = new DockerClient();
@@ -84,6 +102,9 @@ class RunCommandTest extends TestCase
         $this->assertSame("Hello, World!\n", $output->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testRunWithObjectOptions()
     {
         $client = new DockerClient();
@@ -99,6 +120,9 @@ class RunCommandTest extends TestCase
         $this->assertSame("bar\n", $output->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testRunWithPortConflict()
     {
         $this->expectException(PortConflictException::class);

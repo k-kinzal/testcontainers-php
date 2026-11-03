@@ -12,6 +12,9 @@ abstract class DSNTestCase extends TestCase
      */
     abstract public function resolveDSN();
 
+    /**
+     * @return void
+     */
     public function testWithHost()
     {
         $hostname = 'localhost';
@@ -20,6 +23,9 @@ abstract class DSNTestCase extends TestCase
         $this->assertTrue(strpos($dsn->toString(), $hostname) !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testWithPort()
     {
         $port = 3306;
@@ -31,6 +37,9 @@ abstract class DSNTestCase extends TestCase
         $this->assertTrue(strpos($dsn->toString(), (string) $port) !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testPassPDO()
     {
         $dsn = $this->resolveDSN()

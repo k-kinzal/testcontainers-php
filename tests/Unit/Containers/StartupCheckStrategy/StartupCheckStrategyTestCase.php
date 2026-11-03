@@ -15,6 +15,9 @@ abstract class StartupCheckStrategyTestCase extends TestCase
      */
     abstract public function resolveStartupCheckStrategy();
 
+    /**
+     * @return void
+     */
     public function testWaitUntilStartupSuccessful()
     {
         $strategy = $this->resolveStartupCheckStrategy();

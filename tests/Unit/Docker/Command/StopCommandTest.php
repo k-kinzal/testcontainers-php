@@ -18,6 +18,9 @@ use Tests\Images\DinD;
  */
 class StopCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasStopCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -25,6 +28,9 @@ class StopCommandTest extends TestCase
         $this->assertContains(StopCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStop()
     {
         $instance = Testcontainers::run(DinD::class);
@@ -51,6 +57,9 @@ class StopCommandTest extends TestCase
         $this->assertSame((string) $containerId, (string) $containerIds[0]);
     }
 
+    /**
+     * @return void
+     */
     public function testStopWithNonExistentContainerId()
     {
         $this->expectException(NoSuchContainerException::class);

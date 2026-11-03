@@ -18,6 +18,9 @@ use Testcontainers\Testcontainers;
  */
 class MachineExecutorTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function test()
     {
         if (getenv('CIRCLECI') !== 'true' || getenv('DOCKER_HOST') !== false) {

@@ -16,6 +16,9 @@ use UnexpectedValueException;
  */
 class StopSignalSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasStopSignalSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -23,6 +26,9 @@ class StopSignalSettingTest extends TestCase
         $this->assertContains(StopSignalSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticStopSignal()
     {
         $container = new StopSignalSettingWithStaticContainer('alpine:latest');
@@ -31,6 +37,9 @@ class StopSignalSettingTest extends TestCase
         $this->assertSame('KILL', $instance->getStopSignal());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithStopSignal()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -41,6 +50,9 @@ class StopSignalSettingTest extends TestCase
         $this->assertSame('KILL', $instance->getStopSignal());
     }
 
+    /**
+     * @return void
+     */
     public function testDefaultStopSignalIsNull()
     {
         $container = new GenericContainer('alpine:latest');
@@ -49,6 +61,9 @@ class StopSignalSettingTest extends TestCase
         $this->assertNull($instance->getStopSignal());
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidStopSignal()
     {
         $container = new StopSignalSettingWithInvalidStopSignalContainer('alpine');

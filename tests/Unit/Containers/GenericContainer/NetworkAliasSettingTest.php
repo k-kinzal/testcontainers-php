@@ -20,6 +20,9 @@ use UnexpectedValueException;
  */
 class NetworkAliasSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasNetworkAliasSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -27,6 +30,9 @@ class NetworkAliasSettingTest extends TestCase
         $this->assertContains(NetworkAliasSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
@@ -50,6 +56,9 @@ class NetworkAliasSettingTest extends TestCase
         $this->assertStringStartsWith('PING my-service', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
@@ -75,6 +84,9 @@ class NetworkAliasSettingTest extends TestCase
         $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithNetworkAliases()
     {
         $instance = Testcontainers::run(DinD::class);
@@ -103,6 +115,7 @@ class NetworkAliasSettingTest extends TestCase
     /**
      * @dataProvider providerWithNetworkAliasesInvalidInputs
      * @param array{string, array{}} $aliases
+     * @return void
      */
     public function testWithNetworkAliasesRejectsInvalidInputs($aliases)
     {
@@ -122,6 +135,9 @@ class NetworkAliasSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidNetworkAliases()
     {
         $container = new NetworkAliasSettingWithInvalidNetworkAliasesContainer('alpine');

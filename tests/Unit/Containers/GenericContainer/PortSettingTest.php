@@ -18,6 +18,9 @@ use UnexpectedValueException;
  */
 class PortSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasPortSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -25,6 +28,9 @@ class PortSettingTest extends TestCase
         $this->assertContains(PortSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticExposedPorts()
     {
         $container = (new PortSettingWithExposedPortsContainer('alpine:latest'));
@@ -33,6 +39,9 @@ class PortSettingTest extends TestCase
         $this->assertSame([80, 443], $instance->getExposedPorts());
     }
 
+    /**
+     * @return void
+     */
     public function testStaticExpose()
     {
         $container = (new PortSettingWithExposeContainer('alpine:latest'));
@@ -41,6 +50,9 @@ class PortSettingTest extends TestCase
         $this->assertSame([80, 443], $instance->getExposedPorts());
     }
 
+    /**
+     * @return void
+     */
     public function testStaticPorts()
     {
         $container = (new PortSettingWithPortsContainer('alpine:latest'));
@@ -49,6 +61,9 @@ class PortSettingTest extends TestCase
         $this->assertSame([80, 443], $instance->getExposedPorts());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithExposedPort()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -60,6 +75,9 @@ class PortSettingTest extends TestCase
         $this->assertSame([80], $instance->getExposedPorts());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithExpose()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -71,6 +89,9 @@ class PortSettingTest extends TestCase
         $this->assertSame([80], $instance->getExposedPorts());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithPort()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -82,6 +103,9 @@ class PortSettingTest extends TestCase
         $this->assertSame([80], $instance->getExposedPorts());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithExposedPorts()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -93,6 +117,9 @@ class PortSettingTest extends TestCase
         $this->assertSame([80], $instance->getExposedPorts());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithExposes()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -104,6 +131,9 @@ class PortSettingTest extends TestCase
         $this->assertSame([80], $instance->getExposedPorts());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithPorts()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -118,6 +148,7 @@ class PortSettingTest extends TestCase
     /**
      * @dataProvider providerWithPortInvalidInputs
      * @param bool|float|int|string $port
+     * @return void
      */
     public function testWithPortRejectsInvalidInputs($port)
     {
@@ -147,6 +178,7 @@ class PortSettingTest extends TestCase
     /**
      * @dataProvider providerWithPortsInvalidInputs
      * @param array{int, int} $ports
+     * @return void
      */
     public function testWithPortsRejectsInvalidInputs($ports)
     {
@@ -169,6 +201,7 @@ class PortSettingTest extends TestCase
     /**
      * @dataProvider providerWithPortStrategyInvalidInputs
      * @param stdClass $strategy
+     * @return void
      */
     public function testWithPortStrategyRejectsInvalidInputs($strategy)
     {
@@ -188,6 +221,9 @@ class PortSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidExposedPorts()
     {
         $container = new PortSettingWithInvalidExposedPortsContainer('alpine');
@@ -196,6 +232,9 @@ class PortSettingTest extends TestCase
         $container->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidPorts()
     {
         $container = new PortSettingWithInvalidPortsContainer('alpine');
@@ -204,6 +243,9 @@ class PortSettingTest extends TestCase
         $container->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidPortStrategy()
     {
         $container = new PortSettingWithInvalidPortStrategyContainer('alpine');

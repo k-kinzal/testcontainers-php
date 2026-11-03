@@ -18,6 +18,9 @@ use Tests\Images\DinD;
  */
 class RmCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasRmCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -25,6 +28,9 @@ class RmCommandTest extends TestCase
         $this->assertContains(RmCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testRm()
     {
         $instance = Testcontainers::run(DinD::class);
@@ -54,6 +60,9 @@ class RmCommandTest extends TestCase
         $this->assertSame((string) $containerId, (string) $containerIds[0]);
     }
 
+    /**
+     * @return void
+     */
     public function testRmWithNonExistentContainerId()
     {
         $this->expectException(NoSuchContainerException::class);

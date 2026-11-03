@@ -20,6 +20,7 @@ class ContainerReaperTest extends TestCase
     /**
      * @dataProvider providerRetainedContainerLabels
      * @param array<string, string> $labels
+     * @return void
      */
     public function testExecuteKeepsContainersWithoutOrphanedOwnership($labels)
     {
@@ -69,6 +70,9 @@ class ContainerReaperTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteStopsOrphanedContainerFromSameHost()
     {
         $dind = Testcontainers::run(DinD::class);
@@ -98,6 +102,9 @@ class ContainerReaperTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteKeepsContainerOwnedByAnotherLiveProcess()
     {
         $dind = Testcontainers::run(DinD::class);
@@ -130,6 +137,9 @@ class ContainerReaperTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteHandlesUnavailableDockerDaemon()
     {
         $client = (new DockerClient())->withGlobalOptions([
@@ -139,6 +149,9 @@ class ContainerReaperTest extends TestCase
         $this->assertNull((new ContainerReaper($client))->execute());
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteHandlesInvalidCommandOutput()
     {
         $client = (new DockerClient())

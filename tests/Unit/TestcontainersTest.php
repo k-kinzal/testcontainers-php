@@ -16,6 +16,9 @@ use Tests\Images\AlpineContainer;
  */
 class TestcontainersTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testWithContainerClassString()
     {
         try {
@@ -28,6 +31,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testWithContainerInstance()
     {
         try {
@@ -40,6 +46,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testReuseModeAddCreatesNewContainers()
     {
         try {
@@ -58,6 +67,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testReuseModeReuseReturnsSameContainer()
     {
         try {
@@ -75,6 +87,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testReuseModeRestartStopsExistingContainer()
     {
         try {
@@ -93,6 +108,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testReuseModeWithInstanceMethod()
     {
         try {
@@ -113,6 +131,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testLoggerIsPassedToContainersWithoutTheirOwn()
     {
         $stream = fopen('php://memory', 'w+');
@@ -129,6 +150,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testContainerLoggerTakesPrecedenceOverTestcontainersLogger()
     {
         $globalStream = fopen('php://memory', 'w+');
@@ -148,6 +172,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testEnvironmentLoggerIsPassedToContainersWithoutLogger()
     {
         $container = new AlpineContainer();
@@ -163,6 +190,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testContainerLoggerTakesPrecedenceOverEnvironmentLogger()
     {
         $containerLogger = new ConsoleLogger(fopen('php://memory', 'w+'));
@@ -179,6 +209,9 @@ class TestcontainersTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testTestcontainersLoggerTakesPrecedenceOverEnvironmentLogger()
     {
         $logger = new ConsoleLogger(fopen('php://memory', 'w+'));

@@ -16,6 +16,9 @@ use UnexpectedValueException;
  */
 class InspectIntervalSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasInspectIntervalSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -23,6 +26,9 @@ class InspectIntervalSettingTest extends TestCase
         $this->assertContains(InspectIntervalSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticInspectInterval()
     {
         $container = new InspectIntervalSettingWithStaticContainer('alpine:latest');
@@ -31,6 +37,9 @@ class InspectIntervalSettingTest extends TestCase
         $this->assertSame(5, $instance->getInspectInterval());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithInspectInterval()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -41,6 +50,9 @@ class InspectIntervalSettingTest extends TestCase
         $this->assertSame(0.5, $instance->getInspectInterval());
     }
 
+    /**
+     * @return void
+     */
     public function testDefaultInspectInterval()
     {
         $container = new GenericContainer('alpine:latest');
@@ -52,6 +64,7 @@ class InspectIntervalSettingTest extends TestCase
     /**
      * @dataProvider providerWithInspectIntervalInvalidInputs
      * @param float $seconds
+     * @return void
      */
     public function testWithInspectIntervalRejectsInvalidInputs($seconds)
     {
@@ -71,6 +84,9 @@ class InspectIntervalSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidInspectInterval()
     {
         $container = new InspectIntervalSettingWithInvalidInspectIntervalContainer('alpine');

@@ -16,6 +16,9 @@ use Testcontainers\Docker\Output\DockerEventsOutput;
  */
 class DockerEventsOutputTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testGetIterator()
     {
         $output = new DockerEventsOutput(self::startProcess(
@@ -33,6 +36,9 @@ class DockerEventsOutputTest extends TestCase
         $this->assertSame(['create', 'start'], $actions);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorYieldsNullWithoutEvent()
     {
         $process = new Process(['sleep', '30']);
@@ -42,6 +48,9 @@ class DockerEventsOutputTest extends TestCase
         $this->assertNull($output->getIterator()->current());
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorRestartsFromLastEvent()
     {
         $output = new DockerEventsOutput(self::startProcess(
@@ -63,6 +72,9 @@ class DockerEventsOutputTest extends TestCase
         $this->assertSame(['create', 'start', 'start'], $actions);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorThrowsInvalidValueException()
     {
         $output = new DockerEventsOutput(self::startProcess("invalid\n"), false);
@@ -73,6 +85,9 @@ class DockerEventsOutputTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testReleaseStopsProcess()
     {
         $process = new Process(['sleep', '30']);

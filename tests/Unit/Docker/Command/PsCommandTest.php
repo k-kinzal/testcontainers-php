@@ -17,6 +17,9 @@ use Tests\Images\DinD;
  */
 class PsCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasPsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -24,6 +27,9 @@ class PsCommandTest extends TestCase
         $this->assertContains(PsCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testPs()
     {
         $instance = Testcontainers::run(DinD::class);
@@ -53,6 +59,9 @@ class PsCommandTest extends TestCase
         $client->stop($runOutput->getContainerId());
     }
 
+    /**
+     * @return void
+     */
     public function testPsReturnsEmptyWhenNoContainersMatch()
     {
         $client = new DockerClient();

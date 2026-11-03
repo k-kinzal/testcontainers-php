@@ -12,6 +12,9 @@ use Testcontainers\Docker\DockerClient;
  */
 class DockerClientTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testClone()
     {
         $client = new DockerClient();

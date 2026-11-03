@@ -17,6 +17,7 @@ class BaseCommandTest extends TestCase
     /**
      * @dataProvider providerWithGlobalOptionsInvalidHosts
      * @param bool|int|array{}|array{bool}|stdClass $host
+     * @return void
      */
     public function testWithGlobalOptionsRejectsInvalidHost($host)
     {
@@ -44,6 +45,7 @@ class BaseCommandTest extends TestCase
      * @dataProvider providerWithGlobalOptionsHosts
      * @param string|non-empty-array<array-key, string> $host
      * @param string $expected
+     * @return void
      */
     public function testWithGlobalOptionsPreservesFirstHost($host, $expected)
     {
@@ -64,6 +66,9 @@ class BaseCommandTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testWithGlobalOptionsRejectsUnrenderableValue()
     {
         $client = new DockerClient();
@@ -72,6 +77,9 @@ class BaseCommandTest extends TestCase
         $client->withGlobalOptions(['value' => new stdClass()]);
     }
 
+    /**
+     * @return void
+     */
     public function testWithProcOptionsExecutesCommand()
     {
         $client = (new DockerClient())
@@ -85,6 +93,9 @@ class BaseCommandTest extends TestCase
         $this->assertSame(0, strpos($output->getOutput(), 'PHP '));
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromDefault()
     {
         $backup = getenv('DOCKER_HOST');
@@ -99,6 +110,9 @@ class BaseCommandTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromOptions()
     {
         $client = (new DockerClient())
@@ -110,6 +124,9 @@ class BaseCommandTest extends TestCase
         $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromEnv()
     {
         $client = (new DockerClient())
@@ -121,6 +138,9 @@ class BaseCommandTest extends TestCase
         $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromGlobalEnv()
     {
         $backup = getenv('DOCKER_HOST');

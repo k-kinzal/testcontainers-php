@@ -15,6 +15,9 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class EventActionTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testEventAction()
     {
         $action = new EventAction(EventAction::$START);
@@ -24,6 +27,9 @@ class EventActionTest extends TestCase
         $this->assertNull($action->getDetail());
     }
 
+    /**
+     * @return void
+     */
     public function testEventActionWithDetail()
     {
         $action = new EventAction(EventAction::$EXEC_START, "/bin/sh -c 'echo hello'");
@@ -33,6 +39,9 @@ class EventActionTest extends TestCase
         $this->assertSame("/bin/sh -c 'echo hello'", $action->getDetail());
     }
 
+    /**
+     * @return void
+     */
     public function testDie()
     {
         $action = EventAction::DIE_();
@@ -41,6 +50,9 @@ class EventActionTest extends TestCase
         $this->assertTrue($action->isDie());
     }
 
+    /**
+     * @return void
+     */
     public function testHealthStatusHealthy()
     {
         $action = EventAction::HEALTH_STATUS_HEALTHY();
@@ -51,6 +63,9 @@ class EventActionTest extends TestCase
         $this->assertFalse($action->isHealthStatusUnhealthy());
     }
 
+    /**
+     * @return void
+     */
     public function testFromString()
     {
         foreach (EventAction::values() as $value) {
@@ -61,6 +76,9 @@ class EventActionTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithDetail()
     {
         $action = EventAction::fromString('exec_create: ls -la');
@@ -70,6 +88,9 @@ class EventActionTest extends TestCase
         $this->assertSame('exec_create: ls -la', $action->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithFreeFormHealthStatus()
     {
         $action = EventAction::fromString('health_status: curl: (7) Failed to connect');
@@ -78,6 +99,9 @@ class EventActionTest extends TestCase
         $this->assertSame('curl: (7) Failed to connect', $action->getDetail());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithInvalidValue()
     {
         $this->expectException(InvalidFormatException::class);
@@ -85,6 +109,9 @@ class EventActionTest extends TestCase
         EventAction::fromString('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithDetailOnActionWithoutDetail()
     {
         $this->expectException(InvalidFormatException::class);
@@ -92,6 +119,9 @@ class EventActionTest extends TestCase
         EventAction::fromString('die: 1');
     }
 
+    /**
+     * @return void
+     */
     public function testIsMethodsAreExclusive()
     {
         $action = EventAction::CREATE();

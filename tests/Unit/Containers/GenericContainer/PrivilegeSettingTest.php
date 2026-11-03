@@ -16,6 +16,9 @@ use UnexpectedValueException;
  */
 class PrivilegeSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasPrivilegeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -23,6 +26,9 @@ class PrivilegeSettingTest extends TestCase
         $this->assertContains(PrivilegeSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticPrivileged()
     {
         $container = new PrivilegeSettingWithStaticPrivilegedContainer('alpine:latest');
@@ -31,6 +37,9 @@ class PrivilegeSettingTest extends TestCase
         $this->assertSame(true, $instance->getPrivilegedMode());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithPrivilegedMode()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -44,6 +53,7 @@ class PrivilegeSettingTest extends TestCase
     /**
      * @dataProvider providerWithPrivilegedModeInvalidInputs
      * @param string $mode
+     * @return void
      */
     public function testWithPrivilegedModeRejectsInvalidInputs($mode)
     {
@@ -63,6 +73,9 @@ class PrivilegeSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidPrivileged()
     {
         $container = new PrivilegeSettingWithInvalidPrivilegedContainer('alpine');

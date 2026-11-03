@@ -16,6 +16,9 @@ use Testcontainers\Exceptions\InvalidFormatException;
  */
 class EventTypeTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testContainer()
     {
         $type = EventType::CONTAINER();
@@ -25,6 +28,9 @@ class EventTypeTest extends TestCase
         $this->assertFalse($type->isImage());
     }
 
+    /**
+     * @return void
+     */
     public function testFromString()
     {
         foreach (EventType::values() as $value) {
@@ -32,6 +38,9 @@ class EventTypeTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithInvalidValue()
     {
         $this->expectException(InvalidFormatException::class);
@@ -39,12 +48,18 @@ class EventTypeTest extends TestCase
         EventType::fromString('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testScopeFromString()
     {
         $this->assertTrue(EventScope::fromString('local')->isLocal());
         $this->assertTrue(EventScope::fromString('swarm')->isSwarm());
     }
 
+    /**
+     * @return void
+     */
     public function testScopeFromStringWithInvalidValue()
     {
         $this->expectException(InvalidFormatException::class);

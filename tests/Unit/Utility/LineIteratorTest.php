@@ -13,6 +13,9 @@ use Testcontainers\Utility\LineIterator;
  */
 class LineIteratorTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testGetIterator()
     {
         $process = new Process([PHP_BINARY, '-r', 'echo "a\nb"; flush(); usleep(100000); echo "c\nd";']);
@@ -27,6 +30,9 @@ class LineIteratorTest extends TestCase
         $this->assertSame([[Process::OUT, 'a'], [Process::OUT, 'bc'], [Process::OUT, 'd']], $actual);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorSeparatesOutputAndErrorOutput()
     {
         $process = new Process([PHP_BINARY, '-r', 'fwrite(STDOUT, "a"); fwrite(STDERR, "b\n"); fflush(STDOUT); usleep(100000); fwrite(STDOUT, "c\n");']);
@@ -41,6 +47,9 @@ class LineIteratorTest extends TestCase
         $this->assertSame([[Process::ERR, 'b'], [Process::OUT, 'ac']], $actual);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorWithSkipErr()
     {
         $process = new Process([PHP_BINARY, '-r', 'fwrite(STDERR, "a\n"); fwrite(STDOUT, "b\n");']);
@@ -55,6 +64,9 @@ class LineIteratorTest extends TestCase
         $this->assertSame(['b'], $actual);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorYieldsNullWithoutCompleteLineInNonBlockingMode()
     {
         $process = new Process(['sleep', '30']);

@@ -16,6 +16,9 @@ class MySQLDSNTest extends DSNTestCase
         return new MySQLDSN();
     }
 
+    /**
+     * @return void
+     */
     public function testWithDbname()
     {
         $dbname = 'test';
@@ -27,6 +30,9 @@ class MySQLDSNTest extends DSNTestCase
         $this->assertTrue(strpos($dsn->toString(), $dbname) !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testWithCharset()
     {
         $charset = 'utf8';
@@ -38,6 +44,9 @@ class MySQLDSNTest extends DSNTestCase
         $this->assertTrue(strpos($dsn->toString(), $charset) !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testFullDSN()
     {
         $dsn = (new MySQLDSN())

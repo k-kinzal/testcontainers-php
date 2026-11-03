@@ -15,6 +15,9 @@ use UnexpectedValueException;
  */
 class LoggerFactoryTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testCreateWithoutEnvironmentVariables()
     {
         putenv('TESTCONTAINERS_LOGGER');
@@ -27,6 +30,9 @@ class LoggerFactoryTest extends TestCase
         $this->assertInstanceOf(NullLogger::class, LoggerFactory::create());
     }
 
+    /**
+     * @return void
+     */
     public function testCreateFromLogger()
     {
         try {
@@ -38,6 +44,9 @@ class LoggerFactoryTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testCreateFromLoggerWithLeadingBackslash()
     {
         try {
@@ -49,6 +58,9 @@ class LoggerFactoryTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testCreateFromLoggerNotImplementingLoggerInterface()
     {
         try {
@@ -63,6 +75,9 @@ class LoggerFactoryTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testCreateFromUndefinedLogger()
     {
         try {
@@ -77,6 +92,9 @@ class LoggerFactoryTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testCreateFromGitHubActionsRunnerDebug()
     {
         try {
@@ -90,6 +108,9 @@ class LoggerFactoryTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testCreateFromGitHubActionsStepDebug()
     {
         try {
@@ -101,6 +122,9 @@ class LoggerFactoryTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testCreateFromGitLabDebugTrace()
     {
         try {
@@ -112,6 +136,9 @@ class LoggerFactoryTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testCreateFromAzurePipelinesSystemDebug()
     {
         try {

@@ -20,6 +20,9 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         return new LogMessageWaitStrategy();
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('alpine:latest');
@@ -33,6 +36,9 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyWithMultipleLinesAtOnce()
     {
         $container = new GenericContainer('alpine:latest');
@@ -47,6 +53,9 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);
@@ -61,6 +70,9 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsContainerStoppedException()
     {
         $this->expectException(ContainerStoppedException::class);
@@ -76,6 +88,9 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsLogMessageFailedException()
     {
         $this->expectException(LogMessageFailedException::class);

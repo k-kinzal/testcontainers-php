@@ -18,6 +18,9 @@ use UnexpectedValueException;
  */
 class WaitSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasWaitSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -25,6 +28,9 @@ class WaitSettingTest extends TestCase
         $this->assertContains(WaitSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticWaitStrategy()
     {
         $container = new WaitSettingWithStaticWaitStrategyContainer();
@@ -33,6 +39,9 @@ class WaitSettingTest extends TestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithWaitStrategy()
     {
         $container = (new GenericContainer('nginx:latest'))
@@ -47,6 +56,7 @@ class WaitSettingTest extends TestCase
     /**
      * @dataProvider providerWithWaitStrategyInvalidInputs
      * @param stdClass $waitStrategy
+     * @return void
      */
     public function testWithWaitStrategyRejectsInvalidInputs($waitStrategy)
     {

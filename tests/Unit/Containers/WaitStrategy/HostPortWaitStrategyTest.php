@@ -19,6 +19,9 @@ class HostPortWaitStrategyTest extends WaitStrategyTestCase
         return new HostPortWaitStrategy();
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('nginx:alpine');
@@ -31,6 +34,9 @@ class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);
@@ -46,6 +52,9 @@ class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsContainerStoppedException()
     {
         $this->expectException(ContainerStoppedException::class);

@@ -18,6 +18,7 @@ class ContainerIdTest extends TestCase
      * @dataProvider providerValues
      * @param array{}|bool|int|null|stdClass|string $value
      * @param bool                                  $expected
+     * @return void
      */
     public function testIsValidReturnsWhetherValueIsValid($value, $expected)
     {
@@ -47,6 +48,7 @@ class ContainerIdTest extends TestCase
     /**
      * @dataProvider providerValidIdentifiers
      * @param string $value
+     * @return void
      */
     public function testConstructPreservesValidIdentifier($value)
     {
@@ -58,6 +60,7 @@ class ContainerIdTest extends TestCase
     /**
      * @dataProvider providerValidIdentifiers
      * @param string $value
+     * @return void
      */
     public function testFromStringPreservesValidIdentifier($value)
     {
@@ -78,6 +81,7 @@ class ContainerIdTest extends TestCase
     /**
      * @dataProvider providerInvalidIdentifiers
      * @param string $value
+     * @return void
      */
     public function testConstructRejectsInvalidIdentifier($value)
     {
@@ -89,6 +93,7 @@ class ContainerIdTest extends TestCase
     /**
      * @dataProvider providerInvalidIdentifiers
      * @param string $value
+     * @return void
      */
     public function testFromStringRejectsInvalidIdentifier($value)
     {

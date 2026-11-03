@@ -18,6 +18,7 @@ class DockerVersionOutputTest extends TestCase
      * @dataProvider providerClientVersions
      * @param string      $json
      * @param null|string $expected
+     * @return void
      */
     public function testGetClientVersionReturnsParsedVersion($json, $expected)
     {
@@ -53,6 +54,7 @@ class DockerVersionOutputTest extends TestCase
      * @dataProvider providerServerVersions
      * @param string      $json
      * @param null|string $expected
+     * @return void
      */
     public function testGetServerVersionReturnsParsedVersion($json, $expected)
     {
@@ -87,6 +89,7 @@ class DockerVersionOutputTest extends TestCase
     /**
      * @dataProvider providerInvalidVersions
      * @param string $json
+     * @return void
      */
     public function testConstructRejectsInvalidVersionType($json)
     {

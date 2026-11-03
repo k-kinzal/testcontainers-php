@@ -15,6 +15,7 @@ class AutoRemoveOnExitSettingTest extends TestCase
     /**
      * @dataProvider providerWithAutoRemoveOnExitInvalidInputs
      * @param int $autoRemoveOnExit
+     * @return void
      */
     public function testWithAutoRemoveOnExitRejectsInvalidInputs($autoRemoveOnExit)
     {
@@ -34,6 +35,9 @@ class AutoRemoveOnExitSettingTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidAutoRemoveOnExit()
     {
         $container = new AutoRemoveOnExitSettingWithInvalidAutoRemoveOnExitContainer('alpine');

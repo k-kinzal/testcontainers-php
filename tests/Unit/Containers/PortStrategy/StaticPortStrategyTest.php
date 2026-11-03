@@ -17,6 +17,9 @@ class StaticPortStrategyTest extends PortStrategyTestCase
         return new StaticPortStrategy(50000);
     }
 
+    /**
+     * @return void
+     */
     public function testInterfaceGetPort()
     {
         $strategy = $this->resolvePortStrategy();
@@ -25,6 +28,9 @@ class StaticPortStrategyTest extends PortStrategyTestCase
         $this->assertSame(50000, $port);
     }
 
+    /**
+     * @return void
+     */
     public function testReturnsSpecifiedPort()
     {
         $strategy1 = new StaticPortStrategy(50001);
@@ -34,6 +40,9 @@ class StaticPortStrategyTest extends PortStrategyTestCase
         $this->assertSame(50002, $strategy2->getPort());
     }
 
+    /**
+     * @return void
+     */
     public function testConflictBehaviorIsFail()
     {
         $strategy = $this->resolvePortStrategy();
@@ -43,6 +52,9 @@ class StaticPortStrategyTest extends PortStrategyTestCase
         $this->assertFalse($behavior->isRetry());
     }
 
+    /**
+     * @return void
+     */
     public function testConstructRejectsBooleanPort()
     {
         $this->expectException(UnexpectedValueException::class);

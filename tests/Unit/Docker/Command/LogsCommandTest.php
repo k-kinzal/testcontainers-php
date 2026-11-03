@@ -18,6 +18,9 @@ use Tests\Images\DinD;
  */
 class LogsCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasLogsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -25,6 +28,9 @@ class LogsCommandTest extends TestCase
         $this->assertContains(LogsCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testLogs()
     {
         $instance = Testcontainers::run(DinD::class);
@@ -48,6 +54,9 @@ class LogsCommandTest extends TestCase
         $this->assertNotEmpty($logsOutput->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testLogsWithFollow()
     {
         $instance = Testcontainers::run(DinD::class);

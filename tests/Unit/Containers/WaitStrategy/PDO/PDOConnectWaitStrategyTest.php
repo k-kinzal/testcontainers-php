@@ -24,6 +24,9 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         return (new PDOConnectWaitStrategy())->withDsn(new SQLiteDSN());
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('alpine:latest');
@@ -36,6 +39,9 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $this->assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);
@@ -50,6 +56,9 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsContainerStoppedException()
     {
         $this->expectException(ContainerStoppedException::class);
@@ -63,6 +72,9 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWithDsnRejectsUnrelatedObject()
     {
         $this->expectException(UnexpectedValueException::class);

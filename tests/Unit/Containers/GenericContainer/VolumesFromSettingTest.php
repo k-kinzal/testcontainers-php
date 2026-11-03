@@ -21,6 +21,9 @@ use UnexpectedValueException;
  */
 class VolumesFromSettingTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasVolumesFromSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
@@ -28,6 +31,9 @@ class VolumesFromSettingTest extends TestCase
         $this->assertContains(VolumesFromSetting::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStaticVolumesFrom()
     {
         $fp = tmpfile();
@@ -67,6 +73,9 @@ class VolumesFromSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance2->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartWithVolumesFrom()
     {
         $fp = tmpfile();
@@ -91,6 +100,9 @@ class VolumesFromSettingTest extends TestCase
         $this->assertSame('Hello, World!', $instance2->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testStartRejectsInvalidVolumesFrom()
     {
         $container = new VolumesFromSettingWithInvalidVolumesFromContainer('alpine');

@@ -22,6 +22,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableScalarOrStringableOrArrayMapValidValues
      * @param array<string, null|scalar|SimpleXMLElement|array<array-key, scalar|SimpleXMLElement>> $value
+     * @return void
      */
     public function testEnsureNullableScalarOrStringableOrArrayMapReturnsExpectedValue($value)
     {
@@ -47,6 +48,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableScalarOrStringableOrArrayMapInvalidValues
      * @param null|bool|array<array-key, string|stdClass|array<array-key, null|array{}>> $value
+     * @return void
      */
     public function testEnsureNullableScalarOrStringableOrArrayMapRejectsInvalidValues($value)
     {
@@ -70,6 +72,9 @@ class EnsureTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testEnsureNullableScalarOrStringableOrArrayMapUsesProvidedMessage()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -82,6 +87,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerStringValidValues
      * @param string $value
      * @param string $expected
+     * @return void
      */
     public function testEnsureStringReturnsExpectedValue($value, $expected)
     {
@@ -105,6 +111,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerStringInvalidValues
      * @param array{}|bool|int|null|stdClass $value
+     * @return void
      */
     public function testEnsureStringRejectsInvalidValues($value)
     {
@@ -131,6 +138,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNonEmptyStringValidValues
      * @param string $value
      * @param string $expected
+     * @return void
      */
     public function testEnsureNonEmptyStringReturnsExpectedValue($value, $expected)
     {
@@ -153,6 +161,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNonEmptyStringInvalidValues
      * @param bool|int|null|string $value
+     * @return void
      */
     public function testEnsureNonEmptyStringRejectsInvalidValues($value)
     {
@@ -178,6 +187,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableStringValidValues
      * @param null|string $value
      * @param null|string $expected
+     * @return void
      */
     public function testEnsureNullableStringReturnsExpectedValue($value, $expected)
     {
@@ -201,6 +211,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableStringInvalidValues
      * @param array{}|bool|int $value
+     * @return void
      */
     public function testEnsureNullableStringRejectsInvalidValues($value)
     {
@@ -225,6 +236,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableNonEmptyStringValidValues
      * @param null|string $value
      * @param null|string $expected
+     * @return void
      */
     public function testEnsureNullableNonEmptyStringReturnsExpectedValue($value, $expected)
     {
@@ -248,6 +260,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableNonEmptyStringInvalidValues
      * @param bool|int|string $value
+     * @return void
      */
     public function testEnsureNullableNonEmptyStringRejectsInvalidValues($value)
     {
@@ -272,6 +285,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerBoolValidValues
      * @param bool $value
      * @param bool $expected
+     * @return void
      */
     public function testEnsureBoolReturnsExpectedValue($value, $expected)
     {
@@ -294,6 +308,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerBoolInvalidValues
      * @param array{}|int|null|string $value
+     * @return void
      */
     public function testEnsureBoolRejectsInvalidValues($value)
     {
@@ -320,6 +335,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableBoolValidValues
      * @param bool|null $value
      * @param bool|null $expected
+     * @return void
      */
     public function testEnsureNullableBoolReturnsExpectedValue($value, $expected)
     {
@@ -343,6 +359,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableBoolInvalidValues
      * @param array{}|int|string $value
+     * @return void
      */
     public function testEnsureNullableBoolRejectsInvalidValues($value)
     {
@@ -367,6 +384,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerIntValidValues
      * @param int $value
      * @param int $expected
+     * @return void
      */
     public function testEnsureIntReturnsExpectedValue($value, $expected)
     {
@@ -390,6 +408,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerIntInvalidValues
      * @param bool|float|null|string $value
+     * @return void
      */
     public function testEnsureIntRejectsInvalidValues($value)
     {
@@ -417,6 +436,7 @@ class EnsureTest extends TestCase
      * @param int      $minimum
      * @param int|null $maximum
      * @param int      $expected
+     * @return void
      */
     public function testEnsureIntRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
@@ -442,6 +462,7 @@ class EnsureTest extends TestCase
      * @param int|string $value
      * @param int        $minimum
      * @param int        $maximum
+     * @return void
      */
     public function testEnsureIntRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -468,6 +489,7 @@ class EnsureTest extends TestCase
      * @param int      $minimum
      * @param int      $maximum
      * @param int|null $expected
+     * @return void
      */
     public function testEnsureNullableIntRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
@@ -493,6 +515,7 @@ class EnsureTest extends TestCase
      * @param bool|int $value
      * @param int      $minimum
      * @param int      $maximum
+     * @return void
      */
     public function testEnsureNullableIntRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -517,6 +540,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerIntOrDigitStringValidValues
      * @param int|string $value
      * @param int|string $expected
+     * @return void
      */
     public function testEnsureIntOrDigitStringReturnsExpectedValue($value, $expected)
     {
@@ -540,6 +564,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerIntOrDigitStringInvalidValues
      * @param bool|float|string $value
+     * @return void
      */
     public function testEnsureIntOrDigitStringRejectsInvalidValues($value)
     {
@@ -569,6 +594,7 @@ class EnsureTest extends TestCase
      * @param int        $minimum
      * @param int        $maximum
      * @param int|string $expected
+     * @return void
      */
     public function testEnsureIntOrDigitStringRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
@@ -594,6 +620,7 @@ class EnsureTest extends TestCase
      * @param bool|int|string $value
      * @param int             $minimum
      * @param int             $maximum
+     * @return void
      */
     public function testEnsureIntOrDigitStringRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -619,6 +646,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerDigitStringValidValues
      * @param string $value
      * @param string $expected
+     * @return void
      */
     public function testEnsureDigitStringReturnsExpectedValue($value, $expected)
     {
@@ -642,6 +670,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerDigitStringInvalidValues
      * @param bool|int|string $value
+     * @return void
      */
     public function testEnsureDigitStringRejectsInvalidValues($value)
     {
@@ -671,6 +700,7 @@ class EnsureTest extends TestCase
      * @param int    $minimum
      * @param int    $maximum
      * @param string $expected
+     * @return void
      */
     public function testEnsureDigitStringRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
@@ -695,6 +725,7 @@ class EnsureTest extends TestCase
      * @param string $value
      * @param int    $minimum
      * @param int    $maximum
+     * @return void
      */
     public function testEnsureDigitStringRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -719,6 +750,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNonNegativeNumberValidValues
      * @param float|int $value
      * @param float|int $expected
+     * @return void
      */
     public function testEnsureNonNegativeNumberReturnsExpectedValue($value, $expected)
     {
@@ -742,6 +774,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNonNegativeNumberInvalidValues
      * @param bool|float|int|string $value
+     * @return void
      */
     public function testEnsureNonNegativeNumberRejectsInvalidValues($value)
     {
@@ -768,6 +801,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableNonNegativeNumberValidValues
      * @param float|int|null $value
      * @param float|int|null $expected
+     * @return void
      */
     public function testEnsureNullableNonNegativeNumberReturnsExpectedValue($value, $expected)
     {
@@ -791,6 +825,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableNonNegativeNumberInvalidValues
      * @param float|int|string $value
+     * @return void
      */
     public function testEnsureNullableNonNegativeNumberRejectsInvalidValues($value)
     {
@@ -816,6 +851,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerArrayValidValues
      * @param array{'key': int}|array{} $value
      * @param array{'key': int}|array{} $expected
+     * @return void
      */
     public function testEnsureArrayReturnsExpectedValue($value, $expected)
     {
@@ -838,6 +874,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerArrayInvalidValues
      * @param null|stdClass|string $value
+     * @return void
      */
     public function testEnsureArrayRejectsInvalidValues($value)
     {
@@ -862,6 +899,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableArrayValidValues
      * @param array{'key': int}|array{}|null $value
      * @param array{'key': int}|array{}|null $expected
+     * @return void
      */
     public function testEnsureNullableArrayReturnsExpectedValue($value, $expected)
     {
@@ -885,6 +923,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableArrayInvalidValues
      * @param bool|stdClass|string $value
+     * @return void
      */
     public function testEnsureNullableArrayRejectsInvalidValues($value)
     {
@@ -909,6 +948,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNonEmptyArrayValidValues
      * @param array{'key': null}|array{int} $value
      * @param array{'key': null}|array{int} $expected
+     * @return void
      */
     public function testEnsureNonEmptyArrayReturnsExpectedValue($value, $expected)
     {
@@ -931,6 +971,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNonEmptyArrayInvalidValues
      * @param array{}|null|string $value
+     * @return void
      */
     public function testEnsureNonEmptyArrayRejectsInvalidValues($value)
     {
@@ -956,6 +997,7 @@ class EnsureTest extends TestCase
      * @param array{'key': null}|array{bool} $value
      * @param int|string                     $key
      * @param array{'key': null}|array{bool} $expected
+     * @return void
      */
     public function testEnsureArrayHasKeyReturnsExpectedValue($value, $key, $expected)
     {
@@ -979,6 +1021,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerArrayHasKeyInvalidValues
      * @param array{'other': int}|array{} $value
      * @param string                      $key
+     * @return void
      */
     public function testEnsureArrayHasKeyRejectsInvalidValues($value, $key)
     {
@@ -1002,6 +1045,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerStringArrayValidValues
      * @param array{'key': string}|array{2: string, 8: string}|array{} $value
      * @param array{'key': string}|array{2: string, 8: string}|array{} $expected
+     * @return void
      */
     public function testEnsureStringArrayReturnsExpectedValue($value, $expected)
     {
@@ -1025,6 +1069,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerStringArrayInvalidValues
      * @param array{int}|array{string, bool}|bool $value
+     * @return void
      */
     public function testEnsureStringArrayRejectsInvalidValues($value)
     {
@@ -1049,6 +1094,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableStringArrayValidValues
      * @param array{2: string}|array{}|null $value
      * @param array{2: string}|array{}|null $expected
+     * @return void
      */
     public function testEnsureNullableStringArrayReturnsExpectedValue($value, $expected)
     {
@@ -1072,6 +1118,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableStringArrayInvalidValues
      * @param array{string, bool}|bool $value
+     * @return void
      */
     public function testEnsureNullableStringArrayRejectsInvalidValues($value)
     {
@@ -1095,6 +1142,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableStringOrStringArrayValidValues
      * @param array{2: string, 8: string}|null|string $value
      * @param array{2: string, 8: string}|null|string $expected
+     * @return void
      */
     public function testEnsureNullableStringOrStringArrayReturnsExpectedValue($value, $expected)
     {
@@ -1118,6 +1166,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableStringOrStringArrayInvalidValues
      * @param array{string, bool}|bool|int $value
+     * @return void
      */
     public function testEnsureNullableStringOrStringArrayRejectsInvalidValues($value)
     {
@@ -1142,6 +1191,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerStringOrArrayValidValues
      * @param array{'key': null}|array{}|string $value
      * @param array{'key': null}|array{}|string $expected
+     * @return void
      */
     public function testEnsureStringOrArrayReturnsExpectedValue($value, $expected)
     {
@@ -1165,6 +1215,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerStringOrArrayInvalidValues
      * @param bool|null|stdClass $value
+     * @return void
      */
     public function testEnsureStringOrArrayRejectsInvalidValues($value)
     {
@@ -1189,6 +1240,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerStringKeyedArrayValidValues
      * @param array{'key': null}|array{'key': stdClass}|array{} $value
      * @param array{'key': null}|array{'key': stdClass}|array{} $expected
+     * @return void
      */
     public function testEnsureStringKeyedArrayReturnsExpectedValue($value, $expected)
     {
@@ -1214,6 +1266,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerStringKeyedArrayInvalidValues
      * @param array{int}|bool $value
+     * @return void
      */
     public function testEnsureStringKeyedArrayRejectsInvalidValues($value)
     {
@@ -1237,6 +1290,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerStringMapValidValues
      * @param array{'key': string}|array{} $value
      * @param array{'key': string}|array{} $expected
+     * @return void
      */
     public function testEnsureStringMapReturnsExpectedValue($value, $expected)
     {
@@ -1260,6 +1314,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerStringMapInvalidValues
      * @param array{'key': bool}|array{string}|bool $value
+     * @return void
      */
     public function testEnsureStringMapRejectsInvalidValues($value)
     {
@@ -1284,6 +1339,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableStringMapValidValues
      * @param array{'key': string}|array{}|null $value
      * @param array{'key': string}|array{}|null $expected
+     * @return void
      */
     public function testEnsureNullableStringMapReturnsExpectedValue($value, $expected)
     {
@@ -1307,6 +1363,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableStringMapInvalidValues
      * @param array{'key': bool}|bool $value
+     * @return void
      */
     public function testEnsureNullableStringMapRejectsInvalidValues($value)
     {
@@ -1330,6 +1387,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableBoolOrStringValidValues
      * @param bool|null|string $value
      * @param bool|null|string $expected
+     * @return void
      */
     public function testEnsureNullableBoolOrStringReturnsExpectedValue($value, $expected)
     {
@@ -1354,6 +1412,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableBoolOrStringInvalidValues
      * @param array{}|int|stdClass $value
+     * @return void
      */
     public function testEnsureNullableBoolOrStringRejectsInvalidValues($value)
     {
@@ -1378,6 +1437,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerObjectValidValues
      * @param stdClass $value
      * @param stdClass $expected
+     * @return void
      */
     public function testEnsureObjectReturnsExpectedValue($value, $expected)
     {
@@ -1401,6 +1461,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerObjectInvalidValues
      * @param array{}|null|string $value
+     * @return void
      */
     public function testEnsureObjectRejectsInvalidValues($value)
     {
@@ -1425,6 +1486,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerClassStringValidValues
      * @param string $value
      * @param string $expected
+     * @return void
      */
     public function testEnsureClassStringReturnsExpectedValue($value, $expected)
     {
@@ -1447,6 +1509,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerClassStringInvalidValues
      * @param bool|stdClass|string $value
+     * @return void
      */
     public function testEnsureClassStringRejectsInvalidValues($value)
     {
@@ -1472,6 +1535,7 @@ class EnsureTest extends TestCase
      * @param stdClass $value
      * @param string   $class
      * @param stdClass $expected
+     * @return void
      */
     public function testEnsureInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
@@ -1496,6 +1560,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerInstanceOfInvalidValues
      * @param array{}|null|stdClass $value
      * @param string                $class
+     * @return void
      */
     public function testEnsureInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1521,6 +1586,7 @@ class EnsureTest extends TestCase
      * @param null|stdClass $value
      * @param string        $class
      * @param null|stdClass $expected
+     * @return void
      */
     public function testEnsureNullableInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
@@ -1546,6 +1612,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableInstanceOfInvalidValues
      * @param array{}|bool $value
      * @param string       $class
+     * @return void
      */
     public function testEnsureNullableInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1570,6 +1637,7 @@ class EnsureTest extends TestCase
      * @param stdClass|string $value
      * @param string          $class
      * @param stdClass|string $expected
+     * @return void
      */
     public function testEnsureNonEmptyStringOrInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
@@ -1595,6 +1663,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNonEmptyStringOrInstanceOfInvalidValues
      * @param bool|null|string $value
      * @param string           $class
+     * @return void
      */
     public function testEnsureNonEmptyStringOrInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1620,6 +1689,7 @@ class EnsureTest extends TestCase
      * @param array{}|stdClass|string $value
      * @param string                  $class
      * @param array{}|stdClass|string $expected
+     * @return void
      */
     public function testEnsureStringOrArrayOrInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
@@ -1646,6 +1716,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerStringOrArrayOrInstanceOfInvalidValues
      * @param bool|null $value
      * @param string    $class
+     * @return void
      */
     public function testEnsureStringOrArrayOrInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1669,6 +1740,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullValidValues
      * @param null $value
      * @param null $expected
+     * @return void
      */
     public function testEnsureNullReturnsExpectedValue($value, $expected)
     {
@@ -1690,6 +1762,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullInvalidValues
      * @param array{}|bool|int|string $value
+     * @return void
      */
     public function testEnsureNullRejectsInvalidValues($value)
     {
@@ -1716,6 +1789,7 @@ class EnsureTest extends TestCase
      * @param string                $value
      * @param array{string, string} $values
      * @param string                $expected
+     * @return void
      */
     public function testEnsureOneOfReturnsExpectedValue($value, $values, $expected)
     {
@@ -1738,6 +1812,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerOneOfInvalidValues
      * @param int|string                          $value
      * @param array{string, string}|array{string} $values
+     * @return void
      */
     public function testEnsureOneOfRejectsInvalidValues($value, $values)
     {
@@ -1762,6 +1837,7 @@ class EnsureTest extends TestCase
      * @param string $value
      * @param string $pattern
      * @param string $expected
+     * @return void
      */
     public function testEnsureMatchesReturnsExpectedValue($value, $pattern, $expected)
     {
@@ -1784,6 +1860,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerMatchesInvalidValues
      * @param string $value
      * @param string $pattern
+     * @return void
      */
     public function testEnsureMatchesRejectsInvalidValues($value, $pattern)
     {
@@ -1806,6 +1883,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableStreamValidValues
      * @param null|resource $value
      * @param null|resource $expected
+     * @return void
      */
     public function testEnsureNullableStreamReturnsExpectedValue($value, $expected)
     {
@@ -1830,6 +1908,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableStreamInvalidValues
      * @param bool|stdClass|string $value
+     * @return void
      */
     public function testEnsureNullableStreamRejectsInvalidValues($value)
     {
@@ -1854,6 +1933,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerStreamValidValues
      * @param resource $value
      * @param resource $expected
+     * @return void
      */
     public function testEnsureStreamReturnsExpectedValue($value, $expected)
     {
@@ -1877,6 +1957,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerStreamInvalidValues
      * @param bool|null|stdClass|string $value
+     * @return void
      */
     public function testEnsureStreamRejectsInvalidValues($value)
     {
@@ -1902,6 +1983,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableScalarOrStreamOrTraversableValidValues
      * @param ArrayIterator<never, never>|bool|int|null|resource|string $value
      * @param ArrayIterator<never, never>|bool|int|null|resource|string $expected
+     * @return void
      */
     public function testEnsureNullableScalarOrStreamOrTraversableReturnsExpectedValue($value, $expected)
     {
@@ -1931,6 +2013,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableScalarOrStreamOrTraversableInvalidValues
      * @param array{}|stdClass $value
+     * @return void
      */
     public function testEnsureNullableScalarOrStreamOrTraversableRejectsInvalidValues($value)
     {
@@ -1955,6 +2038,7 @@ class EnsureTest extends TestCase
      * @param string $value
      * @param string $class
      * @param string $expected
+     * @return void
      */
     public function testEnsureClassStringOfReturnsExpectedValue($value, $class, $expected)
     {
@@ -1977,6 +2061,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerClassStringOfInvalidValues
      * @param bool|string $value
      * @param string      $class
+     * @return void
      */
     public function testEnsureClassStringOfRejectsInvalidValues($value, $class)
     {
@@ -2002,6 +2087,7 @@ class EnsureTest extends TestCase
      * @param ArrayIterator<never, never>|string $value
      * @param string                             $class
      * @param ArrayIterator<never, never>|string $expected
+     * @return void
      */
     public function testEnsureClassStringOrInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
@@ -2027,6 +2113,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerClassStringOrInstanceOfInvalidValues
      * @param bool|stdClass|string $value
      * @param string               $class
+     * @return void
      */
     public function testEnsureClassStringOrInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -2051,6 +2138,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerScalarOrStringableValidValues
      * @param SimpleXMLElement|bool|int|string $value
      * @param SimpleXMLElement|bool|int|string $expected
+     * @return void
      */
     public function testEnsureScalarOrStringableReturnsExpectedValue($value, $expected)
     {
@@ -2077,6 +2165,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerScalarOrStringableInvalidValues
      * @param array{}|null|stdClass $value
+     * @return void
      */
     public function testEnsureScalarOrStringableRejectsInvalidValues($value)
     {
@@ -2101,6 +2190,7 @@ class EnsureTest extends TestCase
      * @dataProvider providerNullableScalarOrStringableOrArrayValidValues
      * @param array{SimpleXMLElement}|array{string, int}|bool|null $value
      * @param array{SimpleXMLElement}|array{string, int}|bool|null $expected
+     * @return void
      */
     public function testEnsureNullableScalarOrStringableOrArrayReturnsExpectedValue($value, $expected)
     {
@@ -2127,6 +2217,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerNullableScalarOrStringableOrArrayInvalidValues
      * @param array{'bad': stdClass}|array{array{int}}|stdClass $value
+     * @return void
      */
     public function testEnsureNullableScalarOrStringableOrArrayRejectsInvalidValues($value)
     {
@@ -2147,6 +2238,9 @@ class EnsureTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testEnsureStringUsesProvidedMessage()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -2158,6 +2252,7 @@ class EnsureTest extends TestCase
     /**
      * @dataProvider providerStringMapInvalidValues
      * @param array{'key': bool}|array{string}|bool $value
+     * @return void
      */
     public function testEnsureStringMapUsesProvidedMessage($value)
     {

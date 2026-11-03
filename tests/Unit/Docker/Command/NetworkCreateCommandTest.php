@@ -16,6 +16,9 @@ use Tests\Images\DinD;
  */
 class NetworkCreateCommandTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testHasNetworkCreateCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
@@ -23,6 +26,9 @@ class NetworkCreateCommandTest extends TestCase
         $this->assertContains(NetworkCreateCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testNetworkCreate()
     {
         $instance = Testcontainers::run(DinD::class);

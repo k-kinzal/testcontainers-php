@@ -16,6 +16,9 @@ use Testcontainers\Logger\ConsoleLogger;
  */
 class ConsoleLoggerTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testImplementsLoggerInterface()
     {
         $logger = new ConsoleLogger($this->createStream());
@@ -23,6 +26,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertInstanceOf(LoggerInterface::class, $logger);
     }
 
+    /**
+     * @return void
+     */
     public function testDebugMessageWritesToStream()
     {
         $stream = $this->createStream();
@@ -34,6 +40,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(preg_match('/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[DEBUG\] hello world$/', trim($output)) === 1);
     }
 
+    /**
+     * @return void
+     */
     public function testMessageWithContext()
     {
         $stream = $this->createStream();
@@ -45,6 +54,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(strpos($output, '[INFO] User logged in {"name":"Alice"}') !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testEmptyContextOmitsJson()
     {
         $stream = $this->createStream();
@@ -57,6 +69,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(strpos($output, '{}') === false);
     }
 
+    /**
+     * @return void
+     */
     public function testPlaceholderInterpolation()
     {
         $stream = $this->createStream();
@@ -68,6 +83,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(strpos($output, 'Connecting to localhost:3306') !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testMinLevelFiltering()
     {
         $stream = $this->createStream();
@@ -82,6 +100,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(strpos($output, '[WARNING] visible') !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testAllLevelsOutputWhenDebug()
     {
         $stream = $this->createStream();
@@ -107,6 +128,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(strpos($output, '[DEBUG]') !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testLevelDisplayedUppercase()
     {
         $stream = $this->createStream();
@@ -118,6 +142,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(strpos($output, '[ERROR]') !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testContextWithNonStringableValues()
     {
         $stream = $this->createStream();
@@ -134,6 +161,9 @@ class ConsoleLoggerTest extends TestCase
         $this->assertTrue(strpos($output, '"nested":{"a":1}') !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testConstructRejectsInvalidMinimumLevel()
     {
         $this->expectException(InvalidFormatException::class);
@@ -141,6 +171,9 @@ class ConsoleLoggerTest extends TestCase
         new ConsoleLogger($this->createStream(), 'invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testLogRejectsInvalidLevel()
     {
         $this->expectException(InvalidArgumentException::class);
