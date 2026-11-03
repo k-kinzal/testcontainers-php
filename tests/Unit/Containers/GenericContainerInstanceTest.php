@@ -5,7 +5,7 @@
 namespace Tests\Unit\Containers;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
+use Closure;
 use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
@@ -314,11 +314,12 @@ final class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $events = new ReflectionProperty(GenericContainerInstance::class, 'events');
-        if (PHP_VERSION_ID < 80100) {
-            $events->setAccessible(true);
-        }
-        $events->setValue($instance, null);
+        $clearEvents = Closure::bind(function () {
+            /** @psalm-scope-this GenericContainerInstance */
+            $this->events = null;
+        }, $instance, GenericContainerInstance::class);
+        $this->assertNotNull($clearEvents);
+        $clearEvents();
         rewind($stream);
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
@@ -517,15 +518,13 @@ final class GenericContainerInstanceTest extends TestCase
         ;
         $instance = $container->start();
         $this->assertTrue($instance->isRunning());
-        $events = new ReflectionProperty(GenericContainerInstance::class, 'events');
-        if (PHP_VERSION_ID < 80100) {
-            $events->setAccessible(true);
-        }
-        $this->assertNotNull($events->getValue($instance));
+        $properties = (array) $instance;
+        $this->assertNotNull($properties["\0".GenericContainerInstance::class."\0events"]);
 
         $instance->stop();
 
-        $this->assertNull($events->getValue($instance));
+        $properties = (array) $instance;
+        $this->assertNull($properties["\0".GenericContainerInstance::class."\0events"]);
     }
 
     /**
