@@ -40,6 +40,6 @@ final class NetworkCreateCommandTest extends TestCase
 
         $this->assertInstanceOf(DockerNetworkCreateOutput::class, $output);
         $this->assertSame(0, $output->getExitCode());
-        $this->assertTrue(preg_match('/^[0-9a-f]{64}/', $output->getNetworkId()) === 1);
+        $this->assertTrue(preg_match('/^[0-9a-f]{64}/', $output->getNetworkId()->toString()) === 1);
     }
 }

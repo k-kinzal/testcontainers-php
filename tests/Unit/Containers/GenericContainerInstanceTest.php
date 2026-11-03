@@ -496,7 +496,7 @@ final class GenericContainerInstanceTest extends TestCase
         $log = stream_get_contents($stream);
         self::assertNotFalse($log);
         $this->assertSame(1, substr_count($log, 'docker events '));
-        $this->assertNotFalse(strpos($log, 'container='.$instance->getContainerId()));
+        $this->assertNotFalse(strpos($log, 'container='.$instance->getContainerId()->toString()));
         $this->assertNotFalse(strpos($log, 'event=die'));
         $this->assertNotFalse(strpos($log, '--since 0'));
     }

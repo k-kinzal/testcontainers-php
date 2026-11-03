@@ -40,7 +40,7 @@ final class EventsCommandTest extends TestCase
         $containerId = $output->getContainerId();
 
         $eventsOutput = $client->events([
-            'filter' => ['container='.$containerId],
+            'filter' => ['container='.$containerId->toString()],
             'since' => '0',
             'until' => (string) (time() + 3),
         ]);
