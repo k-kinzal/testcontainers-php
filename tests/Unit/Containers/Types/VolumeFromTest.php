@@ -10,11 +10,6 @@ use Testcontainers\Containers\Types\VolumeFrom;
 use Testcontainers\Exceptions\InvalidFormatException;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class VolumeFromTest extends TestCase
 {
     /**

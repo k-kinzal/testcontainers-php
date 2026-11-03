@@ -9,11 +9,6 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Output\DockerEventsOutput;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class DockerEventsOutputTest extends TestCase
 {
     /**

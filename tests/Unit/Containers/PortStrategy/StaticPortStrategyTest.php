@@ -5,11 +5,6 @@ namespace Tests\Unit\Containers\PortStrategy;
 use Testcontainers\Containers\PortStrategy\StaticPortStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class StaticPortStrategyTest extends PortStrategyTestCase
 {
     public function resolvePortStrategy()

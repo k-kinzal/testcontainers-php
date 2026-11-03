@@ -9,11 +9,6 @@ use Testcontainers\Containers\StartupCheckStrategy\AlreadyExistsStartupStrategyE
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class StartupCheckStrategyProviderTest extends TestCase
 {
     /**

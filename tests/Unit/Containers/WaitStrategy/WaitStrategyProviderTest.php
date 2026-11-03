@@ -10,11 +10,6 @@ use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
 use Testcontainers\Logger\WithLogger;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class WaitStrategyProviderTest extends TestCase
 {
     /**

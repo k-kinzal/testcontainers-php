@@ -12,11 +12,6 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class GeneralSettingTest extends TestCase
 {
     /**

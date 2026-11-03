@@ -11,10 +11,6 @@ use Testcontainers\Utility\Ensure;
 use Traversable;
 use UnexpectedValueException;
 
-/**
- * @internal
- * @coversNothing
- */
 final class EnsureTest extends TestCase
 {
     use Ensure;

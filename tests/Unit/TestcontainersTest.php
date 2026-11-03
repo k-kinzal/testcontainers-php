@@ -9,11 +9,6 @@ use Testcontainers\Logger\ConsoleLogger;
 use Testcontainers\Testcontainers;
 use Tests\Images\AlpineContainer;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class TestcontainersTest extends TestCase
 {
     /**

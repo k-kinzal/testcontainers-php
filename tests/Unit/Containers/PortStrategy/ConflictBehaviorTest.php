@@ -8,11 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\PortStrategy\ConflictBehavior;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class ConflictBehaviorTest extends TestCase
 {
     /**

@@ -10,11 +10,6 @@ use Testcontainers\Containers\GenericContainer\NetworkModeSetting;
 use Testcontainers\Containers\Types\NetworkMode;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class NetworkModeSettingTest extends TestCase
 {
     /**

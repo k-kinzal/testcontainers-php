@@ -7,11 +7,6 @@ use stdClass;
 use Testcontainers\Docker\Types\ContainerId;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class ContainerIdTest extends TestCase
 {
     /**

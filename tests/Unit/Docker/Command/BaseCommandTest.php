@@ -7,11 +7,6 @@ use stdClass;
 use Testcontainers\Docker\DockerClient;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class BaseCommandTest extends TestCase
 {
     /**

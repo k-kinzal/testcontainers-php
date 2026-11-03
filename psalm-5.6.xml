@@ -11,4 +11,7 @@
             <file name="src/Logger/ConsoleLogger/ConsoleLogger80.php" />
         </ignoreFiles>
     </projectFiles>
+    <fileExtensions>
+        <extension name="php" filetypeHandler="rules/AllRule56.php" />
+    </fileExtensions>
 </psalm>

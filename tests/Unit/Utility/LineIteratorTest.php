@@ -6,11 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Testcontainers\Utility\LineIterator;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class LineIteratorTest extends TestCase
 {
     /**

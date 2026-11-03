@@ -11,11 +11,6 @@ use Testcontainers\Containers\GenericContainer\PortSetting;
 use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class PortSettingTest extends TestCase
 {
     /**

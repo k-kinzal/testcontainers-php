@@ -8,11 +8,6 @@ use Testcontainers\Logger\ConsoleLogger;
 use Testcontainers\Logger\LoggerFactory;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class LoggerFactoryTest extends TestCase
 {
     /**

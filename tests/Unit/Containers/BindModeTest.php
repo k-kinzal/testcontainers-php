@@ -8,11 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class BindModeTest extends TestCase
 {
     /**

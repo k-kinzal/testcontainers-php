@@ -16,6 +16,9 @@
             <file name="src/Logger/ConsoleLogger/ConsoleLogger56.php" />
         </ignoreFiles>
     </projectFiles>
+    <plugins>
+        <pluginClass class="Rules\AllRule" />
+    </plugins>
     <issueHandlers>
         <PossiblyUnusedReturnValue errorLevel="suppress" />
     </issueHandlers>

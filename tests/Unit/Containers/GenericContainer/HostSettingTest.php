@@ -10,11 +10,6 @@ use Testcontainers\Containers\GenericContainer\HostSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class HostSettingTest extends TestCase
 {
     /**

@@ -11,11 +11,6 @@ use Testcontainers\Containers\GenericContainer\WaitSetting;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class WaitSettingTest extends TestCase
 {
     /**

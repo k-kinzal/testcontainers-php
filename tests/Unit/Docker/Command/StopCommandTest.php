@@ -11,11 +11,6 @@ use Testcontainers\Docker\Output\DockerStopOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class StopCommandTest extends TestCase
 {
     /**

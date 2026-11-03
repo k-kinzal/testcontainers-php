@@ -7,8 +7,4 @@ use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 
 abstract class WaitStrategyTestCase extends TestCase
 {
-    /**
-     * @return WaitStrategy
-     */
-    abstract public function resolveWaitStrategy();
 }

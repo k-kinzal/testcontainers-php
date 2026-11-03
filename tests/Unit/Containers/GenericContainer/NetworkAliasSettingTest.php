@@ -13,11 +13,6 @@ use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class NetworkAliasSettingTest extends TestCase
 {
     /**

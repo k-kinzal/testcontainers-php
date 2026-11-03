@@ -10,11 +10,6 @@ use Testcontainers\Containers\GenericContainer\ReuseModeSetting;
 use Testcontainers\Containers\ReuseMode;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class ReuseModeSettingTest extends TestCase
 {
     /**

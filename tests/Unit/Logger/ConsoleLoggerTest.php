@@ -9,11 +9,6 @@ use Psr\Log\LogLevel;
 use Testcontainers\Exceptions\InvalidFormatException;
 use Testcontainers\Logger\ConsoleLogger;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class ConsoleLoggerTest extends TestCase
 {
     /**

@@ -10,11 +10,6 @@ use Testcontainers\Containers\GenericContainer\PullPolicySetting;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class PullPolicySettingTest extends TestCase
 {
     /**

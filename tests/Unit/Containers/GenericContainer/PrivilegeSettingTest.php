@@ -9,11 +9,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PrivilegeSetting;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class PrivilegeSettingTest extends TestCase
 {
     /**

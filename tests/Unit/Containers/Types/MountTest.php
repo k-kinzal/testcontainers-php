@@ -8,11 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\Mount;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class MountTest extends TestCase
 {
     /**

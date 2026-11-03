@@ -7,11 +7,6 @@ use Testcontainers\Docker\Command\VersionCommand;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerVersionOutput;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class VersionCommandTest extends TestCase
 {
     /**

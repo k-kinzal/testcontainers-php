@@ -10,11 +10,6 @@ use Testcontainers\Containers\GenericContainer\LabelSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class LabelSettingTest extends TestCase
 {
     /**

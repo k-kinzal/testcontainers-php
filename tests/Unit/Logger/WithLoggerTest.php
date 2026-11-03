@@ -7,10 +7,6 @@ use stdClass;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use UnexpectedValueException;
 
-/**
- * @internal
- * @coversNothing
- */
 final class WithLoggerTest extends TestCase
 {
     /**

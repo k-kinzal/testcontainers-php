@@ -9,11 +9,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StopTimeoutSetting;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class StopTimeoutSettingTest extends TestCase
 {
     /**

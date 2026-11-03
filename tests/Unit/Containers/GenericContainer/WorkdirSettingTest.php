@@ -10,11 +10,6 @@ use Testcontainers\Containers\GenericContainer\WorkdirSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class WorkdirSettingTest extends TestCase
 {
     /**

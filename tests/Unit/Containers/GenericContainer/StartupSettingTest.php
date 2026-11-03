@@ -11,11 +11,6 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class StartupSettingTest extends TestCase
 {
     /**

@@ -8,18 +8,8 @@ use Testcontainers\Containers\WaitStrategy\LogMessageFailedException;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
 {
-    public function resolveWaitStrategy()
-    {
-        return new LogMessageWaitStrategy();
-    }
-
     /**
      * @return void
      */

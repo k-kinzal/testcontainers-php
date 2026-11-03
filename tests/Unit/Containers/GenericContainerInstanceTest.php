@@ -20,11 +20,6 @@ use Testcontainers\SSH\Session;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class GenericContainerInstanceTest extends TestCase
 {
     /**

@@ -7,18 +7,8 @@ use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class HostPortWaitStrategyTest extends WaitStrategyTestCase
 {
-    public function resolveWaitStrategy()
-    {
-        return new HostPortWaitStrategy();
-    }
-
     /**
      * @return void
      */

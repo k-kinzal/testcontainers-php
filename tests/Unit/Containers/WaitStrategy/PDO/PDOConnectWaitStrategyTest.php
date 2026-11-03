@@ -12,18 +12,8 @@ use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Tests\Unit\Containers\WaitStrategy\WaitStrategyTestCase;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 {
-    public function resolveWaitStrategy()
-    {
-        return (new PDOConnectWaitStrategy())->withDsn(new SQLiteDSN());
-    }
-
     /**
      * @return void
      */

@@ -12,11 +12,6 @@ use Testcontainers\Docker\Output\DockerEventsOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Types\Event;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class EventsCommandTest extends TestCase
 {
     /**

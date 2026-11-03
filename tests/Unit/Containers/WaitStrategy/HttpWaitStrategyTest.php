@@ -8,18 +8,8 @@ use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class HttpWaitStrategyTest extends WaitStrategyTestCase
 {
-    public function resolveWaitStrategy()
-    {
-        return new HttpWaitStrategy();
-    }
-
     /**
      * @return void
      */

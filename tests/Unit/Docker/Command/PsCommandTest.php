@@ -10,11 +10,6 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class PsCommandTest extends TestCase
 {
     /**

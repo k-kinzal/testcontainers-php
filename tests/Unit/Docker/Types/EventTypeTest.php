@@ -9,11 +9,6 @@ use Testcontainers\Docker\Types\EventScope;
 use Testcontainers\Docker\Types\EventType;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class EventTypeTest extends TestCase
 {
     /**

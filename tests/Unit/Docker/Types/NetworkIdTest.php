@@ -7,11 +7,6 @@ use stdClass;
 use Testcontainers\Docker\Types\NetworkId;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class NetworkIdTest extends TestCase
 {
     /**

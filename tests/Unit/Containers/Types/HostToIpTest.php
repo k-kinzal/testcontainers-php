@@ -9,11 +9,6 @@ use Testcontainers\Containers\Types\HostToIp;
 use Testcontainers\Exceptions\InvalidFormatException;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class HostToIpTest extends TestCase
 {
     /**

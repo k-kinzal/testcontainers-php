@@ -10,11 +10,6 @@ use Testcontainers\Lifecycle\ContainerReaper;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class ContainerReaperTest extends TestCase
 {
     /**

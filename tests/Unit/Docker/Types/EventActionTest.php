@@ -8,11 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\Types\EventAction;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class EventActionTest extends TestCase
 {
     /**

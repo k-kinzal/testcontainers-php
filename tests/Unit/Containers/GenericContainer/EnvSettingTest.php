@@ -11,11 +11,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class EnvSettingTest extends TestCase
 {
     /**

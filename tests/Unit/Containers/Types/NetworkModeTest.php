@@ -5,11 +5,6 @@ namespace Tests\Unit\Containers\Types;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\NetworkMode;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class NetworkModeTest extends TestCase
 {
     /**

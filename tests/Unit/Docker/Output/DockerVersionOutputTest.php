@@ -7,11 +7,6 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Output\DockerVersionOutput;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class DockerVersionOutputTest extends TestCase
 {
     /**

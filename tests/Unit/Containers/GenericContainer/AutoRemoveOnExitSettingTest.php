@@ -6,10 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use UnexpectedValueException;
 
-/**
- * @internal
- * @coversNothing
- */
 final class AutoRemoveOnExitSettingTest extends TestCase
 {
     /**

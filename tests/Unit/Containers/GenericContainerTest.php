@@ -13,11 +13,6 @@ use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Docker\Exception\PortConflictException;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class GenericContainerTest extends TestCase
 {
     /**

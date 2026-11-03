@@ -7,10 +7,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Docker\DockerClient;
 use UnexpectedValueException;
 
-/**
- * @internal
- * @coversNothing
- */
 final class SSHPortForwardSettingTest extends TestCase
 {
     /**

@@ -13,11 +13,6 @@ use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClientFactory;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class MountSettingTest extends TestCase
 {
     /**

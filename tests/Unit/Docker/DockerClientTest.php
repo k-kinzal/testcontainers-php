@@ -5,11 +5,6 @@ namespace Tests\Unit\Docker;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class DockerClientTest extends TestCase
 {
     /**

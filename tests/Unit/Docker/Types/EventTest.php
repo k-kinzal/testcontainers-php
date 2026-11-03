@@ -8,11 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\Event;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class EventTest extends TestCase
 {
     /**
