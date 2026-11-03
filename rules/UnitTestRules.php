@@ -32,6 +32,7 @@ final class UnitTestRules
         }
         foreach ([
             UnitTestRules\UnitTestSourceRule::class,
+            UnitTestRules\UnitTestInheritanceRule::class,
         ] as $rule) {
             $rule::check($source, $nodes, $test, $codebase);
         }
