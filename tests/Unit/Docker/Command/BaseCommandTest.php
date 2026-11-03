@@ -38,7 +38,7 @@ final class BaseCommandTest extends TestCase
 
     /**
      * @dataProvider providerWithGlobalOptionsHosts
-     * @param string|non-empty-array<array-key, string> $host
+     * @param string|array<array-key, string> $host
      * @param string $expected
      * @return void
      */
@@ -50,7 +50,7 @@ final class BaseCommandTest extends TestCase
     }
 
     /**
-     * @return array<string, array{string|non-empty-array<array-key, string>, string}>
+     * @return array<string, array{string|array<array-key, string>, string}>
      */
     public static function providerWithGlobalOptionsHosts()
     {
