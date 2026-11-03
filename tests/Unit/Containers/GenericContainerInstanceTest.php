@@ -443,7 +443,9 @@ final class GenericContainerInstanceTest extends TestCase
         $instance = $container->start();
         $this->assertInstanceOf(GenericContainerInstance::class, $instance);
 
-        $this->assertSame('running', $instance->getState()->status);
+        $state = $instance->getState();
+        $this->assertNotNull($state);
+        $this->assertSame('running', $state->status);
     }
 
     /**

@@ -23,6 +23,7 @@ final class EventTest extends TestCase
         $this->assertSame('2', $event->actor->getAttribute('exitCode'));
         $this->assertSame('alpine', $event->actor->getAttribute('image'));
         $this->assertNull($event->actor->getAttribute('not-exist'));
+        $this->assertNotNull($event->scope);
         $this->assertTrue($event->scope->isLocal());
         $this->assertSame(1793107853, $event->time);
         $this->assertSame(1793107853987226709, $event->timeNano);
