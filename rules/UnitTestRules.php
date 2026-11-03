@@ -35,6 +35,7 @@ final class UnitTestRules
             UnitTestRules\UnitTestInheritanceRule::class,
             UnitTestRules\UnitTestMethodRule::class,
             UnitTestRules\UnitTestProviderRule::class,
+            UnitTestRules\UnitTestHelperClassRule::class,
         ] as $rule) {
             $rule::check($source, $nodes, $test, $codebase);
         }

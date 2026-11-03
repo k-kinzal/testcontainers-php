@@ -5,10 +5,9 @@
 namespace Tests\Unit\Containers\WaitStrategy;
 
 use PHPUnit\Framework\TestCase;
+use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\AlreadyExistsWaitStrategyException;
-use Testcontainers\Containers\WaitStrategy\WaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitStrategyProvider;
-use Testcontainers\Logger\WithLogger;
 
 final class WaitStrategyProviderTest extends TestCase
 {
@@ -18,7 +17,7 @@ final class WaitStrategyProviderTest extends TestCase
     public function testRegister()
     {
         $provider = new WaitStrategyProvider();
-        $provider->register('test', new TestWaitStrategy());
+        $provider->register('test', new HostPortWaitStrategy());
 
         $this->assertTrue(true);
     }
@@ -32,8 +31,8 @@ final class WaitStrategyProviderTest extends TestCase
         $this->expectException(AlreadyExistsWaitStrategyException::class);
 
         $provider = new WaitStrategyProvider();
-        $provider->register('test', new TestWaitStrategy());
-        $provider->register('test', new TestWaitStrategy());
+        $provider->register('test', new HostPortWaitStrategy());
+        $provider->register('test', new HostPortWaitStrategy());
     }
 
     /**
@@ -41,7 +40,7 @@ final class WaitStrategyProviderTest extends TestCase
      */
     public function testGet()
     {
-        $strategy = new TestWaitStrategy();
+        $strategy = new HostPortWaitStrategy();
         $provider = new WaitStrategyProvider();
         $provider->register('test', $strategy);
 
@@ -56,14 +55,5 @@ final class WaitStrategyProviderTest extends TestCase
         $provider = new WaitStrategyProvider();
 
         $this->assertNull($provider->get('test'));
-    }
-}
-
-final class TestWaitStrategy implements WaitStrategy
-{
-    use WithLogger;
-
-    public function waitUntilReady($instance)
-    {
     }
 }

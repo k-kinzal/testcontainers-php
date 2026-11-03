@@ -5,6 +5,7 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
+use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use stdClass;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
@@ -60,7 +61,7 @@ final class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['tail', '-f', '/dev/null'])
-            ->withWaitStrategy(new FailingWaitStrategy())
+            ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('never emitted')->withTimeoutSeconds(1))
             ->withAutoRemoveOnExit(true)
         ;
 
@@ -114,15 +115,5 @@ final class GenericContainerTest extends TestCase
         $this->expectException(UnexpectedValueException::class);
 
         new GenericContainer('');
-    }
-}
-
-final class FailingWaitStrategy implements \Testcontainers\Containers\WaitStrategy\WaitStrategy
-{
-    use \Testcontainers\Logger\WithLogger;
-
-    public function waitUntilReady($instance)
-    {
-        throw new WaitingTimeoutException(0, 'intentional failure for testing');
     }
 }

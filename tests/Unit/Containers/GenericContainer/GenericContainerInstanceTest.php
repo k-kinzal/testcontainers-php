@@ -5,6 +5,7 @@
 namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Closure;
 use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
@@ -223,14 +224,14 @@ final class GenericContainerInstanceTest extends TestCase
      */
     public function testSetDataAndGetData()
     {
-        $data = new CustomData();
+        $data = new stdClass();
 
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
         $instance->setData($data);
 
-        $this->assertSame($data, $instance->getData(CustomData::class));
+        $this->assertSame($data, $instance->getData(stdClass::class));
     }
 
     /**
@@ -574,8 +575,4 @@ final class GenericContainerInstanceTest extends TestCase
 
         $this->assertNull($instance);
     }
-}
-
-final class CustomData
-{
 }
