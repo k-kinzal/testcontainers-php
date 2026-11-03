@@ -87,8 +87,11 @@ final class LogsCommandTest extends TestCase
             $iter->next();
         }
 
+        $this->assertNotNull($lines[0]);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
+        $this->assertNotNull($lines[1]);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
+        $this->assertNotNull($lines[2]);
         $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);
     }
 }
