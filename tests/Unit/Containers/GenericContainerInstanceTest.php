@@ -571,9 +571,9 @@ final class GenericContainerInstanceTest extends TestCase
         ]);
         $instance->setDockerClient($client);
 
-        unset($instance);
+        $instance = null;
 
-        $this->assertFalse(isset($instance));
+        $this->assertNull($instance);
     }
 }
 
