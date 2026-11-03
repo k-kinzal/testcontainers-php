@@ -11,29 +11,26 @@ use Testcontainers\Utility\Ensure;
 use Traversable;
 use UnexpectedValueException;
 
-/**
- * @internal
- * @coversNothing
- */
-class EnsureTest extends TestCase
+final class EnsureTest extends TestCase
 {
     use Ensure;
 
     /**
-     * @dataProvider providerNullableScalarOrStringableOrArrayMapValidValues
+     * @dataProvider providerEnsureNullableScalarOrStringableOrArrayMapReturnsExpectedValue
      * @param array<string, null|scalar|SimpleXMLElement|array<array-key, scalar|SimpleXMLElement>> $value
+     * @return void
      */
     public function testEnsureNullableScalarOrStringableOrArrayMapReturnsExpectedValue($value)
     {
         $actual = self::ensureNullableScalarOrStringableOrArrayMap($value);
 
-        $this->assertSame($value, $actual);
+        self::assertSame($value, $actual);
     }
 
     /**
      * @return array<string, array{array<string, null|scalar|SimpleXMLElement|array<array-key, scalar|SimpleXMLElement>>}>
      */
-    public static function providerNullableScalarOrStringableOrArrayMapValidValues()
+    public static function providerEnsureNullableScalarOrStringableOrArrayMapReturnsExpectedValue()
     {
         return [
             'empty map' => [[]],
@@ -45,8 +42,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableScalarOrStringableOrArrayMapInvalidValues
+     * @dataProvider providerEnsureNullableScalarOrStringableOrArrayMapRejectsInvalidValues
      * @param null|bool|array<array-key, string|stdClass|array<array-key, null|array{}>> $value
+     * @return void
      */
     public function testEnsureNullableScalarOrStringableOrArrayMapRejectsInvalidValues($value)
     {
@@ -58,7 +56,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{null|bool|array<array-key, string|stdClass|array<array-key, null|array{}>>}>
      */
-    public static function providerNullableScalarOrStringableOrArrayMapInvalidValues()
+    public static function providerEnsureNullableScalarOrStringableOrArrayMapRejectsInvalidValues()
     {
         return [
             'null map' => [null],
@@ -70,6 +68,9 @@ class EnsureTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testEnsureNullableScalarOrStringableOrArrayMapUsesProvidedMessage()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -79,21 +80,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringValidValues
+     * @dataProvider providerEnsureStringReturnsExpectedValue
      * @param string $value
      * @param string $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{string, string}>
      */
-    public static function providerStringValidValues()
+    public static function providerEnsureStringReturnsExpectedValue()
     {
         return [
             'case 1' => ['', ''],
@@ -103,8 +106,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringInvalidValues
+     * @dataProvider providerEnsureStringRejectsInvalidValues
      * @param array{}|bool|int|null|stdClass $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringRejectsInvalidValues($value)
     {
@@ -116,7 +121,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|bool|int|null|stdClass}>
      */
-    public static function providerStringInvalidValues()
+    public static function providerEnsureStringRejectsInvalidValues()
     {
         return [
             'case 1' => [null],
@@ -128,21 +133,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNonEmptyStringValidValues
+     * @dataProvider providerEnsureNonEmptyStringReturnsExpectedValue
      * @param string $value
      * @param string $expected
+     * @return void
      */
     public function testEnsureNonEmptyStringReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNonEmptyString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{string, string}>
      */
-    public static function providerNonEmptyStringValidValues()
+    public static function providerEnsureNonEmptyStringReturnsExpectedValue()
     {
         return [
             'case 1' => ['text', 'text'],
@@ -151,8 +157,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNonEmptyStringInvalidValues
+     * @dataProvider providerEnsureNonEmptyStringRejectsInvalidValues
      * @param bool|int|null|string $value
+     * @return void
      */
     public function testEnsureNonEmptyStringRejectsInvalidValues($value)
     {
@@ -164,7 +171,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|int|null|string}>
      */
-    public static function providerNonEmptyStringInvalidValues()
+    public static function providerEnsureNonEmptyStringRejectsInvalidValues()
     {
         return [
             'case 1' => [''],
@@ -175,21 +182,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStringValidValues
+     * @dataProvider providerEnsureNullableStringReturnsExpectedValue
      * @param null|string $value
      * @param null|string $expected
+     * @return void
      */
     public function testEnsureNullableStringReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{null|string, null|string}>
      */
-    public static function providerNullableStringValidValues()
+    public static function providerEnsureNullableStringReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -199,8 +207,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStringInvalidValues
+     * @dataProvider providerEnsureNullableStringRejectsInvalidValues
      * @param array{}|bool|int $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStringRejectsInvalidValues($value)
     {
@@ -212,7 +222,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|bool|int}>
      */
-    public static function providerNullableStringInvalidValues()
+    public static function providerEnsureNullableStringRejectsInvalidValues()
     {
         return [
             'case 1' => [false],
@@ -222,21 +232,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableNonEmptyStringValidValues
+     * @dataProvider providerEnsureNullableNonEmptyStringReturnsExpectedValue
      * @param null|string $value
      * @param null|string $expected
+     * @return void
      */
     public function testEnsureNullableNonEmptyStringReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableNonEmptyString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{null|string, null|string}>
      */
-    public static function providerNullableNonEmptyStringValidValues()
+    public static function providerEnsureNullableNonEmptyStringReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -246,8 +257,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableNonEmptyStringInvalidValues
+     * @dataProvider providerEnsureNullableNonEmptyStringRejectsInvalidValues
      * @param bool|int|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableNonEmptyStringRejectsInvalidValues($value)
     {
@@ -259,7 +272,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|int|string}>
      */
-    public static function providerNullableNonEmptyStringInvalidValues()
+    public static function providerEnsureNullableNonEmptyStringRejectsInvalidValues()
     {
         return [
             'case 1' => [''],
@@ -269,21 +282,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerBoolValidValues
+     * @dataProvider providerEnsureBoolReturnsExpectedValue
      * @param bool $value
      * @param bool $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureBoolReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureBool($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{bool, bool}>
      */
-    public static function providerBoolValidValues()
+    public static function providerEnsureBoolReturnsExpectedValue()
     {
         return [
             'case 1' => [true, true],
@@ -292,8 +307,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerBoolInvalidValues
+     * @dataProvider providerEnsureBoolRejectsInvalidValues
      * @param array{}|int|null|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureBoolRejectsInvalidValues($value)
     {
@@ -305,7 +322,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|int|null|string}>
      */
-    public static function providerBoolInvalidValues()
+    public static function providerEnsureBoolRejectsInvalidValues()
     {
         return [
             'case 1' => [null],
@@ -317,21 +334,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableBoolValidValues
+     * @dataProvider providerEnsureNullableBoolReturnsExpectedValue
      * @param bool|null $value
      * @param bool|null $expected
+     * @return void
      */
     public function testEnsureNullableBoolReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableBool($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{bool|null, bool|null}>
      */
-    public static function providerNullableBoolValidValues()
+    public static function providerEnsureNullableBoolReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -341,8 +359,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableBoolInvalidValues
+     * @dataProvider providerEnsureNullableBoolRejectsInvalidValues
      * @param array{}|int|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableBoolRejectsInvalidValues($value)
     {
@@ -354,7 +374,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|int|string}>
      */
-    public static function providerNullableBoolInvalidValues()
+    public static function providerEnsureNullableBoolRejectsInvalidValues()
     {
         return [
             'case 1' => [0],
@@ -364,21 +384,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIntValidValues
+     * @dataProvider providerEnsureIntReturnsExpectedValue
      * @param int $value
      * @param int $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureIntReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureInt($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{int, int}>
      */
-    public static function providerIntValidValues()
+    public static function providerEnsureIntReturnsExpectedValue()
     {
         return [
             'case 1' => [0, 0],
@@ -388,8 +410,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIntInvalidValues
+     * @dataProvider providerEnsureIntRejectsInvalidValues
      * @param bool|float|null|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureIntRejectsInvalidValues($value)
     {
@@ -401,7 +425,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|float|null|string}>
      */
-    public static function providerIntInvalidValues()
+    public static function providerEnsureIntRejectsInvalidValues()
     {
         return [
             'case 1' => ['1'],
@@ -412,23 +436,25 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIntRangeValidValues
+     * @dataProvider providerEnsureIntRangeReturnsExpectedValue
      * @param int      $value
      * @param int      $minimum
      * @param int|null $maximum
      * @param int      $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureIntRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
         $actual = self::ensureIntRange($value, $minimum, $maximum);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{int, int, int|null, int}>
      */
-    public static function providerIntRangeValidValues()
+    public static function providerEnsureIntRangeReturnsExpectedValue()
     {
         return [
             'case 1' => [0, 0, 10, 0],
@@ -438,10 +464,11 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIntRangeInvalidValues
+     * @dataProvider providerEnsureIntRangeRejectsInvalidValues
      * @param int|string $value
      * @param int        $minimum
      * @param int        $maximum
+     * @return void
      */
     public function testEnsureIntRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -453,7 +480,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{int|string, int, int}>
      */
-    public static function providerIntRangeInvalidValues()
+    public static function providerEnsureIntRangeRejectsInvalidValues()
     {
         return [
             'case 1' => [-1, 0, 10],
@@ -463,23 +490,24 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableIntRangeValidValues
+     * @dataProvider providerEnsureNullableIntRangeReturnsExpectedValue
      * @param int|null $value
      * @param int      $minimum
      * @param int      $maximum
      * @param int|null $expected
+     * @return void
      */
     public function testEnsureNullableIntRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
         $actual = self::ensureNullableIntRange($value, $minimum, $maximum);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{int|null, int, int, int|null}>
      */
-    public static function providerNullableIntRangeValidValues()
+    public static function providerEnsureNullableIntRangeReturnsExpectedValue()
     {
         return [
             'case 1' => [null, 0, 10, null],
@@ -489,10 +517,12 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableIntRangeInvalidValues
+     * @dataProvider providerEnsureNullableIntRangeRejectsInvalidValues
      * @param bool|int $value
      * @param int      $minimum
      * @param int      $maximum
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableIntRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -504,7 +534,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|int, int, int}>
      */
-    public static function providerNullableIntRangeInvalidValues()
+    public static function providerEnsureNullableIntRangeRejectsInvalidValues()
     {
         return [
             'case 1' => [-1, 0, 10],
@@ -514,21 +544,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIntOrDigitStringValidValues
+     * @dataProvider providerEnsureIntOrDigitStringReturnsExpectedValue
      * @param int|string $value
      * @param int|string $expected
+     * @return void
      */
     public function testEnsureIntOrDigitStringReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureIntOrDigitString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{int|string, int|string}>
      */
-    public static function providerIntOrDigitStringValidValues()
+    public static function providerEnsureIntOrDigitStringReturnsExpectedValue()
     {
         return [
             'case 1' => [80, 80],
@@ -538,8 +569,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIntOrDigitStringInvalidValues
+     * @dataProvider providerEnsureIntOrDigitStringRejectsInvalidValues
      * @param bool|float|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureIntOrDigitStringRejectsInvalidValues($value)
     {
@@ -551,7 +584,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|float|string}>
      */
-    public static function providerIntOrDigitStringInvalidValues()
+    public static function providerEnsureIntOrDigitStringRejectsInvalidValues()
     {
         return [
             'case 1' => [true],
@@ -564,23 +597,24 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIntOrDigitStringRangeValidValues
+     * @dataProvider providerEnsureIntOrDigitStringRangeReturnsExpectedValue
      * @param int|string $value
      * @param int        $minimum
      * @param int        $maximum
      * @param int|string $expected
+     * @return void
      */
     public function testEnsureIntOrDigitStringRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
         $actual = self::ensureIntOrDigitStringRange($value, $minimum, $maximum);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{int|string, int, int, int|string}>
      */
-    public static function providerIntOrDigitStringRangeValidValues()
+    public static function providerEnsureIntOrDigitStringRangeReturnsExpectedValue()
     {
         return [
             'case 1' => [1, 1, 65535, 1],
@@ -590,10 +624,11 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerIntOrDigitStringRangeInvalidValues
+     * @dataProvider providerEnsureIntOrDigitStringRangeRejectsInvalidValues
      * @param bool|int|string $value
      * @param int             $minimum
      * @param int             $maximum
+     * @return void
      */
     public function testEnsureIntOrDigitStringRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -605,7 +640,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|int|string, int, int}>
      */
-    public static function providerIntOrDigitStringRangeInvalidValues()
+    public static function providerEnsureIntOrDigitStringRangeRejectsInvalidValues()
     {
         return [
             'case 1' => [0, 1, 65535],
@@ -616,21 +651,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerDigitStringValidValues
+     * @dataProvider providerEnsureDigitStringReturnsExpectedValue
      * @param string $value
      * @param string $expected
+     * @return void
      */
     public function testEnsureDigitStringReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureDigitString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{string, string}>
      */
-    public static function providerDigitStringValidValues()
+    public static function providerEnsureDigitStringReturnsExpectedValue()
     {
         return [
             'case 1' => ['0', '0'],
@@ -640,8 +676,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerDigitStringInvalidValues
+     * @dataProvider providerEnsureDigitStringRejectsInvalidValues
      * @param bool|int|string $value
+     * @return void
      */
     public function testEnsureDigitStringRejectsInvalidValues($value)
     {
@@ -653,7 +690,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|int|string}>
      */
-    public static function providerDigitStringInvalidValues()
+    public static function providerEnsureDigitStringRejectsInvalidValues()
     {
         return [
             'case 1' => [''],
@@ -666,23 +703,24 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerDigitStringRangeValidValues
+     * @dataProvider providerEnsureDigitStringRangeReturnsExpectedValue
      * @param string $value
      * @param int    $minimum
      * @param int    $maximum
      * @param string $expected
+     * @return void
      */
     public function testEnsureDigitStringRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
         $actual = self::ensureDigitStringRange($value, $minimum, $maximum);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{string, int, int, string}>
      */
-    public static function providerDigitStringRangeValidValues()
+    public static function providerEnsureDigitStringRangeReturnsExpectedValue()
     {
         return [
             'case 1' => ['1', 1, 10, '1'],
@@ -691,10 +729,11 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerDigitStringRangeInvalidValues
+     * @dataProvider providerEnsureDigitStringRangeRejectsInvalidValues
      * @param string $value
      * @param int    $minimum
      * @param int    $maximum
+     * @return void
      */
     public function testEnsureDigitStringRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -706,7 +745,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{string, int, int}>
      */
-    public static function providerDigitStringRangeInvalidValues()
+    public static function providerEnsureDigitStringRangeRejectsInvalidValues()
     {
         return [
             'case 1' => ['0', 1, 10],
@@ -716,21 +755,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNonNegativeNumberValidValues
+     * @dataProvider providerEnsureNonNegativeNumberReturnsExpectedValue
      * @param float|int $value
      * @param float|int $expected
+     * @return void
      */
     public function testEnsureNonNegativeNumberReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNonNegativeNumber($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{float|int, float|int}>
      */
-    public static function providerNonNegativeNumberValidValues()
+    public static function providerEnsureNonNegativeNumberReturnsExpectedValue()
     {
         return [
             'case 1' => [0, 0],
@@ -740,8 +780,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNonNegativeNumberInvalidValues
+     * @dataProvider providerEnsureNonNegativeNumberRejectsInvalidValues
      * @param bool|float|int|string $value
+     * @return void
      */
     public function testEnsureNonNegativeNumberRejectsInvalidValues($value)
     {
@@ -753,7 +794,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|float|int|string}>
      */
-    public static function providerNonNegativeNumberInvalidValues()
+    public static function providerEnsureNonNegativeNumberRejectsInvalidValues()
     {
         return [
             'case 1' => [-1],
@@ -765,21 +806,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableNonNegativeNumberValidValues
+     * @dataProvider providerEnsureNullableNonNegativeNumberReturnsExpectedValue
      * @param float|int|null $value
      * @param float|int|null $expected
+     * @return void
      */
     public function testEnsureNullableNonNegativeNumberReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableNonNegativeNumber($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{float|int|null, float|int|null}>
      */
-    public static function providerNullableNonNegativeNumberValidValues()
+    public static function providerEnsureNullableNonNegativeNumberReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -789,8 +831,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableNonNegativeNumberInvalidValues
+     * @dataProvider providerEnsureNullableNonNegativeNumberRejectsInvalidValues
      * @param float|int|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableNonNegativeNumberRejectsInvalidValues($value)
     {
@@ -802,7 +846,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{float|int|string}>
      */
-    public static function providerNullableNonNegativeNumberInvalidValues()
+    public static function providerEnsureNullableNonNegativeNumberRejectsInvalidValues()
     {
         return [
             'case 1' => [-1],
@@ -813,21 +857,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerArrayValidValues
+     * @dataProvider providerEnsureArrayReturnsExpectedValue
      * @param array{'key': int}|array{} $value
      * @param array{'key': int}|array{} $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{'key': int}|array{}, array{'key': int}|array{}}>
      */
-    public static function providerArrayValidValues()
+    public static function providerEnsureArrayReturnsExpectedValue()
     {
         return [
             'case 1' => [[], []],
@@ -836,8 +882,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerArrayInvalidValues
+     * @dataProvider providerEnsureArrayRejectsInvalidValues
      * @param null|stdClass|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureArrayRejectsInvalidValues($value)
     {
@@ -849,7 +897,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{null|stdClass|string}>
      */
-    public static function providerArrayInvalidValues()
+    public static function providerEnsureArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [null],
@@ -859,21 +907,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableArrayValidValues
+     * @dataProvider providerEnsureNullableArrayReturnsExpectedValue
      * @param array{'key': int}|array{}|null $value
      * @param array{'key': int}|array{}|null $expected
+     * @return void
      */
     public function testEnsureNullableArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{'key': int}|array{}|null, array{'key': int}|array{}|null}>
      */
-    public static function providerNullableArrayValidValues()
+    public static function providerEnsureNullableArrayReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -883,8 +932,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableArrayInvalidValues
+     * @dataProvider providerEnsureNullableArrayRejectsInvalidValues
      * @param bool|stdClass|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableArrayRejectsInvalidValues($value)
     {
@@ -896,7 +947,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|stdClass|string}>
      */
-    public static function providerNullableArrayInvalidValues()
+    public static function providerEnsureNullableArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [false],
@@ -906,21 +957,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNonEmptyArrayValidValues
+     * @dataProvider providerEnsureNonEmptyArrayReturnsExpectedValue
      * @param array{'key': null}|array{int} $value
-     * @param array{'key': null}|array{int} $expected
+     * @param array<array-key, null|int> $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNonEmptyArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNonEmptyArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
-     * @return array<string, array{array{'key': null}|array{int}, array{'key': null}|array{int}}>
+     * @return array<string, array{array{'key': null}|array{int}, array<array-key, null|int>}>
      */
-    public static function providerNonEmptyArrayValidValues()
+    public static function providerEnsureNonEmptyArrayReturnsExpectedValue()
     {
         return [
             'case 1' => [['key' => null], ['key' => null]],
@@ -929,8 +982,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNonEmptyArrayInvalidValues
+     * @dataProvider providerEnsureNonEmptyArrayRejectsInvalidValues
      * @param array{}|null|string $value
+     * @return void
      */
     public function testEnsureNonEmptyArrayRejectsInvalidValues($value)
     {
@@ -942,7 +996,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|null|string}>
      */
-    public static function providerNonEmptyArrayInvalidValues()
+    public static function providerEnsureNonEmptyArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [[]],
@@ -952,22 +1006,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerArrayHasKeyValidValues
+     * @dataProvider providerEnsureArrayHasKeyReturnsExpectedValue
      * @param array{'key': null}|array{bool} $value
      * @param int|string                     $key
      * @param array{'key': null}|array{bool} $expected
+     * @return void
      */
     public function testEnsureArrayHasKeyReturnsExpectedValue($value, $key, $expected)
     {
         $actual = self::ensureArrayHasKey($value, $key);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{'key': null}|array{bool}, int|string, array{'key': null}|array{bool}}>
      */
-    public static function providerArrayHasKeyValidValues()
+    public static function providerEnsureArrayHasKeyReturnsExpectedValue()
     {
         return [
             'case 1' => [['key' => null], 'key', ['key' => null]],
@@ -976,9 +1031,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerArrayHasKeyInvalidValues
+     * @dataProvider providerEnsureArrayHasKeyRejectsInvalidValues
      * @param array{'other': int}|array{} $value
      * @param string                      $key
+     * @return void
      */
     public function testEnsureArrayHasKeyRejectsInvalidValues($value, $key)
     {
@@ -990,7 +1046,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{'other': int}|array{}, string}>
      */
-    public static function providerArrayHasKeyInvalidValues()
+    public static function providerEnsureArrayHasKeyRejectsInvalidValues()
     {
         return [
             'case 1' => [[], 'key'],
@@ -999,21 +1055,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringArrayValidValues
+     * @dataProvider providerEnsureStringArrayReturnsExpectedValue
      * @param array{'key': string}|array{2: string, 8: string}|array{} $value
      * @param array{'key': string}|array{2: string, 8: string}|array{} $expected
+     * @return void
      */
     public function testEnsureStringArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureStringArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{'key': string}|array{2: string, 8: string}|array{}, array{'key': string}|array{2: string, 8: string}|array{}}>
      */
-    public static function providerStringArrayValidValues()
+    public static function providerEnsureStringArrayReturnsExpectedValue()
     {
         return [
             'case 1' => [[], []],
@@ -1023,8 +1080,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringArrayInvalidValues
+     * @dataProvider providerEnsureStringArrayRejectsInvalidValues
      * @param array{int}|array{string, bool}|bool $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringArrayRejectsInvalidValues($value)
     {
@@ -1036,7 +1095,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{int}|array{string, bool}|bool}>
      */
-    public static function providerStringArrayInvalidValues()
+    public static function providerEnsureStringArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [['a', false]],
@@ -1046,21 +1105,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStringArrayValidValues
+     * @dataProvider providerEnsureNullableStringArrayReturnsExpectedValue
      * @param array{2: string}|array{}|null $value
      * @param array{2: string}|array{}|null $expected
+     * @return void
      */
     public function testEnsureNullableStringArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableStringArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{2: string}|array{}|null, array{2: string}|array{}|null}>
      */
-    public static function providerNullableStringArrayValidValues()
+    public static function providerEnsureNullableStringArrayReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -1070,8 +1130,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStringArrayInvalidValues
+     * @dataProvider providerEnsureNullableStringArrayRejectsInvalidValues
      * @param array{string, bool}|bool $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStringArrayRejectsInvalidValues($value)
     {
@@ -1083,7 +1145,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{string, bool}|bool}>
      */
-    public static function providerNullableStringArrayInvalidValues()
+    public static function providerEnsureNullableStringArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [['a', false]],
@@ -1092,21 +1154,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStringOrStringArrayValidValues
+     * @dataProvider providerEnsureNullableStringOrStringArrayReturnsExpectedValue
      * @param array{2: string, 8: string}|null|string $value
      * @param array{2: string, 8: string}|null|string $expected
+     * @return void
      */
     public function testEnsureNullableStringOrStringArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableStringOrStringArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{2: string, 8: string}|null|string, array{2: string, 8: string}|null|string}>
      */
-    public static function providerNullableStringOrStringArrayValidValues()
+    public static function providerEnsureNullableStringOrStringArrayReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -1116,8 +1179,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStringOrStringArrayInvalidValues
+     * @dataProvider providerEnsureNullableStringOrStringArrayRejectsInvalidValues
      * @param array{string, bool}|bool|int $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStringOrStringArrayRejectsInvalidValues($value)
     {
@@ -1129,7 +1194,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{string, bool}|bool|int}>
      */
-    public static function providerNullableStringOrStringArrayInvalidValues()
+    public static function providerEnsureNullableStringOrStringArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [['a', false]],
@@ -1139,21 +1204,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringOrArrayValidValues
+     * @dataProvider providerEnsureStringOrArrayReturnsExpectedValue
      * @param array{'key': null}|array{}|string $value
      * @param array{'key': null}|array{}|string $expected
+     * @return void
      */
     public function testEnsureStringOrArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureStringOrArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{'key': null}|array{}|string, array{'key': null}|array{}|string}>
      */
-    public static function providerStringOrArrayValidValues()
+    public static function providerEnsureStringOrArrayReturnsExpectedValue()
     {
         return [
             'case 1' => ['', ''],
@@ -1163,8 +1229,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringOrArrayInvalidValues
+     * @dataProvider providerEnsureStringOrArrayRejectsInvalidValues
      * @param bool|null|stdClass $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringOrArrayRejectsInvalidValues($value)
     {
@@ -1176,7 +1244,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|null|stdClass}>
      */
-    public static function providerStringOrArrayInvalidValues()
+    public static function providerEnsureStringOrArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [null],
@@ -1186,21 +1254,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringKeyedArrayValidValues
+     * @dataProvider providerEnsureStringKeyedArrayReturnsExpectedValue
      * @param array{'key': null}|array{'key': stdClass}|array{} $value
      * @param array{'key': null}|array{'key': stdClass}|array{} $expected
+     * @return void
      */
     public function testEnsureStringKeyedArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureStringKeyedArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{'key': null}|array{'key': stdClass}|array{}, array{'key': null}|array{'key': stdClass}|array{}}>
      */
-    public static function providerStringKeyedArrayValidValues()
+    public static function providerEnsureStringKeyedArrayReturnsExpectedValue()
     {
         $value2 = ['key' => new stdClass()];
 
@@ -1212,8 +1281,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringKeyedArrayInvalidValues
+     * @dataProvider providerEnsureStringKeyedArrayRejectsInvalidValues
      * @param array{int}|bool $value
+     * @return void
      */
     public function testEnsureStringKeyedArrayRejectsInvalidValues($value)
     {
@@ -1225,7 +1295,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{int}|bool}>
      */
-    public static function providerStringKeyedArrayInvalidValues()
+    public static function providerEnsureStringKeyedArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [[0 => 1]],
@@ -1234,21 +1304,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringMapValidValues
+     * @dataProvider providerEnsureStringMapReturnsExpectedValue
      * @param array{'key': string}|array{} $value
      * @param array{'key': string}|array{} $expected
+     * @return void
      */
     public function testEnsureStringMapReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureStringMap($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{'key': string}|array{}, array{'key': string}|array{}}>
      */
-    public static function providerStringMapValidValues()
+    public static function providerEnsureStringMapReturnsExpectedValue()
     {
         return [
             'case 1' => [[], []],
@@ -1258,8 +1329,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringMapInvalidValues
+     * @dataProvider providerEnsureStringMapRejectsInvalidValues
      * @param array{'key': bool}|array{string}|bool $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringMapRejectsInvalidValues($value)
     {
@@ -1271,7 +1344,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{'key': bool}|array{string}|bool}>
      */
-    public static function providerStringMapInvalidValues()
+    public static function providerEnsureStringMapRejectsInvalidValues()
     {
         return [
             'case 1' => [['key' => false]],
@@ -1281,21 +1354,34 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStringMapValidValues
+     * @return array<string, array{array{'key': bool}|array{string}|bool}>
+     */
+    public static function providerEnsureStringMapUsesProvidedMessage()
+    {
+        return [
+            'case 1' => [['key' => false]],
+            'case 2' => [[0 => 'value']],
+            'case 3' => [false],
+        ];
+    }
+
+    /**
+     * @dataProvider providerEnsureNullableStringMapReturnsExpectedValue
      * @param array{'key': string}|array{}|null $value
      * @param array{'key': string}|array{}|null $expected
+     * @return void
      */
     public function testEnsureNullableStringMapReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableStringMap($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{'key': string}|array{}|null, array{'key': string}|array{}|null}>
      */
-    public static function providerNullableStringMapValidValues()
+    public static function providerEnsureNullableStringMapReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -1305,8 +1391,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStringMapInvalidValues
+     * @dataProvider providerEnsureNullableStringMapRejectsInvalidValues
      * @param array{'key': bool}|bool $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStringMapRejectsInvalidValues($value)
     {
@@ -1318,7 +1406,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{'key': bool}|bool}>
      */
-    public static function providerNullableStringMapInvalidValues()
+    public static function providerEnsureNullableStringMapRejectsInvalidValues()
     {
         return [
             'case 1' => [['key' => false]],
@@ -1327,21 +1415,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableBoolOrStringValidValues
+     * @dataProvider providerEnsureNullableBoolOrStringReturnsExpectedValue
      * @param bool|null|string $value
      * @param bool|null|string $expected
+     * @return void
      */
     public function testEnsureNullableBoolOrStringReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableBoolOrString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{bool|null|string, bool|null|string}>
      */
-    public static function providerNullableBoolOrStringValidValues()
+    public static function providerEnsureNullableBoolOrStringReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -1352,8 +1441,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableBoolOrStringInvalidValues
+     * @dataProvider providerEnsureNullableBoolOrStringRejectsInvalidValues
      * @param array{}|int|stdClass $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableBoolOrStringRejectsInvalidValues($value)
     {
@@ -1365,7 +1456,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|int|stdClass}>
      */
-    public static function providerNullableBoolOrStringInvalidValues()
+    public static function providerEnsureNullableBoolOrStringRejectsInvalidValues()
     {
         return [
             'case 1' => [1],
@@ -1375,21 +1466,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerObjectValidValues
+     * @dataProvider providerEnsureObjectReturnsExpectedValue
      * @param stdClass $value
      * @param stdClass $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureObjectReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureObject($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{stdClass, stdClass}>
      */
-    public static function providerObjectValidValues()
+    public static function providerEnsureObjectReturnsExpectedValue()
     {
         $value0 = new stdClass();
 
@@ -1399,8 +1492,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerObjectInvalidValues
+     * @dataProvider providerEnsureObjectRejectsInvalidValues
      * @param array{}|null|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureObjectRejectsInvalidValues($value)
     {
@@ -1412,7 +1507,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|null|string}>
      */
-    public static function providerObjectInvalidValues()
+    public static function providerEnsureObjectRejectsInvalidValues()
     {
         return [
             'case 1' => [null],
@@ -1422,21 +1517,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerClassStringValidValues
+     * @dataProvider providerEnsureClassStringReturnsExpectedValue
      * @param string $value
      * @param string $expected
+     * @return void
      */
     public function testEnsureClassStringReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureClassString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{string, string}>
      */
-    public static function providerClassStringValidValues()
+    public static function providerEnsureClassStringReturnsExpectedValue()
     {
         return [
             'case 1' => [stdClass::class, stdClass::class],
@@ -1445,8 +1541,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerClassStringInvalidValues
+     * @dataProvider providerEnsureClassStringRejectsInvalidValues
      * @param bool|stdClass|string $value
+     * @return void
      */
     public function testEnsureClassStringRejectsInvalidValues($value)
     {
@@ -1458,7 +1555,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|stdClass|string}>
      */
-    public static function providerClassStringInvalidValues()
+    public static function providerEnsureClassStringRejectsInvalidValues()
     {
         return [
             'case 1' => ['ClassThatDoesNotExist'],
@@ -1468,22 +1565,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInstanceOfValidValues
+     * @dataProvider providerEnsureInstanceOfReturnsExpectedValue
      * @param stdClass $value
-     * @param string   $class
+     * @param class-string   $class
      * @param stdClass $expected
+     * @return void
      */
     public function testEnsureInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
         $actual = self::ensureInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
-     * @return array<string, array{stdClass, string, stdClass}>
+     * @return array<string, array{stdClass, class-string, stdClass}>
      */
-    public static function providerInstanceOfValidValues()
+    public static function providerEnsureInstanceOfReturnsExpectedValue()
     {
         $value0 = new stdClass();
 
@@ -1493,9 +1591,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInstanceOfInvalidValues
+     * @dataProvider providerEnsureInstanceOfRejectsInvalidValues
      * @param array{}|null|stdClass $value
-     * @param string                $class
+     * @param class-string                $class
+     * @return void
      */
     public function testEnsureInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1505,9 +1604,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @return array<string, array{array{}|null|stdClass, string}>
+     * @return array<string, array{array{}|null|stdClass, class-string}>
      */
-    public static function providerInstanceOfInvalidValues()
+    public static function providerEnsureInstanceOfRejectsInvalidValues()
     {
         return [
             'case 1' => [null, stdClass::class],
@@ -1517,22 +1616,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableInstanceOfValidValues
+     * @dataProvider providerEnsureNullableInstanceOfReturnsExpectedValue
      * @param null|stdClass $value
-     * @param string        $class
+     * @param class-string        $class
      * @param null|stdClass $expected
+     * @return void
      */
     public function testEnsureNullableInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
         $actual = self::ensureNullableInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
-     * @return array<string, array{null|stdClass, string, null|stdClass}>
+     * @return array<string, array{null|stdClass, class-string, null|stdClass}>
      */
-    public static function providerNullableInstanceOfValidValues()
+    public static function providerEnsureNullableInstanceOfReturnsExpectedValue()
     {
         $value1 = new stdClass();
 
@@ -1543,9 +1643,11 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableInstanceOfInvalidValues
+     * @dataProvider providerEnsureNullableInstanceOfRejectsInvalidValues
      * @param array{}|bool $value
-     * @param string       $class
+     * @param class-string       $class
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1555,9 +1657,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @return array<string, array{array{}|bool, string}>
+     * @return array<string, array{array{}|bool, class-string}>
      */
-    public static function providerNullableInstanceOfInvalidValues()
+    public static function providerEnsureNullableInstanceOfRejectsInvalidValues()
     {
         return [
             'case 1' => [[], stdClass::class],
@@ -1566,22 +1668,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNonEmptyStringOrInstanceOfValidValues
+     * @dataProvider providerEnsureNonEmptyStringOrInstanceOfReturnsExpectedValue
      * @param stdClass|string $value
-     * @param string          $class
+     * @param class-string          $class
      * @param stdClass|string $expected
+     * @return void
      */
     public function testEnsureNonEmptyStringOrInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
         $actual = self::ensureNonEmptyStringOrInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
-     * @return array<string, array{stdClass|string, string, stdClass|string}>
+     * @return array<string, array{stdClass|string, class-string, stdClass|string}>
      */
-    public static function providerNonEmptyStringOrInstanceOfValidValues()
+    public static function providerEnsureNonEmptyStringOrInstanceOfReturnsExpectedValue()
     {
         $value1 = new stdClass();
 
@@ -1592,9 +1695,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNonEmptyStringOrInstanceOfInvalidValues
+     * @dataProvider providerEnsureNonEmptyStringOrInstanceOfRejectsInvalidValues
      * @param bool|null|string $value
-     * @param string           $class
+     * @param class-string           $class
+     * @return void
      */
     public function testEnsureNonEmptyStringOrInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1604,9 +1708,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @return array<string, array{bool|null|string, string}>
+     * @return array<string, array{bool|null|string, class-string}>
      */
-    public static function providerNonEmptyStringOrInstanceOfInvalidValues()
+    public static function providerEnsureNonEmptyStringOrInstanceOfRejectsInvalidValues()
     {
         return [
             'case 1' => ['', stdClass::class],
@@ -1616,22 +1720,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringOrArrayOrInstanceOfValidValues
+     * @dataProvider providerEnsureStringOrArrayOrInstanceOfReturnsExpectedValue
      * @param array{}|stdClass|string $value
-     * @param string                  $class
+     * @param class-string                  $class
      * @param array{}|stdClass|string $expected
+     * @return void
      */
     public function testEnsureStringOrArrayOrInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
         $actual = self::ensureStringOrArrayOrInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
-     * @return array<string, array{array{}|stdClass|string, string, array{}|stdClass|string}>
+     * @return array<string, array{array{}|stdClass|string, class-string, array{}|stdClass|string}>
      */
-    public static function providerStringOrArrayOrInstanceOfValidValues()
+    public static function providerEnsureStringOrArrayOrInstanceOfReturnsExpectedValue()
     {
         $value2 = new stdClass();
 
@@ -1643,9 +1748,11 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringOrArrayOrInstanceOfInvalidValues
+     * @dataProvider providerEnsureStringOrArrayOrInstanceOfRejectsInvalidValues
      * @param bool|null $value
-     * @param string    $class
+     * @param class-string    $class
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringOrArrayOrInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1655,9 +1762,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @return array<string, array{bool|null, string}>
+     * @return array<string, array{bool|null, class-string}>
      */
-    public static function providerStringOrArrayOrInstanceOfInvalidValues()
+    public static function providerEnsureStringOrArrayOrInstanceOfRejectsInvalidValues()
     {
         return [
             'case 1' => [false, stdClass::class],
@@ -1666,21 +1773,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullValidValues
+     * @dataProvider providerEnsureNullReturnsExpectedValue
      * @param null $value
      * @param null $expected
+     * @return void
      */
     public function testEnsureNullReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNull($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{null, null}>
      */
-    public static function providerNullValidValues()
+    public static function providerEnsureNullReturnsExpectedValue()
     {
         return [
             'case 1' => [null, null],
@@ -1688,8 +1796,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullInvalidValues
+     * @dataProvider providerEnsureNullRejectsInvalidValues
      * @param array{}|bool|int|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullRejectsInvalidValues($value)
     {
@@ -1701,7 +1811,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|bool|int|string}>
      */
-    public static function providerNullInvalidValues()
+    public static function providerEnsureNullRejectsInvalidValues()
     {
         return [
             'case 1' => [false],
@@ -1712,22 +1822,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerOneOfValidValues
+     * @dataProvider providerEnsureOneOfReturnsExpectedValue
      * @param string                $value
      * @param array{string, string} $values
      * @param string                $expected
+     * @return void
      */
     public function testEnsureOneOfReturnsExpectedValue($value, $values, $expected)
     {
         $actual = self::ensureOneOf($value, $values);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{string, array{string, string}, string}>
      */
-    public static function providerOneOfValidValues()
+    public static function providerEnsureOneOfReturnsExpectedValue()
     {
         return [
             'case 1' => ['one', ['one', 'two'], 'one'],
@@ -1735,9 +1846,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerOneOfInvalidValues
+     * @dataProvider providerEnsureOneOfRejectsInvalidValues
      * @param int|string                          $value
      * @param array{string, string}|array{string} $values
+     * @return void
      */
     public function testEnsureOneOfRejectsInvalidValues($value, $values)
     {
@@ -1749,7 +1861,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{int|string, array{string, string}|array{string}}>
      */
-    public static function providerOneOfInvalidValues()
+    public static function providerEnsureOneOfRejectsInvalidValues()
     {
         return [
             'case 1' => ['three', ['one', 'two']],
@@ -1758,22 +1870,24 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerMatchesValidValues
+     * @dataProvider providerEnsureMatchesReturnsExpectedValue
      * @param string $value
-     * @param string $pattern
+     * @param non-empty-string $pattern
      * @param string $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureMatchesReturnsExpectedValue($value, $pattern, $expected)
     {
         $actual = self::ensureMatches($value, $pattern);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
-     * @return array<string, array{string, string, string}>
+     * @return array<string, array{string, non-empty-string, string}>
      */
-    public static function providerMatchesValidValues()
+    public static function providerEnsureMatchesReturnsExpectedValue()
     {
         return [
             'case 1' => ['123', '/^[0-9]+$/', '123'],
@@ -1781,9 +1895,11 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerMatchesInvalidValues
+     * @dataProvider providerEnsureMatchesRejectsInvalidValues
      * @param string $value
-     * @param string $pattern
+     * @param non-empty-string $pattern
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureMatchesRejectsInvalidValues($value, $pattern)
     {
@@ -1793,9 +1909,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @return array<string, array{string, string}>
+     * @return array<string, array{string, non-empty-string}>
      */
-    public static function providerMatchesInvalidValues()
+    public static function providerEnsureMatchesRejectsInvalidValues()
     {
         return [
             'case 1' => ['123x', '/^[0-9]+$/'],
@@ -1803,23 +1919,25 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStreamValidValues
+     * @dataProvider providerEnsureNullableStreamReturnsExpectedValue
      * @param null|resource $value
      * @param null|resource $expected
+     * @return void
      */
     public function testEnsureNullableStreamReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableStream($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{null|resource, null|resource}>
      */
-    public static function providerNullableStreamValidValues()
+    public static function providerEnsureNullableStreamReturnsExpectedValue()
     {
         $value1 = fopen('php://memory', 'w+');
+        self::assertNotFalse($value1);
 
         return [
             'case 1' => [null, null],
@@ -1828,8 +1946,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableStreamInvalidValues
+     * @dataProvider providerEnsureNullableStreamRejectsInvalidValues
      * @param bool|stdClass|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStreamRejectsInvalidValues($value)
     {
@@ -1841,7 +1961,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|stdClass|string}>
      */
-    public static function providerNullableStreamInvalidValues()
+    public static function providerEnsureNullableStreamRejectsInvalidValues()
     {
         return [
             'case 1' => [false],
@@ -1851,23 +1971,26 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStreamValidValues
+     * @dataProvider providerEnsureStreamReturnsExpectedValue
      * @param resource $value
      * @param resource $expected
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStreamReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureStream($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{resource, resource}>
      */
-    public static function providerStreamValidValues()
+    public static function providerEnsureStreamReturnsExpectedValue()
     {
         $value0 = fopen('php://memory', 'w+');
+        self::assertNotFalse($value0);
 
         return [
             'case 1' => [$value0, $value0],
@@ -1875,8 +1998,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStreamInvalidValues
+     * @dataProvider providerEnsureStreamRejectsInvalidValues
      * @param bool|null|stdClass|string $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStreamRejectsInvalidValues($value)
     {
@@ -1888,7 +2013,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{bool|null|stdClass|string}>
      */
-    public static function providerStreamInvalidValues()
+    public static function providerEnsureStreamRejectsInvalidValues()
     {
         return [
             'case 1' => [null],
@@ -1899,23 +2024,25 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableScalarOrStreamOrTraversableValidValues
+     * @dataProvider providerEnsureNullableScalarOrStreamOrTraversableReturnsExpectedValue
      * @param ArrayIterator<never, never>|bool|int|null|resource|string $value
      * @param ArrayIterator<never, never>|bool|int|null|resource|string $expected
+     * @return void
      */
     public function testEnsureNullableScalarOrStreamOrTraversableReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableScalarOrStreamOrTraversable($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{ArrayIterator<never, never>|bool|int|null|resource|string, ArrayIterator<never, never>|bool|int|null|resource|string}>
      */
-    public static function providerNullableScalarOrStreamOrTraversableValidValues()
+    public static function providerEnsureNullableScalarOrStreamOrTraversableReturnsExpectedValue()
     {
         $value4 = fopen('php://memory', 'w+');
+        self::assertNotFalse($value4);
         $value5 = new ArrayIterator([]);
 
         return [
@@ -1929,8 +2056,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableScalarOrStreamOrTraversableInvalidValues
+     * @dataProvider providerEnsureNullableScalarOrStreamOrTraversableRejectsInvalidValues
      * @param array{}|stdClass $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableScalarOrStreamOrTraversableRejectsInvalidValues($value)
     {
@@ -1942,7 +2071,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|stdClass}>
      */
-    public static function providerNullableScalarOrStreamOrTraversableInvalidValues()
+    public static function providerEnsureNullableScalarOrStreamOrTraversableRejectsInvalidValues()
     {
         return [
             'case 1' => [[]],
@@ -1951,22 +2080,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerClassStringOfValidValues
+     * @dataProvider providerEnsureClassStringOfReturnsExpectedValue
      * @param string $value
-     * @param string $class
+     * @param class-string $class
      * @param string $expected
+     * @return void
      */
     public function testEnsureClassStringOfReturnsExpectedValue($value, $class, $expected)
     {
         $actual = self::ensureClassStringOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
-     * @return array<string, array{string, string, string}>
+     * @return array<string, array{string, class-string, string}>
      */
-    public static function providerClassStringOfValidValues()
+    public static function providerEnsureClassStringOfReturnsExpectedValue()
     {
         return [
             'case 1' => [ArrayIterator::class, Traversable::class, ArrayIterator::class],
@@ -1974,9 +2104,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerClassStringOfInvalidValues
+     * @dataProvider providerEnsureClassStringOfRejectsInvalidValues
      * @param bool|string $value
-     * @param string      $class
+     * @param class-string      $class
+     * @return void
      */
     public function testEnsureClassStringOfRejectsInvalidValues($value, $class)
     {
@@ -1986,9 +2117,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @return array<string, array{bool|string, string}>
+     * @return array<string, array{bool|string, class-string}>
      */
-    public static function providerClassStringOfInvalidValues()
+    public static function providerEnsureClassStringOfRejectsInvalidValues()
     {
         return [
             'case 1' => [stdClass::class, Traversable::class],
@@ -1998,22 +2129,23 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerClassStringOrInstanceOfValidValues
+     * @dataProvider providerEnsureClassStringOrInstanceOfReturnsExpectedValue
      * @param ArrayIterator<never, never>|string $value
-     * @param string                             $class
+     * @param class-string                             $class
      * @param ArrayIterator<never, never>|string $expected
+     * @return void
      */
     public function testEnsureClassStringOrInstanceOfReturnsExpectedValue($value, $class, $expected)
     {
         $actual = self::ensureClassStringOrInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
-     * @return array<string, array{ArrayIterator<never, never>|string, string, ArrayIterator<never, never>|string}>
+     * @return array<string, array{ArrayIterator<never, never>|string, class-string, ArrayIterator<never, never>|string}>
      */
-    public static function providerClassStringOrInstanceOfValidValues()
+    public static function providerEnsureClassStringOrInstanceOfReturnsExpectedValue()
     {
         $value1 = new ArrayIterator([]);
 
@@ -2024,9 +2156,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerClassStringOrInstanceOfInvalidValues
+     * @dataProvider providerEnsureClassStringOrInstanceOfRejectsInvalidValues
      * @param bool|stdClass|string $value
-     * @param string               $class
+     * @param class-string               $class
+     * @return void
      */
     public function testEnsureClassStringOrInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -2036,9 +2169,9 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @return array<string, array{bool|stdClass|string, string}>
+     * @return array<string, array{bool|stdClass|string, class-string}>
      */
-    public static function providerClassStringOrInstanceOfInvalidValues()
+    public static function providerEnsureClassStringOrInstanceOfRejectsInvalidValues()
     {
         return [
             'case 1' => [stdClass::class, Traversable::class],
@@ -2048,21 +2181,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerScalarOrStringableValidValues
+     * @dataProvider providerEnsureScalarOrStringableReturnsExpectedValue
      * @param SimpleXMLElement|bool|int|string $value
      * @param SimpleXMLElement|bool|int|string $expected
+     * @return void
      */
     public function testEnsureScalarOrStringableReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureScalarOrStringable($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{SimpleXMLElement|bool|int|string, SimpleXMLElement|bool|int|string}>
      */
-    public static function providerScalarOrStringableValidValues()
+    public static function providerEnsureScalarOrStringableReturnsExpectedValue()
     {
         $value3 = new SimpleXMLElement('<value>text</value>');
 
@@ -2075,8 +2209,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerScalarOrStringableInvalidValues
+     * @dataProvider providerEnsureScalarOrStringableRejectsInvalidValues
      * @param array{}|null|stdClass $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureScalarOrStringableRejectsInvalidValues($value)
     {
@@ -2088,7 +2224,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{}|null|stdClass}>
      */
-    public static function providerScalarOrStringableInvalidValues()
+    public static function providerEnsureScalarOrStringableRejectsInvalidValues()
     {
         return [
             'case 1' => [null],
@@ -2098,21 +2234,22 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableScalarOrStringableOrArrayValidValues
+     * @dataProvider providerEnsureNullableScalarOrStringableOrArrayReturnsExpectedValue
      * @param array{SimpleXMLElement}|array{string, int}|bool|null $value
      * @param array{SimpleXMLElement}|array{string, int}|bool|null $expected
+     * @return void
      */
     public function testEnsureNullableScalarOrStringableOrArrayReturnsExpectedValue($value, $expected)
     {
         $actual = self::ensureNullableScalarOrStringableOrArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
      * @return array<string, array{array{SimpleXMLElement}|array{string, int}|bool|null, array{SimpleXMLElement}|array{string, int}|bool|null}>
      */
-    public static function providerNullableScalarOrStringableOrArrayValidValues()
+    public static function providerEnsureNullableScalarOrStringableOrArrayReturnsExpectedValue()
     {
         $value3 = [new SimpleXMLElement('<value>text</value>')];
 
@@ -2125,8 +2262,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNullableScalarOrStringableOrArrayInvalidValues
+     * @dataProvider providerEnsureNullableScalarOrStringableOrArrayRejectsInvalidValues
      * @param array{'bad': stdClass}|array{array{int}}|stdClass $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableScalarOrStringableOrArrayRejectsInvalidValues($value)
     {
@@ -2138,7 +2277,7 @@ class EnsureTest extends TestCase
     /**
      * @return array<string, array{array{'bad': stdClass}|array{array{int}}|stdClass}>
      */
-    public static function providerNullableScalarOrStringableOrArrayInvalidValues()
+    public static function providerEnsureNullableScalarOrStringableOrArrayRejectsInvalidValues()
     {
         return [
             'case 1' => [new stdClass()],
@@ -2147,6 +2286,9 @@ class EnsureTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testEnsureStringUsesProvidedMessage()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -2156,8 +2298,10 @@ class EnsureTest extends TestCase
     }
 
     /**
-     * @dataProvider providerStringMapInvalidValues
+     * @dataProvider providerEnsureStringMapUsesProvidedMessage
      * @param array{'key': bool}|array{string}|bool $value
+     * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringMapUsesProvidedMessage($value)
     {

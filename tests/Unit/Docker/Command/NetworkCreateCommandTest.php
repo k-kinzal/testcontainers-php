@@ -9,33 +9,36 @@ use Testcontainers\Docker\Output\DockerNetworkCreateOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class NetworkCreateCommandTest extends TestCase
+final class NetworkCreateCommandTest extends TestCase
 {
-    public function testHasNetworkCreateCommandTrait()
+    /**
+     * @return void
+     */
+    public function testNetworkCreateIsProvidedByNetworkCreateCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
-
-        $this->assertContains(NetworkCreateCommand::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(NetworkCreateCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testNetworkCreate()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
             'config' => __ROOT__.'/config.json',
         ]);
         $output = $client->networkCreate('test-network');
 
-        $this->assertInstanceOf(DockerNetworkCreateOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertTrue(preg_match('/^[0-9a-f]{64}/', $output->getNetworkId()) === 1);
+        self::assertInstanceOf(DockerNetworkCreateOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertTrue(preg_match('/^[0-9a-f]{64}/', $output->getNetworkId()->toString()) === 1);
     }
 }

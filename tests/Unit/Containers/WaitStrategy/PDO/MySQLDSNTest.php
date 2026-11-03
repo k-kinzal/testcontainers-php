@@ -4,18 +4,35 @@ namespace Tests\Unit\Containers\WaitStrategy\PDO;
 
 use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class MySQLDSNTest extends DSNTestCase
+final class MySQLDSNTest extends DSNTestCase
 {
-    public function resolveDSN()
+    /**
+     * @return array<array{MySQLDSN}>
+     */
+    public static function providerWithHost()
     {
-        return new MySQLDSN();
+        return [[new MySQLDSN()]];
     }
 
+    /**
+     * @return array<array{MySQLDSN}>
+     */
+    public static function providerWithPort()
+    {
+        return [[new MySQLDSN()]];
+    }
+
+    /**
+     * @return array<array{MySQLDSN}>
+     */
+    public static function providerToStringAcceptedByPDO()
+    {
+        return [[new MySQLDSN()]];
+    }
+
+    /**
+     * @return void
+     */
     public function testWithDbname()
     {
         $dbname = 'test';
@@ -24,9 +41,12 @@ class MySQLDSNTest extends DSNTestCase
             ->withDbname($dbname)
         ;
 
-        $this->assertTrue(strpos($dsn->toString(), $dbname) !== false);
+        self::assertTrue(strpos($dsn->toString(), $dbname) !== false);
     }
 
+    /**
+     * @return void
+     */
     public function testWithCharset()
     {
         $charset = 'utf8';
@@ -35,10 +55,13 @@ class MySQLDSNTest extends DSNTestCase
             ->withCharset($charset)
         ;
 
-        $this->assertTrue(strpos($dsn->toString(), $charset) !== false);
+        self::assertTrue(strpos($dsn->toString(), $charset) !== false);
     }
 
-    public function testFullDSN()
+    /**
+     * @return void
+     */
+    public function testToStringWithAllComponents()
     {
         $dsn = (new MySQLDSN())
             ->withHost('localhost')
@@ -47,6 +70,6 @@ class MySQLDSNTest extends DSNTestCase
             ->withCharset('utf8')
         ;
 
-        $this->assertEquals('mysql:host=localhost;port=3306;dbname=test;charset=utf8;', $dsn->toString());
+        self::assertEquals('mysql:host=localhost;port=3306;dbname=test;charset=utf8;', $dsn->toString());
     }
 }

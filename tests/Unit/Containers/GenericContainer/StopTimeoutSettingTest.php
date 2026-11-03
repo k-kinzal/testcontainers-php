@@ -9,49 +9,57 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StopTimeoutSetting;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class StopTimeoutSettingTest extends TestCase
+final class StopTimeoutSettingTest extends TestCase
 {
-    public function testHasStopTimeoutSettingTrait()
+    /**
+     * @return void
+     */
+    public function testStopTimeoutIsProvidedByStopTimeoutSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(StopTimeoutSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(StopTimeoutSetting::class, $uses);
     }
 
-    public function testStaticStopTimeout()
+    /**
+     * @return void
+     */
+    public function testStopTimeoutFromStaticStopTimeout()
     {
         $container = new StopTimeoutSettingWithStaticContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(5, $instance->getStopTimeout());
+        self::assertSame(5, $instance->getStopTimeout());
     }
 
-    public function testStartWithStopTimeout()
+    /**
+     * @return void
+     */
+    public function testWithStopTimeout()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
 
-        $this->assertSame(0, $instance->getStopTimeout());
+        self::assertSame(0, $instance->getStopTimeout());
     }
 
-    public function testDefaultStopTimeoutIsNull()
+    /**
+     * @return void
+     */
+    public function testStopTimeoutIsNullByDefault()
     {
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertNull($instance->getStopTimeout());
+        self::assertNull($instance->getStopTimeout());
     }
 
     /**
-     * @dataProvider providerWithStopTimeoutInvalidInputs
+     * @dataProvider providerWithStopTimeoutRejectsInvalidInputs
      * @param int $seconds
+     * @return void
      */
     public function testWithStopTimeoutRejectsInvalidInputs($seconds)
     {
@@ -64,14 +72,17 @@ class StopTimeoutSettingTest extends TestCase
     /**
      * @return array<string, array{int}>
      */
-    public static function providerWithStopTimeoutInvalidInputs()
+    public static function providerWithStopTimeoutRejectsInvalidInputs()
     {
         return [
             'case 1' => [-2],
         ];
     }
 
-    public function testStartRejectsInvalidStopTimeout()
+    /**
+     * @return void
+     */
+    public function testStopTimeoutRejectsInvalidStaticConfiguration()
     {
         $container = new StopTimeoutSettingWithInvalidStopTimeoutContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -80,12 +91,12 @@ class StopTimeoutSettingTest extends TestCase
     }
 }
 
-class StopTimeoutSettingWithStaticContainer extends GenericContainer
+final class StopTimeoutSettingWithStaticContainer extends GenericContainer
 {
     protected static $STOP_TIMEOUT = 5;
 }
 
-class StopTimeoutSettingWithInvalidStopTimeoutContainer extends GenericContainer
+final class StopTimeoutSettingWithInvalidStopTimeoutContainer extends GenericContainer
 {
     protected static $STOP_TIMEOUT = -2;
 }

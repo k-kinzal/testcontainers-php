@@ -7,17 +7,13 @@ use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Output\DockerVersionOutput;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class DockerVersionOutputTest extends TestCase
+final class DockerVersionOutputTest extends TestCase
 {
     /**
-     * @dataProvider providerClientVersions
+     * @dataProvider providerGetClientVersionReturnsParsedVersion
      * @param string      $json
      * @param null|string $expected
+     * @return void
      */
     public function testGetClientVersionReturnsParsedVersion($json, $expected)
     {
@@ -25,13 +21,13 @@ class DockerVersionOutputTest extends TestCase
         $process->run();
         $output = new DockerVersionOutput($process);
 
-        $this->assertSame($expected, $output->getClientVersion());
+        self::assertSame($expected, $output->getClientVersion());
     }
 
     /**
      * @return array<string, array{string, null|string}>
      */
-    public static function providerClientVersions()
+    public static function providerGetClientVersionReturnsParsedVersion()
     {
         return [
             'both versions' => ['{"Client":{"Version":"28.0.1"},"Server":{"Version":"28.0.2"}}', '28.0.1'],
@@ -50,9 +46,10 @@ class DockerVersionOutputTest extends TestCase
     }
 
     /**
-     * @dataProvider providerServerVersions
+     * @dataProvider providerGetServerVersionReturnsParsedVersion
      * @param string      $json
      * @param null|string $expected
+     * @return void
      */
     public function testGetServerVersionReturnsParsedVersion($json, $expected)
     {
@@ -60,13 +57,13 @@ class DockerVersionOutputTest extends TestCase
         $process->run();
         $output = new DockerVersionOutput($process);
 
-        $this->assertSame($expected, $output->getServerVersion());
+        self::assertSame($expected, $output->getServerVersion());
     }
 
     /**
      * @return array<string, array{string, null|string}>
      */
-    public static function providerServerVersions()
+    public static function providerGetServerVersionReturnsParsedVersion()
     {
         return [
             'both versions' => ['{"Client":{"Version":"28.0.1"},"Server":{"Version":"28.0.2"}}', '28.0.2'],
@@ -85,8 +82,9 @@ class DockerVersionOutputTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidVersions
+     * @dataProvider providerConstructRejectsInvalidVersionType
      * @param string $json
+     * @return void
      */
     public function testConstructRejectsInvalidVersionType($json)
     {
@@ -100,7 +98,7 @@ class DockerVersionOutputTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerInvalidVersions()
+    public static function providerConstructRejectsInvalidVersionType()
     {
         return [
             'integer client version' => ['{"Client":{"Version":28}}'],

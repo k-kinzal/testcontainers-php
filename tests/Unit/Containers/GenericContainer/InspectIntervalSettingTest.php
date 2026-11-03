@@ -9,49 +9,57 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\InspectIntervalSetting;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class InspectIntervalSettingTest extends TestCase
+final class InspectIntervalSettingTest extends TestCase
 {
-    public function testHasInspectIntervalSettingTrait()
+    /**
+     * @return void
+     */
+    public function testInspectIntervalIsProvidedByInspectIntervalSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(InspectIntervalSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(InspectIntervalSetting::class, $uses);
     }
 
-    public function testStaticInspectInterval()
+    /**
+     * @return void
+     */
+    public function testInspectIntervalFromStaticInspectInterval()
     {
         $container = new InspectIntervalSettingWithStaticContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(5, $instance->getInspectInterval());
+        self::assertSame(5, $instance->getInspectInterval());
     }
 
-    public function testStartWithInspectInterval()
+    /**
+     * @return void
+     */
+    public function testWithInspectInterval()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withInspectInterval(0.5)
         ;
         $instance = $container->start();
 
-        $this->assertSame(0.5, $instance->getInspectInterval());
+        self::assertSame(0.5, $instance->getInspectInterval());
     }
 
-    public function testDefaultInspectInterval()
+    /**
+     * @return void
+     */
+    public function testInspectIntervalByDefault()
     {
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(10, $instance->getInspectInterval());
+        self::assertSame(10, $instance->getInspectInterval());
     }
 
     /**
-     * @dataProvider providerWithInspectIntervalInvalidInputs
+     * @dataProvider providerWithInspectIntervalRejectsInvalidInputs
      * @param float $seconds
+     * @return void
      */
     public function testWithInspectIntervalRejectsInvalidInputs($seconds)
     {
@@ -64,14 +72,17 @@ class InspectIntervalSettingTest extends TestCase
     /**
      * @return array<string, array{float}>
      */
-    public static function providerWithInspectIntervalInvalidInputs()
+    public static function providerWithInspectIntervalRejectsInvalidInputs()
     {
         return [
             'case 1' => [NAN],
         ];
     }
 
-    public function testStartRejectsInvalidInspectInterval()
+    /**
+     * @return void
+     */
+    public function testInspectIntervalRejectsInvalidStaticConfiguration()
     {
         $container = new InspectIntervalSettingWithInvalidInspectIntervalContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -80,12 +91,12 @@ class InspectIntervalSettingTest extends TestCase
     }
 }
 
-class InspectIntervalSettingWithStaticContainer extends GenericContainer
+final class InspectIntervalSettingWithStaticContainer extends GenericContainer
 {
     protected static $INSPECT_INTERVAL = 5;
 }
 
-class InspectIntervalSettingWithInvalidInspectIntervalContainer extends GenericContainer
+final class InspectIntervalSettingWithInvalidInspectIntervalContainer extends GenericContainer
 {
     protected static $INSPECT_INTERVAL = INF;
 }

@@ -7,18 +7,11 @@ use Testcontainers\Containers\WaitStrategy\ContainerStoppedException;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class HostPortWaitStrategyTest extends WaitStrategyTestCase
+final class HostPortWaitStrategyTest extends WaitStrategyTestCase
 {
-    public function resolveWaitStrategy()
-    {
-        return new HostPortWaitStrategy();
-    }
-
+    /**
+     * @return void
+     */
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('nginx:alpine');
@@ -28,9 +21,12 @@ class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $strategy = new HostPortWaitStrategy();
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);
@@ -46,6 +42,9 @@ class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsContainerStoppedException()
     {
         $this->expectException(ContainerStoppedException::class);

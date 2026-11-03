@@ -14,23 +14,25 @@ use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class VolumesFromSettingTest extends TestCase
+final class VolumesFromSettingTest extends TestCase
 {
-    public function testHasVolumesFromSettingTrait()
+    /**
+     * @return void
+     */
+    public function testVolumesFromIsProvidedByVolumesFromSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(VolumesFromSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(VolumesFromSetting::class, $uses);
     }
 
-    public function testStaticVolumesFrom()
+    /**
+     * @return void
+     */
+    public function testVolumesFromFromStaticVolumesFrom()
     {
         $fp = tmpfile();
+        self::assertNotFalse($fp);
         fwrite($fp, 'Hello, World!');
         $meta = stream_get_meta_data($fp);
         $path = $meta['uri'];
@@ -39,9 +41,11 @@ class VolumesFromSettingTest extends TestCase
             (new DinD())
                 ->withFileSystemBind(dirname($path), dirname($path), BindMode::READ_WRITE())
         );
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -52,8 +56,7 @@ class VolumesFromSettingTest extends TestCase
             ->withFileSystemBind($path, $path, BindMode::READ_WRITE())
         ;
 
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $instance1 = $container->start();
+        $container->start();
 
         $container = (new VolumesFromSettingWithStaticVolumesFromContainer('alpine:latest'))
             ->withDockerClient($client)
@@ -63,13 +66,17 @@ class VolumesFromSettingTest extends TestCase
         ;
         $instance2 = $container->start();
 
-        $this->assertSame('', $instance2->getErrorOutput());
-        $this->assertSame('Hello, World!', $instance2->getOutput());
+        self::assertSame('', $instance2->getErrorOutput());
+        self::assertSame('Hello, World!', $instance2->getOutput());
     }
 
-    public function testStartWithVolumesFrom()
+    /**
+     * @return void
+     */
+    public function testWithVolumesFrom()
     {
         $fp = tmpfile();
+        self::assertNotFalse($fp);
         fwrite($fp, 'Hello, World!');
         $meta = stream_get_meta_data($fp);
         $path = $meta['uri'];
@@ -88,10 +95,13 @@ class VolumesFromSettingTest extends TestCase
         ;
         $instance2 = $container->start();
 
-        $this->assertSame('Hello, World!', $instance2->getOutput());
+        self::assertSame('Hello, World!', $instance2->getOutput());
     }
 
-    public function testStartRejectsInvalidVolumesFrom()
+    /**
+     * @return void
+     */
+    public function testVolumesFromRejectsInvalidStaticConfiguration()
     {
         $container = new VolumesFromSettingWithInvalidVolumesFromContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -100,14 +110,14 @@ class VolumesFromSettingTest extends TestCase
     }
 }
 
-class VolumesFromSettingWithStaticVolumesFromContainer extends GenericContainer
+final class VolumesFromSettingWithStaticVolumesFromContainer extends GenericContainer
 {
     protected static $VOLUMES_FROM = [
         ['name' => 'volumes-from-container', 'mode' => 'rw'],
     ];
 }
 
-class VolumesFromSettingWithInvalidVolumesFromContainer extends GenericContainer
+final class VolumesFromSettingWithInvalidVolumesFromContainer extends GenericContainer
 {
     protected static $VOLUMES_FROM = false;
 }

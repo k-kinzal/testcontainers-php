@@ -8,55 +8,71 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\PortStrategy\ConflictBehavior;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class ConflictBehaviorTest extends TestCase
+final class ConflictBehaviorTest extends TestCase
 {
-    public function testConflictBehaviorRetry()
+    /**
+     * @return void
+     */
+    public function testConstructRetry()
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$RETRY);
 
-        $this->assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
     }
 
-    public function testConflictBehaviorFail()
+    /**
+     * @return void
+     */
+    public function testConstructFail()
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$FAIL);
 
-        $this->assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testRetry()
     {
         $conflictBehavior = ConflictBehavior::RETRY();
 
-        $this->assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFail()
     {
         $conflictBehavior = ConflictBehavior::FAIL();
 
-        $this->assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithRetry()
     {
         $conflictBehavior = ConflictBehavior::fromString(ConflictBehavior::$RETRY);
 
-        $this->assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithFail()
     {
         $conflictBehavior = ConflictBehavior::fromString(ConflictBehavior::$FAIL);
 
-        $this->assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithInvalidAction()
     {
         $this->expectException(InvalidFormatException::class);
@@ -65,19 +81,25 @@ class ConflictBehaviorTest extends TestCase
         ConflictBehavior::fromString('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testIsRetry()
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$RETRY);
 
-        $this->assertTrue($conflictBehavior->isRetry());
-        $this->assertFalse($conflictBehavior->isFail());
+        self::assertTrue($conflictBehavior->isRetry());
+        self::assertFalse($conflictBehavior->isFail());
     }
 
+    /**
+     * @return void
+     */
     public function testIsFail()
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$FAIL);
 
-        $this->assertTrue($conflictBehavior->isFail());
-        $this->assertFalse($conflictBehavior->isRetry());
+        self::assertTrue($conflictBehavior->isFail());
+        self::assertFalse($conflictBehavior->isRetry());
     }
 }

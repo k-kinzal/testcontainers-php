@@ -9,47 +9,57 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\StopSignalSetting;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class StopSignalSettingTest extends TestCase
+final class StopSignalSettingTest extends TestCase
 {
-    public function testHasStopSignalSettingTrait()
+    /**
+     * @return void
+     */
+    public function testStopSignalIsProvidedByStopSignalSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(StopSignalSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(StopSignalSetting::class, $uses);
     }
 
-    public function testStaticStopSignal()
+    /**
+     * @return void
+     */
+    public function testStopSignalFromStaticStopSignal()
     {
         $container = new StopSignalSettingWithStaticContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame('KILL', $instance->getStopSignal());
+        self::assertSame('KILL', $instance->getStopSignal());
     }
 
-    public function testStartWithStopSignal()
+    /**
+     * @return void
+     */
+    public function testWithStopSignal()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withStopSignal('KILL')
         ;
         $instance = $container->start();
 
-        $this->assertSame('KILL', $instance->getStopSignal());
+        self::assertSame('KILL', $instance->getStopSignal());
     }
 
-    public function testDefaultStopSignalIsNull()
+    /**
+     * @return void
+     */
+    public function testStopSignalIsNullByDefault()
     {
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertNull($instance->getStopSignal());
+        self::assertNull($instance->getStopSignal());
     }
 
-    public function testStartRejectsInvalidStopSignal()
+    /**
+     * @return void
+     */
+    public function testStopSignalRejectsInvalidStaticConfiguration()
     {
         $container = new StopSignalSettingWithInvalidStopSignalContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -58,12 +68,12 @@ class StopSignalSettingTest extends TestCase
     }
 }
 
-class StopSignalSettingWithStaticContainer extends GenericContainer
+final class StopSignalSettingWithStaticContainer extends GenericContainer
 {
     protected static $STOP_SIGNAL = 'KILL';
 }
 
-class StopSignalSettingWithInvalidStopSignalContainer extends GenericContainer
+final class StopSignalSettingWithInvalidStopSignalContainer extends GenericContainer
 {
     protected static $STOP_SIGNAL = [];
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <psalm xmlns="https://getpsalm.org/schema/config"
        errorLevel="1"
+       autoloader="tests/bootstrap.php"
        ensureOverrideAttribute="false"
        phpVersion="8.5"
        resolveFromConfigFile="true"
@@ -9,11 +10,15 @@
        findUnusedPsalmSuppress="true">
     <projectFiles>
         <directory name="src" />
+        <directory name="tests" />
         <ignoreFiles>
             <directory name="vendor" />
             <file name="src/Logger/ConsoleLogger/ConsoleLogger56.php" />
         </ignoreFiles>
     </projectFiles>
+    <plugins>
+        <pluginClass class="Rules\AllRule" />
+    </plugins>
     <issueHandlers>
         <PossiblyUnusedReturnValue errorLevel="suppress" />
     </issueHandlers>

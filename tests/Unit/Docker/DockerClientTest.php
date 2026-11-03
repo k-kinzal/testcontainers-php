@@ -5,19 +5,18 @@ namespace Tests\Unit\Docker;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\DockerClient;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class DockerClientTest extends TestCase
+final class DockerClientTest extends TestCase
 {
-    public function testClone()
+    /**
+     * @return void
+     */
+    public function testWithTimeoutConfigurationSurvivesCloning()
     {
-        $client = new DockerClient();
+        $client = (new DockerClient())->withTimeout(42);
         $cloned = clone $client;
 
-        $this->assertNotSame($client, $cloned);
-        $this->assertEquals($client, $cloned);
+        self::assertNotSame($client, $cloned);
+        self::assertEquals($client, $cloned);
+        self::assertSame(42, $cloned->getTimeout());
     }
 }

@@ -11,21 +11,22 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class EnvSettingTest extends TestCase
+final class EnvSettingTest extends TestCase
 {
-    public function testHasEnvSettingTrait()
+    /**
+     * @return void
+     */
+    public function testEnvIsProvidedByEnvSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(EnvSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(EnvSetting::class, $uses);
     }
 
-    public function testStaticEnvironments()
+    /**
+     * @return void
+     */
+    public function testEnvFromStaticEnvironments()
     {
         $container = (new EnvSettingWithStaticEnvironmentsContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -33,10 +34,13 @@ class EnvSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("value1\nvalue2\n", $instance->getOutput());
+        self::assertSame("value1\nvalue2\n", $instance->getOutput());
     }
 
-    public function testStartWithEnv()
+    /**
+     * @return void
+     */
+    public function testWithEnv()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -47,10 +51,13 @@ class EnvSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("value1\nvalue2\n", $instance->getOutput());
+        self::assertSame("value1\nvalue2\n", $instance->getOutput());
     }
 
-    public function testStartWithEnvs()
+    /**
+     * @return void
+     */
+    public function testWithEnvs()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -63,13 +70,14 @@ class EnvSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("value1\nvalue2\n", $instance->getOutput());
+        self::assertSame("value1\nvalue2\n", $instance->getOutput());
     }
 
     /**
-     * @dataProvider providerWithEnvInvalidInputs
+     * @dataProvider providerWithEnvRejectsInvalidInputs
      * @param string $key
      * @param bool   $value
+     * @return void
      */
     public function testWithEnvRejectsInvalidInputs($key, $value)
     {
@@ -82,7 +90,7 @@ class EnvSettingTest extends TestCase
     /**
      * @return array<string, array{string, bool}>
      */
-    public static function providerWithEnvInvalidInputs()
+    public static function providerWithEnvRejectsInvalidInputs()
     {
         return [
             'case 1' => ['KEY', false],
@@ -90,8 +98,9 @@ class EnvSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithEnvsInvalidInputs
+     * @dataProvider providerWithEnvsRejectsInvalidInputs
      * @param array{'KEY': stdClass} $env
+     * @return void
      */
     public function testWithEnvsRejectsInvalidInputs($env)
     {
@@ -104,14 +113,17 @@ class EnvSettingTest extends TestCase
     /**
      * @return array<string, array{array{'KEY': stdClass}}>
      */
-    public static function providerWithEnvsInvalidInputs()
+    public static function providerWithEnvsRejectsInvalidInputs()
     {
         return [
             'case 1' => [['KEY' => new stdClass()]],
         ];
     }
 
-    public function testStartRejectsInvalidEnv()
+    /**
+     * @return void
+     */
+    public function testEnvRejectsInvalidStaticConfiguration()
     {
         $container = new EnvSettingWithInvalidEnvContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -120,7 +132,7 @@ class EnvSettingTest extends TestCase
     }
 }
 
-class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
+final class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
 {
     protected static $ENVIRONMENTS = [
         'ENV1' => 'value1',
@@ -130,7 +142,7 @@ class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
     protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
 
-class EnvSettingWithInvalidEnvContainer extends GenericContainer
+final class EnvSettingWithInvalidEnvContainer extends GenericContainer
 {
     protected static $ENV = ['KEY' => false];
 }

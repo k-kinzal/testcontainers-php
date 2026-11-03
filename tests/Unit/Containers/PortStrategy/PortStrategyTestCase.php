@@ -9,24 +9,37 @@ use Testcontainers\Containers\PortStrategy\PortStrategy;
 abstract class PortStrategyTestCase extends TestCase
 {
     /**
-     * @return PortStrategy
+     * @return array<array{PortStrategy}>
      */
-    abstract public function resolvePortStrategy();
+    abstract public static function providerGetPort();
 
-    public function testInterfaceGetPort()
+    /**
+     * @return array<array{PortStrategy}>
+     */
+    abstract public static function providerConflictBehavior();
+
+    /**
+     * @dataProvider providerGetPort
+     * @param PortStrategy $strategy
+     * @return void
+     */
+    public function testGetPort($strategy)
     {
-        $strategy = $this->resolvePortStrategy();
         $port = $strategy->getPort();
 
-        $this->assertGreaterThanOrEqual(49152, $port);
-        $this->assertLessThanOrEqual(65535, $port);
+        self::assertGreaterThanOrEqual(49152, $port);
+        self::assertLessThanOrEqual(65535, $port);
     }
 
-    public function testInterfaceConflictBehavior()
+    /**
+     * @dataProvider providerConflictBehavior
+     * @param PortStrategy $strategy
+     * @return void
+     */
+    public function testConflictBehavior($strategy)
     {
-        $strategy = $this->resolvePortStrategy();
         $conflictBehavior = $strategy->conflictBehavior();
 
-        $this->assertInstanceOf(ConflictBehavior::class, $conflictBehavior);
+        self::assertInstanceOf(ConflictBehavior::class, $conflictBehavior);
     }
 }

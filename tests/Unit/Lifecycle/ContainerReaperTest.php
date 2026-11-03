@@ -10,23 +10,21 @@ use Testcontainers\Lifecycle\ContainerReaper;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class ContainerReaperTest extends TestCase
+final class ContainerReaperTest extends TestCase
 {
     /**
-     * @dataProvider providerRetainedContainerLabels
+     * @dataProvider providerExecuteKeepsContainersWithoutOrphanedOwnership
      * @param array<string, string> $labels
+     * @return void
      */
     public function testExecuteKeepsContainersWithoutOrphanedOwnership($labels)
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -34,12 +32,13 @@ class ContainerReaperTest extends TestCase
             'detach' => true,
             'label' => $labels + ['org.testcontainers' => 'true'],
         ]);
+        self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
             (new ContainerReaper($client))->execute();
 
-            $this->assertSame('running', $client->inspect($id)->state->status);
+            self::assertSame('running', $client->inspect($id)->state->status);
         } finally {
             $client->rm($id, ['force' => true]);
             $dind->stop();
@@ -49,7 +48,7 @@ class ContainerReaperTest extends TestCase
     /**
      * @return array<string, array{array<string, string>}>
      */
-    public static function providerRetainedContainerLabels()
+    public static function providerExecuteKeepsContainersWithoutOrphanedOwnership()
     {
         return [
             'different host' => [[
@@ -69,12 +68,17 @@ class ContainerReaperTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteStopsOrphanedContainerFromSameHost()
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -86,24 +90,30 @@ class ContainerReaperTest extends TestCase
                 'org.testcontainers.pid' => '2147483647',
             ],
         ]);
+        self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
             (new ContainerReaper($client))->execute();
 
-            $this->assertSame('exited', $client->inspect($id)->state->status);
+            self::assertSame('exited', $client->inspect($id)->state->status);
         } finally {
             $client->rm($id, ['force' => true]);
             $dind->stop();
         }
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteKeepsContainerOwnedByAnotherLiveProcess()
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -117,12 +127,13 @@ class ContainerReaperTest extends TestCase
                 'org.testcontainers.pid' => (string) $process->getPid(),
             ],
         ]);
+        self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
             (new ContainerReaper($client))->execute();
 
-            $this->assertSame('running', $client->inspect($id)->state->status);
+            self::assertSame('running', $client->inspect($id)->state->status);
         } finally {
             $client->rm($id, ['force' => true]);
             $dind->stop();
@@ -130,15 +141,21 @@ class ContainerReaperTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteHandlesUnavailableDockerDaemon()
     {
         $client = (new DockerClient())->withGlobalOptions([
             'host' => 'unix://'.__DIR__.'/missing-docker.sock',
         ]);
 
-        $this->assertNull((new ContainerReaper($client))->execute());
+        self::assertNull((new ContainerReaper($client))->execute());
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteHandlesInvalidCommandOutput()
     {
         $client = (new DockerClient())
@@ -146,6 +163,6 @@ class ContainerReaperTest extends TestCase
             ->withGlobalOptions(['version' => true])
         ;
 
-        $this->assertNull((new ContainerReaper($client))->execute());
+        self::assertNull((new ContainerReaper($client))->execute());
     }
 }

@@ -12,18 +12,11 @@ use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Tests\Unit\Containers\WaitStrategy\WaitStrategyTestCase;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
+final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 {
-    public function resolveWaitStrategy()
-    {
-        return (new PDOConnectWaitStrategy())->withDsn(new SQLiteDSN());
-    }
-
+    /**
+     * @return void
+     */
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('alpine:latest');
@@ -33,9 +26,12 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $strategy = (new PDOConnectWaitStrategy())->withDsn(new SQLiteDSN());
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);
@@ -45,11 +41,14 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $container->withExposedPort(3306);
         $instance = $container->start();
 
-        $strategy = (new PDOConnectWaitStrategy())->withDsn(new MySQLDSN('test'));
+        $strategy = (new PDOConnectWaitStrategy())->withDsn((new MySQLDSN())->withDbname('test'));
         $strategy->withTimeoutSeconds(1);
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsContainerStoppedException()
     {
         $this->expectException(ContainerStoppedException::class);
@@ -59,10 +58,13 @@ class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $container->withExposedPort(3306);
         $instance = $container->start();
 
-        $strategy = (new PDOConnectWaitStrategy())->withDsn(new MySQLDSN('test'));
+        $strategy = (new PDOConnectWaitStrategy())->withDsn((new MySQLDSN())->withDbname('test'));
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWithDsnRejectsUnrelatedObject()
     {
         $this->expectException(UnexpectedValueException::class);

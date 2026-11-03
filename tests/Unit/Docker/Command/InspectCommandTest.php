@@ -8,20 +8,21 @@ use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerInspectOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class InspectCommandTest extends TestCase
+final class InspectCommandTest extends TestCase
 {
-    public function testHasInspectCommandTrait()
+    /**
+     * @return void
+     */
+    public function testInspectIsProvidedByInspectCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
-
-        $this->assertContains(InspectCommand::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(InspectCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testInspect()
     {
         $client = new DockerClient();
@@ -33,9 +34,9 @@ class InspectCommandTest extends TestCase
         $containerId = $output->getContainerId();
         $output = $client->inspect($containerId);
 
-        $this->assertInstanceOf(DockerInspectOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertContains($output->state->status, [
+        self::assertInstanceOf(DockerInspectOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertContains($output->state->status, [
             'created',
             'running',
             'paused',
@@ -44,6 +45,6 @@ class InspectCommandTest extends TestCase
             'exited',
             'dead',
         ]);
-        $this->assertSame(0, $output->state->exitCode);
+        self::assertSame(0, $output->state->exitCode);
     }
 }

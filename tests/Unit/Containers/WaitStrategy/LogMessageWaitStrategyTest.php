@@ -8,18 +8,11 @@ use Testcontainers\Containers\WaitStrategy\LogMessageFailedException;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class LogMessageWaitStrategyTest extends WaitStrategyTestCase
+final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
 {
-    public function resolveWaitStrategy()
-    {
-        return new LogMessageWaitStrategy();
-    }
-
+    /**
+     * @return void
+     */
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('alpine:latest');
@@ -30,9 +23,12 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy->withPattern('Ready');
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyWithMultipleLinesAtOnce()
     {
         $container = new GenericContainer('alpine:latest');
@@ -44,9 +40,12 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy->withTimeoutSeconds(5);
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);
@@ -61,6 +60,9 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsContainerStoppedException()
     {
         $this->expectException(ContainerStoppedException::class);
@@ -76,6 +78,9 @@ class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsLogMessageFailedException()
     {
         $this->expectException(LogMessageFailedException::class);

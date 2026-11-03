@@ -8,18 +8,11 @@ use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class HttpWaitStrategyTest extends WaitStrategyTestCase
+final class HttpWaitStrategyTest extends WaitStrategyTestCase
 {
-    public function resolveWaitStrategy()
-    {
-        return new HttpWaitStrategy();
-    }
-
+    /**
+     * @return void
+     */
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('nginx:alpine');
@@ -29,9 +22,12 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         $strategy = new HttpWaitStrategy();
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsWaitingTimeoutException()
     {
         $this->expectException(WaitingTimeoutException::class);
@@ -46,6 +42,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWaitUntilReadyThrowsContainerStoppedException()
     {
         $this->expectException(ContainerStoppedException::class);
@@ -59,6 +58,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         $strategy->waitUntilReady($instance);
     }
 
+    /**
+     * @return void
+     */
     public function testWithTimeoutSecondsRejectsNegativeTimeout()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -66,6 +68,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         (new HttpWaitStrategy())->withTimeoutSeconds(-1);
     }
 
+    /**
+     * @return void
+     */
     public function testWithRetryIntervalRejectsStringInterval()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -73,6 +78,9 @@ class HttpWaitStrategyTest extends WaitStrategyTestCase
         (new HttpWaitStrategy())->withRetryInterval('1');
     }
 
+    /**
+     * @return void
+     */
     public function testWithExpectedResponseCodeRejectsOutOfRangeCode()
     {
         $this->expectException(UnexpectedValueException::class);

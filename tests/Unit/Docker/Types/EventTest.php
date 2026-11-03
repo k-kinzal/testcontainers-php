@@ -8,41 +8,46 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Types\Event;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class EventTest extends TestCase
+final class EventTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testFromArray()
     {
         $event = Event::fromArray(json_decode('{"Type":"container","Action":"die","Actor":{"ID":"713445482cc85d55d1df8adb30ea097a5884727c52d893c7e08978be3315909c","Attributes":{"execDuration":"0","exitCode":"2","image":"alpine","name":"clever_moser"}},"scope":"local","time":1793107853,"timeNano":1793107853987226709}', true));
 
-        $this->assertTrue($event->type->isContainer());
-        $this->assertTrue($event->action->isDie());
-        $this->assertSame('713445482cc85d55d1df8adb30ea097a5884727c52d893c7e08978be3315909c', $event->actor->id);
-        $this->assertSame('2', $event->actor->getAttribute('exitCode'));
-        $this->assertSame('alpine', $event->actor->getAttribute('image'));
-        $this->assertNull($event->actor->getAttribute('not-exist'));
-        $this->assertTrue($event->scope->isLocal());
-        $this->assertSame(1793107853, $event->time);
-        $this->assertSame(1793107853987226709, $event->timeNano);
-        $this->assertNull($event->status);
-        $this->assertNull($event->id);
-        $this->assertNull($event->from);
+        self::assertTrue($event->type->isContainer());
+        self::assertTrue($event->action->isDie());
+        self::assertSame('713445482cc85d55d1df8adb30ea097a5884727c52d893c7e08978be3315909c', $event->actor->id);
+        self::assertSame('2', $event->actor->getAttribute('exitCode'));
+        self::assertSame('alpine', $event->actor->getAttribute('image'));
+        self::assertNull($event->actor->getAttribute('not-exist'));
+        self::assertNotNull($event->scope);
+        self::assertTrue($event->scope->isLocal());
+        self::assertSame(1793107853, $event->time);
+        self::assertSame(1793107853987226709, $event->timeNano);
+        self::assertNull($event->status);
+        self::assertNull($event->id);
+        self::assertNull($event->from);
     }
 
+    /**
+     * @return void
+     */
     public function testDeserialize()
     {
         $event = Event::deserialize('{"Type":"container","Action":"start","Actor":{"ID":"8188d93d8a27","Attributes":{"image":"alpine"}},"scope":"local","time":1,"timeNano":1000000000}');
 
-        $this->assertTrue($event->type->isContainer());
-        $this->assertTrue($event->action->isStart());
-        $this->assertSame('8188d93d8a27', $event->actor->id);
-        $this->assertSame(1000000000, $event->timeNano);
+        self::assertTrue($event->type->isContainer());
+        self::assertTrue($event->action->isStart());
+        self::assertSame('8188d93d8a27', $event->actor->id);
+        self::assertSame(1000000000, $event->timeNano);
     }
 
+    /**
+     * @return void
+     */
     public function testDeserializeWithInvalidJson()
     {
         $this->expectException(InvalidValueException::class);
@@ -50,6 +55,9 @@ class EventTest extends TestCase
         Event::deserialize('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithDeprecatedProperties()
     {
         $event = Event::fromArray([
@@ -64,11 +72,14 @@ class EventTest extends TestCase
             'timeNano' => 1000000000,
         ]);
 
-        $this->assertSame('start', $event->status);
-        $this->assertSame('8188d93d8a27', $event->id);
-        $this->assertSame('alpine', $event->from);
+        self::assertSame('start', $event->status);
+        self::assertSame('8188d93d8a27', $event->id);
+        self::assertSame('alpine', $event->from);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithOmittedProperties()
     {
         $event = Event::fromArray([
@@ -77,14 +88,17 @@ class EventTest extends TestCase
             'Actor' => ['ID' => 'daemon-id', 'Attributes' => null],
         ]);
 
-        $this->assertTrue($event->type->isDaemon());
-        $this->assertTrue($event->action->isReload());
-        $this->assertSame([], $event->actor->attributes);
-        $this->assertNull($event->scope);
-        $this->assertNull($event->time);
-        $this->assertNull($event->timeNano);
+        self::assertTrue($event->type->isDaemon());
+        self::assertTrue($event->action->isReload());
+        self::assertSame([], $event->actor->attributes);
+        self::assertNull($event->scope);
+        self::assertNull($event->time);
+        self::assertNull($event->timeNano);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithUnknownType()
     {
         $this->expectException(InvalidValueException::class);
@@ -96,6 +110,9 @@ class EventTest extends TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithUnknownAction()
     {
         $this->expectException(InvalidValueException::class);
@@ -107,6 +124,9 @@ class EventTest extends TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithoutActor()
     {
         $this->expectException(InvalidValueException::class);
@@ -117,6 +137,9 @@ class EventTest extends TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithNonStringAttribute()
     {
         $this->expectException(InvalidValueException::class);
@@ -128,6 +151,9 @@ class EventTest extends TestCase
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayWithNonIntegerTime()
     {
         $this->expectException(InvalidValueException::class);

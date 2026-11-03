@@ -10,21 +10,22 @@ use Testcontainers\Containers\GenericContainer\HostSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class HostSettingTest extends TestCase
+final class HostSettingTest extends TestCase
 {
-    public function testHasHostSettingTrait()
+    /**
+     * @return void
+     */
+    public function testExtraHostsIsProvidedByHostSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(HostSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(HostSetting::class, $uses);
     }
 
-    public function testStaticExtraHosts()
+    /**
+     * @return void
+     */
+    public function testExtraHostsFromStaticExtraHosts()
     {
         $container = (new HostSettingWithExtraHostsContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -33,10 +34,13 @@ class HostSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
+        self::assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
     }
 
-    public function testStaticHosts()
+    /**
+     * @return void
+     */
+    public function testExtraHostsFromStaticHosts()
     {
         $container = (new HostSettingWithHostsContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -45,10 +49,13 @@ class HostSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
+        self::assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
     }
 
-    public function testStartWithExtraHost()
+    /**
+     * @return void
+     */
+    public function testWithExtraHost()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -58,10 +65,13 @@ class HostSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
+        self::assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
     }
 
-    public function testStartWithInvalidCall()
+    /**
+     * @return void
+     */
+    public function testWithExtraHostRejectsInvalidCall()
     {
         $this->expectExceptionMessage('Expected null');
         $this->expectException(UnexpectedValueException::class);
@@ -71,7 +81,10 @@ class HostSettingTest extends TestCase
         ;
     }
 
-    public function testStartWithExtraHosts()
+    /**
+     * @return void
+     */
+    public function testWithExtraHosts()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -84,12 +97,13 @@ class HostSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
+        self::assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
     }
 
     /**
-     * @dataProvider providerWithExtraHostsInvalidInputs
+     * @dataProvider providerWithExtraHostsRejectsInvalidInputs
      * @param bool $extraHosts
+     * @return void
      */
     public function testWithExtraHostsRejectsInvalidInputs($extraHosts)
     {
@@ -102,14 +116,17 @@ class HostSettingTest extends TestCase
     /**
      * @return array<string, array{bool}>
      */
-    public static function providerWithExtraHostsInvalidInputs()
+    public static function providerWithExtraHostsRejectsInvalidInputs()
     {
         return [
             'case 1' => [false],
         ];
     }
 
-    public function testStartRejectsInvalidExtraHosts()
+    /**
+     * @return void
+     */
+    public function testExtraHostsRejectsInvalidStaticConfiguration()
     {
         $container = new HostSettingWithInvalidExtraHostsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -118,21 +135,21 @@ class HostSettingTest extends TestCase
     }
 }
 
-class HostSettingWithExtraHostsContainer extends GenericContainer
+final class HostSettingWithExtraHostsContainer extends GenericContainer
 {
     public static $EXTRA_HOSTS = [
         'example.com:127.0.0.1',
     ];
 }
 
-class HostSettingWithHostsContainer extends GenericContainer
+final class HostSettingWithHostsContainer extends GenericContainer
 {
     public static $HOSTS = [
         ['hostname' => 'example.org', 'ipAddress' => '127.0.0.1'],
     ];
 }
 
-class HostSettingWithInvalidExtraHostsContainer extends GenericContainer
+final class HostSettingWithInvalidExtraHostsContainer extends GenericContainer
 {
     protected static $EXTRA_HOSTS = false;
 }

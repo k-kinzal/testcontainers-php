@@ -2,9 +2,10 @@
 
 /** @noinspection PhpUnhandledExceptionInspection */
 
-namespace Tests\Unit\Containers;
+namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
+use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use stdClass;
 use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
@@ -13,23 +14,24 @@ use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
 use Testcontainers\Docker\Exception\PortConflictException;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class GenericContainerTest extends TestCase
+final class GenericContainerTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testStart()
     {
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertInstanceOf(ContainerInstance::class, $instance);
-        $this->assertNotEmpty($instance->getContainerId());
+        self::assertInstanceOf(ContainerInstance::class, $instance);
+        self::assertNotEmpty($instance->getContainerId());
     }
 
-    public function testContainerFailsOnPortConflictWithStaticPortStrategy()
+    /**
+     * @return void
+     */
+    public function testStartFailsOnPortConflictWithStaticPortStrategy()
     {
         $this->expectException(PortConflictException::class);
 
@@ -41,8 +43,8 @@ class GenericContainerTest extends TestCase
 
         $instance1 = $container1->start();
 
-        $this->assertInstanceOf(ContainerInstance::class, $instance1);
-        $this->assertEquals(50000, $instance1->getMappedPort(80));
+        self::assertInstanceOf(ContainerInstance::class, $instance1);
+        self::assertEquals(50000, $instance1->getMappedPort(80));
 
         $container2 = (new GenericContainer('alpine:latest'))
             ->withExposedPort(80)
@@ -52,11 +54,14 @@ class GenericContainerTest extends TestCase
         $container2->start();
     }
 
+    /**
+     * @return void
+     */
     public function testStartStopsContainerOnWaitStrategyFailure()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['tail', '-f', '/dev/null'])
-            ->withWaitStrategy(new FailingWaitStrategy())
+            ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('never emitted')->withTimeoutSeconds(1))
             ->withAutoRemoveOnExit(true)
         ;
 
@@ -65,13 +70,14 @@ class GenericContainerTest extends TestCase
             $this->fail('Expected WaitingTimeoutException');
         } catch (WaitingTimeoutException $e) {
             // Expected -- container should have been stopped and removed (--rm)
-            $this->assertTrue(strpos($e->getMessage(), 'timed out') !== false);
+            self::assertTrue(strpos($e->getMessage(), 'timed out') !== false);
         }
     }
 
     /**
-     * @dataProvider providerWithDockerClientInvalidInputs
+     * @dataProvider providerWithDockerClientRejectsInvalidInputs
      * @param stdClass $client
+     * @return void
      */
     public function testWithDockerClientRejectsInvalidInputs($client)
     {
@@ -84,13 +90,16 @@ class GenericContainerTest extends TestCase
     /**
      * @return array<string, array{stdClass}>
      */
-    public static function providerWithDockerClientInvalidInputs()
+    public static function providerWithDockerClientRejectsInvalidInputs()
     {
         return [
             'case 1' => [new stdClass()],
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testConstructRejectsArrayImage()
     {
         $this->expectException(UnexpectedValueException::class);
@@ -98,20 +107,13 @@ class GenericContainerTest extends TestCase
         new GenericContainer([]);
     }
 
+    /**
+     * @return void
+     */
     public function testConstructRejectsEmptyImage()
     {
         $this->expectException(UnexpectedValueException::class);
 
         new GenericContainer('');
-    }
-}
-
-class FailingWaitStrategy implements \Testcontainers\Containers\WaitStrategy\WaitStrategy
-{
-    use \Testcontainers\Logger\WithLogger;
-
-    public function waitUntilReady($instance)
-    {
-        throw new WaitingTimeoutException(0, 'intentional failure for testing');
     }
 }

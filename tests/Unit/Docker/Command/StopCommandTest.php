@@ -11,27 +11,30 @@ use Testcontainers\Docker\Output\DockerStopOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class StopCommandTest extends TestCase
+final class StopCommandTest extends TestCase
 {
-    public function testHasStopCommandTrait()
+    /**
+     * @return void
+     */
+    public function testStopIsProvidedByStopCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
-
-        $this->assertContains(StopCommand::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(StopCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testStop()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
             'config' => __ROOT__.'/config.json',
         ]);
 
@@ -42,15 +45,18 @@ class StopCommandTest extends TestCase
         $containerId = $output->getContainerId();
         $output = $client->stop($containerId);
 
-        $this->assertInstanceOf(DockerStopOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame("{$containerId}\n", $output->getOutput());
+        self::assertInstanceOf(DockerStopOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertSame("{$containerId}\n", $output->getOutput());
 
         $containerIds = $output->getContainerIds();
-        $this->assertCount(1, $containerIds);
-        $this->assertSame((string) $containerId, (string) $containerIds[0]);
+        self::assertCount(1, $containerIds);
+        self::assertSame((string) $containerId, (string) $containerIds[0]);
     }
 
+    /**
+     * @return void
+     */
     public function testStopWithNonExistentContainerId()
     {
         $this->expectException(NoSuchContainerException::class);

@@ -9,73 +9,83 @@ use Testcontainers\Logger\ConsoleLogger;
 use Testcontainers\Testcontainers;
 use Tests\Images\AlpineContainer;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class TestcontainersTest extends TestCase
+final class TestcontainersTest extends TestCase
 {
-    public function testWithContainerClassString()
+    /**
+     * @return void
+     */
+    public function testRunWithContainerClassString()
     {
         try {
             $instance = Testcontainers::run(AlpineContainer::class);
             $running = $instance->isRunning();
 
-            $this->assertTrue($running);
+            self::assertTrue($running);
         } finally {
             Testcontainers::stop();
         }
     }
 
-    public function testWithContainerInstance()
+    /**
+     * @return void
+     */
+    public function testRunWithContainerInstance()
     {
         try {
             $instance = Testcontainers::run(new AlpineContainer());
             $running = $instance->isRunning();
 
-            $this->assertTrue($running);
+            self::assertTrue($running);
         } finally {
             Testcontainers::stop();
         }
     }
 
-    public function testReuseModeAddCreatesNewContainers()
+    /**
+     * @return void
+     */
+    public function testRunWithReuseModeAddCreatesNewContainers()
     {
         try {
             $instance1 = Testcontainers::run(AlpineContainerWithAddMode::class);
             $instance2 = Testcontainers::run(AlpineContainerWithAddMode::class);
 
             // ADD mode should create new container each time
-            $this->assertNotSame(
+            self::assertNotSame(
                 $instance1->getContainerId()->toString(),
                 $instance2->getContainerId()->toString()
             );
-            $this->assertTrue($instance1->isRunning());
-            $this->assertTrue($instance2->isRunning());
+            self::assertTrue($instance1->isRunning());
+            self::assertTrue($instance2->isRunning());
         } finally {
             Testcontainers::stop();
         }
     }
 
-    public function testReuseModeReuseReturnsSameContainer()
+    /**
+     * @return void
+     */
+    public function testRunWithReuseModeReuseReturnsSameContainer()
     {
         try {
             $instance1 = Testcontainers::run(AlpineContainerWithReuseMode::class);
             $instance2 = Testcontainers::run(AlpineContainerWithReuseMode::class);
 
             // REUSE mode should return same container
-            $this->assertSame(
+            self::assertSame(
                 $instance1->getContainerId()->toString(),
                 $instance2->getContainerId()->toString()
             );
-            $this->assertTrue($instance1->isRunning());
+            self::assertTrue($instance1->isRunning());
         } finally {
             Testcontainers::stop();
         }
     }
 
-    public function testReuseModeRestartStopsExistingContainer()
+    /**
+     * @return void
+     */
+    public function testRunWithReuseModeRestartStopsExistingContainer()
     {
         try {
             $instance1 = Testcontainers::run(AlpineContainerWithRestartMode::class);
@@ -85,15 +95,18 @@ class TestcontainersTest extends TestCase
             $containerId2 = $instance2->getContainerId()->toString();
 
             // RESTART mode should create new container and stop old one
-            $this->assertNotSame($containerId1, $containerId2);
-            $this->assertFalse($instance1->isRunning());
-            $this->assertTrue($instance2->isRunning());
+            self::assertNotSame($containerId1, $containerId2);
+            self::assertFalse($instance1->isRunning());
+            self::assertTrue($instance2->isRunning());
         } finally {
             Testcontainers::stop();
         }
     }
 
-    public function testReuseModeWithInstanceMethod()
+    /**
+     * @return void
+     */
+    public function testRunWithReuseModeFromInstanceMethod()
     {
         try {
             $container = (new GenericContainer('alpine:latest'))
@@ -104,7 +117,7 @@ class TestcontainersTest extends TestCase
             $instance2 = Testcontainers::run($container);
 
             // Same object with REUSE mode should return same container
-            $this->assertSame(
+            self::assertSame(
                 $instance1->getContainerId()->toString(),
                 $instance2->getContainerId()->toString()
             );
@@ -113,26 +126,37 @@ class TestcontainersTest extends TestCase
         }
     }
 
-    public function testLoggerIsPassedToContainersWithoutTheirOwn()
+    /**
+     * @return void
+     */
+    public function testSetLoggerIsPassedToContainersWithoutTheirOwn()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
 
         try {
             Testcontainers::setLogger(new ConsoleLogger($stream));
             Testcontainers::run(new AlpineContainer());
 
             rewind($stream);
-            $this->assertTrue(strpos(stream_get_contents($stream), 'Starting container') !== false);
+            $contents = stream_get_contents($stream);
+            self::assertNotFalse($contents);
+            self::assertTrue(strpos($contents, 'Starting container') !== false);
         } finally {
             Testcontainers::stop();
             Testcontainers::setLogger(null);
         }
     }
 
-    public function testContainerLoggerTakesPrecedenceOverTestcontainersLogger()
+    /**
+     * @return void
+     */
+    public function testRunPrefersContainerLoggerOverTestcontainersLogger()
     {
         $globalStream = fopen('php://memory', 'w+');
+        self::assertNotFalse($globalStream);
         $containerStream = fopen('php://memory', 'w+');
+        self::assertNotFalse($containerStream);
 
         try {
             Testcontainers::setLogger(new ConsoleLogger($globalStream));
@@ -140,15 +164,22 @@ class TestcontainersTest extends TestCase
 
             rewind($globalStream);
             rewind($containerStream);
-            $this->assertSame('', stream_get_contents($globalStream));
-            $this->assertTrue(strpos(stream_get_contents($containerStream), 'Starting container') !== false);
+            $contents = stream_get_contents($globalStream);
+            self::assertNotFalse($contents);
+            self::assertSame('', $contents);
+            $contents = stream_get_contents($containerStream);
+            self::assertNotFalse($contents);
+            self::assertTrue(strpos($contents, 'Starting container') !== false);
         } finally {
             Testcontainers::stop();
             Testcontainers::setLogger(null);
         }
     }
 
-    public function testEnvironmentLoggerIsPassedToContainersWithoutLogger()
+    /**
+     * @return void
+     */
+    public function testRunPassesEnvironmentLoggerToContainersWithoutLogger()
     {
         $container = new AlpineContainer();
 
@@ -156,14 +187,17 @@ class TestcontainersTest extends TestCase
             putenv('TESTCONTAINERS_LOG_LEVEL=error');
             Testcontainers::run($container);
 
-            $this->assertInstanceOf(ConsoleLogger::class, $container->logger());
+            self::assertInstanceOf(ConsoleLogger::class, $container->logger());
         } finally {
             Testcontainers::stop();
             putenv('TESTCONTAINERS_LOG_LEVEL');
         }
     }
 
-    public function testContainerLoggerTakesPrecedenceOverEnvironmentLogger()
+    /**
+     * @return void
+     */
+    public function testRunPrefersContainerLoggerOverEnvironmentLogger()
     {
         $containerLogger = new ConsoleLogger(fopen('php://memory', 'w+'));
         $container = (new AlpineContainer())->withLogger($containerLogger);
@@ -172,14 +206,17 @@ class TestcontainersTest extends TestCase
             putenv('TESTCONTAINERS_LOG_LEVEL=error');
             Testcontainers::run($container);
 
-            $this->assertSame($containerLogger, $container->logger());
+            self::assertSame($containerLogger, $container->logger());
         } finally {
             Testcontainers::stop();
             putenv('TESTCONTAINERS_LOG_LEVEL');
         }
     }
 
-    public function testTestcontainersLoggerTakesPrecedenceOverEnvironmentLogger()
+    /**
+     * @return void
+     */
+    public function testSetLoggerTakesPrecedenceOverEnvironmentLogger()
     {
         $logger = new ConsoleLogger(fopen('php://memory', 'w+'));
         $container = new AlpineContainer();
@@ -189,7 +226,7 @@ class TestcontainersTest extends TestCase
             Testcontainers::setLogger($logger);
             Testcontainers::run($container);
 
-            $this->assertSame($logger, $container->logger());
+            self::assertSame($logger, $container->logger());
         } finally {
             Testcontainers::stop();
             Testcontainers::setLogger(null);
@@ -198,7 +235,7 @@ class TestcontainersTest extends TestCase
     }
 }
 
-class AlpineContainerWithAddMode extends GenericContainer
+final class AlpineContainerWithAddMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
 
@@ -207,7 +244,7 @@ class AlpineContainerWithAddMode extends GenericContainer
     protected static $REUSE_MODE = 'add';
 }
 
-class AlpineContainerWithReuseMode extends GenericContainer
+final class AlpineContainerWithReuseMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
 
@@ -216,7 +253,7 @@ class AlpineContainerWithReuseMode extends GenericContainer
     protected static $REUSE_MODE = 'reuse';
 }
 
-class AlpineContainerWithRestartMode extends GenericContainer
+final class AlpineContainerWithRestartMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
 

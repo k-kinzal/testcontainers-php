@@ -7,16 +7,12 @@ use stdClass;
 use Testcontainers\Docker\DockerClient;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class BaseCommandTest extends TestCase
+final class BaseCommandTest extends TestCase
 {
     /**
-     * @dataProvider providerWithGlobalOptionsInvalidHosts
+     * @dataProvider providerWithGlobalOptionsRejectsInvalidHost
      * @param bool|int|array{}|array{bool}|stdClass $host
+     * @return void
      */
     public function testWithGlobalOptionsRejectsInvalidHost($host)
     {
@@ -29,7 +25,7 @@ class BaseCommandTest extends TestCase
     /**
      * @return array<string, array{bool|int|array{}|array{bool}|stdClass}>
      */
-    public static function providerWithGlobalOptionsInvalidHosts()
+    public static function providerWithGlobalOptionsRejectsInvalidHost()
     {
         return [
             'boolean' => [false],
@@ -41,21 +37,22 @@ class BaseCommandTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithGlobalOptionsHosts
-     * @param string|non-empty-array<array-key, string> $host
+     * @dataProvider providerWithGlobalOptionsPreservesFirstHost
+     * @param string|array<array-key, string> $host
      * @param string $expected
+     * @return void
      */
     public function testWithGlobalOptionsPreservesFirstHost($host, $expected)
     {
         $client = (new DockerClient())->withGlobalOptions(['host' => $host]);
 
-        $this->assertSame($expected, $client->getHost());
+        self::assertSame($expected, $client->getHost());
     }
 
     /**
-     * @return array<string, array{string|non-empty-array<array-key, string>, string}>
+     * @return array<string, array{string|array<array-key, string>, string}>
      */
-    public static function providerWithGlobalOptionsHosts()
+    public static function providerWithGlobalOptionsPreservesFirstHost()
     {
         return [
             'string' => ['tcp://first:2375', 'tcp://first:2375'],
@@ -64,6 +61,9 @@ class BaseCommandTest extends TestCase
         ];
     }
 
+    /**
+     * @return void
+     */
     public function testWithGlobalOptionsRejectsUnrenderableValue()
     {
         $client = new DockerClient();
@@ -72,6 +72,9 @@ class BaseCommandTest extends TestCase
         $client->withGlobalOptions(['value' => new stdClass()]);
     }
 
+    /**
+     * @return void
+     */
     public function testWithProcOptionsExecutesCommand()
     {
         $client = (new DockerClient())
@@ -81,24 +84,26 @@ class BaseCommandTest extends TestCase
         ;
         $output = $client->version();
 
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame(0, strpos($output->getOutput(), 'PHP '));
+        self::assertSame(0, $output->getExitCode());
+        self::assertSame(0, strpos($output->getOutput(), 'PHP '));
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     * @return void
+     */
     public function testGetHostFromDefault()
     {
-        $backup = getenv('DOCKER_HOST');
+        putenv('DOCKER_HOST');
+        $client = new DockerClient();
 
-        try {
-            putenv('DOCKER_HOST');
-            $client = new DockerClient();
-
-            $this->assertSame('unix:///var/run/docker.sock', $client->getHost());
-        } finally {
-            putenv($backup === false ? 'DOCKER_HOST' : 'DOCKER_HOST='.$backup);
-        }
+        self::assertSame('unix:///var/run/docker.sock', $client->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromOptions()
     {
         $client = (new DockerClient())
@@ -107,9 +112,12 @@ class BaseCommandTest extends TestCase
             ])
         ;
 
-        $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
+        self::assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromEnv()
     {
         $client = (new DockerClient())
@@ -118,20 +126,19 @@ class BaseCommandTest extends TestCase
             ])
         ;
 
-        $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
+        self::assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     * @return void
+     */
     public function testGetHostFromGlobalEnv()
     {
-        $backup = getenv('DOCKER_HOST');
+        putenv('DOCKER_HOST=tcp://127.0.0.1:2375');
+        $client = new DockerClient();
 
-        try {
-            putenv('DOCKER_HOST=tcp://127.0.0.1:2375');
-            $client = new DockerClient();
-
-            $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
-        } finally {
-            putenv($backup === false ? 'DOCKER_HOST' : 'DOCKER_HOST='.$backup);
-        }
+        self::assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 }

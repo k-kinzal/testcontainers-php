@@ -7,16 +7,13 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Docker\DockerClient;
 use UnexpectedValueException;
 
-/**
- * @internal
- * @coversNothing
- */
-class SSHPortForwardSettingTest extends TestCase
+final class SSHPortForwardSettingTest extends TestCase
 {
     /**
-     * @dataProvider providerWithSSHPortForwardInvalidInputs
+     * @dataProvider providerWithSSHPortForwardRejectsInvalidInputs
      * @param string $sshHost
      * @param string $sshPort
+     * @return void
      */
     public function testWithSSHPortForwardRejectsInvalidInputs($sshHost, $sshPort)
     {
@@ -29,14 +26,17 @@ class SSHPortForwardSettingTest extends TestCase
     /**
      * @return array<string, array{string, string}>
      */
-    public static function providerWithSSHPortForwardInvalidInputs()
+    public static function providerWithSSHPortForwardRejectsInvalidInputs()
     {
         return [
             'case 1' => ['host', 'bad'],
         ];
     }
 
-    public function testStartRejectsInvalidSshPortForwardBeforeRunningContainer()
+    /**
+     * @return void
+     */
+    public function testSshPortForwardRejectsInvalidStaticConfigurationBeforeRunningContainer()
     {
         $client = (new DockerClient())->withCommand(__DIR__.'/missing-docker');
         $container = (new SSHPortForwardSettingWithInvalidSshPortForwardContainer('alpine'))
@@ -49,7 +49,7 @@ class SSHPortForwardSettingTest extends TestCase
     }
 }
 
-class SSHPortForwardSettingWithInvalidSshPortForwardContainer extends GenericContainer
+final class SSHPortForwardSettingWithInvalidSshPortForwardContainer extends GenericContainer
 {
     protected static $SSH_PORT_FORWARD = [];
 }

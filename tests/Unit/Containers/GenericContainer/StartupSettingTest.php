@@ -11,21 +11,22 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\StartupCheckStrategy\StartupCheckFailedException;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class StartupSettingTest extends TestCase
+final class StartupSettingTest extends TestCase
 {
-    public function testHasStartupSettingTrait()
+    /**
+     * @return void
+     */
+    public function testStartupTimeoutIsProvidedByStartupSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(StartupSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(StartupSetting::class, $uses);
     }
 
-    public function testStaticStartupTimeout()
+    /**
+     * @return void
+     */
+    public function testStartupTimeoutFromStaticStartupTimeout()
     {
         $this->expectException(StartupCheckFailedException::class);
 
@@ -35,7 +36,10 @@ class StartupSettingTest extends TestCase
         $container->start();
     }
 
-    public function testStaticStartupCheckStrategy()
+    /**
+     * @return void
+     */
+    public function testStartupCheckStrategyFromStaticStartupCheckStrategy()
     {
         $this->expectException(StartupCheckFailedException::class);
 
@@ -45,7 +49,10 @@ class StartupSettingTest extends TestCase
         $container->start();
     }
 
-    public function testStartWithStartupTimeout()
+    /**
+     * @return void
+     */
+    public function testWithStartupTimeout()
     {
         $this->expectException(StartupCheckFailedException::class);
 
@@ -56,7 +63,10 @@ class StartupSettingTest extends TestCase
         $container->start();
     }
 
-    public function testStartWithStartupCheckStrategy()
+    /**
+     * @return void
+     */
+    public function testWithStartupCheckStrategy()
     {
         $this->expectException(StartupCheckFailedException::class);
 
@@ -68,8 +78,9 @@ class StartupSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithStartupTimeoutInvalidInputs
+     * @dataProvider providerWithStartupTimeoutRejectsInvalidInputs
      * @param int $timeout
+     * @return void
      */
     public function testWithStartupTimeoutRejectsInvalidInputs($timeout)
     {
@@ -82,7 +93,7 @@ class StartupSettingTest extends TestCase
     /**
      * @return array<string, array{int}>
      */
-    public static function providerWithStartupTimeoutInvalidInputs()
+    public static function providerWithStartupTimeoutRejectsInvalidInputs()
     {
         return [
             'case 1' => [-1],
@@ -90,8 +101,9 @@ class StartupSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithStartupConflictRetriesInvalidInputs
+     * @dataProvider providerWithStartupConflictRetriesRejectsInvalidInputs
      * @param int $retryAttempts
+     * @return void
      */
     public function testWithStartupConflictRetriesRejectsInvalidInputs($retryAttempts)
     {
@@ -104,14 +116,17 @@ class StartupSettingTest extends TestCase
     /**
      * @return array<string, array{int}>
      */
-    public static function providerWithStartupConflictRetriesInvalidInputs()
+    public static function providerWithStartupConflictRetriesRejectsInvalidInputs()
     {
         return [
             'case 1' => [0],
         ];
     }
 
-    public function testStartRejectsInvalidStartupTimeout()
+    /**
+     * @return void
+     */
+    public function testStartupTimeoutRejectsInvalidStaticConfiguration()
     {
         $container = new StartupSettingWithInvalidStartupTimeoutContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -119,7 +134,10 @@ class StartupSettingTest extends TestCase
         $container->start();
     }
 
-    public function testStartRejectsInvalidStartupConflictRetryAttempts()
+    /**
+     * @return void
+     */
+    public function testStartupConflictRetryAttemptsRejectsInvalidStaticConfiguration()
     {
         $container = new StartupSettingWithInvalidStartupConflictRetryAttemptsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -128,22 +146,22 @@ class StartupSettingTest extends TestCase
     }
 }
 
-class StartupSettingWithStaticStartupTimeoutContainer extends GenericContainer
+final class StartupSettingWithStaticStartupTimeoutContainer extends GenericContainer
 {
     protected static $STARTUP_TIMEOUT = 1;
 }
 
-class StartupSettingWithStaticStartupCheckStrategyContainer extends GenericContainer
+final class StartupSettingWithStaticStartupCheckStrategyContainer extends GenericContainer
 {
     protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
 
-class StartupSettingWithInvalidStartupTimeoutContainer extends GenericContainer
+final class StartupSettingWithInvalidStartupTimeoutContainer extends GenericContainer
 {
     protected static $STARTUP_TIMEOUT = -1;
 }
 
-class StartupSettingWithInvalidStartupConflictRetryAttemptsContainer extends GenericContainer
+final class StartupSettingWithInvalidStartupConflictRetryAttemptsContainer extends GenericContainer
 {
     protected static $STARTUP_CONFLICT_RETRY_ATTEMPTS = 0;
 }

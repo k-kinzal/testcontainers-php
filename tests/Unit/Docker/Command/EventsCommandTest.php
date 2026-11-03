@@ -12,20 +12,21 @@ use Testcontainers\Docker\Output\DockerEventsOutput;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Types\Event;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class EventsCommandTest extends TestCase
+final class EventsCommandTest extends TestCase
 {
-    public function testHasEventsCommandTrait()
+    /**
+     * @return void
+     */
+    public function testEventsIsProvidedByEventsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
-
-        $this->assertContains(EventsCommand::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(EventsCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testEvents()
     {
         $client = new DockerClient();
@@ -38,29 +39,32 @@ class EventsCommandTest extends TestCase
         $containerId = $output->getContainerId();
 
         $eventsOutput = $client->events([
-            'filter' => ['container='.$containerId],
+            'filter' => ['container='.$containerId->toString()],
             'since' => '0',
             'until' => (string) (time() + 3),
         ]);
 
-        $this->assertInstanceOf(DockerEventsOutput::class, $eventsOutput);
+        self::assertInstanceOf(DockerEventsOutput::class, $eventsOutput);
 
-        $actions = [];
-        foreach ($eventsOutput->getIterator() as $event) {
-            if ($event === null) {
-                continue;
-            }
-            $this->assertInstanceOf(Event::class, $event);
-            $this->assertSame((string) $containerId, $event->actor->id);
-            $actions[] = $event->action->toString();
-            if ($event->action->isDie()) {
-                $this->assertSame('3', $event->actor->getAttribute('exitCode'));
-            }
-        }
-
-        $this->assertSame(['create', 'start', 'die'], array_values(array_intersect($actions, ['create', 'start', 'die'])));
+        $events = array_values(array_filter(iterator_to_array($eventsOutput->getIterator(), false)));
+        $containerIds = array_unique(array_map(function (Event $event) {
+            return $event->actor->id;
+        }, $events));
+        self::assertSame([$containerId->toString()], array_values($containerIds));
+        $actions = array_map(function (Event $event) {
+            return $event->action->toString();
+        }, $events);
+        $deaths = array_values(array_filter($events, function (Event $event) {
+            return $event->action->isDie();
+        }));
+        self::assertNotEmpty($deaths);
+        self::assertSame('3', $deaths[0]->actor->getAttribute('exitCode'));
+        self::assertSame(['create', 'start', 'die'], array_values(array_intersect($actions, ['create', 'start', 'die'])));
     }
 
+    /**
+     * @return void
+     */
     public function testEventsWithTimeout()
     {
         $client = new DockerClient();
@@ -71,13 +75,12 @@ class EventsCommandTest extends TestCase
         ]);
 
         try {
-            foreach ($eventsOutput->getIterator() as $event) {
-            }
+            iterator_to_array($eventsOutput->getIterator(), false);
             $this->fail('Expected ProcessTimedOutException');
         } catch (ProcessTimedOutException $e) {
-            $this->assertSame(1.0, $e->getExceededTimeout());
+            self::assertSame(1.0, $e->getExceededTimeout());
         }
 
-        $this->assertSame(60, $client->getTimeout());
+        self::assertSame(60, $client->getTimeout());
     }
 }

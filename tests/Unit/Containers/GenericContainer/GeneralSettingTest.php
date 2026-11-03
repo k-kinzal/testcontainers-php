@@ -12,29 +12,33 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class GeneralSettingTest extends TestCase
+final class GeneralSettingTest extends TestCase
 {
-    public function testHasGeneralSettingTrait()
+    /**
+     * @return void
+     */
+    public function testCommandsIsProvidedByGeneralSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(GeneralSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(GeneralSetting::class, $uses);
     }
 
-    public function testStaticCommands()
+    /**
+     * @return void
+     */
+    public function testCommandsFromStaticCommands()
     {
         $container = new GeneralSettingWithStaticCommandsContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame("Hello, World!\n", $instance->getOutput());
+        self::assertSame("Hello, World!\n", $instance->getOutput());
     }
 
-    public function testStartWithCommand()
+    /**
+     * @return void
+     */
+    public function testWithCommand()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -43,10 +47,13 @@ class GeneralSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("/\n", $instance->getOutput());
+        self::assertSame("/\n", $instance->getOutput());
     }
 
-    public function testStartWithCommands()
+    /**
+     * @return void
+     */
+    public function testWithCommands()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -55,12 +62,13 @@ class GeneralSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("Hello, World!\n", $instance->getOutput());
+        self::assertSame("Hello, World!\n", $instance->getOutput());
     }
 
     /**
-     * @dataProvider providerWithCommandsInvalidInputs
+     * @dataProvider providerWithCommandsRejectsInvalidInputs
      * @param array{string, stdClass} $commandParts
+     * @return void
      */
     public function testWithCommandsRejectsInvalidInputs($commandParts)
     {
@@ -73,14 +81,17 @@ class GeneralSettingTest extends TestCase
     /**
      * @return array<string, array{array{string, stdClass}}>
      */
-    public static function providerWithCommandsInvalidInputs()
+    public static function providerWithCommandsRejectsInvalidInputs()
     {
         return [
             'case 1' => [['echo', new stdClass()]],
         ];
     }
 
-    public function testStartRejectsInvalidName()
+    /**
+     * @return void
+     */
+    public function testNameRejectsInvalidStaticConfiguration()
     {
         $container = new GeneralSettingWithInvalidNameContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -88,7 +99,10 @@ class GeneralSettingTest extends TestCase
         $container->start();
     }
 
-    public function testStartRejectsInvalidCommands()
+    /**
+     * @return void
+     */
+    public function testCommandsRejectsInvalidStaticConfiguration()
     {
         $container = new GeneralSettingWithInvalidCommandsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -97,7 +111,7 @@ class GeneralSettingTest extends TestCase
     }
 }
 
-class GeneralSettingWithStaticCommandsContainer extends GenericContainer
+final class GeneralSettingWithStaticCommandsContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
@@ -106,12 +120,12 @@ class GeneralSettingWithStaticCommandsContainer extends GenericContainer
     protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
 
-class GeneralSettingWithInvalidNameContainer extends GenericContainer
+final class GeneralSettingWithInvalidNameContainer extends GenericContainer
 {
     protected static $NAME = [];
 }
 
-class GeneralSettingWithInvalidCommandsContainer extends GenericContainer
+final class GeneralSettingWithInvalidCommandsContainer extends GenericContainer
 {
     protected static $COMMANDS = ['echo', false];
 }

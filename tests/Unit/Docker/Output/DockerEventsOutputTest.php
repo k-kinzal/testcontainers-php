@@ -5,75 +5,89 @@
 namespace Tests\Unit\Docker\Output;
 
 use PHPUnit\Framework\TestCase;
+use CallbackFilterIterator;
+use LimitIterator;
+use Testcontainers\Docker\Types\Event;
 use Symfony\Component\Process\Process;
 use Testcontainers\Docker\Exception\InvalidValueException;
 use Testcontainers\Docker\Output\DockerEventsOutput;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class DockerEventsOutputTest extends TestCase
+final class DockerEventsOutputTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testGetIterator()
     {
-        $output = new DockerEventsOutput(self::startProcess(
-            self::event('create', 1700000000000000001)."\n"
-            .self::event('start', 1700000000000000002)
-        ), false);
+        $payload = '{"Type":"container","Action":"create","Actor":{"ID":"abc","Attributes":null},"scope":"local","time":1700000000,"timeNano":1700000000000000001}'."\n"
+            .'{"Type":"container","Action":"start","Actor":{"ID":"abc","Attributes":null},"scope":"local","time":1700000000,"timeNano":1700000000000000002}';
+        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($payload, true).';']);
+        $process->start();
+        $output = new DockerEventsOutput($process, false);
 
-        $actions = [];
-        foreach ($output->getIterator() as $event) {
-            if ($event !== null) {
-                $actions[] = $event->action->toString();
-            }
-        }
+        $events = array_values(array_filter(iterator_to_array($output->getIterator(), false)));
+        $actions = array_map(function (Event $event) {
+            return $event->action->toString();
+        }, $events);
 
-        $this->assertSame(['create', 'start'], $actions);
+        self::assertSame(['create', 'start'], $actions);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorYieldsNullWithoutEvent()
     {
         $process = new Process(['sleep', '30']);
         $process->start();
         $output = new DockerEventsOutput($process, true);
 
-        $this->assertNull($output->getIterator()->current());
+        self::assertNull($output->getIterator()->current());
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorRestartsFromLastEvent()
     {
-        $output = new DockerEventsOutput(self::startProcess(
-            self::event('create', 1700000000000000001)."\n"
-            .self::event('start', 1700000000000000002)."\n"
-        ), true);
+        $payload = '{"Type":"container","Action":"create","Actor":{"ID":"abc","Attributes":null},"scope":"local","time":1700000000,"timeNano":1700000000000000001}'."\n"
+            .'{"Type":"container","Action":"start","Actor":{"ID":"abc","Attributes":null},"scope":"local","time":1700000000,"timeNano":1700000000000000002}'."\n";
+        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($payload, true).';']);
+        $process->start();
+        $output = new DockerEventsOutput($process, true);
 
-        $actions = [];
-        $deadline = time() + 10;
-        foreach ($output->getIterator() as $event) {
-            if ($event !== null) {
-                $actions[] = $event->action->toString();
-            }
-            if (count($actions) === 3 || time() > $deadline) {
-                break;
-            }
-        }
+        $events = new CallbackFilterIterator($output->getIterator(), function ($event) {
+            return $event !== null;
+        });
+        $firstThree = iterator_to_array(new LimitIterator($events, 0, 3), false);
+        self::assertCount(3, $firstThree);
+        self::assertInstanceOf(Event::class, $firstThree[0]);
+        self::assertInstanceOf(Event::class, $firstThree[1]);
+        self::assertInstanceOf(Event::class, $firstThree[2]);
+        $actions = [$firstThree[0]->action->toString(), $firstThree[1]->action->toString(), $firstThree[2]->action->toString()];
 
-        $this->assertSame(['create', 'start', 'start'], $actions);
+        self::assertSame(['create', 'start', 'start'], $actions);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorThrowsInvalidValueException()
     {
-        $output = new DockerEventsOutput(self::startProcess("invalid\n"), false);
+        $payload = "invalid\n";
+        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($payload, true).';']);
+        $process->start();
+        $output = new DockerEventsOutput($process, false);
 
         $this->expectException(InvalidValueException::class);
 
-        foreach ($output->getIterator() as $event) {
-        }
+        iterator_to_array($output->getIterator(), false);
     }
 
-    public function testReleaseStopsProcess()
+    /**
+     * @return void
+     */
+    public function testDestructStopsProcess()
     {
         $process = new Process(['sleep', '30']);
         $process->start();
@@ -81,41 +95,11 @@ class DockerEventsOutputTest extends TestCase
         $iterator = $output->getIterator();
         $iterator->current();
 
-        $this->assertTrue($process->isRunning());
+        self::assertTrue($process->isRunning());
 
         unset($output, $iterator);
 
-        $this->assertFalse($process->isRunning());
+        self::assertFalse($process->isRunning());
     }
 
-    /**
-     * @param string $action
-     * @param int    $timeNano
-     *
-     * @return string
-     */
-    private static function event($action, $timeNano)
-    {
-        return json_encode([
-            'Type' => 'container',
-            'Action' => $action,
-            'Actor' => ['ID' => 'abc', 'Attributes' => null],
-            'scope' => 'local',
-            'time' => (int) ($timeNano / 1000000000),
-            'timeNano' => $timeNano,
-        ]);
-    }
-
-    /**
-     * @param string $output
-     *
-     * @return Process
-     */
-    private static function startProcess($output)
-    {
-        $process = new Process([PHP_BINARY, '-r', 'echo '.var_export($output, true).';']);
-        $process->start();
-
-        return $process;
-    }
 }

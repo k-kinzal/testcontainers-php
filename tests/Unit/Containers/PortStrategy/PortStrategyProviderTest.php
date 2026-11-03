@@ -5,71 +5,67 @@
 namespace Tests\Unit\Containers\PortStrategy;
 
 use PHPUnit\Framework\TestCase;
+use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 use stdClass;
 use Testcontainers\Containers\PortStrategy\AlreadyExistsPortStrategyException;
-use Testcontainers\Containers\PortStrategy\ConflictBehavior;
-use Testcontainers\Containers\PortStrategy\PortStrategy;
 use Testcontainers\Containers\PortStrategy\PortStrategyProvider;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class PortStrategyProviderTest extends TestCase
+final class PortStrategyProviderTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testRegister()
     {
         $provider = new PortStrategyProvider();
-        $provider->register('test', new TestPortStrategy());
+        $provider->register('test', new RandomPortStrategy());
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterAlreadyExistsPortStrategyException()
     {
         $this->expectExceptionMessage('Port strategy with name test already exists.');
         $this->expectException(AlreadyExistsPortStrategyException::class);
 
         $provider = new PortStrategyProvider();
-        $provider->register('test', new TestPortStrategy());
-        $provider->register('test', new TestPortStrategy());
+        $provider->register('test', new RandomPortStrategy());
+        $provider->register('test', new RandomPortStrategy());
     }
 
+    /**
+     * @return void
+     */
     public function testGet()
     {
-        $strategy = new TestPortStrategy();
+        $strategy = new RandomPortStrategy();
         $provider = new PortStrategyProvider();
         $provider->register('test', $strategy);
 
-        $this->assertSame($strategy, $provider->get('test'));
+        self::assertSame($strategy, $provider->get('test'));
     }
 
+    /**
+     * @return void
+     */
     public function testGetNotFound()
     {
         $provider = new PortStrategyProvider();
 
-        $this->assertNull($provider->get('test'));
+        self::assertNull($provider->get('test'));
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterRejectsUnrelatedObject()
     {
         $this->expectException(UnexpectedValueException::class);
 
         (new PortStrategyProvider())->register('bad', new stdClass());
-    }
-}
-
-class TestPortStrategy implements PortStrategy
-{
-    public function getPort()
-    {
-        return 0;
-    }
-
-    public function conflictBehavior()
-    {
-        return ConflictBehavior::RETRY();
     }
 }

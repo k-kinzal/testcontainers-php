@@ -11,21 +11,22 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class UserSettingTest extends TestCase
+final class UserSettingTest extends TestCase
 {
-    public function testHasUserSettingTrait()
+    /**
+     * @return void
+     */
+    public function testUserIsProvidedByUserSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(UserSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(UserSetting::class, $uses);
     }
 
-    public function testStaticUser()
+    /**
+     * @return void
+     */
+    public function testUserFromStaticUser()
     {
         $container = (new UserSettingWithStaticUserContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -35,10 +36,13 @@ class UserSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("nobody\n", $instance->getOutput());
+        self::assertSame("nobody\n", $instance->getOutput());
     }
 
-    public function testStartWithUser()
+    /**
+     * @return void
+     */
+    public function testWithUser()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -49,10 +53,13 @@ class UserSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("nobody\n", $instance->getOutput());
+        self::assertSame("nobody\n", $instance->getOutput());
     }
 
-    public function testStartRejectsInvalidUser()
+    /**
+     * @return void
+     */
+    public function testUserRejectsInvalidStaticConfiguration()
     {
         $container = new UserSettingWithInvalidUserContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -61,12 +68,12 @@ class UserSettingTest extends TestCase
     }
 }
 
-class UserSettingWithStaticUserContainer extends GenericContainer
+final class UserSettingWithStaticUserContainer extends GenericContainer
 {
     protected static $USER = 'nobody';
 }
 
-class UserSettingWithInvalidUserContainer extends GenericContainer
+final class UserSettingWithInvalidUserContainer extends GenericContainer
 {
     protected static $USER = [];
 }

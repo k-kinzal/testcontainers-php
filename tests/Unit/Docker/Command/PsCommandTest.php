@@ -10,27 +10,30 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class PsCommandTest extends TestCase
+final class PsCommandTest extends TestCase
 {
-    public function testHasPsCommandTrait()
+    /**
+     * @return void
+     */
+    public function testPsIsProvidedByPsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
-
-        $this->assertContains(PsCommand::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(PsCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testPs()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
             'config' => __ROOT__.'/config.json',
         ]);
 
@@ -44,15 +47,18 @@ class PsCommandTest extends TestCase
             'filter' => ['label=test.ps=true'],
         ]);
 
-        $this->assertInstanceOf(DockerPsOutput::class, $output);
+        self::assertInstanceOf(DockerPsOutput::class, $output);
 
         $containers = $output->getContainers();
-        $this->assertCount(1, $containers);
-        $this->assertSame((string) $runOutput->getContainerId(), (string) $containers[0]->id);
+        self::assertCount(1, $containers);
+        self::assertSame((string) $runOutput->getContainerId(), (string) $containers[0]->id);
 
         $client->stop($runOutput->getContainerId());
     }
 
+    /**
+     * @return void
+     */
     public function testPsReturnsEmptyWhenNoContainersMatch()
     {
         $client = new DockerClient();
@@ -60,7 +66,7 @@ class PsCommandTest extends TestCase
             'filter' => ['label=test.nonexistent.label.xyz=1'],
         ]);
 
-        $this->assertInstanceOf(DockerPsOutput::class, $output);
-        $this->assertCount(0, $output->getContainers());
+        self::assertInstanceOf(DockerPsOutput::class, $output);
+        self::assertCount(0, $output->getContainers());
     }
 }

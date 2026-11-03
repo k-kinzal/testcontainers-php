@@ -7,28 +7,31 @@ use Testcontainers\Docker\Command\VersionCommand;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Docker\Output\DockerVersionOutput;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class VersionCommandTest extends TestCase
+final class VersionCommandTest extends TestCase
 {
-    public function testHasVersionCommandTrait()
+    /**
+     * @return void
+     */
+    public function testVersionIsProvidedByVersionCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
-
-        $this->assertContains(VersionCommand::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(VersionCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testVersion()
     {
         $client = new DockerClient();
         $output = $client->version();
 
-        $this->assertInstanceOf(DockerVersionOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertNotNull($output->getClientVersion());
-        $this->assertTrue(preg_match('/^\d+\.\d+/', $output->getClientVersion()) === 1);
+        self::assertInstanceOf(DockerVersionOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertNotNull($output->getClientVersion());
+        $version = $output->getClientVersion();
+        self::assertNotNull($version);
+        self::assertTrue(preg_match('/^\d+\.\d+/', $version) === 1);
     }
 }

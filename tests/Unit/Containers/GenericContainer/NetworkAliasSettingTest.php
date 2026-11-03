@@ -13,27 +13,30 @@ use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class NetworkAliasSettingTest extends TestCase
+final class NetworkAliasSettingTest extends TestCase
 {
-    public function testHasNetworkAliasSettingTrait()
+    /**
+     * @return void
+     */
+    public function testNetworkAliasesIsProvidedByNetworkAliasSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(NetworkAliasSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(NetworkAliasSetting::class, $uses);
     }
 
-    public function testStaticNetworkAlias()
+    /**
+     * @return void
+     */
+    public function testNetworkAliasesFromStaticNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -47,16 +50,21 @@ class NetworkAliasSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING my-service', $instance->getOutput());
+        self::assertStringStartsWith('PING my-service', $instance->getOutput());
     }
 
-    public function testStartWithNetworkAlias()
+    /**
+     * @return void
+     */
+    public function testWithNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -72,16 +80,21 @@ class NetworkAliasSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
+        self::assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
 
-    public function testStartWithNetworkAliases()
+    /**
+     * @return void
+     */
+    public function testWithNetworkAliases()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -97,12 +110,13 @@ class NetworkAliasSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
+        self::assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
 
     /**
-     * @dataProvider providerWithNetworkAliasesInvalidInputs
+     * @dataProvider providerWithNetworkAliasesRejectsInvalidInputs
      * @param array{string, array{}} $aliases
+     * @return void
      */
     public function testWithNetworkAliasesRejectsInvalidInputs($aliases)
     {
@@ -115,14 +129,17 @@ class NetworkAliasSettingTest extends TestCase
     /**
      * @return array<string, array{array{string, array{}}}>
      */
-    public static function providerWithNetworkAliasesInvalidInputs()
+    public static function providerWithNetworkAliasesRejectsInvalidInputs()
     {
         return [
             'case 1' => [['ok', []]],
         ];
     }
 
-    public function testStartRejectsInvalidNetworkAliases()
+    /**
+     * @return void
+     */
+    public function testNetworkAliasesRejectsInvalidStaticConfiguration()
     {
         $container = new NetworkAliasSettingWithInvalidNetworkAliasesContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -131,14 +148,14 @@ class NetworkAliasSettingTest extends TestCase
     }
 }
 
-class NetworkAliasSettingWithStaticNetworkAliasContainer extends GenericContainer
+final class NetworkAliasSettingWithStaticNetworkAliasContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
     protected static $NETWORK_ALIASES = ['my-service'];
 }
 
-class NetworkAliasSettingWithInvalidNetworkAliasesContainer extends GenericContainer
+final class NetworkAliasSettingWithInvalidNetworkAliasesContainer extends GenericContainer
 {
     protected static $NETWORK_ALIASES = [false];
 }

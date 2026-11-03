@@ -11,27 +11,30 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class RmCommandTest extends TestCase
+final class RmCommandTest extends TestCase
 {
-    public function testHasRmCommandTrait()
+    /**
+     * @return void
+     */
+    public function testRmIsProvidedByRmCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
-
-        $this->assertContains(RmCommand::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(RmCommand::class, $uses);
     }
 
+    /**
+     * @return void
+     */
     public function testRm()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
             'config' => __ROOT__.'/config.json',
         ]);
 
@@ -46,14 +49,17 @@ class RmCommandTest extends TestCase
 
         $output = $client->rm($containerId);
 
-        $this->assertInstanceOf(DockerRmOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
+        self::assertInstanceOf(DockerRmOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
 
         $containerIds = $output->getContainerIds();
-        $this->assertCount(1, $containerIds);
-        $this->assertSame((string) $containerId, (string) $containerIds[0]);
+        self::assertCount(1, $containerIds);
+        self::assertSame((string) $containerId, (string) $containerIds[0]);
     }
 
+    /**
+     * @return void
+     */
     public function testRmWithNonExistentContainerId()
     {
         $this->expectException(NoSuchContainerException::class);

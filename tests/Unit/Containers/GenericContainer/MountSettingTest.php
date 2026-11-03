@@ -13,21 +13,22 @@ use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use Testcontainers\Docker\DockerClientFactory;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class MountSettingTest extends TestCase
+final class MountSettingTest extends TestCase
 {
-    public function testHasMountSettingTrait()
+    /**
+     * @return void
+     */
+    public function testMountsIsProvidedByMountSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(MountSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(MountSetting::class, $uses);
     }
 
-    public function testStaticMounts()
+    /**
+     * @return void
+     */
+    public function testMountsFromStaticMounts()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -43,10 +44,13 @@ class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
-    public function testStaticVolumes()
+    /**
+     * @return void
+     */
+    public function testMountsFromStaticVolumes()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -62,10 +66,13 @@ class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
-    public function testStartWithFileSystemBind()
+    /**
+     * @return void
+     */
+    public function testWithFileSystemBind()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -78,10 +85,13 @@ class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
-    public function testStartWithFileSystemBinds()
+    /**
+     * @return void
+     */
+    public function testWithFileSystemBinds()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -96,10 +106,13 @@ class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
-    public function testStartWithVolume()
+    /**
+     * @return void
+     */
+    public function testWithVolume()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -112,10 +125,13 @@ class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
-    public function testStartWithVolumes()
+    /**
+     * @return void
+     */
+    public function testWithVolumes()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -135,10 +151,13 @@ class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
-    public function testStartWithMount()
+    /**
+     * @return void
+     */
+    public function testWithMount()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -156,10 +175,13 @@ class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
-    public function testStartWithMounts()
+    /**
+     * @return void
+     */
+    public function testWithMounts()
     {
         $tmpdir = sys_get_temp_dir();
         file_put_contents($tmpdir.'/to', 'Hello, World!');
@@ -174,12 +196,13 @@ class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**
-     * @dataProvider providerWithMountsInvalidInputs
+     * @dataProvider providerWithMountsRejectsInvalidInputs
      * @param bool $mounts
+     * @return void
      */
     public function testWithMountsRejectsInvalidInputs($mounts)
     {
@@ -192,14 +215,17 @@ class MountSettingTest extends TestCase
     /**
      * @return array<string, array{bool}>
      */
-    public static function providerWithMountsInvalidInputs()
+    public static function providerWithMountsRejectsInvalidInputs()
     {
         return [
             'case 1' => [false],
         ];
     }
 
-    public function testStartRejectsInvalidMounts()
+    /**
+     * @return void
+     */
+    public function testMountsRejectsInvalidStaticConfiguration()
     {
         $container = new MountSettingWithInvalidMountsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -208,7 +234,7 @@ class MountSettingTest extends TestCase
     }
 }
 
-class MountSettingWithMountsContainer extends GenericContainer
+final class MountSettingWithMountsContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
@@ -217,7 +243,7 @@ class MountSettingWithMountsContainer extends GenericContainer
     ];
 }
 
-class MountSettingWithVolumesContainer extends GenericContainer
+final class MountSettingWithVolumesContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
@@ -226,7 +252,7 @@ class MountSettingWithVolumesContainer extends GenericContainer
     ];
 }
 
-class MountSettingWithInvalidMountsContainer extends GenericContainer
+final class MountSettingWithInvalidMountsContainer extends GenericContainer
 {
     protected static $MOUNTS = false;
 }

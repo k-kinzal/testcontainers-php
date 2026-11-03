@@ -5,33 +5,38 @@
 namespace Tests\Unit\Docker\Types;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\Docker\Types\EventScope;
 use Testcontainers\Docker\Types\EventType;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class EventTypeTest extends TestCase
+final class EventTypeTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testContainer()
     {
         $type = EventType::CONTAINER();
 
-        $this->assertSame('container', $type->toString());
-        $this->assertTrue($type->isContainer());
-        $this->assertFalse($type->isImage());
+        self::assertSame('container', $type->toString());
+        self::assertTrue($type->isContainer());
+        self::assertFalse($type->isImage());
     }
 
-    public function testFromString()
+    /**
+     * @dataProvider providerFromString
+     * @param string $value
+     * @return void
+     */
+    public function testFromString($value)
     {
-        foreach (EventType::values() as $value) {
-            $this->assertSame($value, EventType::fromString($value)->toString());
-        }
+        $action = EventType::fromString($value);
+
+        self::assertSame($value, $action->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithInvalidValue()
     {
         $this->expectException(InvalidFormatException::class);
@@ -39,16 +44,12 @@ class EventTypeTest extends TestCase
         EventType::fromString('invalid');
     }
 
-    public function testScopeFromString()
+    /**
+     * @return array<array<string>>
+     */
+    public static function providerFromString()
     {
-        $this->assertTrue(EventScope::fromString('local')->isLocal());
-        $this->assertTrue(EventScope::fromString('swarm')->isSwarm());
+        return array_chunk(EventType::values(), 1);
     }
 
-    public function testScopeFromStringWithInvalidValue()
-    {
-        $this->expectException(InvalidFormatException::class);
-
-        EventScope::fromString('invalid');
-    }
 }

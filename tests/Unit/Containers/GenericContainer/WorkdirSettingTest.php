@@ -10,21 +10,22 @@ use Testcontainers\Containers\GenericContainer\WorkdirSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class WorkdirSettingTest extends TestCase
+final class WorkdirSettingTest extends TestCase
 {
-    public function testHasWorkdirSettingTrait()
+    /**
+     * @return void
+     */
+    public function testWorkDirIsProvidedByWorkdirSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(WorkdirSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(WorkdirSetting::class, $uses);
     }
 
-    public function testStaticWorkdir()
+    /**
+     * @return void
+     */
+    public function testWorkdirFromStaticWorkdir()
     {
         $container = (new WorkdirSettingWithStaticWorkdirContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -33,10 +34,13 @@ class WorkdirSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("/tmp\n", $instance->getOutput());
+        self::assertSame("/tmp\n", $instance->getOutput());
     }
 
-    public function testStartWithWorkingDirectory()
+    /**
+     * @return void
+     */
+    public function testWithWorkingDirectory()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -46,12 +50,13 @@ class WorkdirSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("/tmp\n", $instance->getOutput());
+        self::assertSame("/tmp\n", $instance->getOutput());
     }
 
     /**
-     * @dataProvider providerWithWorkingDirectoryInvalidInputs
+     * @dataProvider providerWithWorkingDirectoryRejectsInvalidInputs
      * @param array{} $workDir
+     * @return void
      */
     public function testWithWorkingDirectoryRejectsInvalidInputs($workDir)
     {
@@ -64,14 +69,17 @@ class WorkdirSettingTest extends TestCase
     /**
      * @return array<string, array{array{}}>
      */
-    public static function providerWithWorkingDirectoryInvalidInputs()
+    public static function providerWithWorkingDirectoryRejectsInvalidInputs()
     {
         return [
             'case 1' => [[]],
         ];
     }
 
-    public function testStartRejectsInvalidWorkdir()
+    /**
+     * @return void
+     */
+    public function testWorkdirRejectsInvalidStaticConfiguration()
     {
         $container = new WorkdirSettingWithInvalidWorkdirContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -80,12 +88,12 @@ class WorkdirSettingTest extends TestCase
     }
 }
 
-class WorkdirSettingWithStaticWorkdirContainer extends GenericContainer
+final class WorkdirSettingWithStaticWorkdirContainer extends GenericContainer
 {
     protected static $WORKDIR = '/tmp';
 }
 
-class WorkdirSettingWithInvalidWorkdirContainer extends GenericContainer
+final class WorkdirSettingWithInvalidWorkdirContainer extends GenericContainer
 {
     protected static $WORKDIR = false;
 }

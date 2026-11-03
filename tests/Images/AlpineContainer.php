@@ -4,7 +4,7 @@ namespace Tests\Images;
 
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 
-class AlpineContainer extends GenericContainer
+final class AlpineContainer extends GenericContainer
 {
     public static $IMAGE = 'alpine:latest';
 

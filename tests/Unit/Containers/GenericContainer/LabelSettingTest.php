@@ -10,30 +10,34 @@ use Testcontainers\Containers\GenericContainer\LabelSetting;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class LabelSettingTest extends TestCase
+final class LabelSettingTest extends TestCase
 {
-    public function testHasLabelSettingTrait()
+    /**
+     * @return void
+     */
+    public function testLabelsIsProvidedByLabelSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(LabelSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(LabelSetting::class, $uses);
     }
 
-    public function testStaticLabels()
+    /**
+     * @return void
+     */
+    public function testLabelsFromStaticLabels()
     {
         $container = new LabelSettingWithStaticLabelsContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame('VALUE1', $instance->getLabel('KEY1'));
-        $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
+        self::assertSame('VALUE1', $instance->getLabel('KEY1'));
+        self::assertSame('VALUE2', $instance->getLabel('KEY2'));
     }
 
-    public function testStartWithLabel()
+    /**
+     * @return void
+     */
+    public function testWithLabel()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabel('KEY1', 'VALUE1')
@@ -43,11 +47,14 @@ class LabelSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('VALUE1', $instance->getLabel('KEY1'));
-        $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
+        self::assertSame('VALUE1', $instance->getLabel('KEY1'));
+        self::assertSame('VALUE2', $instance->getLabel('KEY2'));
     }
 
-    public function testStartWithLabels()
+    /**
+     * @return void
+     */
+    public function testWithLabels()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withLabels(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'])
@@ -56,15 +63,16 @@ class LabelSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('VALUE1', $instance->getLabel('KEY1'));
-        $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
-        $this->assertSame(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'], $instance->getLabels());
+        self::assertSame('VALUE1', $instance->getLabel('KEY1'));
+        self::assertSame('VALUE2', $instance->getLabel('KEY2'));
+        self::assertSame(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'], $instance->getLabels());
     }
 
     /**
-     * @dataProvider providerWithLabelInvalidInputs
+     * @dataProvider providerWithLabelRejectsInvalidInputs
      * @param array{} $key
      * @param string  $value
+     * @return void
      */
     public function testWithLabelRejectsInvalidInputs($key, $value)
     {
@@ -77,7 +85,7 @@ class LabelSettingTest extends TestCase
     /**
      * @return array<string, array{array{}, string}>
      */
-    public static function providerWithLabelInvalidInputs()
+    public static function providerWithLabelRejectsInvalidInputs()
     {
         return [
             'case 1' => [[], 'value'],
@@ -85,8 +93,9 @@ class LabelSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithLabelsInvalidInputs
+     * @dataProvider providerWithLabelsRejectsInvalidInputs
      * @param string $labels
+     * @return void
      */
     public function testWithLabelsRejectsInvalidInputs($labels)
     {
@@ -99,14 +108,17 @@ class LabelSettingTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerWithLabelsInvalidInputs()
+    public static function providerWithLabelsRejectsInvalidInputs()
     {
         return [
             'case 1' => ['not an array'],
         ];
     }
 
-    public function testStartRejectsInvalidLabels()
+    /**
+     * @return void
+     */
+    public function testLabelsRejectsInvalidStaticConfiguration()
     {
         $container = new LabelSettingWithInvalidLabelsContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -115,7 +127,7 @@ class LabelSettingTest extends TestCase
     }
 }
 
-class LabelSettingWithStaticLabelsContainer extends GenericContainer
+final class LabelSettingWithStaticLabelsContainer extends GenericContainer
 {
     protected static $LABELS = [
         'KEY1' => 'VALUE1',
@@ -123,7 +135,7 @@ class LabelSettingWithStaticLabelsContainer extends GenericContainer
     ];
 }
 
-class LabelSettingWithInvalidLabelsContainer extends GenericContainer
+final class LabelSettingWithInvalidLabelsContainer extends GenericContainer
 {
     protected static $LABELS = [1 => 'value'];
 }

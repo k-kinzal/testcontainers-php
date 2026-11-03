@@ -11,29 +11,33 @@ use Testcontainers\Containers\GenericContainer\WaitSetting;
 use Testcontainers\Containers\WaitStrategy\HostPortWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class WaitSettingTest extends TestCase
+final class WaitSettingTest extends TestCase
 {
-    public function testHasWaitSettingTrait()
+    /**
+     * @return void
+     */
+    public function testWaitStrategyIsProvidedByWaitSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(WaitSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(WaitSetting::class, $uses);
     }
 
-    public function testStaticWaitStrategy()
+    /**
+     * @return void
+     */
+    public function testWaitStrategyFromStaticWaitStrategy()
     {
         $container = new WaitSettingWithStaticWaitStrategyContainer();
         $container->start();
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
-    public function testStartWithWaitStrategy()
+    /**
+     * @return void
+     */
+    public function testWithWaitStrategy()
     {
         $container = (new GenericContainer('nginx:latest'))
             ->withExposedPort(80)
@@ -41,12 +45,13 @@ class WaitSettingTest extends TestCase
         ;
         $container->start();
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**
-     * @dataProvider providerWithWaitStrategyInvalidInputs
+     * @dataProvider providerWithWaitStrategyRejectsInvalidInputs
      * @param stdClass $waitStrategy
+     * @return void
      */
     public function testWithWaitStrategyRejectsInvalidInputs($waitStrategy)
     {
@@ -59,7 +64,7 @@ class WaitSettingTest extends TestCase
     /**
      * @return array<string, array{stdClass}>
      */
-    public static function providerWithWaitStrategyInvalidInputs()
+    public static function providerWithWaitStrategyRejectsInvalidInputs()
     {
         return [
             'case 1' => [new stdClass()],
@@ -67,7 +72,7 @@ class WaitSettingTest extends TestCase
     }
 }
 
-class WaitSettingWithStaticWaitStrategyContainer extends GenericContainer
+final class WaitSettingWithStaticWaitStrategyContainer extends GenericContainer
 {
     protected static $IMAGE = 'nginx:latest';
 

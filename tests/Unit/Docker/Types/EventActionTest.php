@@ -8,76 +8,95 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Docker\Types\EventAction;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class EventActionTest extends TestCase
+final class EventActionTest extends TestCase
 {
-    public function testEventAction()
+    /**
+     * @return void
+     */
+    public function testConstruct()
     {
         $action = new EventAction(EventAction::$START);
 
-        $this->assertSame('start', $action->toString());
-        $this->assertSame('start', $action->getName());
-        $this->assertNull($action->getDetail());
+        self::assertSame('start', $action->toString());
+        self::assertSame('start', $action->getName());
+        self::assertNull($action->getDetail());
     }
 
-    public function testEventActionWithDetail()
+    /**
+     * @return void
+     */
+    public function testConstructWithDetail()
     {
         $action = new EventAction(EventAction::$EXEC_START, "/bin/sh -c 'echo hello'");
 
-        $this->assertSame("exec_start: /bin/sh -c 'echo hello'", $action->toString());
-        $this->assertSame('exec_start', $action->getName());
-        $this->assertSame("/bin/sh -c 'echo hello'", $action->getDetail());
+        self::assertSame("exec_start: /bin/sh -c 'echo hello'", $action->toString());
+        self::assertSame('exec_start', $action->getName());
+        self::assertSame("/bin/sh -c 'echo hello'", $action->getDetail());
     }
 
+    /**
+     * @return void
+     */
     public function testDie()
     {
         $action = EventAction::DIE_();
 
-        $this->assertSame('die', $action->toString());
-        $this->assertTrue($action->isDie());
+        self::assertSame('die', $action->toString());
+        self::assertTrue($action->isDie());
     }
 
+    /**
+     * @return void
+     */
     public function testHealthStatusHealthy()
     {
         $action = EventAction::HEALTH_STATUS_HEALTHY();
 
-        $this->assertSame('health_status: healthy', $action->toString());
-        $this->assertTrue($action->isHealthStatus());
-        $this->assertTrue($action->isHealthStatusHealthy());
-        $this->assertFalse($action->isHealthStatusUnhealthy());
+        self::assertSame('health_status: healthy', $action->toString());
+        self::assertTrue($action->isHealthStatus());
+        self::assertTrue($action->isHealthStatusHealthy());
+        self::assertFalse($action->isHealthStatusUnhealthy());
     }
 
-    public function testFromString()
+    /**
+     * @dataProvider providerFromString
+     * @param string $value
+     * @return void
+     */
+    public function testFromString($value)
     {
-        foreach (EventAction::values() as $value) {
-            $action = EventAction::fromString($value);
+        $action = EventAction::fromString($value);
 
-            $this->assertSame($value, $action->toString());
-            $this->assertNull($action->getDetail());
-        }
+        self::assertSame($value, $action->toString());
+        self::assertNull($action->getDetail());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithDetail()
     {
         $action = EventAction::fromString('exec_create: ls -la');
 
-        $this->assertTrue($action->isExecCreate());
-        $this->assertSame('ls -la', $action->getDetail());
-        $this->assertSame('exec_create: ls -la', $action->toString());
+        self::assertTrue($action->isExecCreate());
+        self::assertSame('ls -la', $action->getDetail());
+        self::assertSame('exec_create: ls -la', $action->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithFreeFormHealthStatus()
     {
         $action = EventAction::fromString('health_status: curl: (7) Failed to connect');
 
-        $this->assertTrue($action->isHealthStatus());
-        $this->assertSame('curl: (7) Failed to connect', $action->getDetail());
+        self::assertTrue($action->isHealthStatus());
+        self::assertSame('curl: (7) Failed to connect', $action->getDetail());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithInvalidValue()
     {
         $this->expectException(InvalidFormatException::class);
@@ -85,6 +104,9 @@ class EventActionTest extends TestCase
         EventAction::fromString('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithDetailOnActionWithoutDetail()
     {
         $this->expectException(InvalidFormatException::class);
@@ -92,12 +114,23 @@ class EventActionTest extends TestCase
         EventAction::fromString('die: 1');
     }
 
-    public function testIsMethodsAreExclusive()
+    /**
+     * @return void
+     */
+    public function testIsDieIsExclusiveOfOtherActions()
     {
         $action = EventAction::CREATE();
 
-        $this->assertTrue($action->isCreate());
-        $this->assertFalse($action->isStart());
-        $this->assertFalse($action->isDestroy());
+        self::assertTrue($action->isCreate());
+        self::assertFalse($action->isStart());
+        self::assertFalse($action->isDestroy());
     }
+    /**
+     * @return array<array<string>>
+     */
+    public static function providerFromString()
+    {
+        return array_chunk(EventAction::values(), 1);
+    }
+
 }

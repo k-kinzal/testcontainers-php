@@ -7,27 +7,23 @@ use stdClass;
 use Testcontainers\Docker\Types\NetworkId;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class NetworkIdTest extends TestCase
+final class NetworkIdTest extends TestCase
 {
     /**
-     * @dataProvider providerValues
+     * @dataProvider providerIsValidReturnsWhetherValueIsValid
      * @param array{}|bool|int|null|stdClass|string $value
      * @param bool                                  $expected
+     * @return void
      */
     public function testIsValidReturnsWhetherValueIsValid($value, $expected)
     {
-        $this->assertSame($expected, NetworkId::isValid($value));
+        self::assertSame($expected, NetworkId::isValid($value));
     }
 
     /**
      * @return array<string, array{array{}|bool|int|null|stdClass|string, bool}>
      */
-    public static function providerValues()
+    public static function providerIsValidReturnsWhetherValueIsValid()
     {
         return [
             'short ID' => ['012345abcdef', true],
@@ -45,29 +41,31 @@ class NetworkIdTest extends TestCase
     }
 
     /**
-     * @dataProvider providerValidIdentifiers
+     * @dataProvider providerConstructPreservesValidIdentifier
      * @param string $value
+     * @return void
      */
     public function testConstructPreservesValidIdentifier($value)
     {
         $identifier = new NetworkId($value);
 
-        $this->assertSame($value, $identifier->toString());
+        self::assertSame($value, $identifier->toString());
     }
 
     /**
-     * @dataProvider providerValidIdentifiers
+     * @dataProvider providerFromStringPreservesValidIdentifier
      * @param string $value
+     * @return void
      */
     public function testFromStringPreservesValidIdentifier($value)
     {
-        $this->assertSame($value, NetworkId::fromString($value)->toString());
+        self::assertSame($value, NetworkId::fromString($value)->toString());
     }
 
     /**
      * @return array<string, array{string}>
      */
-    public static function providerValidIdentifiers()
+    public static function providerConstructPreservesValidIdentifier()
     {
         return [
             'short ID' => ['012345abcdef'],
@@ -76,8 +74,20 @@ class NetworkIdTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidIdentifiers
+     * @return array<string, array{string}>
+     */
+    public static function providerFromStringPreservesValidIdentifier()
+    {
+        return [
+            'short ID' => ['012345abcdef'],
+            'full ID' => [str_repeat('0123456789abcdef', 4)],
+        ];
+    }
+
+    /**
+     * @dataProvider providerConstructRejectsInvalidIdentifier
      * @param string $value
+     * @return void
      */
     public function testConstructRejectsInvalidIdentifier($value)
     {
@@ -87,8 +97,9 @@ class NetworkIdTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidIdentifiers
+     * @dataProvider providerFromStringRejectsInvalidIdentifier
      * @param string $value
+     * @return void
      */
     public function testFromStringRejectsInvalidIdentifier($value)
     {
@@ -100,7 +111,20 @@ class NetworkIdTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerInvalidIdentifiers()
+    public static function providerConstructRejectsInvalidIdentifier()
+    {
+        return [
+            'empty string' => [''],
+            'invalid length' => ['012345abcde'],
+            'invalid character' => ['012345abcdeg'],
+            'uppercase characters' => ['012345ABCDEF'],
+        ];
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function providerFromStringRejectsInvalidIdentifier()
     {
         return [
             'empty string' => [''],

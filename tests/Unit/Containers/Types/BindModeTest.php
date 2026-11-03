@@ -2,61 +2,77 @@
 
 /** @noinspection PhpUnhandledExceptionInspection */
 
-namespace Tests\Unit\Containers;
+namespace Tests\Unit\Containers\Types;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\BindMode;
 use Testcontainers\Exceptions\InvalidFormatException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class BindModeTest extends TestCase
+final class BindModeTest extends TestCase
 {
-    public function testBindModeReadOnly()
+    /**
+     * @return void
+     */
+    public function testConstructReadOnly()
     {
         $bindMode = new BindMode(BindMode::$READ_ONLY);
 
-        $this->assertSame(BindMode::$READ_ONLY, $bindMode->toString());
+        self::assertSame(BindMode::$READ_ONLY, $bindMode->toString());
     }
 
-    public function testBindModeReadWrite()
+    /**
+     * @return void
+     */
+    public function testConstructReadWrite()
     {
         $bindMode = new BindMode(BindMode::$READ_WRITE);
 
-        $this->assertSame(BindMode::$READ_WRITE, $bindMode->toString());
+        self::assertSame(BindMode::$READ_WRITE, $bindMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testReadOnly()
     {
         $bindMode = BindMode::READ_ONLY();
 
-        $this->assertSame(BindMode::$READ_ONLY, $bindMode->toString());
+        self::assertSame(BindMode::$READ_ONLY, $bindMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testReadWrite()
     {
         $bindMode = BindMode::READ_WRITE();
 
-        $this->assertSame(BindMode::$READ_WRITE, $bindMode->toString());
+        self::assertSame(BindMode::$READ_WRITE, $bindMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithReadOnly()
     {
         $bindMode = BindMode::fromString(BindMode::$READ_ONLY);
 
-        $this->assertSame(BindMode::$READ_ONLY, $bindMode->toString());
+        self::assertSame(BindMode::$READ_ONLY, $bindMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithReadWrite()
     {
         $bindMode = BindMode::fromString(BindMode::$READ_WRITE);
 
-        $this->assertSame(BindMode::$READ_WRITE, $bindMode->toString());
+        self::assertSame(BindMode::$READ_WRITE, $bindMode->toString());
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringWithInvalidMode()
     {
         $this->expectException(InvalidFormatException::class);
@@ -65,20 +81,29 @@ class BindModeTest extends TestCase
         BindMode::fromString('invalid');
     }
 
+    /**
+     * @return void
+     */
     public function testIsReadOnly()
     {
         $bindMode = new BindMode(BindMode::$READ_ONLY);
 
-        $this->assertTrue($bindMode->isReadOnly());
+        self::assertTrue($bindMode->isReadOnly());
     }
 
+    /**
+     * @return void
+     */
     public function testIsReadWrite()
     {
         $bindMode = new BindMode(BindMode::$READ_WRITE);
 
-        $this->assertTrue($bindMode->isReadWrite());
+        self::assertTrue($bindMode->isReadWrite());
     }
 
+    /**
+     * @return void
+     */
     public function testConstructRejectsUnknownMode()
     {
         $this->expectException(InvalidFormatException::class);

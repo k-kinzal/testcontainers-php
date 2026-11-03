@@ -11,21 +11,22 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class EntrypointSettingTest extends TestCase
+final class EntrypointSettingTest extends TestCase
 {
-    public function testHasEntrypointSettingTrait()
+    /**
+     * @return void
+     */
+    public function testEntrypointIsProvidedByEntrypointSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(EntrypointSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(EntrypointSetting::class, $uses);
     }
 
-    public function testStaticEntrypoint()
+    /**
+     * @return void
+     */
+    public function testEntrypointFromStaticEntrypoint()
     {
         $container = (new EntrypointSettingWithStaticEntrypointContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -35,10 +36,13 @@ class EntrypointSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("hello\n", $instance->getOutput());
+        self::assertSame("hello\n", $instance->getOutput());
     }
 
-    public function testStartWithEntrypoint()
+    /**
+     * @return void
+     */
+    public function testWithEntrypoint()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -49,10 +53,13 @@ class EntrypointSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("hello\n", $instance->getOutput());
+        self::assertSame("hello\n", $instance->getOutput());
     }
 
-    public function testStartRejectsInvalidEntrypoint()
+    /**
+     * @return void
+     */
+    public function testEntrypointRejectsInvalidStaticConfiguration()
     {
         $container = new EntrypointSettingWithInvalidEntrypointContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -61,12 +68,12 @@ class EntrypointSettingTest extends TestCase
     }
 }
 
-class EntrypointSettingWithStaticEntrypointContainer extends GenericContainer
+final class EntrypointSettingWithStaticEntrypointContainer extends GenericContainer
 {
     protected static $ENTRYPOINT = '/bin/sh';
 }
 
-class EntrypointSettingWithInvalidEntrypointContainer extends GenericContainer
+final class EntrypointSettingWithInvalidEntrypointContainer extends GenericContainer
 {
     protected static $ENTRYPOINT = [];
 }

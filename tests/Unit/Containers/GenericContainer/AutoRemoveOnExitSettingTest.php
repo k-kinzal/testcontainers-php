@@ -6,15 +6,12 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use UnexpectedValueException;
 
-/**
- * @internal
- * @coversNothing
- */
-class AutoRemoveOnExitSettingTest extends TestCase
+final class AutoRemoveOnExitSettingTest extends TestCase
 {
     /**
-     * @dataProvider providerWithAutoRemoveOnExitInvalidInputs
+     * @dataProvider providerWithAutoRemoveOnExitRejectsInvalidInputs
      * @param int $autoRemoveOnExit
+     * @return void
      */
     public function testWithAutoRemoveOnExitRejectsInvalidInputs($autoRemoveOnExit)
     {
@@ -27,14 +24,17 @@ class AutoRemoveOnExitSettingTest extends TestCase
     /**
      * @return array<string, array{int}>
      */
-    public static function providerWithAutoRemoveOnExitInvalidInputs()
+    public static function providerWithAutoRemoveOnExitRejectsInvalidInputs()
     {
         return [
             'case 1' => [1],
         ];
     }
 
-    public function testStartRejectsInvalidAutoRemoveOnExit()
+    /**
+     * @return void
+     */
+    public function testAutoRemoveOnExitRejectsInvalidStaticConfiguration()
     {
         $container = new AutoRemoveOnExitSettingWithInvalidAutoRemoveOnExitContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -43,7 +43,7 @@ class AutoRemoveOnExitSettingTest extends TestCase
     }
 }
 
-class AutoRemoveOnExitSettingWithInvalidAutoRemoveOnExitContainer extends GenericContainer
+final class AutoRemoveOnExitSettingWithInvalidAutoRemoveOnExitContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = 1;
 }

@@ -9,41 +9,46 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\PrivilegeSetting;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class PrivilegeSettingTest extends TestCase
+final class PrivilegeSettingTest extends TestCase
 {
-    public function testHasPrivilegeSettingTrait()
+    /**
+     * @return void
+     */
+    public function testPrivilegedIsProvidedByPrivilegeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(PrivilegeSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(PrivilegeSetting::class, $uses);
     }
 
-    public function testStaticPrivileged()
+    /**
+     * @return void
+     */
+    public function testPrivilegedFromStaticPrivileged()
     {
         $container = new PrivilegeSettingWithStaticPrivilegedContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(true, $instance->getPrivilegedMode());
+        self::assertSame(true, $instance->getPrivilegedMode());
     }
 
-    public function testStartWithPrivilegedMode()
+    /**
+     * @return void
+     */
+    public function testWithPrivilegedMode()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withPrivilegedMode(true)
         ;
         $instance = $container->start();
 
-        $this->assertSame(true, $instance->getPrivilegedMode());
+        self::assertSame(true, $instance->getPrivilegedMode());
     }
 
     /**
-     * @dataProvider providerWithPrivilegedModeInvalidInputs
+     * @dataProvider providerWithPrivilegedModeRejectsInvalidInputs
      * @param string $mode
+     * @return void
      */
     public function testWithPrivilegedModeRejectsInvalidInputs($mode)
     {
@@ -56,14 +61,17 @@ class PrivilegeSettingTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerWithPrivilegedModeInvalidInputs()
+    public static function providerWithPrivilegedModeRejectsInvalidInputs()
     {
         return [
             'case 1' => ['false'],
         ];
     }
 
-    public function testStartRejectsInvalidPrivileged()
+    /**
+     * @return void
+     */
+    public function testPrivilegedRejectsInvalidStaticConfiguration()
     {
         $container = new PrivilegeSettingWithInvalidPrivilegedContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -72,12 +80,12 @@ class PrivilegeSettingTest extends TestCase
     }
 }
 
-class PrivilegeSettingWithStaticPrivilegedContainer extends GenericContainer
+final class PrivilegeSettingWithStaticPrivilegedContainer extends GenericContainer
 {
     protected static $PRIVILEGED = true;
 }
 
-class PrivilegeSettingWithInvalidPrivilegedContainer extends GenericContainer
+final class PrivilegeSettingWithInvalidPrivilegedContainer extends GenericContainer
 {
     protected static $PRIVILEGED = 'false';
 }

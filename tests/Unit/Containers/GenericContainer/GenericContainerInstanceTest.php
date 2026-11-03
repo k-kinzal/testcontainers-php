@@ -2,10 +2,12 @@
 
 /** @noinspection PhpUnhandledExceptionInspection */
 
-namespace Tests\Unit\Containers;
+namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
+use stdClass;
+use Closure;
+use Testcontainers\Docker\Types\Event;
 use Symfony\Component\Process\Process;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
@@ -20,22 +22,23 @@ use Testcontainers\SSH\Session;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class GenericContainerInstanceTest extends TestCase
+final class GenericContainerInstanceTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testGetContainerId()
     {
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
 
-        $this->assertSame('8188d93d8a27', (string) $instance->getContainerId());
+        self::assertSame('8188d93d8a27', (string) $instance->getContainerId());
     }
 
+    /**
+     * @return void
+     */
     public function testGetLabel()
     {
         $instance = new GenericContainerInstance([
@@ -45,9 +48,12 @@ class GenericContainerInstanceTest extends TestCase
             ],
         ]);
 
-        $this->assertSame('value', $instance->getLabel('com.example.label'));
+        self::assertSame('value', $instance->getLabel('com.example.label'));
     }
 
+    /**
+     * @return void
+     */
     public function testGetLabels()
     {
         $instance = new GenericContainerInstance([
@@ -57,24 +63,32 @@ class GenericContainerInstanceTest extends TestCase
             ],
         ]);
 
-        $this->assertSame(['com.example.label' => 'value'], $instance->getLabels());
+        self::assertSame(['com.example.label' => 'value'], $instance->getLabels());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHost()
     {
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
 
-        $this->assertSame('localhost', $instance->getHost());
+        self::assertSame('localhost', $instance->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromDockerHost()
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -84,15 +98,20 @@ class GenericContainerInstanceTest extends TestCase
         ]);
         $instance->setDockerClient($client);
 
-        $this->assertSame($dind->getHost(), $instance->getHost());
+        self::assertSame($dind->getHost(), $instance->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromPortForward()
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -103,9 +122,12 @@ class GenericContainerInstanceTest extends TestCase
         $instance->setDockerClient($client);
         $instance->setData(new Session(new Process(['pwd'])));
 
-        $this->assertSame('localhost', $instance->getHost());
+        self::assertSame('localhost', $instance->getHost());
     }
 
+    /**
+     * @return void
+     */
     public function testGetHostFromOverride()
     {
         try {
@@ -114,12 +136,15 @@ class GenericContainerInstanceTest extends TestCase
                 'containerId' => new ContainerId('8188d93d8a27'),
             ]);
 
-            $this->assertSame('override.local', $instance->getHost());
+            self::assertSame('override.local', $instance->getHost());
         } finally {
             putenv('TESTCONTAINERS_HOST_OVERRIDE');
         }
     }
 
+    /**
+     * @return void
+     */
     public function testGetMappedPort()
     {
         $instance = new GenericContainerInstance([
@@ -129,9 +154,12 @@ class GenericContainerInstanceTest extends TestCase
             ],
         ]);
 
-        $this->assertSame(8080, $instance->getMappedPort(80));
+        self::assertSame(8080, $instance->getMappedPort(80));
     }
 
+    /**
+     * @return void
+     */
     public function testGetImagePullPolicy()
     {
         $pullPolicy = ImagePullPolicy::ALWAYS();
@@ -140,9 +168,12 @@ class GenericContainerInstanceTest extends TestCase
             'pull' => $pullPolicy,
         ]);
 
-        $this->assertSame($pullPolicy, $instance->getImagePullPolicy());
+        self::assertSame($pullPolicy, $instance->getImagePullPolicy());
     }
 
+    /**
+     * @return void
+     */
     public function testGetPrivilegedMode()
     {
         $instance = new GenericContainerInstance([
@@ -150,9 +181,12 @@ class GenericContainerInstanceTest extends TestCase
             'privileged' => true,
         ]);
 
-        $this->assertTrue($instance->getPrivilegedMode());
+        self::assertTrue($instance->getPrivilegedMode());
     }
 
+    /**
+     * @return void
+     */
     public function testGetOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -161,13 +195,14 @@ class GenericContainerInstanceTest extends TestCase
         ;
         $instance = $container->start();
 
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
-
-        $this->assertSame("Hello, World!\n", $instance->getOutput());
+        $wait = new Process(['docker', 'wait', $instance->getContainerId()->toString()]);
+        self::assertSame(0, $wait->run());
+        self::assertSame("Hello, World!\n", $instance->getOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testGetErrorOutput()
     {
         $container = (new GenericContainer('alpine:latest'))
@@ -176,37 +211,45 @@ class GenericContainerInstanceTest extends TestCase
         ;
         $instance = $container->start();
 
-        while ($instance->isRunning()) {
-            usleep(100);
-        }
-
-        $this->assertSame("ls: /not-exist-dir: No such file or directory\n", $instance->getErrorOutput());
+        $wait = new Process(['docker', 'wait', $instance->getContainerId()->toString()]);
+        self::assertSame(0, $wait->run());
+        self::assertSame("ls: /not-exist-dir: No such file or directory\n", $instance->getErrorOutput());
     }
 
+    /**
+     * @return void
+     */
     public function testSetDataAndGetData()
     {
-        $data = new CustomData();
+        $data = new stdClass();
 
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
         $instance->setData($data);
 
-        $this->assertSame($data, $instance->getData(CustomData::class));
+        self::assertSame($data, $instance->getData(stdClass::class));
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunning()
     {
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
 
-        $this->assertFalse($instance->isRunning());
+        self::assertFalse($instance->isRunning());
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunningReusesInspectedStateUntilEventIsEmitted()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -217,36 +260,50 @@ class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $deadline = microtime(true) + 10;
-        do {
-            rewind($stream);
-            $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
-            $this->assertTrue($instance->isRunning());
-            usleep(10000);
-            rewind($stream);
-            $observed = substr_count(stream_get_contents($stream), 'docker inspect ');
-        } while ($observed !== $inspected && microtime(true) < $deadline);
-
-        $this->assertTrue($instance->isRunning());
-        $this->assertTrue($instance->isRunning());
+        self::assertTrue($instance->isRunning());
+        $events = call_user_func(function () {
+            yield null;
+            yield null;
+            yield null;
+            yield Event::fromArray(['Type' => 'container', 'Action' => 'die', 'Actor' => ['ID' => 'fixture', 'Attributes' => null]]);
+            yield null;
+            yield null;
+        });
+        $useEvents = Closure::bind(function () use ($events) {
+            /** @psalm-scope-this GenericContainerInstance */
+            $this->events = $events;
+            $this->eventObserved = true;
+        }, $instance, GenericContainerInstance::class);
+        self::assertNotNull($useEvents);
+        $useEvents();
         rewind($stream);
-        $this->assertSame($inspected, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $inspected = substr_count($contents, 'docker inspect ');
+
+        self::assertTrue($instance->isRunning());
+        self::assertTrue($instance->isRunning());
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        self::assertSame($inspected, substr_count($contents, 'docker inspect '));
 
         $client->stop($instance->getContainerId(), ['timeout' => 0]);
-        $deadline = time() + 5;
-        while ($instance->isRunning() && time() < $deadline) {
-            usleep(10000);
-        }
-
-        $this->assertFalse($instance->isRunning());
-        $this->assertTrue($instance->isStopped());
+        self::assertFalse($instance->isRunning());
+        self::assertTrue($instance->isStopped());
         rewind($stream);
-        $this->assertGreaterThan($inspected, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        self::assertGreaterThan($inspected, substr_count($contents, 'docker inspect '));
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunningInspectsWithoutEvents()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -257,23 +314,32 @@ class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $events = new ReflectionProperty(GenericContainerInstance::class, 'events');
-        if (PHP_VERSION_ID < 80100) {
-            $events->setAccessible(true);
-        }
-        $events->setValue($instance, null);
+        $clearEvents = Closure::bind(function () {
+            /** @psalm-scope-this GenericContainerInstance */
+            $this->events = null;
+        }, $instance, GenericContainerInstance::class);
+        self::assertNotNull($clearEvents);
+        $clearEvents();
         rewind($stream);
-        $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $inspected = substr_count($contents, 'docker inspect ');
 
-        $this->assertTrue($instance->isRunning());
-        $this->assertTrue($instance->isRunning());
+        self::assertTrue($instance->isRunning());
+        self::assertTrue($instance->isRunning());
         rewind($stream);
-        $this->assertSame($inspected + 2, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        self::assertSame($inspected + 2, substr_count($contents, 'docker inspect '));
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunningInspectsAfterInspectIntervalElapses()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -284,26 +350,42 @@ class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $deadline = microtime(true) + 10;
-        do {
-            rewind($stream);
-            $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
-            $this->assertTrue($instance->isRunning());
-            usleep(10000);
-            rewind($stream);
-            $observed = substr_count(stream_get_contents($stream), 'docker inspect ');
-        } while ($observed !== $inspected && microtime(true) < $deadline);
+        self::assertTrue($instance->isRunning());
+        $events = call_user_func(function () {
+            yield null;
+            yield null;
+            yield null;
+            yield null;
+            yield null;
+        });
+        $useEvents = Closure::bind(function () use ($events) {
+            /** @psalm-scope-this GenericContainerInstance */
+            $this->events = $events;
+            $this->eventObserved = true;
+        }, $instance, GenericContainerInstance::class);
+        self::assertNotNull($useEvents);
+        $useEvents();
+        rewind($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $inspected = substr_count($contents, 'docker inspect ');
 
         usleep(500000);
 
-        $this->assertTrue($instance->isRunning());
+        self::assertTrue($instance->isRunning());
         rewind($stream);
-        $this->assertSame($inspected + 1, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        self::assertSame($inspected + 1, substr_count($contents, 'docker inspect '));
     }
 
+    /**
+     * @return void
+     */
     public function testIsRunningInspectsEveryTimeWithInspectIntervalOfZero()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -315,14 +397,21 @@ class GenericContainerInstanceTest extends TestCase
         ;
         $instance = $container->start();
         rewind($stream);
-        $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $inspected = substr_count($contents, 'docker inspect ');
 
-        $this->assertTrue($instance->isRunning());
-        $this->assertTrue($instance->isRunning());
+        self::assertTrue($instance->isRunning());
+        self::assertTrue($instance->isRunning());
         rewind($stream);
-        $this->assertSame($inspected + 2, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        self::assertSame($inspected + 2, substr_count($contents, 'docker inspect '));
     }
 
+    /**
+     * @return void
+     */
     public function testIsStopped()
     {
         $client = new DockerClient();
@@ -335,17 +424,20 @@ class GenericContainerInstanceTest extends TestCase
             'containerId' => $output->getContainerId(),
         ]);
 
-        $this->assertFalse($instance->isStopped());
+        self::assertFalse($instance->isStopped());
 
         $instance->stop();
 
-        $this->assertTrue($instance->isStopped());
+        self::assertTrue($instance->isStopped());
 
         $client->rm($output->getContainerId());
 
-        $this->assertTrue($instance->isStopped());
+        self::assertTrue($instance->isStopped());
     }
 
+    /**
+     * @return void
+     */
     public function testGetState()
     {
         $client = new DockerClient();
@@ -356,31 +448,44 @@ class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
+        self::assertInstanceOf(GenericContainerInstance::class, $instance);
 
-        $this->assertSame('running', $instance->getState()->status);
+        $state = $instance->getState();
+        self::assertNotNull($state);
+        self::assertSame('running', $state->status);
     }
 
+    /**
+     * @return void
+     */
     public function testGetStateIfContainerDoesNotExist()
     {
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
 
-        $this->assertNull($instance->getState());
+        self::assertNull($instance->getState());
     }
 
+    /**
+     * @return void
+     */
     public function testIsStoppedIfContainerDoesNotExist()
     {
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
         ]);
 
-        $this->assertTrue($instance->isStopped());
+        self::assertTrue($instance->isStopped());
     }
 
+    /**
+     * @return void
+     */
     public function testGetStateSubscribesEventsOfContainer()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -391,18 +496,23 @@ class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
+        self::assertInstanceOf(GenericContainerInstance::class, $instance);
 
         $instance->getState();
         $instance->getState();
 
         rewind($stream);
         $log = stream_get_contents($stream);
-        $this->assertSame(1, substr_count($log, 'docker events '));
-        $this->assertNotFalse(strpos($log, 'container='.$instance->getContainerId()));
-        $this->assertNotFalse(strpos($log, 'event=die'));
-        $this->assertNotFalse(strpos($log, '--since 0'));
+        self::assertNotFalse($log);
+        self::assertSame(1, substr_count($log, 'docker events '));
+        self::assertNotFalse(strpos($log, 'container='.$instance->getContainerId()->toString()));
+        self::assertNotFalse(strpos($log, 'event=die'));
+        self::assertNotFalse(strpos($log, '--since 0'));
     }
 
+    /**
+     * @return void
+     */
     public function testStopStopsObservingEvents()
     {
         $client = new DockerClient();
@@ -413,18 +523,19 @@ class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $this->assertTrue($instance->isRunning());
-        $events = new ReflectionProperty(GenericContainerInstance::class, 'events');
-        if (PHP_VERSION_ID < 80100) {
-            $events->setAccessible(true);
-        }
-        $this->assertNotNull($events->getValue($instance));
+        self::assertTrue($instance->isRunning());
+        $properties = (array) $instance;
+        self::assertNotNull($properties["\0".GenericContainerInstance::class."\0events"]);
 
         $instance->stop();
 
-        $this->assertNull($events->getValue($instance));
+        $properties = (array) $instance;
+        self::assertNull($properties["\0".GenericContainerInstance::class."\0events"]);
     }
 
+    /**
+     * @return void
+     */
     public function testStop()
     {
         $instance = new GenericContainerInstance([
@@ -432,9 +543,12 @@ class GenericContainerInstanceTest extends TestCase
         ]);
         $instance->stop();
 
-        $this->assertFalse($instance->isRunning());
+        self::assertFalse($instance->isRunning());
     }
 
+    /**
+     * @return void
+     */
     public function testStopThrowsDockerException()
     {
         $client = (new DockerClient())->withGlobalOptions([
@@ -449,6 +563,9 @@ class GenericContainerInstanceTest extends TestCase
         $instance->stop();
     }
 
+    /**
+     * @return void
+     */
     public function testDestructSwallowsDockerException()
     {
         $client = (new DockerClient())->withGlobalOptions([
@@ -459,12 +576,8 @@ class GenericContainerInstanceTest extends TestCase
         ]);
         $instance->setDockerClient($client);
 
-        unset($instance);
+        $instance = null;
 
-        $this->assertFalse(isset($instance));
+        self::assertNull($instance);
     }
-}
-
-class CustomData
-{
 }

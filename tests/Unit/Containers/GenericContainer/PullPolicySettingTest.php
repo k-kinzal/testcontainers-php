@@ -10,32 +10,36 @@ use Testcontainers\Containers\GenericContainer\PullPolicySetting;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class PullPolicySettingTest extends TestCase
+final class PullPolicySettingTest extends TestCase
 {
-    public function testHasPullPolicySettingTrait()
+    /**
+     * @return void
+     */
+    public function testPullPolicyIsProvidedByPullPolicySettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(PullPolicySetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(PullPolicySetting::class, $uses);
     }
 
-    public function testStaticPullPolicy()
+    /**
+     * @return void
+     */
+    public function testPullPolicyFromStaticPullPolicy()
     {
         $container = new PullPolicySettingWithStaticPullPolicyContainer('alpine:latest');
         $instance = $container->start();
 
         $pullPolicy = $instance->getImagePullPolicy();
 
-        $this->assertNotNull($pullPolicy);
-        $this->assertSame(ImagePullPolicy::$ALWAYS, $pullPolicy->toString());
+        self::assertNotNull($pullPolicy);
+        self::assertSame(ImagePullPolicy::$ALWAYS, $pullPolicy->toString());
     }
 
-    public function testStartWithImagePullPolicy()
+    /**
+     * @return void
+     */
+    public function testWithImagePullPolicy()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withImagePullPolicy(ImagePullPolicy::MISSING())
@@ -44,11 +48,14 @@ class PullPolicySettingTest extends TestCase
 
         $pullPolicy = $instance->getImagePullPolicy();
 
-        $this->assertNotNull($pullPolicy);
-        $this->assertSame(ImagePullPolicy::$MISSING, $pullPolicy->toString());
+        self::assertNotNull($pullPolicy);
+        self::assertSame(ImagePullPolicy::$MISSING, $pullPolicy->toString());
     }
 
-    public function testStartRejectsInvalidPullPolicy()
+    /**
+     * @return void
+     */
+    public function testPullPolicyRejectsInvalidStaticConfiguration()
     {
         $container = new PullPolicySettingWithInvalidPullPolicyContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -57,12 +64,12 @@ class PullPolicySettingTest extends TestCase
     }
 }
 
-class PullPolicySettingWithStaticPullPolicyContainer extends GenericContainer
+final class PullPolicySettingWithStaticPullPolicyContainer extends GenericContainer
 {
     protected static $PULL_POLICY = 'always';
 }
 
-class PullPolicySettingWithInvalidPullPolicyContainer extends GenericContainer
+final class PullPolicySettingWithInvalidPullPolicyContainer extends GenericContainer
 {
     protected static $PULL_POLICY = [];
 }

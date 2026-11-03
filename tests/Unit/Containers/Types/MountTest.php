@@ -8,14 +8,12 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\Mount;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class MountTest extends TestCase
+final class MountTest extends TestCase
 {
-    public function testMount()
+    /**
+     * @return void
+     */
+    public function testConstruct()
     {
         $mount = new Mount(
             'bind',
@@ -27,67 +25,82 @@ class MountTest extends TestCase
             []
         );
 
-        $this->assertSame('bind', $mount->type);
-        $this->assertSame('/host/path', $mount->source);
-        $this->assertSame('/container/path', $mount->destination);
-        $this->assertSame('/sub/path', $mount->subpath);
-        $this->assertTrue($mount->readonly);
-        $this->assertTrue($mount->nocopy);
-        $this->assertSame([], $mount->opt);
+        self::assertSame('bind', $mount->type);
+        self::assertSame('/host/path', $mount->source);
+        self::assertSame('/container/path', $mount->destination);
+        self::assertSame('/sub/path', $mount->subpath);
+        self::assertTrue($mount->readonly);
+        self::assertTrue($mount->nocopy);
+        self::assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringParsesTargetOnlyBindMountString()
     {
         $mount = Mount::fromString('/container/path');
 
-        $this->assertSame('bind', $mount->type);
-        $this->assertNull($mount->source);
-        $this->assertSame('/container/path', $mount->destination);
-        $this->assertNull($mount->subpath);
-        $this->assertFalse($mount->readonly);
-        $this->assertFalse($mount->nocopy);
-        $this->assertSame([], $mount->opt);
+        self::assertSame('bind', $mount->type);
+        self::assertNull($mount->source);
+        self::assertSame('/container/path', $mount->destination);
+        self::assertNull($mount->subpath);
+        self::assertFalse($mount->readonly);
+        self::assertFalse($mount->nocopy);
+        self::assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringParsesCompleteBindMountString()
     {
         $mount = Mount::fromString('/host/path:/container/path:ro');
 
-        $this->assertSame('bind', $mount->type);
-        $this->assertSame('/host/path', $mount->source);
-        $this->assertSame('/container/path', $mount->destination);
-        $this->assertNull($mount->subpath);
-        $this->assertTrue($mount->readonly);
-        $this->assertFalse($mount->nocopy);
-        $this->assertSame([], $mount->opt);
+        self::assertSame('bind', $mount->type);
+        self::assertSame('/host/path', $mount->source);
+        self::assertSame('/container/path', $mount->destination);
+        self::assertNull($mount->subpath);
+        self::assertTrue($mount->readonly);
+        self::assertFalse($mount->nocopy);
+        self::assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringParsesTargetOnlyMountString()
     {
         $mount = Mount::fromString('target=/container/path');
 
-        $this->assertSame('bind', $mount->type);
-        $this->assertNull($mount->source);
-        $this->assertSame('/container/path', $mount->destination);
-        $this->assertNull($mount->subpath);
-        $this->assertFalse($mount->readonly);
-        $this->assertFalse($mount->nocopy);
-        $this->assertSame([], $mount->opt);
+        self::assertSame('bind', $mount->type);
+        self::assertNull($mount->source);
+        self::assertSame('/container/path', $mount->destination);
+        self::assertNull($mount->subpath);
+        self::assertFalse($mount->readonly);
+        self::assertFalse($mount->nocopy);
+        self::assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromStringParsesCompleteMountString()
     {
         $mount = Mount::fromString('type=volume,source=/host/path,destination=/container/path,volume-subpath=/sub/path,readonly,volume-nocopy');
 
-        $this->assertSame('volume', $mount->type);
-        $this->assertSame('/host/path', $mount->source);
-        $this->assertSame('/container/path', $mount->destination);
-        $this->assertSame('/sub/path', $mount->subpath);
-        $this->assertTrue($mount->readonly);
-        $this->assertTrue($mount->nocopy);
-        $this->assertSame([], $mount->opt);
+        self::assertSame('volume', $mount->type);
+        self::assertSame('/host/path', $mount->source);
+        self::assertSame('/container/path', $mount->destination);
+        self::assertSame('/sub/path', $mount->subpath);
+        self::assertTrue($mount->readonly);
+        self::assertTrue($mount->nocopy);
+        self::assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArray()
     {
         $mount = Mount::fromArray([
@@ -100,15 +113,18 @@ class MountTest extends TestCase
             'opt' => [],
         ]);
 
-        $this->assertSame('bind', $mount->type);
-        $this->assertSame('/host/path', $mount->source);
-        $this->assertSame('/container/path', $mount->destination);
-        $this->assertSame('/sub/path', $mount->subpath);
-        $this->assertTrue($mount->readonly);
-        $this->assertTrue($mount->nocopy);
-        $this->assertSame([], $mount->opt);
+        self::assertSame('bind', $mount->type);
+        self::assertSame('/host/path', $mount->source);
+        self::assertSame('/container/path', $mount->destination);
+        self::assertSame('/sub/path', $mount->subpath);
+        self::assertTrue($mount->readonly);
+        self::assertTrue($mount->nocopy);
+        self::assertSame([], $mount->opt);
     }
 
+    /**
+     * @return void
+     */
     public function testToString()
     {
         $mount = new Mount(
@@ -121,9 +137,12 @@ class MountTest extends TestCase
             []
         );
 
-        $this->assertSame('type=bind,source=/host/path,destination=/container/path,volume-subpath=/sub/path,readonly,volume-nocopy', (string) $mount);
+        self::assertSame('type=bind,source=/host/path,destination=/container/path,volume-subpath=/sub/path,readonly,volume-nocopy', (string) $mount);
     }
 
+    /**
+     * @return void
+     */
     public function testFromArrayRejectsStringReadonlyFlag()
     {
         $this->expectException(UnexpectedValueException::class);

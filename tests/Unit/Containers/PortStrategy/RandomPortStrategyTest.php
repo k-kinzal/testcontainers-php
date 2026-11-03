@@ -4,15 +4,21 @@ namespace Tests\Unit\Containers\PortStrategy;
 
 use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class RandomPortStrategyTest extends PortStrategyTestCase
+final class RandomPortStrategyTest extends PortStrategyTestCase
 {
-    public function resolvePortStrategy()
+    /**
+     * @return array<array{RandomPortStrategy}>
+     */
+    public static function providerGetPort()
     {
-        return new RandomPortStrategy();
+        return [[new RandomPortStrategy()]];
+    }
+
+    /**
+     * @return array<array{RandomPortStrategy}>
+     */
+    public static function providerConflictBehavior()
+    {
+        return [[new RandomPortStrategy()]];
     }
 }

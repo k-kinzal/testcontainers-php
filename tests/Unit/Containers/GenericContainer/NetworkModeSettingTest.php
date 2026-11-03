@@ -10,31 +10,35 @@ use Testcontainers\Containers\GenericContainer\NetworkModeSetting;
 use Testcontainers\Containers\Types\NetworkMode;
 use UnexpectedValueException;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class NetworkModeSettingTest extends TestCase
+final class NetworkModeSettingTest extends TestCase
 {
-    public function testHasNetworkModeSettingTrait()
+    /**
+     * @return void
+     */
+    public function testNetworkModeIsProvidedByNetworkModeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
-
-        $this->assertContains(NetworkModeSetting::class, $uses);
+        self::assertNotFalse($uses);
+        self::assertContains(NetworkModeSetting::class, $uses);
     }
 
-    public function testStaticNetworkMode()
+    /**
+     * @return void
+     */
+    public function testNetworkModeFromStaticNetworkMode()
     {
         $container = (new NetworkModeSettingWithStaticNetworkModeContainer('alpine:latest'))
             ->withCommands(['sh', '-c', 'ls /sys/class/net'])
         ;
         $instance = $container->start();
 
-        $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
+        self::assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 
-    public function testStartWithNetworkMode()
+    /**
+     * @return void
+     */
+    public function testWithNetworkMode()
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withAutoRemoveOnExit(false)
@@ -43,10 +47,13 @@ class NetworkModeSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
+        self::assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 
-    public function testStartRejectsInvalidNetworkMode()
+    /**
+     * @return void
+     */
+    public function testNetworkModeRejectsInvalidStaticConfiguration()
     {
         $container = new NetworkModeSettingWithInvalidNetworkModeContainer('alpine');
         $this->expectException(UnexpectedValueException::class);
@@ -55,14 +62,14 @@ class NetworkModeSettingTest extends TestCase
     }
 }
 
-class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
+final class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
     protected static $NETWORK_MODE = 'none';
 }
 
-class NetworkModeSettingWithInvalidNetworkModeContainer extends GenericContainer
+final class NetworkModeSettingWithInvalidNetworkModeContainer extends GenericContainer
 {
     protected static $NETWORK_MODE = [];
 }

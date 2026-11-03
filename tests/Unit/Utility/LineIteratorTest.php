@@ -6,62 +6,75 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Testcontainers\Utility\LineIterator;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class LineIteratorTest extends TestCase
+final class LineIteratorTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testGetIterator()
     {
         $process = new Process([PHP_BINARY, '-r', 'echo "a\nb"; flush(); usleep(100000); echo "c\nd";']);
         $process->start();
         $lines = new LineIterator($process);
 
-        $actual = [];
-        foreach ($lines->getIterator() as $type => $line) {
-            $actual[] = [$type, $line];
-        }
+        $iterator = $lines->getIterator();
+        self::assertSame(Process::OUT, $iterator->key());
+        self::assertSame('a', $iterator->current());
+        $iterator->next();
+        self::assertSame(Process::OUT, $iterator->key());
+        self::assertSame('bc', $iterator->current());
+        $iterator->next();
+        self::assertSame(Process::OUT, $iterator->key());
+        self::assertSame('d', $iterator->current());
+        $iterator->next();
+        self::assertFalse($iterator->valid());
 
-        $this->assertSame([[Process::OUT, 'a'], [Process::OUT, 'bc'], [Process::OUT, 'd']], $actual);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorSeparatesOutputAndErrorOutput()
     {
         $process = new Process([PHP_BINARY, '-r', 'fwrite(STDOUT, "a"); fwrite(STDERR, "b\n"); fflush(STDOUT); usleep(100000); fwrite(STDOUT, "c\n");']);
         $process->start();
         $lines = new LineIterator($process);
 
-        $actual = [];
-        foreach ($lines->getIterator() as $type => $line) {
-            $actual[] = [$type, $line];
-        }
+        $iterator = $lines->getIterator();
+        self::assertSame(Process::ERR, $iterator->key());
+        self::assertSame('b', $iterator->current());
+        $iterator->next();
+        self::assertSame(Process::OUT, $iterator->key());
+        self::assertSame('ac', $iterator->current());
+        $iterator->next();
+        self::assertFalse($iterator->valid());
 
-        $this->assertSame([[Process::ERR, 'b'], [Process::OUT, 'ac']], $actual);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorWithSkipErr()
     {
         $process = new Process([PHP_BINARY, '-r', 'fwrite(STDERR, "a\n"); fwrite(STDOUT, "b\n");']);
         $process->start();
         $lines = new LineIterator($process);
 
-        $actual = [];
-        foreach ($lines->getIterator(Process::ITER_SKIP_ERR) as $line) {
-            $actual[] = $line;
-        }
+        $actual = iterator_to_array($lines->getIterator(Process::ITER_SKIP_ERR), false);
 
-        $this->assertSame(['b'], $actual);
+        self::assertSame(['b'], $actual);
     }
 
+    /**
+     * @return void
+     */
     public function testGetIteratorYieldsNullWithoutCompleteLineInNonBlockingMode()
     {
         $process = new Process(['sleep', '30']);
         $process->start();
         $lines = new LineIterator($process);
 
-        $this->assertNull($lines->getIterator(Process::ITER_NON_BLOCKING)->current());
+        self::assertNull($lines->getIterator(Process::ITER_NON_BLOCKING)->current());
 
         $process->stop(0);
     }

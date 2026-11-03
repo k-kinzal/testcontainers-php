@@ -4,15 +4,13 @@ namespace Tests\Unit\Containers\StartupCheckStrategy;
 
 use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy;
 
-/**
- * @internal
- *
- * @coversNothing
- */
-class IsRunningStartupCheckStrategyTest extends StartupCheckStrategyTestCase
+final class IsRunningStartupCheckStrategyTest extends StartupCheckStrategyTestCase
 {
-    public function resolveStartupCheckStrategy()
+    /**
+     * @return array<array{IsRunningStartupCheckStrategy}>
+     */
+    public static function providerWaitUntilStartupSuccessful()
     {
-        return new IsRunningStartupCheckStrategy();
+        return [[new IsRunningStartupCheckStrategy()]];
     }
 }
