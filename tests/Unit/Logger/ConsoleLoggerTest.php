@@ -21,7 +21,7 @@ final class ConsoleLoggerTest extends TestCase
 
         $logger = new ConsoleLogger($stream);
 
-        $this->assertInstanceOf(LoggerInterface::class, $logger);
+        self::assertInstanceOf(LoggerInterface::class, $logger);
     }
 
     /**
@@ -39,7 +39,7 @@ final class ConsoleLoggerTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $output = $contents;
-        $this->assertTrue(preg_match('/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[DEBUG\] hello world$/', trim($output)) === 1);
+        self::assertTrue(preg_match('/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[DEBUG\] hello world$/', trim($output)) === 1);
     }
 
     /**
@@ -57,7 +57,7 @@ final class ConsoleLoggerTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $output = $contents;
-        $this->assertTrue(strpos($output, '[INFO] User logged in {"name":"Alice"}') !== false);
+        self::assertTrue(strpos($output, '[INFO] User logged in {"name":"Alice"}') !== false);
     }
 
     /**
@@ -75,8 +75,8 @@ final class ConsoleLoggerTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $output = trim($contents);
-        $this->assertStringEndsWith('something happened', $output);
-        $this->assertTrue(strpos($output, '{}') === false);
+        self::assertStringEndsWith('something happened', $output);
+        self::assertTrue(strpos($output, '{}') === false);
     }
 
     /**
@@ -94,7 +94,7 @@ final class ConsoleLoggerTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $output = $contents;
-        $this->assertTrue(strpos($output, 'Connecting to localhost:3306') !== false);
+        self::assertTrue(strpos($output, 'Connecting to localhost:3306') !== false);
     }
 
     /**
@@ -114,8 +114,8 @@ final class ConsoleLoggerTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $output = $contents;
-        $this->assertTrue(strpos($output, 'hidden') === false);
-        $this->assertTrue(strpos($output, '[WARNING] visible') !== false);
+        self::assertTrue(strpos($output, 'hidden') === false);
+        self::assertTrue(strpos($output, '[WARNING] visible') !== false);
     }
 
     /**
@@ -140,14 +140,14 @@ final class ConsoleLoggerTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $output = $contents;
-        $this->assertTrue(strpos($output, '[EMERGENCY]') !== false);
-        $this->assertTrue(strpos($output, '[ALERT]') !== false);
-        $this->assertTrue(strpos($output, '[CRITICAL]') !== false);
-        $this->assertTrue(strpos($output, '[ERROR]') !== false);
-        $this->assertTrue(strpos($output, '[WARNING]') !== false);
-        $this->assertTrue(strpos($output, '[NOTICE]') !== false);
-        $this->assertTrue(strpos($output, '[INFO]') !== false);
-        $this->assertTrue(strpos($output, '[DEBUG]') !== false);
+        self::assertTrue(strpos($output, '[EMERGENCY]') !== false);
+        self::assertTrue(strpos($output, '[ALERT]') !== false);
+        self::assertTrue(strpos($output, '[CRITICAL]') !== false);
+        self::assertTrue(strpos($output, '[ERROR]') !== false);
+        self::assertTrue(strpos($output, '[WARNING]') !== false);
+        self::assertTrue(strpos($output, '[NOTICE]') !== false);
+        self::assertTrue(strpos($output, '[INFO]') !== false);
+        self::assertTrue(strpos($output, '[DEBUG]') !== false);
     }
 
     /**
@@ -165,7 +165,7 @@ final class ConsoleLoggerTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $output = $contents;
-        $this->assertTrue(strpos($output, '[ERROR]') !== false);
+        self::assertTrue(strpos($output, '[ERROR]') !== false);
     }
 
     /**
@@ -187,8 +187,8 @@ final class ConsoleLoggerTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $output = $contents;
-        $this->assertTrue(strpos($output, '[ERROR] Failed') !== false);
-        $this->assertTrue(strpos($output, '"nested":{"a":1}') !== false);
+        self::assertTrue(strpos($output, '[ERROR] Failed') !== false);
+        self::assertTrue(strpos($output, '"nested":{"a":1}') !== false);
     }
 
     /**

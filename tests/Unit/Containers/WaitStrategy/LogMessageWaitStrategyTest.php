@@ -23,7 +23,7 @@ final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy->withPattern('Ready');
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**
@@ -40,7 +40,7 @@ final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $strategy->withTimeoutSeconds(5);
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**

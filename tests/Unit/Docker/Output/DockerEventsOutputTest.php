@@ -30,7 +30,7 @@ final class DockerEventsOutputTest extends TestCase
             return $event->action->toString();
         }, $events);
 
-        $this->assertSame(['create', 'start'], $actions);
+        self::assertSame(['create', 'start'], $actions);
     }
 
     /**
@@ -42,7 +42,7 @@ final class DockerEventsOutputTest extends TestCase
         $process->start();
         $output = new DockerEventsOutput($process, true);
 
-        $this->assertNull($output->getIterator()->current());
+        self::assertNull($output->getIterator()->current());
     }
 
     /**
@@ -60,13 +60,13 @@ final class DockerEventsOutputTest extends TestCase
             return $event !== null;
         });
         $firstThree = iterator_to_array(new LimitIterator($events, 0, 3), false);
-        $this->assertCount(3, $firstThree);
-        $this->assertInstanceOf(Event::class, $firstThree[0]);
-        $this->assertInstanceOf(Event::class, $firstThree[1]);
-        $this->assertInstanceOf(Event::class, $firstThree[2]);
+        self::assertCount(3, $firstThree);
+        self::assertInstanceOf(Event::class, $firstThree[0]);
+        self::assertInstanceOf(Event::class, $firstThree[1]);
+        self::assertInstanceOf(Event::class, $firstThree[2]);
         $actions = [$firstThree[0]->action->toString(), $firstThree[1]->action->toString(), $firstThree[2]->action->toString()];
 
-        $this->assertSame(['create', 'start', 'start'], $actions);
+        self::assertSame(['create', 'start', 'start'], $actions);
     }
 
     /**
@@ -95,11 +95,11 @@ final class DockerEventsOutputTest extends TestCase
         $iterator = $output->getIterator();
         $iterator->current();
 
-        $this->assertTrue($process->isRunning());
+        self::assertTrue($process->isRunning());
 
         unset($output, $iterator);
 
-        $this->assertFalse($process->isRunning());
+        self::assertFalse($process->isRunning());
     }
 
 }

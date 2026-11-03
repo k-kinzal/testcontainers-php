@@ -18,16 +18,16 @@ final class LineIteratorTest extends TestCase
         $lines = new LineIterator($process);
 
         $iterator = $lines->getIterator();
-        $this->assertSame(Process::OUT, $iterator->key());
-        $this->assertSame('a', $iterator->current());
+        self::assertSame(Process::OUT, $iterator->key());
+        self::assertSame('a', $iterator->current());
         $iterator->next();
-        $this->assertSame(Process::OUT, $iterator->key());
-        $this->assertSame('bc', $iterator->current());
+        self::assertSame(Process::OUT, $iterator->key());
+        self::assertSame('bc', $iterator->current());
         $iterator->next();
-        $this->assertSame(Process::OUT, $iterator->key());
-        $this->assertSame('d', $iterator->current());
+        self::assertSame(Process::OUT, $iterator->key());
+        self::assertSame('d', $iterator->current());
         $iterator->next();
-        $this->assertFalse($iterator->valid());
+        self::assertFalse($iterator->valid());
 
     }
 
@@ -41,13 +41,13 @@ final class LineIteratorTest extends TestCase
         $lines = new LineIterator($process);
 
         $iterator = $lines->getIterator();
-        $this->assertSame(Process::ERR, $iterator->key());
-        $this->assertSame('b', $iterator->current());
+        self::assertSame(Process::ERR, $iterator->key());
+        self::assertSame('b', $iterator->current());
         $iterator->next();
-        $this->assertSame(Process::OUT, $iterator->key());
-        $this->assertSame('ac', $iterator->current());
+        self::assertSame(Process::OUT, $iterator->key());
+        self::assertSame('ac', $iterator->current());
         $iterator->next();
-        $this->assertFalse($iterator->valid());
+        self::assertFalse($iterator->valid());
 
     }
 
@@ -62,7 +62,7 @@ final class LineIteratorTest extends TestCase
 
         $actual = iterator_to_array($lines->getIterator(Process::ITER_SKIP_ERR), false);
 
-        $this->assertSame(['b'], $actual);
+        self::assertSame(['b'], $actual);
     }
 
     /**
@@ -74,7 +74,7 @@ final class LineIteratorTest extends TestCase
         $process->start();
         $lines = new LineIterator($process);
 
-        $this->assertNull($lines->getIterator(Process::ITER_NON_BLOCKING)->current());
+        self::assertNull($lines->getIterator(Process::ITER_NON_BLOCKING)->current());
 
         $process->stop(0);
     }

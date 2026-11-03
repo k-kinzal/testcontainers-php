@@ -24,8 +24,8 @@ final class GenericContainerTest extends TestCase
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertInstanceOf(ContainerInstance::class, $instance);
-        $this->assertNotEmpty($instance->getContainerId());
+        self::assertInstanceOf(ContainerInstance::class, $instance);
+        self::assertNotEmpty($instance->getContainerId());
     }
 
     /**
@@ -43,8 +43,8 @@ final class GenericContainerTest extends TestCase
 
         $instance1 = $container1->start();
 
-        $this->assertInstanceOf(ContainerInstance::class, $instance1);
-        $this->assertEquals(50000, $instance1->getMappedPort(80));
+        self::assertInstanceOf(ContainerInstance::class, $instance1);
+        self::assertEquals(50000, $instance1->getMappedPort(80));
 
         $container2 = (new GenericContainer('alpine:latest'))
             ->withExposedPort(80)
@@ -70,7 +70,7 @@ final class GenericContainerTest extends TestCase
             $this->fail('Expected WaitingTimeoutException');
         } catch (WaitingTimeoutException $e) {
             // Expected -- container should have been stopped and removed (--rm)
-            $this->assertTrue(strpos($e->getMessage(), 'timed out') !== false);
+            self::assertTrue(strpos($e->getMessage(), 'timed out') !== false);
         }
     }
 

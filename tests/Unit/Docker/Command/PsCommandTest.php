@@ -19,8 +19,7 @@ final class PsCommandTest extends TestCase
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(PsCommand::class, $uses);
+        self::assertContains(PsCommand::class, $uses);
     }
 
     /**
@@ -30,7 +29,7 @@ final class PsCommandTest extends TestCase
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
@@ -48,11 +47,11 @@ final class PsCommandTest extends TestCase
             'filter' => ['label=test.ps=true'],
         ]);
 
-        $this->assertInstanceOf(DockerPsOutput::class, $output);
+        self::assertInstanceOf(DockerPsOutput::class, $output);
 
         $containers = $output->getContainers();
-        $this->assertCount(1, $containers);
-        $this->assertSame((string) $runOutput->getContainerId(), (string) $containers[0]->id);
+        self::assertCount(1, $containers);
+        self::assertSame((string) $runOutput->getContainerId(), (string) $containers[0]->id);
 
         $client->stop($runOutput->getContainerId());
     }
@@ -67,7 +66,7 @@ final class PsCommandTest extends TestCase
             'filter' => ['label=test.nonexistent.label.xyz=1'],
         ]);
 
-        $this->assertInstanceOf(DockerPsOutput::class, $output);
-        $this->assertCount(0, $output->getContainers());
+        self::assertInstanceOf(DockerPsOutput::class, $output);
+        self::assertCount(0, $output->getContainers());
     }
 }

@@ -17,8 +17,7 @@ final class InspectCommandTest extends TestCase
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(InspectCommand::class, $uses);
+        self::assertContains(InspectCommand::class, $uses);
     }
 
     /**
@@ -35,9 +34,9 @@ final class InspectCommandTest extends TestCase
         $containerId = $output->getContainerId();
         $output = $client->inspect($containerId);
 
-        $this->assertInstanceOf(DockerInspectOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertContains($output->state->status, [
+        self::assertInstanceOf(DockerInspectOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertContains($output->state->status, [
             'created',
             'running',
             'paused',
@@ -46,6 +45,6 @@ final class InspectCommandTest extends TestCase
             'exited',
             'dead',
         ]);
-        $this->assertSame(0, $output->state->exitCode);
+        self::assertSame(0, $output->state->exitCode);
     }
 }

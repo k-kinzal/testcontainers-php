@@ -22,7 +22,7 @@ final class HttpWaitStrategyTest extends WaitStrategyTestCase
         $strategy = new HttpWaitStrategy();
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**

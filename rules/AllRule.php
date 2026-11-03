@@ -28,6 +28,7 @@ final class AllRule implements PluginEntryPointInterface, AfterClassLikeVisitInt
     public static function afterAnalyzeFile(AfterFileAnalysisEvent $event): void
     {
         PHPUnitReferenceRegistrar::afterAnalyzeFile($event);
+        PHPUnitRules\AssertSelfRule::check($event->getStatementsSource(), $event->getStmts(), $event->getCodebase());
         UnitTestRules::check($event->getStatementsSource(), $event->getStmts(), $event->getCodebase());
     }
 }

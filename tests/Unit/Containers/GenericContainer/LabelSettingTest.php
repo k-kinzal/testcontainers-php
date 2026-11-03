@@ -19,8 +19,7 @@ final class LabelSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(LabelSetting::class, $uses);
+        self::assertContains(LabelSetting::class, $uses);
     }
 
     /**
@@ -31,8 +30,8 @@ final class LabelSettingTest extends TestCase
         $container = new LabelSettingWithStaticLabelsContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame('VALUE1', $instance->getLabel('KEY1'));
-        $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
+        self::assertSame('VALUE1', $instance->getLabel('KEY1'));
+        self::assertSame('VALUE2', $instance->getLabel('KEY2'));
     }
 
     /**
@@ -48,8 +47,8 @@ final class LabelSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('VALUE1', $instance->getLabel('KEY1'));
-        $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
+        self::assertSame('VALUE1', $instance->getLabel('KEY1'));
+        self::assertSame('VALUE2', $instance->getLabel('KEY2'));
     }
 
     /**
@@ -64,9 +63,9 @@ final class LabelSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('VALUE1', $instance->getLabel('KEY1'));
-        $this->assertSame('VALUE2', $instance->getLabel('KEY2'));
-        $this->assertSame(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'], $instance->getLabels());
+        self::assertSame('VALUE1', $instance->getLabel('KEY1'));
+        self::assertSame('VALUE2', $instance->getLabel('KEY2'));
+        self::assertSame(['KEY1' => 'VALUE1', 'KEY2' => 'VALUE2'], $instance->getLabels());
     }
 
     /**

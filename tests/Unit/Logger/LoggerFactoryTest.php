@@ -22,7 +22,7 @@ final class LoggerFactoryTest extends TestCase
         putenv('CI_DEBUG_TRACE');
         putenv('SYSTEM_DEBUG');
 
-        $this->assertInstanceOf(NullLogger::class, LoggerFactory::create());
+        self::assertInstanceOf(NullLogger::class, LoggerFactory::create());
     }
 
     /**
@@ -33,7 +33,7 @@ final class LoggerFactoryTest extends TestCase
         try {
             putenv('TESTCONTAINERS_LOGGER=Testcontainers\Logger\ConsoleLogger');
 
-            $this->assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
+            self::assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
         } finally {
             putenv('TESTCONTAINERS_LOGGER');
         }
@@ -47,7 +47,7 @@ final class LoggerFactoryTest extends TestCase
         try {
             putenv('TESTCONTAINERS_LOGGER=\Testcontainers\Logger\ConsoleLogger');
 
-            $this->assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
+            self::assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
         } finally {
             putenv('TESTCONTAINERS_LOGGER');
         }
@@ -64,7 +64,7 @@ final class LoggerFactoryTest extends TestCase
             LoggerFactory::create();
             $this->fail('Expected UnexpectedValueException');
         } catch (UnexpectedValueException $e) {
-            $this->assertTrue(strpos($e->getMessage(), 'stdClass') !== false);
+            self::assertTrue(strpos($e->getMessage(), 'stdClass') !== false);
         } finally {
             putenv('TESTCONTAINERS_LOGGER');
         }
@@ -81,7 +81,7 @@ final class LoggerFactoryTest extends TestCase
             LoggerFactory::create();
             $this->fail('Expected UnexpectedValueException');
         } catch (UnexpectedValueException $e) {
-            $this->assertTrue(strpos($e->getMessage(), 'Undefined\Logger') !== false);
+            self::assertTrue(strpos($e->getMessage(), 'Undefined\Logger') !== false);
         } finally {
             putenv('TESTCONTAINERS_LOGGER');
         }
@@ -94,10 +94,10 @@ final class LoggerFactoryTest extends TestCase
     {
         try {
             putenv('RUNNER_DEBUG=1');
-            $this->assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
+            self::assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
 
             putenv('RUNNER_DEBUG=0');
-            $this->assertInstanceOf(NullLogger::class, LoggerFactory::create());
+            self::assertInstanceOf(NullLogger::class, LoggerFactory::create());
         } finally {
             putenv('RUNNER_DEBUG');
         }
@@ -111,7 +111,7 @@ final class LoggerFactoryTest extends TestCase
         try {
             putenv('ACTIONS_STEP_DEBUG=true');
 
-            $this->assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
+            self::assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
         } finally {
             putenv('ACTIONS_STEP_DEBUG');
         }
@@ -125,7 +125,7 @@ final class LoggerFactoryTest extends TestCase
         try {
             putenv('CI_DEBUG_TRACE=true');
 
-            $this->assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
+            self::assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
         } finally {
             putenv('CI_DEBUG_TRACE');
         }
@@ -139,7 +139,7 @@ final class LoggerFactoryTest extends TestCase
         try {
             putenv('SYSTEM_DEBUG=True');
 
-            $this->assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
+            self::assertInstanceOf(ConsoleLogger::class, LoggerFactory::create());
         } finally {
             putenv('SYSTEM_DEBUG');
         }

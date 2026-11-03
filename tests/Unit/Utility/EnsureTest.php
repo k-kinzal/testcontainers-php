@@ -24,7 +24,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableScalarOrStringableOrArrayMap($value);
 
-        $this->assertSame($value, $actual);
+        self::assertSame($value, $actual);
     }
 
     /**
@@ -90,7 +90,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -142,7 +142,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNonEmptyString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -191,7 +191,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -241,7 +241,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableNonEmptyString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -292,7 +292,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureBool($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -343,7 +343,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableBool($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -394,7 +394,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureInt($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -448,7 +448,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureIntRange($value, $minimum, $maximum);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -501,7 +501,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableIntRange($value, $minimum, $maximum);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -553,7 +553,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureIntOrDigitString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -608,7 +608,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureIntOrDigitStringRange($value, $minimum, $maximum);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -660,7 +660,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureDigitString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -714,7 +714,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureDigitStringRange($value, $minimum, $maximum);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -764,7 +764,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNonNegativeNumber($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -815,7 +815,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableNonNegativeNumber($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -867,7 +867,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -916,7 +916,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -967,7 +967,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNonEmptyArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1016,7 +1016,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureArrayHasKey($value, $key);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1064,7 +1064,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureStringArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1114,7 +1114,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableStringArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1163,7 +1163,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableStringOrStringArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1213,7 +1213,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureStringOrArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1263,7 +1263,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureStringKeyedArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1313,7 +1313,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureStringMap($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1375,7 +1375,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableStringMap($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1424,7 +1424,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableBoolOrString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1476,7 +1476,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureObject($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1526,7 +1526,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureClassString($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1575,7 +1575,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1626,7 +1626,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1678,7 +1678,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNonEmptyStringOrInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1730,7 +1730,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureStringOrArrayOrInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1782,7 +1782,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNull($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1832,7 +1832,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureOneOf($value, $values);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1881,7 +1881,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureMatches($value, $pattern);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1928,7 +1928,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableStream($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -1981,7 +1981,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureStream($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -2033,7 +2033,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableScalarOrStreamOrTraversable($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -2090,7 +2090,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureClassStringOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -2139,7 +2139,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureClassStringOrInstanceOf($value, $class);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -2190,7 +2190,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureScalarOrStringable($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -2243,7 +2243,7 @@ final class EnsureTest extends TestCase
     {
         $actual = self::ensureNullableScalarOrStringableOrArray($value);
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**

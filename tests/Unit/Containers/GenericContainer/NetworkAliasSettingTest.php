@@ -22,8 +22,7 @@ final class NetworkAliasSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(NetworkAliasSetting::class, $uses);
+        self::assertContains(NetworkAliasSetting::class, $uses);
     }
 
     /**
@@ -33,7 +32,7 @@ final class NetworkAliasSettingTest extends TestCase
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
@@ -51,7 +50,7 @@ final class NetworkAliasSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING my-service', $instance->getOutput());
+        self::assertStringStartsWith('PING my-service', $instance->getOutput());
     }
 
     /**
@@ -61,7 +60,7 @@ final class NetworkAliasSettingTest extends TestCase
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
@@ -81,7 +80,7 @@ final class NetworkAliasSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
+        self::assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
 
     /**
@@ -91,7 +90,7 @@ final class NetworkAliasSettingTest extends TestCase
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
@@ -111,7 +110,7 @@ final class NetworkAliasSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING my-alias', $instance->getOutput());
+        self::assertStringStartsWith('PING my-alias', $instance->getOutput());
     }
 
     /**

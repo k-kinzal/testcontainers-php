@@ -18,8 +18,7 @@ final class StopTimeoutSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(StopTimeoutSetting::class, $uses);
+        self::assertContains(StopTimeoutSetting::class, $uses);
     }
 
     /**
@@ -30,7 +29,7 @@ final class StopTimeoutSettingTest extends TestCase
         $container = new StopTimeoutSettingWithStaticContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(5, $instance->getStopTimeout());
+        self::assertSame(5, $instance->getStopTimeout());
     }
 
     /**
@@ -43,7 +42,7 @@ final class StopTimeoutSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame(0, $instance->getStopTimeout());
+        self::assertSame(0, $instance->getStopTimeout());
     }
 
     /**
@@ -54,7 +53,7 @@ final class StopTimeoutSettingTest extends TestCase
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertNull($instance->getStopTimeout());
+        self::assertNull($instance->getStopTimeout());
     }
 
     /**

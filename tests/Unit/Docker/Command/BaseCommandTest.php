@@ -46,7 +46,7 @@ final class BaseCommandTest extends TestCase
     {
         $client = (new DockerClient())->withGlobalOptions(['host' => $host]);
 
-        $this->assertSame($expected, $client->getHost());
+        self::assertSame($expected, $client->getHost());
     }
 
     /**
@@ -84,8 +84,8 @@ final class BaseCommandTest extends TestCase
         ;
         $output = $client->version();
 
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame(0, strpos($output->getOutput(), 'PHP '));
+        self::assertSame(0, $output->getExitCode());
+        self::assertSame(0, strpos($output->getOutput(), 'PHP '));
     }
 
     /**
@@ -98,7 +98,7 @@ final class BaseCommandTest extends TestCase
         putenv('DOCKER_HOST');
         $client = new DockerClient();
 
-        $this->assertSame('unix:///var/run/docker.sock', $client->getHost());
+        self::assertSame('unix:///var/run/docker.sock', $client->getHost());
     }
 
     /**
@@ -112,7 +112,7 @@ final class BaseCommandTest extends TestCase
             ])
         ;
 
-        $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
+        self::assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 
     /**
@@ -126,7 +126,7 @@ final class BaseCommandTest extends TestCase
             ])
         ;
 
-        $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
+        self::assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 
     /**
@@ -139,6 +139,6 @@ final class BaseCommandTest extends TestCase
         putenv('DOCKER_HOST=tcp://127.0.0.1:2375');
         $client = new DockerClient();
 
-        $this->assertSame('tcp://127.0.0.1:2375', $client->getHost());
+        self::assertSame('tcp://127.0.0.1:2375', $client->getHost());
     }
 }

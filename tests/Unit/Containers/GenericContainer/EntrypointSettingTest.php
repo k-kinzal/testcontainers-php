@@ -20,8 +20,7 @@ final class EntrypointSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(EntrypointSetting::class, $uses);
+        self::assertContains(EntrypointSetting::class, $uses);
     }
 
     /**
@@ -37,7 +36,7 @@ final class EntrypointSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("hello\n", $instance->getOutput());
+        self::assertSame("hello\n", $instance->getOutput());
     }
 
     /**
@@ -54,7 +53,7 @@ final class EntrypointSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("hello\n", $instance->getOutput());
+        self::assertSame("hello\n", $instance->getOutput());
     }
 
     /**

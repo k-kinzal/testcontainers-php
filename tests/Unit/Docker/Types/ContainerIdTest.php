@@ -17,7 +17,7 @@ final class ContainerIdTest extends TestCase
      */
     public function testIsValidReturnsWhetherValueIsValid($value, $expected)
     {
-        $this->assertSame($expected, ContainerId::isValid($value));
+        self::assertSame($expected, ContainerId::isValid($value));
     }
 
     /**
@@ -49,7 +49,7 @@ final class ContainerIdTest extends TestCase
     {
         $identifier = new ContainerId($value);
 
-        $this->assertSame($value, $identifier->toString());
+        self::assertSame($value, $identifier->toString());
     }
 
     /**
@@ -59,7 +59,7 @@ final class ContainerIdTest extends TestCase
      */
     public function testFromStringPreservesValidIdentifier($value)
     {
-        $this->assertSame($value, ContainerId::fromString($value)->toString());
+        self::assertSame($value, ContainerId::fromString($value)->toString());
     }
 
     /**

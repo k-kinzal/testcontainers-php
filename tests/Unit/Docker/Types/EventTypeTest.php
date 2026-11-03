@@ -17,9 +17,9 @@ final class EventTypeTest extends TestCase
     {
         $type = EventType::CONTAINER();
 
-        $this->assertSame('container', $type->toString());
-        $this->assertTrue($type->isContainer());
-        $this->assertFalse($type->isImage());
+        self::assertSame('container', $type->toString());
+        self::assertTrue($type->isContainer());
+        self::assertFalse($type->isImage());
     }
 
     /**
@@ -31,7 +31,7 @@ final class EventTypeTest extends TestCase
     {
         $action = EventType::fromString($value);
 
-        $this->assertSame($value, $action->toString());
+        self::assertSame($value, $action->toString());
     }
 
     /**

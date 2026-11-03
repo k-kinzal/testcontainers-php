@@ -20,7 +20,7 @@ final class TestcontainersTest extends TestCase
             $instance = Testcontainers::run(AlpineContainer::class);
             $running = $instance->isRunning();
 
-            $this->assertTrue($running);
+            self::assertTrue($running);
         } finally {
             Testcontainers::stop();
         }
@@ -35,7 +35,7 @@ final class TestcontainersTest extends TestCase
             $instance = Testcontainers::run(new AlpineContainer());
             $running = $instance->isRunning();
 
-            $this->assertTrue($running);
+            self::assertTrue($running);
         } finally {
             Testcontainers::stop();
         }
@@ -51,12 +51,12 @@ final class TestcontainersTest extends TestCase
             $instance2 = Testcontainers::run(AlpineContainerWithAddMode::class);
 
             // ADD mode should create new container each time
-            $this->assertNotSame(
+            self::assertNotSame(
                 $instance1->getContainerId()->toString(),
                 $instance2->getContainerId()->toString()
             );
-            $this->assertTrue($instance1->isRunning());
-            $this->assertTrue($instance2->isRunning());
+            self::assertTrue($instance1->isRunning());
+            self::assertTrue($instance2->isRunning());
         } finally {
             Testcontainers::stop();
         }
@@ -72,11 +72,11 @@ final class TestcontainersTest extends TestCase
             $instance2 = Testcontainers::run(AlpineContainerWithReuseMode::class);
 
             // REUSE mode should return same container
-            $this->assertSame(
+            self::assertSame(
                 $instance1->getContainerId()->toString(),
                 $instance2->getContainerId()->toString()
             );
-            $this->assertTrue($instance1->isRunning());
+            self::assertTrue($instance1->isRunning());
         } finally {
             Testcontainers::stop();
         }
@@ -95,9 +95,9 @@ final class TestcontainersTest extends TestCase
             $containerId2 = $instance2->getContainerId()->toString();
 
             // RESTART mode should create new container and stop old one
-            $this->assertNotSame($containerId1, $containerId2);
-            $this->assertFalse($instance1->isRunning());
-            $this->assertTrue($instance2->isRunning());
+            self::assertNotSame($containerId1, $containerId2);
+            self::assertFalse($instance1->isRunning());
+            self::assertTrue($instance2->isRunning());
         } finally {
             Testcontainers::stop();
         }
@@ -117,7 +117,7 @@ final class TestcontainersTest extends TestCase
             $instance2 = Testcontainers::run($container);
 
             // Same object with REUSE mode should return same container
-            $this->assertSame(
+            self::assertSame(
                 $instance1->getContainerId()->toString(),
                 $instance2->getContainerId()->toString()
             );
@@ -141,7 +141,7 @@ final class TestcontainersTest extends TestCase
             rewind($stream);
             $contents = stream_get_contents($stream);
             self::assertNotFalse($contents);
-            $this->assertTrue(strpos($contents, 'Starting container') !== false);
+            self::assertTrue(strpos($contents, 'Starting container') !== false);
         } finally {
             Testcontainers::stop();
             Testcontainers::setLogger(null);
@@ -166,10 +166,10 @@ final class TestcontainersTest extends TestCase
             rewind($containerStream);
             $contents = stream_get_contents($globalStream);
             self::assertNotFalse($contents);
-            $this->assertSame('', $contents);
+            self::assertSame('', $contents);
             $contents = stream_get_contents($containerStream);
             self::assertNotFalse($contents);
-            $this->assertTrue(strpos($contents, 'Starting container') !== false);
+            self::assertTrue(strpos($contents, 'Starting container') !== false);
         } finally {
             Testcontainers::stop();
             Testcontainers::setLogger(null);
@@ -187,7 +187,7 @@ final class TestcontainersTest extends TestCase
             putenv('TESTCONTAINERS_LOG_LEVEL=error');
             Testcontainers::run($container);
 
-            $this->assertInstanceOf(ConsoleLogger::class, $container->logger());
+            self::assertInstanceOf(ConsoleLogger::class, $container->logger());
         } finally {
             Testcontainers::stop();
             putenv('TESTCONTAINERS_LOG_LEVEL');
@@ -206,7 +206,7 @@ final class TestcontainersTest extends TestCase
             putenv('TESTCONTAINERS_LOG_LEVEL=error');
             Testcontainers::run($container);
 
-            $this->assertSame($containerLogger, $container->logger());
+            self::assertSame($containerLogger, $container->logger());
         } finally {
             Testcontainers::stop();
             putenv('TESTCONTAINERS_LOG_LEVEL');
@@ -226,7 +226,7 @@ final class TestcontainersTest extends TestCase
             Testcontainers::setLogger($logger);
             Testcontainers::run($container);
 
-            $this->assertSame($logger, $container->logger());
+            self::assertSame($logger, $container->logger());
         } finally {
             Testcontainers::stop();
             Testcontainers::setLogger(null);

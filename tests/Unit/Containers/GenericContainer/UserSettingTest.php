@@ -20,8 +20,7 @@ final class UserSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(UserSetting::class, $uses);
+        self::assertContains(UserSetting::class, $uses);
     }
 
     /**
@@ -37,7 +36,7 @@ final class UserSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("nobody\n", $instance->getOutput());
+        self::assertSame("nobody\n", $instance->getOutput());
     }
 
     /**
@@ -54,7 +53,7 @@ final class UserSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("nobody\n", $instance->getOutput());
+        self::assertSame("nobody\n", $instance->getOutput());
     }
 
     /**

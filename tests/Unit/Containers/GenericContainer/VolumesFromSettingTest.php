@@ -23,8 +23,7 @@ final class VolumesFromSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(VolumesFromSetting::class, $uses);
+        self::assertContains(VolumesFromSetting::class, $uses);
     }
 
     /**
@@ -43,7 +42,7 @@ final class VolumesFromSettingTest extends TestCase
                 ->withFileSystemBind(dirname($path), dirname($path), BindMode::READ_WRITE())
         );
         $mappedPort2375 = $instance->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
@@ -67,8 +66,8 @@ final class VolumesFromSettingTest extends TestCase
         ;
         $instance2 = $container->start();
 
-        $this->assertSame('', $instance2->getErrorOutput());
-        $this->assertSame('Hello, World!', $instance2->getOutput());
+        self::assertSame('', $instance2->getErrorOutput());
+        self::assertSame('Hello, World!', $instance2->getOutput());
     }
 
     /**
@@ -96,7 +95,7 @@ final class VolumesFromSettingTest extends TestCase
         ;
         $instance2 = $container->start();
 
-        $this->assertSame('Hello, World!', $instance2->getOutput());
+        self::assertSame('Hello, World!', $instance2->getOutput());
     }
 
     /**

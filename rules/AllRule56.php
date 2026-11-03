@@ -24,6 +24,7 @@ final class AllRule56 extends FileChecker
         if (strpos($this->getFilePath(), dirname(__DIR__).'/tests/') === 0) {
             PHPUnitReferenceRegistrar::registerLegacy($this);
             $statements = $this->resolvedStatements();
+            PHPUnitRules\AssertSelfRule::check($this, $statements);
             UnitTestRules::check($this, $statements);
         }
     }

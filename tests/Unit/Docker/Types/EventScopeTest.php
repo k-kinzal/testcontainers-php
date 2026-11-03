@@ -15,8 +15,8 @@ final class EventScopeTest extends TestCase
      */
     public function testFromString()
     {
-        $this->assertTrue(EventScope::fromString('local')->isLocal());
-        $this->assertTrue(EventScope::fromString('swarm')->isSwarm());
+        self::assertTrue(EventScope::fromString('local')->isLocal());
+        self::assertTrue(EventScope::fromString('swarm')->isSwarm());
     }
 
     /**

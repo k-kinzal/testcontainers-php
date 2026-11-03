@@ -18,8 +18,7 @@ final class PrivilegeSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(PrivilegeSetting::class, $uses);
+        self::assertContains(PrivilegeSetting::class, $uses);
     }
 
     /**
@@ -30,7 +29,7 @@ final class PrivilegeSettingTest extends TestCase
         $container = new PrivilegeSettingWithStaticPrivilegedContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(true, $instance->getPrivilegedMode());
+        self::assertSame(true, $instance->getPrivilegedMode());
     }
 
     /**
@@ -43,7 +42,7 @@ final class PrivilegeSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame(true, $instance->getPrivilegedMode());
+        self::assertSame(true, $instance->getPrivilegedMode());
     }
 
     /**

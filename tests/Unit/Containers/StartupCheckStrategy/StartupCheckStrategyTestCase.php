@@ -32,6 +32,6 @@ abstract class StartupCheckStrategyTestCase extends TestCase
             'containerId' => $output->getContainerId(),
         ]);
 
-        $this->assertTrue($strategy->waitUntilStartupSuccessful($instance));
+        self::assertTrue($strategy->waitUntilStartupSuccessful($instance));
     }
 }

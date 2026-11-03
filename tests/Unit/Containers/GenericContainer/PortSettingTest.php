@@ -20,8 +20,7 @@ final class PortSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(PortSetting::class, $uses);
+        self::assertContains(PortSetting::class, $uses);
     }
 
     /**
@@ -32,7 +31,7 @@ final class PortSettingTest extends TestCase
         $container = (new PortSettingWithExposedPortsContainer('alpine:latest'));
         $instance = $container->start();
 
-        $this->assertSame([80, 443], $instance->getExposedPorts());
+        self::assertSame([80, 443], $instance->getExposedPorts());
     }
 
     /**
@@ -43,7 +42,7 @@ final class PortSettingTest extends TestCase
         $container = (new PortSettingWithExposeContainer('alpine:latest'));
         $instance = $container->start();
 
-        $this->assertSame([80, 443], $instance->getExposedPorts());
+        self::assertSame([80, 443], $instance->getExposedPorts());
     }
 
     /**
@@ -54,7 +53,7 @@ final class PortSettingTest extends TestCase
         $container = (new PortSettingWithPortsContainer('alpine:latest'));
         $instance = $container->start();
 
-        $this->assertSame([80, 443], $instance->getExposedPorts());
+        self::assertSame([80, 443], $instance->getExposedPorts());
     }
 
     /**
@@ -68,7 +67,7 @@ final class PortSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame([80], $instance->getExposedPorts());
+        self::assertSame([80], $instance->getExposedPorts());
     }
 
     /**
@@ -82,7 +81,7 @@ final class PortSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame([80], $instance->getExposedPorts());
+        self::assertSame([80], $instance->getExposedPorts());
     }
 
     /**
@@ -96,7 +95,7 @@ final class PortSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame([80], $instance->getExposedPorts());
+        self::assertSame([80], $instance->getExposedPorts());
     }
 
     /**
@@ -110,7 +109,7 @@ final class PortSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame([80], $instance->getExposedPorts());
+        self::assertSame([80], $instance->getExposedPorts());
     }
 
     /**
@@ -124,7 +123,7 @@ final class PortSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame([80], $instance->getExposedPorts());
+        self::assertSame([80], $instance->getExposedPorts());
     }
 
     /**
@@ -138,7 +137,7 @@ final class PortSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame([80], $instance->getExposedPorts());
+        self::assertSame([80], $instance->getExposedPorts());
     }
 
     /**

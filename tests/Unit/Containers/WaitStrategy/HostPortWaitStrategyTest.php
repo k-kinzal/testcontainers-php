@@ -21,7 +21,7 @@ final class HostPortWaitStrategyTest extends WaitStrategyTestCase
         $strategy = new HostPortWaitStrategy();
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**

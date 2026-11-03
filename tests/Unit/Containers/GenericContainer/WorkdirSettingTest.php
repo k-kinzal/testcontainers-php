@@ -19,8 +19,7 @@ final class WorkdirSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(WorkdirSetting::class, $uses);
+        self::assertContains(WorkdirSetting::class, $uses);
     }
 
     /**
@@ -35,7 +34,7 @@ final class WorkdirSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("/tmp\n", $instance->getOutput());
+        self::assertSame("/tmp\n", $instance->getOutput());
     }
 
     /**
@@ -51,7 +50,7 @@ final class WorkdirSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("/tmp\n", $instance->getOutput());
+        self::assertSame("/tmp\n", $instance->getOutput());
     }
 
     /**

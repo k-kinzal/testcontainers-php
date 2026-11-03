@@ -19,8 +19,8 @@ final class VolumeFromTest extends TestCase
     {
         $volumeFrom = new VolumeFrom('container', BindMode::READ_ONLY());
 
-        $this->assertSame('container', $volumeFrom->name);
-        $this->assertSame(BindMode::$READ_ONLY, (string) $volumeFrom->mode);
+        self::assertSame('container', $volumeFrom->name);
+        self::assertSame(BindMode::$READ_ONLY, (string) $volumeFrom->mode);
     }
 
     /**
@@ -30,8 +30,8 @@ final class VolumeFromTest extends TestCase
     {
         $volumeFrom = VolumeFrom::fromString('name:ro');
 
-        $this->assertSame('name', $volumeFrom->name);
-        $this->assertSame(BindMode::$READ_ONLY, (string) $volumeFrom->mode);
+        self::assertSame('name', $volumeFrom->name);
+        self::assertSame(BindMode::$READ_ONLY, (string) $volumeFrom->mode);
     }
 
     /**
@@ -41,8 +41,8 @@ final class VolumeFromTest extends TestCase
     {
         $volumeFrom = VolumeFrom::fromString('name');
 
-        $this->assertSame('name', $volumeFrom->name);
-        $this->assertSame(BindMode::$READ_WRITE, (string) $volumeFrom->mode);
+        self::assertSame('name', $volumeFrom->name);
+        self::assertSame(BindMode::$READ_WRITE, (string) $volumeFrom->mode);
     }
 
     /**
@@ -65,8 +65,8 @@ final class VolumeFromTest extends TestCase
             'mode' => BindMode::READ_WRITE(),
         ]);
 
-        $this->assertSame('name', $volumeFrom->name);
-        $this->assertSame(BindMode::$READ_WRITE, (string) $volumeFrom->mode);
+        self::assertSame('name', $volumeFrom->name);
+        self::assertSame(BindMode::$READ_WRITE, (string) $volumeFrom->mode);
     }
 
     /**
@@ -76,7 +76,7 @@ final class VolumeFromTest extends TestCase
     {
         $volumeFrom = new VolumeFrom('name', BindMode::READ_ONLY());
 
-        $this->assertSame('name:ro', (string) $volumeFrom);
+        self::assertSame('name:ro', (string) $volumeFrom);
     }
 
     /**

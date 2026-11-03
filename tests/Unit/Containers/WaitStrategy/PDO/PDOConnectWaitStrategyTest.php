@@ -26,7 +26,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $strategy = (new PDOConnectWaitStrategy())->withDsn(new SQLiteDSN());
         $strategy->waitUntilReady($instance);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**

@@ -21,7 +21,7 @@ final class DockerVersionOutputTest extends TestCase
         $process->run();
         $output = new DockerVersionOutput($process);
 
-        $this->assertSame($expected, $output->getClientVersion());
+        self::assertSame($expected, $output->getClientVersion());
     }
 
     /**
@@ -57,7 +57,7 @@ final class DockerVersionOutputTest extends TestCase
         $process->run();
         $output = new DockerVersionOutput($process);
 
-        $this->assertSame($expected, $output->getServerVersion());
+        self::assertSame($expected, $output->getServerVersion());
     }
 
     /**

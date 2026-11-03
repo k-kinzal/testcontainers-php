@@ -21,8 +21,7 @@ final class GeneralSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(GeneralSetting::class, $uses);
+        self::assertContains(GeneralSetting::class, $uses);
     }
 
     /**
@@ -33,7 +32,7 @@ final class GeneralSettingTest extends TestCase
         $container = new GeneralSettingWithStaticCommandsContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame("Hello, World!\n", $instance->getOutput());
+        self::assertSame("Hello, World!\n", $instance->getOutput());
     }
 
     /**
@@ -48,7 +47,7 @@ final class GeneralSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("/\n", $instance->getOutput());
+        self::assertSame("/\n", $instance->getOutput());
     }
 
     /**
@@ -63,7 +62,7 @@ final class GeneralSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("Hello, World!\n", $instance->getOutput());
+        self::assertSame("Hello, World!\n", $instance->getOutput());
     }
 
     /**

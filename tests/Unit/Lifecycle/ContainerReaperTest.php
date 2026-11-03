@@ -21,7 +21,7 @@ final class ContainerReaperTest extends TestCase
     {
         $dind = Testcontainers::run(DinD::class);
         $mappedPort2375 = $dind->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
@@ -32,13 +32,13 @@ final class ContainerReaperTest extends TestCase
             'detach' => true,
             'label' => $labels + ['org.testcontainers' => 'true'],
         ]);
-        $this->assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
+        self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
             (new ContainerReaper($client))->execute();
 
-            $this->assertSame('running', $client->inspect($id)->state->status);
+            self::assertSame('running', $client->inspect($id)->state->status);
         } finally {
             $client->rm($id, ['force' => true]);
             $dind->stop();
@@ -75,7 +75,7 @@ final class ContainerReaperTest extends TestCase
     {
         $dind = Testcontainers::run(DinD::class);
         $mappedPort2375 = $dind->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
@@ -90,13 +90,13 @@ final class ContainerReaperTest extends TestCase
                 'org.testcontainers.pid' => '2147483647',
             ],
         ]);
-        $this->assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
+        self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
             (new ContainerReaper($client))->execute();
 
-            $this->assertSame('exited', $client->inspect($id)->state->status);
+            self::assertSame('exited', $client->inspect($id)->state->status);
         } finally {
             $client->rm($id, ['force' => true]);
             $dind->stop();
@@ -110,7 +110,7 @@ final class ContainerReaperTest extends TestCase
     {
         $dind = Testcontainers::run(DinD::class);
         $mappedPort2375 = $dind->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
                 'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
@@ -127,13 +127,13 @@ final class ContainerReaperTest extends TestCase
                 'org.testcontainers.pid' => (string) $process->getPid(),
             ],
         ]);
-        $this->assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
+        self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
             (new ContainerReaper($client))->execute();
 
-            $this->assertSame('running', $client->inspect($id)->state->status);
+            self::assertSame('running', $client->inspect($id)->state->status);
         } finally {
             $client->rm($id, ['force' => true]);
             $dind->stop();
@@ -150,7 +150,7 @@ final class ContainerReaperTest extends TestCase
             'host' => 'unix://'.__DIR__.'/missing-docker.sock',
         ]);
 
-        $this->assertNull((new ContainerReaper($client))->execute());
+        self::assertNull((new ContainerReaper($client))->execute());
     }
 
     /**
@@ -163,6 +163,6 @@ final class ContainerReaperTest extends TestCase
             ->withGlobalOptions(['version' => true])
         ;
 
-        $this->assertNull((new ContainerReaper($client))->execute());
+        self::assertNull((new ContainerReaper($client))->execute());
     }
 }

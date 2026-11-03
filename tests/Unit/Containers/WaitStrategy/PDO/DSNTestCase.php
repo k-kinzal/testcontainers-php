@@ -32,7 +32,7 @@ abstract class DSNTestCase extends TestCase
         $hostname = 'localhost';
         $dsn = $dsn->withHost($hostname);
 
-        $this->assertTrue(strpos($dsn->toString(), $hostname) !== false);
+        self::assertTrue(strpos($dsn->toString(), $hostname) !== false);
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class DSNTestCase extends TestCase
             ->withPort($port)
         ;
 
-        $this->assertTrue(strpos($dsn->toString(), (string) $port) !== false);
+        self::assertTrue(strpos($dsn->toString(), (string) $port) !== false);
     }
 
     /**
@@ -66,9 +66,9 @@ abstract class DSNTestCase extends TestCase
         try {
             new \PDO($dsn->toString());
         } catch (\PDOException $e) {
-            $this->assertNotSame('could not find driver', $e->getMessage());
+            self::assertNotSame('could not find driver', $e->getMessage());
         }
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 }

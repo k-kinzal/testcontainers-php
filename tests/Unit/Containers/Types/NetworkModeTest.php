@@ -14,7 +14,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = new NetworkMode(NetworkMode::$HOST);
 
-        $this->assertSame(NetworkMode::$HOST, $mode->toString());
+        self::assertSame(NetworkMode::$HOST, $mode->toString());
     }
 
     /**
@@ -24,7 +24,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = new NetworkMode(NetworkMode::$BRIDGE);
 
-        $this->assertSame(NetworkMode::$BRIDGE, $mode->toString());
+        self::assertSame(NetworkMode::$BRIDGE, $mode->toString());
     }
 
     /**
@@ -34,7 +34,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = new NetworkMode(NetworkMode::$NONE);
 
-        $this->assertSame(NetworkMode::$NONE, $mode->toString());
+        self::assertSame(NetworkMode::$NONE, $mode->toString());
     }
 
     /**
@@ -44,7 +44,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = new NetworkMode('custom');
 
-        $this->assertSame('custom', $mode->toString());
+        self::assertSame('custom', $mode->toString());
     }
 
     /**
@@ -54,7 +54,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = NetworkMode::HOST();
 
-        $this->assertSame(NetworkMode::$HOST, $mode->toString());
+        self::assertSame(NetworkMode::$HOST, $mode->toString());
     }
 
     /**
@@ -64,7 +64,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = NetworkMode::BRIDGE();
 
-        $this->assertSame(NetworkMode::$BRIDGE, $mode->toString());
+        self::assertSame(NetworkMode::$BRIDGE, $mode->toString());
     }
 
     /**
@@ -74,7 +74,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = NetworkMode::NONE();
 
-        $this->assertSame(NetworkMode::$NONE, $mode->toString());
+        self::assertSame(NetworkMode::$NONE, $mode->toString());
     }
 
     /**
@@ -84,7 +84,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = NetworkMode::fromString(NetworkMode::$HOST);
 
-        $this->assertSame(NetworkMode::$HOST, $mode->toString());
+        self::assertSame(NetworkMode::$HOST, $mode->toString());
     }
 
     /**
@@ -94,7 +94,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = NetworkMode::fromString(NetworkMode::$BRIDGE);
 
-        $this->assertSame(NetworkMode::$BRIDGE, $mode->toString());
+        self::assertSame(NetworkMode::$BRIDGE, $mode->toString());
     }
 
     /**
@@ -104,7 +104,7 @@ final class NetworkModeTest extends TestCase
     {
         $mode = NetworkMode::fromString(NetworkMode::$NONE);
 
-        $this->assertSame(NetworkMode::$NONE, $mode->toString());
+        self::assertSame(NetworkMode::$NONE, $mode->toString());
     }
 
     /**
@@ -114,6 +114,6 @@ final class NetworkModeTest extends TestCase
     {
         $mode = NetworkMode::fromString('custom');
 
-        $this->assertSame('custom', $mode->toString());
+        self::assertSame('custom', $mode->toString());
     }
 }

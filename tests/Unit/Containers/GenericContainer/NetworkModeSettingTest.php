@@ -19,8 +19,7 @@ final class NetworkModeSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(NetworkModeSetting::class, $uses);
+        self::assertContains(NetworkModeSetting::class, $uses);
     }
 
     /**
@@ -33,7 +32,7 @@ final class NetworkModeSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
+        self::assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 
     /**
@@ -48,7 +47,7 @@ final class NetworkModeSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertTrue(strpos($instance->getOutput(), 'eth0') === false);
+        self::assertTrue(strpos($instance->getOutput(), 'eth0') === false);
     }
 
     /**

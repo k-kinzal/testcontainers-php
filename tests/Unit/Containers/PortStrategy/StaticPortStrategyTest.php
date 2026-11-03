@@ -31,7 +31,7 @@ final class StaticPortStrategyTest extends PortStrategyTestCase
         $strategy = new StaticPortStrategy(50000);
         $port = $strategy->getPort();
 
-        $this->assertSame(50000, $port);
+        self::assertSame(50000, $port);
     }
 
     /**
@@ -42,8 +42,8 @@ final class StaticPortStrategyTest extends PortStrategyTestCase
         $strategy1 = new StaticPortStrategy(50001);
         $strategy2 = new StaticPortStrategy(50002);
 
-        $this->assertSame(50001, $strategy1->getPort());
-        $this->assertSame(50002, $strategy2->getPort());
+        self::assertSame(50001, $strategy1->getPort());
+        self::assertSame(50002, $strategy2->getPort());
     }
 
     /**
@@ -54,8 +54,8 @@ final class StaticPortStrategyTest extends PortStrategyTestCase
         $strategy = new StaticPortStrategy(50000);
         $behavior = $strategy->conflictBehavior();
 
-        $this->assertTrue($behavior->isFail());
-        $this->assertFalse($behavior->isRetry());
+        self::assertTrue($behavior->isFail());
+        self::assertFalse($behavior->isRetry());
     }
 
     /**

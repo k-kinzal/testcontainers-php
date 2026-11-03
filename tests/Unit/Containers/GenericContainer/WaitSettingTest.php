@@ -20,8 +20,7 @@ final class WaitSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(WaitSetting::class, $uses);
+        self::assertContains(WaitSetting::class, $uses);
     }
 
     /**
@@ -32,7 +31,7 @@ final class WaitSettingTest extends TestCase
         $container = new WaitSettingWithStaticWaitStrategyContainer();
         $container->start();
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**
@@ -46,7 +45,7 @@ final class WaitSettingTest extends TestCase
         ;
         $container->start();
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**

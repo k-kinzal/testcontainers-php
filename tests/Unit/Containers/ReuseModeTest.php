@@ -17,7 +17,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = new ReuseMode(ReuseMode::$ADD);
 
-        $this->assertSame(ReuseMode::$ADD, $reuseMode->toString());
+        self::assertSame(ReuseMode::$ADD, $reuseMode->toString());
     }
 
     /**
@@ -27,7 +27,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = new ReuseMode(ReuseMode::$RESTART);
 
-        $this->assertSame(ReuseMode::$RESTART, $reuseMode->toString());
+        self::assertSame(ReuseMode::$RESTART, $reuseMode->toString());
     }
 
     /**
@@ -37,7 +37,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = new ReuseMode(ReuseMode::$REUSE);
 
-        $this->assertSame(ReuseMode::$REUSE, $reuseMode->toString());
+        self::assertSame(ReuseMode::$REUSE, $reuseMode->toString());
     }
 
     /**
@@ -47,7 +47,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = ReuseMode::ADD();
 
-        $this->assertSame(ReuseMode::$ADD, $reuseMode->toString());
+        self::assertSame(ReuseMode::$ADD, $reuseMode->toString());
     }
 
     /**
@@ -57,7 +57,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = ReuseMode::RESTART();
 
-        $this->assertSame(ReuseMode::$RESTART, $reuseMode->toString());
+        self::assertSame(ReuseMode::$RESTART, $reuseMode->toString());
     }
 
     /**
@@ -67,7 +67,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = ReuseMode::REUSE();
 
-        $this->assertSame(ReuseMode::$REUSE, $reuseMode->toString());
+        self::assertSame(ReuseMode::$REUSE, $reuseMode->toString());
     }
 
     /**
@@ -77,7 +77,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = ReuseMode::fromString(ReuseMode::$ADD);
 
-        $this->assertSame(ReuseMode::$ADD, $reuseMode->toString());
+        self::assertSame(ReuseMode::$ADD, $reuseMode->toString());
     }
 
     /**
@@ -87,7 +87,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = ReuseMode::fromString(ReuseMode::$RESTART);
 
-        $this->assertSame(ReuseMode::$RESTART, $reuseMode->toString());
+        self::assertSame(ReuseMode::$RESTART, $reuseMode->toString());
     }
 
     /**
@@ -97,7 +97,7 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = ReuseMode::fromString(ReuseMode::$REUSE);
 
-        $this->assertSame(ReuseMode::$REUSE, $reuseMode->toString());
+        self::assertSame(ReuseMode::$REUSE, $reuseMode->toString());
     }
 
     /**
@@ -118,9 +118,9 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = new ReuseMode(ReuseMode::$ADD);
 
-        $this->assertTrue($reuseMode->isAdd());
-        $this->assertFalse($reuseMode->isRestart());
-        $this->assertFalse($reuseMode->isReuse());
+        self::assertTrue($reuseMode->isAdd());
+        self::assertFalse($reuseMode->isRestart());
+        self::assertFalse($reuseMode->isReuse());
     }
 
     /**
@@ -130,9 +130,9 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = new ReuseMode(ReuseMode::$RESTART);
 
-        $this->assertTrue($reuseMode->isRestart());
-        $this->assertFalse($reuseMode->isAdd());
-        $this->assertFalse($reuseMode->isReuse());
+        self::assertTrue($reuseMode->isRestart());
+        self::assertFalse($reuseMode->isAdd());
+        self::assertFalse($reuseMode->isReuse());
     }
 
     /**
@@ -142,9 +142,9 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = new ReuseMode(ReuseMode::$REUSE);
 
-        $this->assertTrue($reuseMode->isReuse());
-        $this->assertFalse($reuseMode->isAdd());
-        $this->assertFalse($reuseMode->isRestart());
+        self::assertTrue($reuseMode->isReuse());
+        self::assertFalse($reuseMode->isAdd());
+        self::assertFalse($reuseMode->isRestart());
     }
 
     /**
@@ -154,6 +154,6 @@ final class ReuseModeTest extends TestCase
     {
         $reuseMode = ReuseMode::ADD();
 
-        $this->assertSame('add', (string) $reuseMode);
+        self::assertSame('add', (string) $reuseMode);
     }
 }

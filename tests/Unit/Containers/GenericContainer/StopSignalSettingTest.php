@@ -18,8 +18,7 @@ final class StopSignalSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(StopSignalSetting::class, $uses);
+        self::assertContains(StopSignalSetting::class, $uses);
     }
 
     /**
@@ -30,7 +29,7 @@ final class StopSignalSettingTest extends TestCase
         $container = new StopSignalSettingWithStaticContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame('KILL', $instance->getStopSignal());
+        self::assertSame('KILL', $instance->getStopSignal());
     }
 
     /**
@@ -43,7 +42,7 @@ final class StopSignalSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('KILL', $instance->getStopSignal());
+        self::assertSame('KILL', $instance->getStopSignal());
     }
 
     /**
@@ -54,7 +53,7 @@ final class StopSignalSettingTest extends TestCase
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertNull($instance->getStopSignal());
+        self::assertNull($instance->getStopSignal());
     }
 
     /**

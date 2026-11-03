@@ -19,8 +19,7 @@ final class PullPolicySettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(PullPolicySetting::class, $uses);
+        self::assertContains(PullPolicySetting::class, $uses);
     }
 
     /**
@@ -33,8 +32,8 @@ final class PullPolicySettingTest extends TestCase
 
         $pullPolicy = $instance->getImagePullPolicy();
 
-        $this->assertNotNull($pullPolicy);
-        $this->assertSame(ImagePullPolicy::$ALWAYS, $pullPolicy->toString());
+        self::assertNotNull($pullPolicy);
+        self::assertSame(ImagePullPolicy::$ALWAYS, $pullPolicy->toString());
     }
 
     /**
@@ -49,8 +48,8 @@ final class PullPolicySettingTest extends TestCase
 
         $pullPolicy = $instance->getImagePullPolicy();
 
-        $this->assertNotNull($pullPolicy);
-        $this->assertSame(ImagePullPolicy::$MISSING, $pullPolicy->toString());
+        self::assertNotNull($pullPolicy);
+        self::assertSame(ImagePullPolicy::$MISSING, $pullPolicy->toString());
     }
 
     /**

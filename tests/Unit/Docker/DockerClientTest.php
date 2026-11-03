@@ -15,8 +15,8 @@ final class DockerClientTest extends TestCase
         $client = (new DockerClient())->withTimeout(42);
         $cloned = clone $client;
 
-        $this->assertNotSame($client, $cloned);
-        $this->assertEquals($client, $cloned);
-        $this->assertSame(42, $cloned->getTimeout());
+        self::assertNotSame($client, $cloned);
+        self::assertEquals($client, $cloned);
+        self::assertSame(42, $cloned->getTimeout());
     }
 }

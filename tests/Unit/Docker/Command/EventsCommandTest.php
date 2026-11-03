@@ -21,8 +21,7 @@ final class EventsCommandTest extends TestCase
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(EventsCommand::class, $uses);
+        self::assertContains(EventsCommand::class, $uses);
     }
 
     /**
@@ -45,23 +44,22 @@ final class EventsCommandTest extends TestCase
             'until' => (string) (time() + 3),
         ]);
 
-        $this->assertInstanceOf(DockerEventsOutput::class, $eventsOutput);
+        self::assertInstanceOf(DockerEventsOutput::class, $eventsOutput);
 
         $events = array_values(array_filter(iterator_to_array($eventsOutput->getIterator(), false)));
         $containerIds = array_unique(array_map(function (Event $event) {
             return $event->actor->id;
         }, $events));
-        $this->assertSame([$containerId->toString()], array_values($containerIds));
+        self::assertSame([$containerId->toString()], array_values($containerIds));
         $actions = array_map(function (Event $event) {
             return $event->action->toString();
         }, $events);
         $deaths = array_values(array_filter($events, function (Event $event) {
             return $event->action->isDie();
         }));
-        $this->assertNotEmpty($deaths);
-        $this->assertSame('3', $deaths[0]->actor->getAttribute('exitCode'));
-
-        $this->assertSame(['create', 'start', 'die'], array_values(array_intersect($actions, ['create', 'start', 'die'])));
+        self::assertNotEmpty($deaths);
+        self::assertSame('3', $deaths[0]->actor->getAttribute('exitCode'));
+        self::assertSame(['create', 'start', 'die'], array_values(array_intersect($actions, ['create', 'start', 'die'])));
     }
 
     /**
@@ -80,9 +78,9 @@ final class EventsCommandTest extends TestCase
             iterator_to_array($eventsOutput->getIterator(), false);
             $this->fail('Expected ProcessTimedOutException');
         } catch (ProcessTimedOutException $e) {
-            $this->assertSame(1.0, $e->getExceededTimeout());
+            self::assertSame(1.0, $e->getExceededTimeout());
         }
 
-        $this->assertSame(60, $client->getTimeout());
+        self::assertSame(60, $client->getTimeout());
     }
 }

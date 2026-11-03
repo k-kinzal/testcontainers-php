@@ -20,8 +20,7 @@ final class EnvSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(EnvSetting::class, $uses);
+        self::assertContains(EnvSetting::class, $uses);
     }
 
     /**
@@ -35,7 +34,7 @@ final class EnvSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("value1\nvalue2\n", $instance->getOutput());
+        self::assertSame("value1\nvalue2\n", $instance->getOutput());
     }
 
     /**
@@ -52,7 +51,7 @@ final class EnvSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("value1\nvalue2\n", $instance->getOutput());
+        self::assertSame("value1\nvalue2\n", $instance->getOutput());
     }
 
     /**
@@ -71,7 +70,7 @@ final class EnvSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame("value1\nvalue2\n", $instance->getOutput());
+        self::assertSame("value1\nvalue2\n", $instance->getOutput());
     }
 
     /**

@@ -18,8 +18,8 @@ final class HostToIpTest extends TestCase
     {
         $value = new HostToIp('docker.internal', '127.0.0.1');
 
-        $this->assertSame('docker.internal', $value->host);
-        $this->assertSame('127.0.0.1', $value->ip);
+        self::assertSame('docker.internal', $value->host);
+        self::assertSame('127.0.0.1', $value->ip);
     }
 
     /**
@@ -29,8 +29,8 @@ final class HostToIpTest extends TestCase
     {
         $value = HostToIp::fromString('docker.internal:127.0.0.1');
 
-        $this->assertSame('docker.internal', $value->host);
-        $this->assertSame('127.0.0.1', $value->ip);
+        self::assertSame('docker.internal', $value->host);
+        self::assertSame('127.0.0.1', $value->ip);
     }
 
     /**
@@ -51,8 +51,8 @@ final class HostToIpTest extends TestCase
     {
         $value = HostToIp::fromArray(['hostname' => 'docker.internal', 'ipAddress' => '127.0.0.1']);
 
-        $this->assertSame('docker.internal', $value->host);
-        $this->assertSame('127.0.0.1', $value->ip);
+        self::assertSame('docker.internal', $value->host);
+        self::assertSame('127.0.0.1', $value->ip);
     }
 
     /**
@@ -62,7 +62,7 @@ final class HostToIpTest extends TestCase
     {
         $value = new HostToIp('docker.internal', '127.0.0.1');
 
-        $this->assertSame('docker.internal:127.0.0.1', (string) $value);
+        self::assertSame('docker.internal:127.0.0.1', (string) $value);
     }
 
     /**

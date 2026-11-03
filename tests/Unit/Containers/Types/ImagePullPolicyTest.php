@@ -17,7 +17,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$ALWAYS);
 
-        $this->assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
     }
 
     /**
@@ -27,7 +27,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$MISSING);
 
-        $this->assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
     }
 
     /**
@@ -37,7 +37,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$NEVER);
 
-        $this->assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
     }
 
     /**
@@ -47,7 +47,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = ImagePullPolicy::ALWAYS();
 
-        $this->assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
     }
 
     /**
@@ -57,7 +57,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = ImagePullPolicy::MISSING();
 
-        $this->assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
     }
 
     /**
@@ -67,7 +67,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = ImagePullPolicy::NEVER();
 
-        $this->assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
     }
 
     /**
@@ -77,7 +77,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$ALWAYS);
 
-        $this->assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$ALWAYS, $imagePullPolicy->toString());
     }
 
     /**
@@ -87,7 +87,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$MISSING);
 
-        $this->assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$MISSING, $imagePullPolicy->toString());
     }
 
     /**
@@ -97,7 +97,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = ImagePullPolicy::fromString(ImagePullPolicy::$NEVER);
 
-        $this->assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
+        self::assertSame(ImagePullPolicy::$NEVER, $imagePullPolicy->toString());
     }
 
     /**
@@ -117,7 +117,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$ALWAYS);
 
-        $this->assertTrue($imagePullPolicy->isAlways());
+        self::assertTrue($imagePullPolicy->isAlways());
     }
 
     /**
@@ -127,7 +127,7 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$MISSING);
 
-        $this->assertTrue($imagePullPolicy->isMissing());
+        self::assertTrue($imagePullPolicy->isMissing());
     }
 
     /**
@@ -137,6 +137,6 @@ final class ImagePullPolicyTest extends TestCase
     {
         $imagePullPolicy = new ImagePullPolicy(ImagePullPolicy::$NEVER);
 
-        $this->assertTrue($imagePullPolicy->isNever());
+        self::assertTrue($imagePullPolicy->isNever());
     }
 }

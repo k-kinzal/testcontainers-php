@@ -19,7 +19,7 @@ final class StartupCheckStrategyProviderTest extends TestCase
         $provider = new StartupCheckStrategyProvider();
         $provider->register('is_running', new IsRunningStartupCheckStrategy());
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**
@@ -45,7 +45,7 @@ final class StartupCheckStrategyProviderTest extends TestCase
 
         $strategy = $provider->get('is_running');
 
-        $this->assertNotNull($strategy);
-        $this->assertInstanceOf(IsRunningStartupCheckStrategy::class, $strategy);
+        self::assertNotNull($strategy);
+        self::assertInstanceOf(IsRunningStartupCheckStrategy::class, $strategy);
     }
 }

@@ -18,8 +18,7 @@ final class InspectIntervalSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(InspectIntervalSetting::class, $uses);
+        self::assertContains(InspectIntervalSetting::class, $uses);
     }
 
     /**
@@ -30,7 +29,7 @@ final class InspectIntervalSettingTest extends TestCase
         $container = new InspectIntervalSettingWithStaticContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(5, $instance->getInspectInterval());
+        self::assertSame(5, $instance->getInspectInterval());
     }
 
     /**
@@ -43,7 +42,7 @@ final class InspectIntervalSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame(0.5, $instance->getInspectInterval());
+        self::assertSame(0.5, $instance->getInspectInterval());
     }
 
     /**
@@ -54,7 +53,7 @@ final class InspectIntervalSettingTest extends TestCase
         $container = new GenericContainer('alpine:latest');
         $instance = $container->start();
 
-        $this->assertSame(10, $instance->getInspectInterval());
+        self::assertSame(10, $instance->getInspectInterval());
     }
 
     /**

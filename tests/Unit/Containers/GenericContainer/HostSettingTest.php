@@ -19,8 +19,7 @@ final class HostSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(HostSetting::class, $uses);
+        self::assertContains(HostSetting::class, $uses);
     }
 
     /**
@@ -35,7 +34,7 @@ final class HostSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
+        self::assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
     }
 
     /**
@@ -50,7 +49,7 @@ final class HostSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
+        self::assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
     }
 
     /**
@@ -66,7 +65,7 @@ final class HostSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
+        self::assertStringStartsWith('PING example.com (127.0.0.1)', $instance->getOutput());
     }
 
     /**
@@ -98,7 +97,7 @@ final class HostSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
+        self::assertStringStartsWith('PING example.org (127.0.0.1)', $instance->getOutput());
     }
 
     /**

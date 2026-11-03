@@ -17,7 +17,7 @@ final class ConflictBehaviorTest extends TestCase
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$RETRY);
 
-        $this->assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
     }
 
     /**
@@ -27,7 +27,7 @@ final class ConflictBehaviorTest extends TestCase
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$FAIL);
 
-        $this->assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
     }
 
     /**
@@ -37,7 +37,7 @@ final class ConflictBehaviorTest extends TestCase
     {
         $conflictBehavior = ConflictBehavior::RETRY();
 
-        $this->assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
     }
 
     /**
@@ -47,7 +47,7 @@ final class ConflictBehaviorTest extends TestCase
     {
         $conflictBehavior = ConflictBehavior::FAIL();
 
-        $this->assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
     }
 
     /**
@@ -57,7 +57,7 @@ final class ConflictBehaviorTest extends TestCase
     {
         $conflictBehavior = ConflictBehavior::fromString(ConflictBehavior::$RETRY);
 
-        $this->assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$RETRY, $conflictBehavior->toString());
     }
 
     /**
@@ -67,7 +67,7 @@ final class ConflictBehaviorTest extends TestCase
     {
         $conflictBehavior = ConflictBehavior::fromString(ConflictBehavior::$FAIL);
 
-        $this->assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
+        self::assertSame(ConflictBehavior::$FAIL, $conflictBehavior->toString());
     }
 
     /**
@@ -88,8 +88,8 @@ final class ConflictBehaviorTest extends TestCase
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$RETRY);
 
-        $this->assertTrue($conflictBehavior->isRetry());
-        $this->assertFalse($conflictBehavior->isFail());
+        self::assertTrue($conflictBehavior->isRetry());
+        self::assertFalse($conflictBehavior->isFail());
     }
 
     /**
@@ -99,7 +99,7 @@ final class ConflictBehaviorTest extends TestCase
     {
         $conflictBehavior = new ConflictBehavior(ConflictBehavior::$FAIL);
 
-        $this->assertTrue($conflictBehavior->isFail());
-        $this->assertFalse($conflictBehavior->isRetry());
+        self::assertTrue($conflictBehavior->isFail());
+        self::assertFalse($conflictBehavior->isRetry());
     }
 }

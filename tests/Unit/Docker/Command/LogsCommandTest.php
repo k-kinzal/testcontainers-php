@@ -20,8 +20,7 @@ final class LogsCommandTest extends TestCase
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(LogsCommand::class, $uses);
+        self::assertContains(LogsCommand::class, $uses);
     }
 
     /**
@@ -31,7 +30,7 @@ final class LogsCommandTest extends TestCase
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
@@ -47,9 +46,9 @@ final class LogsCommandTest extends TestCase
         $containerId = $output->getContainerId();
         $logsOutput = $client->logs($containerId);
 
-        $this->assertInstanceOf(DockerLogsOutput::class, $logsOutput);
-        $this->assertSame(0, $logsOutput->getExitCode());
-        $this->assertNotEmpty($logsOutput->getOutput());
+        self::assertInstanceOf(DockerLogsOutput::class, $logsOutput);
+        self::assertSame(0, $logsOutput->getExitCode());
+        self::assertNotEmpty($logsOutput->getOutput());
     }
 
     /**
@@ -59,7 +58,7 @@ final class LogsCommandTest extends TestCase
     {
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
@@ -77,7 +76,7 @@ final class LogsCommandTest extends TestCase
             'follow' => true,
         ]);
 
-        $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
+        self::assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
 
         $iter = $logsOutput->getIterator();
         $lines = [];
@@ -87,11 +86,11 @@ final class LogsCommandTest extends TestCase
         $iter->next();
         $lines[] = $iter->current();
 
-        $this->assertNotNull($lines[0]);
-        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
-        $this->assertNotNull($lines[1]);
-        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
-        $this->assertNotNull($lines[2]);
-        $this->assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);
+        self::assertNotNull($lines[0]);
+        self::assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[0]) === 1);
+        self::assertNotNull($lines[1]);
+        self::assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[1]) === 1);
+        self::assertNotNull($lines[2]);
+        self::assertTrue(preg_match('/\d{2}:\d{2}:\d{2}/', $lines[2]) === 1);
     }
 }

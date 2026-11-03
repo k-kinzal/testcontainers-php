@@ -22,8 +22,7 @@ final class MountSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(MountSetting::class, $uses);
+        self::assertContains(MountSetting::class, $uses);
     }
 
     /**
@@ -45,7 +44,7 @@ final class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**
@@ -67,7 +66,7 @@ final class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**
@@ -86,7 +85,7 @@ final class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**
@@ -107,7 +106,7 @@ final class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**
@@ -126,7 +125,7 @@ final class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**
@@ -152,7 +151,7 @@ final class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**
@@ -176,7 +175,7 @@ final class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**
@@ -197,7 +196,7 @@ final class MountSettingTest extends TestCase
         ;
         $instance = $container->start();
 
-        $this->assertSame('Hello, World!', $instance->getOutput());
+        self::assertSame('Hello, World!', $instance->getOutput());
     }
 
     /**

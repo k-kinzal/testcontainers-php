@@ -17,9 +17,9 @@ final class EventActionTest extends TestCase
     {
         $action = new EventAction(EventAction::$START);
 
-        $this->assertSame('start', $action->toString());
-        $this->assertSame('start', $action->getName());
-        $this->assertNull($action->getDetail());
+        self::assertSame('start', $action->toString());
+        self::assertSame('start', $action->getName());
+        self::assertNull($action->getDetail());
     }
 
     /**
@@ -29,9 +29,9 @@ final class EventActionTest extends TestCase
     {
         $action = new EventAction(EventAction::$EXEC_START, "/bin/sh -c 'echo hello'");
 
-        $this->assertSame("exec_start: /bin/sh -c 'echo hello'", $action->toString());
-        $this->assertSame('exec_start', $action->getName());
-        $this->assertSame("/bin/sh -c 'echo hello'", $action->getDetail());
+        self::assertSame("exec_start: /bin/sh -c 'echo hello'", $action->toString());
+        self::assertSame('exec_start', $action->getName());
+        self::assertSame("/bin/sh -c 'echo hello'", $action->getDetail());
     }
 
     /**
@@ -41,8 +41,8 @@ final class EventActionTest extends TestCase
     {
         $action = EventAction::DIE_();
 
-        $this->assertSame('die', $action->toString());
-        $this->assertTrue($action->isDie());
+        self::assertSame('die', $action->toString());
+        self::assertTrue($action->isDie());
     }
 
     /**
@@ -52,10 +52,10 @@ final class EventActionTest extends TestCase
     {
         $action = EventAction::HEALTH_STATUS_HEALTHY();
 
-        $this->assertSame('health_status: healthy', $action->toString());
-        $this->assertTrue($action->isHealthStatus());
-        $this->assertTrue($action->isHealthStatusHealthy());
-        $this->assertFalse($action->isHealthStatusUnhealthy());
+        self::assertSame('health_status: healthy', $action->toString());
+        self::assertTrue($action->isHealthStatus());
+        self::assertTrue($action->isHealthStatusHealthy());
+        self::assertFalse($action->isHealthStatusUnhealthy());
     }
 
     /**
@@ -67,8 +67,8 @@ final class EventActionTest extends TestCase
     {
         $action = EventAction::fromString($value);
 
-        $this->assertSame($value, $action->toString());
-        $this->assertNull($action->getDetail());
+        self::assertSame($value, $action->toString());
+        self::assertNull($action->getDetail());
     }
 
     /**
@@ -78,9 +78,9 @@ final class EventActionTest extends TestCase
     {
         $action = EventAction::fromString('exec_create: ls -la');
 
-        $this->assertTrue($action->isExecCreate());
-        $this->assertSame('ls -la', $action->getDetail());
-        $this->assertSame('exec_create: ls -la', $action->toString());
+        self::assertTrue($action->isExecCreate());
+        self::assertSame('ls -la', $action->getDetail());
+        self::assertSame('exec_create: ls -la', $action->toString());
     }
 
     /**
@@ -90,8 +90,8 @@ final class EventActionTest extends TestCase
     {
         $action = EventAction::fromString('health_status: curl: (7) Failed to connect');
 
-        $this->assertTrue($action->isHealthStatus());
-        $this->assertSame('curl: (7) Failed to connect', $action->getDetail());
+        self::assertTrue($action->isHealthStatus());
+        self::assertSame('curl: (7) Failed to connect', $action->getDetail());
     }
 
     /**
@@ -121,9 +121,9 @@ final class EventActionTest extends TestCase
     {
         $action = EventAction::CREATE();
 
-        $this->assertTrue($action->isCreate());
-        $this->assertFalse($action->isStart());
-        $this->assertFalse($action->isDestroy());
+        self::assertTrue($action->isCreate());
+        self::assertFalse($action->isStart());
+        self::assertFalse($action->isDestroy());
     }
     /**
      * @return array<array<string>>

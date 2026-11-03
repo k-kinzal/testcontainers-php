@@ -19,8 +19,7 @@ final class ReuseModeSettingTest extends TestCase
     {
         $uses = class_uses(GenericContainer::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(ReuseModeSetting::class, $uses);
+        self::assertContains(ReuseModeSetting::class, $uses);
     }
 
     /**
@@ -32,7 +31,7 @@ final class ReuseModeSettingTest extends TestCase
 
         $reuseMode = $container->reuseMode();
 
-        $this->assertTrue($reuseMode->isAdd());
+        self::assertTrue($reuseMode->isAdd());
     }
 
     /**
@@ -45,7 +44,7 @@ final class ReuseModeSettingTest extends TestCase
 
         $reuseMode = $container->reuseMode();
 
-        $this->assertTrue($reuseMode->isRestart());
+        self::assertTrue($reuseMode->isRestart());
     }
 
     /**
@@ -58,7 +57,7 @@ final class ReuseModeSettingTest extends TestCase
 
         $reuseMode = $container->reuseMode();
 
-        $this->assertTrue($reuseMode->isReuse());
+        self::assertTrue($reuseMode->isReuse());
     }
 
     /**
@@ -70,7 +69,7 @@ final class ReuseModeSettingTest extends TestCase
 
         $reuseMode = $container->reuseMode();
 
-        $this->assertTrue($reuseMode->isReuse());
+        self::assertTrue($reuseMode->isReuse());
     }
 
     /**
@@ -82,7 +81,7 @@ final class ReuseModeSettingTest extends TestCase
 
         $reuseMode = $container->reuseMode();
 
-        $this->assertTrue($reuseMode->isRestart());
+        self::assertTrue($reuseMode->isRestart());
     }
 
     /**

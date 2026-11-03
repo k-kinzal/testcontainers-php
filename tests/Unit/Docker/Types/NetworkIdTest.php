@@ -17,7 +17,7 @@ final class NetworkIdTest extends TestCase
      */
     public function testIsValidReturnsWhetherValueIsValid($value, $expected)
     {
-        $this->assertSame($expected, NetworkId::isValid($value));
+        self::assertSame($expected, NetworkId::isValid($value));
     }
 
     /**
@@ -49,7 +49,7 @@ final class NetworkIdTest extends TestCase
     {
         $identifier = new NetworkId($value);
 
-        $this->assertSame($value, $identifier->toString());
+        self::assertSame($value, $identifier->toString());
     }
 
     /**
@@ -59,7 +59,7 @@ final class NetworkIdTest extends TestCase
      */
     public function testFromStringPreservesValidIdentifier($value)
     {
-        $this->assertSame($value, NetworkId::fromString($value)->toString());
+        self::assertSame($value, NetworkId::fromString($value)->toString());
     }
 
     /**

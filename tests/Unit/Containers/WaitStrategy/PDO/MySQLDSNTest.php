@@ -41,7 +41,7 @@ final class MySQLDSNTest extends DSNTestCase
             ->withDbname($dbname)
         ;
 
-        $this->assertTrue(strpos($dsn->toString(), $dbname) !== false);
+        self::assertTrue(strpos($dsn->toString(), $dbname) !== false);
     }
 
     /**
@@ -55,7 +55,7 @@ final class MySQLDSNTest extends DSNTestCase
             ->withCharset($charset)
         ;
 
-        $this->assertTrue(strpos($dsn->toString(), $charset) !== false);
+        self::assertTrue(strpos($dsn->toString(), $charset) !== false);
     }
 
     /**
@@ -70,6 +70,6 @@ final class MySQLDSNTest extends DSNTestCase
             ->withCharset('utf8')
         ;
 
-        $this->assertEquals('mysql:host=localhost;port=3306;dbname=test;charset=utf8;', $dsn->toString());
+        self::assertEquals('mysql:host=localhost;port=3306;dbname=test;charset=utf8;', $dsn->toString());
     }
 }

@@ -21,7 +21,7 @@ final class PortStrategyProviderTest extends TestCase
         $provider = new PortStrategyProvider();
         $provider->register('test', new RandomPortStrategy());
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**
@@ -46,7 +46,7 @@ final class PortStrategyProviderTest extends TestCase
         $provider = new PortStrategyProvider();
         $provider->register('test', $strategy);
 
-        $this->assertSame($strategy, $provider->get('test'));
+        self::assertSame($strategy, $provider->get('test'));
     }
 
     /**
@@ -56,7 +56,7 @@ final class PortStrategyProviderTest extends TestCase
     {
         $provider = new PortStrategyProvider();
 
-        $this->assertNull($provider->get('test'));
+        self::assertNull($provider->get('test'));
     }
 
     /**

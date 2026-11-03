@@ -19,7 +19,7 @@ final class WaitStrategyProviderTest extends TestCase
         $provider = new WaitStrategyProvider();
         $provider->register('test', new HostPortWaitStrategy());
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**
@@ -44,7 +44,7 @@ final class WaitStrategyProviderTest extends TestCase
         $provider = new WaitStrategyProvider();
         $provider->register('test', $strategy);
 
-        $this->assertSame($strategy, $provider->get('test'));
+        self::assertSame($strategy, $provider->get('test'));
     }
 
     /**
@@ -54,6 +54,6 @@ final class WaitStrategyProviderTest extends TestCase
     {
         $provider = new WaitStrategyProvider();
 
-        $this->assertNull($provider->get('test'));
+        self::assertNull($provider->get('test'));
     }
 }

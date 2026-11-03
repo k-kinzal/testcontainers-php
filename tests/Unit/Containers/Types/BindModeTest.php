@@ -17,7 +17,7 @@ final class BindModeTest extends TestCase
     {
         $bindMode = new BindMode(BindMode::$READ_ONLY);
 
-        $this->assertSame(BindMode::$READ_ONLY, $bindMode->toString());
+        self::assertSame(BindMode::$READ_ONLY, $bindMode->toString());
     }
 
     /**
@@ -27,7 +27,7 @@ final class BindModeTest extends TestCase
     {
         $bindMode = new BindMode(BindMode::$READ_WRITE);
 
-        $this->assertSame(BindMode::$READ_WRITE, $bindMode->toString());
+        self::assertSame(BindMode::$READ_WRITE, $bindMode->toString());
     }
 
     /**
@@ -37,7 +37,7 @@ final class BindModeTest extends TestCase
     {
         $bindMode = BindMode::READ_ONLY();
 
-        $this->assertSame(BindMode::$READ_ONLY, $bindMode->toString());
+        self::assertSame(BindMode::$READ_ONLY, $bindMode->toString());
     }
 
     /**
@@ -47,7 +47,7 @@ final class BindModeTest extends TestCase
     {
         $bindMode = BindMode::READ_WRITE();
 
-        $this->assertSame(BindMode::$READ_WRITE, $bindMode->toString());
+        self::assertSame(BindMode::$READ_WRITE, $bindMode->toString());
     }
 
     /**
@@ -57,7 +57,7 @@ final class BindModeTest extends TestCase
     {
         $bindMode = BindMode::fromString(BindMode::$READ_ONLY);
 
-        $this->assertSame(BindMode::$READ_ONLY, $bindMode->toString());
+        self::assertSame(BindMode::$READ_ONLY, $bindMode->toString());
     }
 
     /**
@@ -67,7 +67,7 @@ final class BindModeTest extends TestCase
     {
         $bindMode = BindMode::fromString(BindMode::$READ_WRITE);
 
-        $this->assertSame(BindMode::$READ_WRITE, $bindMode->toString());
+        self::assertSame(BindMode::$READ_WRITE, $bindMode->toString());
     }
 
     /**
@@ -88,7 +88,7 @@ final class BindModeTest extends TestCase
     {
         $bindMode = new BindMode(BindMode::$READ_ONLY);
 
-        $this->assertTrue($bindMode->isReadOnly());
+        self::assertTrue($bindMode->isReadOnly());
     }
 
     /**
@@ -98,7 +98,7 @@ final class BindModeTest extends TestCase
     {
         $bindMode = new BindMode(BindMode::$READ_WRITE);
 
-        $this->assertTrue($bindMode->isReadWrite());
+        self::assertTrue($bindMode->isReadWrite());
     }
 
     /**

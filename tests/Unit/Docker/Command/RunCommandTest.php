@@ -20,8 +20,7 @@ final class RunCommandTest extends TestCase
     {
         $uses = class_uses(DockerClient::class);
         self::assertNotFalse($uses);
-
-        $this->assertContains(RunCommand::class, $uses);
+        self::assertContains(RunCommand::class, $uses);
     }
 
     /**
@@ -32,9 +31,9 @@ final class RunCommandTest extends TestCase
         $client = new DockerClient();
         $output = $client->run('alpine:latest', 'echo', ['Hello, World!']);
 
-        $this->assertInstanceOf(DockerRunOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame("Hello, World!\n", $output->getOutput());
+        self::assertInstanceOf(DockerRunOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertSame("Hello, World!\n", $output->getOutput());
     }
 
     /**
@@ -47,10 +46,10 @@ final class RunCommandTest extends TestCase
             'detach' => true,
         ]);
 
-        $this->assertInstanceOf(DockerRunWithDetachOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
+        self::assertInstanceOf(DockerRunWithDetachOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
         // @var DockerRunWithDetachOutput $output
-        $this->assertNotEmpty($output->getContainerId());
+        self::assertNotEmpty($output->getContainerId());
     }
 
     /**
@@ -63,9 +62,9 @@ final class RunCommandTest extends TestCase
             'quiet' => true,
         ]);
 
-        $this->assertInstanceOf(DockerRunOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame("Hello, World!\n", $output->getOutput());
+        self::assertInstanceOf(DockerRunOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertSame("Hello, World!\n", $output->getOutput());
     }
 
     /**
@@ -78,9 +77,9 @@ final class RunCommandTest extends TestCase
             'detach' => false,
         ]);
 
-        $this->assertInstanceOf(DockerRunOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame("Hello, World!\n", $output->getOutput());
+        self::assertInstanceOf(DockerRunOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertSame("Hello, World!\n", $output->getOutput());
     }
 
     /**
@@ -93,9 +92,9 @@ final class RunCommandTest extends TestCase
             'label' => ['test.label1=value1', 'test.label2=value2'],
         ]);
 
-        $this->assertInstanceOf(DockerRunOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame("Hello, World!\n", $output->getOutput());
+        self::assertInstanceOf(DockerRunOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertSame("Hello, World!\n", $output->getOutput());
     }
 
     /**
@@ -111,9 +110,9 @@ final class RunCommandTest extends TestCase
             ],
         ]);
 
-        $this->assertInstanceOf(DockerRunOutput::class, $output);
-        $this->assertSame(0, $output->getExitCode());
-        $this->assertSame("bar\n", $output->getOutput());
+        self::assertInstanceOf(DockerRunOutput::class, $output);
+        self::assertSame(0, $output->getExitCode());
+        self::assertSame("bar\n", $output->getOutput());
     }
 
     /**
@@ -125,7 +124,7 @@ final class RunCommandTest extends TestCase
 
         $instance = Testcontainers::run(DinD::class);
         $mappedPort2375 = $instance->getMappedPort(2375);
-        $this->assertNotNull($mappedPort2375);
+        self::assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([

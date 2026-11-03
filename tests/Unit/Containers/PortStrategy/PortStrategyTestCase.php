@@ -27,8 +27,8 @@ abstract class PortStrategyTestCase extends TestCase
     {
         $port = $strategy->getPort();
 
-        $this->assertGreaterThanOrEqual(49152, $port);
-        $this->assertLessThanOrEqual(65535, $port);
+        self::assertGreaterThanOrEqual(49152, $port);
+        self::assertLessThanOrEqual(65535, $port);
     }
 
     /**
@@ -40,6 +40,6 @@ abstract class PortStrategyTestCase extends TestCase
     {
         $conflictBehavior = $strategy->conflictBehavior();
 
-        $this->assertInstanceOf(ConflictBehavior::class, $conflictBehavior);
+        self::assertInstanceOf(ConflictBehavior::class, $conflictBehavior);
     }
 }
