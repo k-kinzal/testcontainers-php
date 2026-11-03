@@ -32,10 +32,12 @@ final class NetworkAliasSettingTest extends TestCase
     public function testStaticNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -58,10 +60,12 @@ final class NetworkAliasSettingTest extends TestCase
     public function testStartWithNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -86,10 +90,12 @@ final class NetworkAliasSettingTest extends TestCase
     public function testStartWithNetworkAliases()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
 
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);

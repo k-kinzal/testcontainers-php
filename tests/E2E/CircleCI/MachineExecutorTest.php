@@ -44,8 +44,10 @@ final class MachineExecutorTest extends TestCase
                 )
                 ->withLogger($logger)
         );
+        $mappedPort3306 = $instance->getMappedPort(3306);
+        $this->assertNotNull($mappedPort3306);
 
-        $pdo = new \PDO('mysql:host=127.0.0.1;port='.$instance->getMappedPort(3306), 'root', 'test');
+        $pdo = new \PDO('mysql:host=127.0.0.1;port='.(string) $mappedPort3306, 'root', 'test');
         $result = $pdo->query('SELECT 1')->fetchColumn();
 
         $this->assertSame(1, $result);

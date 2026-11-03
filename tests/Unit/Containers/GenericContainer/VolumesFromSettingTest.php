@@ -42,9 +42,11 @@ final class VolumesFromSettingTest extends TestCase
             (new DinD())
                 ->withFileSystemBind(dirname($path), dirname($path), BindMode::READ_WRITE())
         );
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);

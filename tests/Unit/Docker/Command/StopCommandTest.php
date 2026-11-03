@@ -30,10 +30,12 @@ final class StopCommandTest extends TestCase
     public function testStop()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
             'config' => __ROOT__.'/config.json',
         ]);
 

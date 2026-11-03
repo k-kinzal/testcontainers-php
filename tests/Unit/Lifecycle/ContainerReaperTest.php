@@ -20,9 +20,11 @@ final class ContainerReaperTest extends TestCase
     public function testExecuteKeepsContainersWithoutOrphanedOwnership($labels)
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -72,9 +74,11 @@ final class ContainerReaperTest extends TestCase
     public function testExecuteStopsOrphanedContainerFromSameHost()
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -105,9 +109,11 @@ final class ContainerReaperTest extends TestCase
     public function testExecuteKeepsContainerOwnedByAnotherLiveProcess()
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);

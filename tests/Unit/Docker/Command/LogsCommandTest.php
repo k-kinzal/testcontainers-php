@@ -30,10 +30,12 @@ final class LogsCommandTest extends TestCase
     public function testLogs()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
             'config' => __ROOT__.'/config.json',
         ]);
 
@@ -56,10 +58,12 @@ final class LogsCommandTest extends TestCase
     public function testLogsWithFollow()
     {
         $instance = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $instance->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
 
         $client = new DockerClient();
         $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.$instance->getMappedPort(2375),
+            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
             'config' => __ROOT__.'/config.json',
         ]);
 

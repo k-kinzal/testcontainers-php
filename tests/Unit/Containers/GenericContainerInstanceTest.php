@@ -82,9 +82,11 @@ final class GenericContainerInstanceTest extends TestCase
     public function testGetHostFromDockerHost()
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -103,9 +105,11 @@ final class GenericContainerInstanceTest extends TestCase
     public function testGetHostFromPortForward()
     {
         $dind = Testcontainers::run(DinD::class);
+        $mappedPort2375 = $dind->getMappedPort(2375);
+        $this->assertNotNull($mappedPort2375);
         $client = DockerClientFactory::create([
             'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.$dind->getMappedPort(2375),
+                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
                 'config' => __ROOT__.'/config.json',
             ],
         ]);
@@ -258,7 +262,7 @@ final class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $deadline = microtime(true) + 10;
+        $deadline = microtime(true) + 10.0;
         do {
             rewind($stream);
             $contents = stream_get_contents($stream);
@@ -345,7 +349,7 @@ final class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
-        $deadline = microtime(true) + 10;
+        $deadline = microtime(true) + 10.0;
         do {
             rewind($stream);
             $contents = stream_get_contents($stream);
