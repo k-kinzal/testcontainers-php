@@ -19,6 +19,7 @@ final class EnvSettingTest extends TestCase
     public function testHasEnvSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(EnvSetting::class, $uses);
     }

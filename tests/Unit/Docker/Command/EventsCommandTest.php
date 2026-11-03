@@ -20,6 +20,7 @@ final class EventsCommandTest extends TestCase
     public function testHasEventsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(EventsCommand::class, $uses);
     }

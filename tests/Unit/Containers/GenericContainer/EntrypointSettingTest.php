@@ -19,6 +19,7 @@ final class EntrypointSettingTest extends TestCase
     public function testHasEntrypointSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(EntrypointSetting::class, $uses);
     }

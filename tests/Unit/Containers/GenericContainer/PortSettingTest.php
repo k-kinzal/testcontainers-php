@@ -19,6 +19,7 @@ final class PortSettingTest extends TestCase
     public function testHasPortSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(PortSetting::class, $uses);
     }

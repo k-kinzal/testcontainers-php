@@ -18,6 +18,7 @@ final class PullPolicySettingTest extends TestCase
     public function testHasPullPolicySettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(PullPolicySetting::class, $uses);
     }

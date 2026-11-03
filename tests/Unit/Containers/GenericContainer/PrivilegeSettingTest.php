@@ -17,6 +17,7 @@ final class PrivilegeSettingTest extends TestCase
     public function testHasPrivilegeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(PrivilegeSetting::class, $uses);
     }

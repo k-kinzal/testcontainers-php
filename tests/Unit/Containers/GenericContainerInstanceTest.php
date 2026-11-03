@@ -247,6 +247,7 @@ final class GenericContainerInstanceTest extends TestCase
     public function testIsRunningReusesInspectedStateUntilEventIsEmitted()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -260,17 +261,23 @@ final class GenericContainerInstanceTest extends TestCase
         $deadline = microtime(true) + 10;
         do {
             rewind($stream);
-            $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
+            $contents = stream_get_contents($stream);
+            self::assertNotFalse($contents);
+            $inspected = substr_count($contents, 'docker inspect ');
             $this->assertTrue($instance->isRunning());
             usleep(10000);
             rewind($stream);
-            $observed = substr_count(stream_get_contents($stream), 'docker inspect ');
+            $contents = stream_get_contents($stream);
+            self::assertNotFalse($contents);
+            $observed = substr_count($contents, 'docker inspect ');
         } while ($observed !== $inspected && microtime(true) < $deadline);
 
         $this->assertTrue($instance->isRunning());
         $this->assertTrue($instance->isRunning());
         rewind($stream);
-        $this->assertSame($inspected, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $this->assertSame($inspected, substr_count($contents, 'docker inspect '));
 
         $client->stop($instance->getContainerId(), ['timeout' => 0]);
         $deadline = time() + 5;
@@ -281,7 +288,9 @@ final class GenericContainerInstanceTest extends TestCase
         $this->assertFalse($instance->isRunning());
         $this->assertTrue($instance->isStopped());
         rewind($stream);
-        $this->assertGreaterThan($inspected, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $this->assertGreaterThan($inspected, substr_count($contents, 'docker inspect '));
     }
 
     /**
@@ -290,6 +299,7 @@ final class GenericContainerInstanceTest extends TestCase
     public function testIsRunningInspectsWithoutEvents()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -306,12 +316,16 @@ final class GenericContainerInstanceTest extends TestCase
         }
         $events->setValue($instance, null);
         rewind($stream);
-        $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $inspected = substr_count($contents, 'docker inspect ');
 
         $this->assertTrue($instance->isRunning());
         $this->assertTrue($instance->isRunning());
         rewind($stream);
-        $this->assertSame($inspected + 2, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $this->assertSame($inspected + 2, substr_count($contents, 'docker inspect '));
     }
 
     /**
@@ -320,6 +334,7 @@ final class GenericContainerInstanceTest extends TestCase
     public function testIsRunningInspectsAfterInspectIntervalElapses()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -333,18 +348,24 @@ final class GenericContainerInstanceTest extends TestCase
         $deadline = microtime(true) + 10;
         do {
             rewind($stream);
-            $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
+            $contents = stream_get_contents($stream);
+            self::assertNotFalse($contents);
+            $inspected = substr_count($contents, 'docker inspect ');
             $this->assertTrue($instance->isRunning());
             usleep(10000);
             rewind($stream);
-            $observed = substr_count(stream_get_contents($stream), 'docker inspect ');
+            $contents = stream_get_contents($stream);
+            self::assertNotFalse($contents);
+            $observed = substr_count($contents, 'docker inspect ');
         } while ($observed !== $inspected && microtime(true) < $deadline);
 
         usleep(500000);
 
         $this->assertTrue($instance->isRunning());
         rewind($stream);
-        $this->assertSame($inspected + 1, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $this->assertSame($inspected + 1, substr_count($contents, 'docker inspect '));
     }
 
     /**
@@ -353,6 +374,7 @@ final class GenericContainerInstanceTest extends TestCase
     public function testIsRunningInspectsEveryTimeWithInspectIntervalOfZero()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -364,12 +386,16 @@ final class GenericContainerInstanceTest extends TestCase
         ;
         $instance = $container->start();
         rewind($stream);
-        $inspected = substr_count(stream_get_contents($stream), 'docker inspect ');
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $inspected = substr_count($contents, 'docker inspect ');
 
         $this->assertTrue($instance->isRunning());
         $this->assertTrue($instance->isRunning());
         rewind($stream);
-        $this->assertSame($inspected + 2, substr_count(stream_get_contents($stream), 'docker inspect '));
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+        $this->assertSame($inspected + 2, substr_count($contents, 'docker inspect '));
     }
 
     /**
@@ -446,6 +472,7 @@ final class GenericContainerInstanceTest extends TestCase
     public function testGetStateSubscribesEventsOfContainer()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
         $logger = new ConsoleLogger($stream);
         $client = (new DockerClient())->withLogger($logger);
         $container = (new GenericContainer('alpine:latest'))
@@ -463,6 +490,7 @@ final class GenericContainerInstanceTest extends TestCase
 
         rewind($stream);
         $log = stream_get_contents($stream);
+        self::assertNotFalse($log);
         $this->assertSame(1, substr_count($log, 'docker events '));
         $this->assertNotFalse(strpos($log, 'container='.$instance->getContainerId()));
         $this->assertNotFalse(strpos($log, 'event=die'));

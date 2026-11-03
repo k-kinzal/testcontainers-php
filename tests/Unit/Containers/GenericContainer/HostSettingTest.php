@@ -18,6 +18,7 @@ final class HostSettingTest extends TestCase
     public function testHasHostSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(HostSetting::class, $uses);
     }

@@ -21,6 +21,7 @@ final class MountSettingTest extends TestCase
     public function testHasMountSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(MountSetting::class, $uses);
     }

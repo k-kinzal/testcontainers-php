@@ -19,6 +19,7 @@ final class LogsCommandTest extends TestCase
     public function testHasLogsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(LogsCommand::class, $uses);
     }

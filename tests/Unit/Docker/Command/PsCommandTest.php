@@ -18,6 +18,7 @@ final class PsCommandTest extends TestCase
     public function testHasPsCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(PsCommand::class, $uses);
     }

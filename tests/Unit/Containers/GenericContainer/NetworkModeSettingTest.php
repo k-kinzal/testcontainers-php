@@ -18,6 +18,7 @@ final class NetworkModeSettingTest extends TestCase
     public function testHasNetworkModeSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(NetworkModeSetting::class, $uses);
     }

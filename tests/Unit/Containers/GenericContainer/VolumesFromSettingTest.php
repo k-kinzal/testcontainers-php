@@ -22,6 +22,7 @@ final class VolumesFromSettingTest extends TestCase
     public function testHasVolumesFromSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(VolumesFromSetting::class, $uses);
     }
@@ -32,6 +33,7 @@ final class VolumesFromSettingTest extends TestCase
     public function testStaticVolumesFrom()
     {
         $fp = tmpfile();
+        self::assertNotFalse($fp);
         fwrite($fp, 'Hello, World!');
         $meta = stream_get_meta_data($fp);
         $path = $meta['uri'];
@@ -74,6 +76,7 @@ final class VolumesFromSettingTest extends TestCase
     public function testStartWithVolumesFrom()
     {
         $fp = tmpfile();
+        self::assertNotFalse($fp);
         fwrite($fp, 'Hello, World!');
         $meta = stream_get_meta_data($fp);
         $path = $meta['uri'];

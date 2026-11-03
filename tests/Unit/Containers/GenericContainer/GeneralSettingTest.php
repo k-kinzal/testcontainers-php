@@ -20,6 +20,7 @@ final class GeneralSettingTest extends TestCase
     public function testHasGeneralSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(GeneralSetting::class, $uses);
     }

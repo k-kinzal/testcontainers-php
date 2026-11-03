@@ -17,6 +17,7 @@ final class InspectIntervalSettingTest extends TestCase
     public function testHasInspectIntervalSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(InspectIntervalSetting::class, $uses);
     }

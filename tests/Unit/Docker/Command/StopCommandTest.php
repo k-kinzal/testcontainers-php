@@ -19,6 +19,7 @@ final class StopCommandTest extends TestCase
     public function testHasStopCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(StopCommand::class, $uses);
     }

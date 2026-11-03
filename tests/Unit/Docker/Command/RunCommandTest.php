@@ -19,6 +19,7 @@ final class RunCommandTest extends TestCase
     public function testHasRunCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(RunCommand::class, $uses);
     }

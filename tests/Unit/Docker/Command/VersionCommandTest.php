@@ -15,6 +15,7 @@ final class VersionCommandTest extends TestCase
     public function testHasVersionCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(VersionCommand::class, $uses);
     }

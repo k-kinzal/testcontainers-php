@@ -19,6 +19,7 @@ final class StartupSettingTest extends TestCase
     public function testHasStartupSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(StartupSetting::class, $uses);
     }

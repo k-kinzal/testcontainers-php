@@ -17,6 +17,7 @@ final class StopSignalSettingTest extends TestCase
     public function testHasStopSignalSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(StopSignalSetting::class, $uses);
     }

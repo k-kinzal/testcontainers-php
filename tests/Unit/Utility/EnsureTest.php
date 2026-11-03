@@ -1925,6 +1925,7 @@ final class EnsureTest extends TestCase
     public static function providerNullableStreamValidValues()
     {
         $value1 = fopen('php://memory', 'w+');
+        self::assertNotFalse($value1);
 
         return [
             'case 1' => [null, null],
@@ -1977,6 +1978,7 @@ final class EnsureTest extends TestCase
     public static function providerStreamValidValues()
     {
         $value0 = fopen('php://memory', 'w+');
+        self::assertNotFalse($value0);
 
         return [
             'case 1' => [$value0, $value0],
@@ -2028,6 +2030,7 @@ final class EnsureTest extends TestCase
     public static function providerNullableScalarOrStreamOrTraversableValidValues()
     {
         $value4 = fopen('php://memory', 'w+');
+        self::assertNotFalse($value4);
         $value5 = new ArrayIterator([]);
 
         return [

@@ -132,13 +132,16 @@ final class TestcontainersTest extends TestCase
     public function testLoggerIsPassedToContainersWithoutTheirOwn()
     {
         $stream = fopen('php://memory', 'w+');
+        self::assertNotFalse($stream);
 
         try {
             Testcontainers::setLogger(new ConsoleLogger($stream));
             Testcontainers::run(new AlpineContainer());
 
             rewind($stream);
-            $this->assertTrue(strpos(stream_get_contents($stream), 'Starting container') !== false);
+            $contents = stream_get_contents($stream);
+            self::assertNotFalse($contents);
+            $this->assertTrue(strpos($contents, 'Starting container') !== false);
         } finally {
             Testcontainers::stop();
             Testcontainers::setLogger(null);
@@ -151,7 +154,9 @@ final class TestcontainersTest extends TestCase
     public function testContainerLoggerTakesPrecedenceOverTestcontainersLogger()
     {
         $globalStream = fopen('php://memory', 'w+');
+        self::assertNotFalse($globalStream);
         $containerStream = fopen('php://memory', 'w+');
+        self::assertNotFalse($containerStream);
 
         try {
             Testcontainers::setLogger(new ConsoleLogger($globalStream));
@@ -159,8 +164,12 @@ final class TestcontainersTest extends TestCase
 
             rewind($globalStream);
             rewind($containerStream);
-            $this->assertSame('', stream_get_contents($globalStream));
-            $this->assertTrue(strpos(stream_get_contents($containerStream), 'Starting container') !== false);
+            $contents = stream_get_contents($globalStream);
+            self::assertNotFalse($contents);
+            $this->assertSame('', $contents);
+            $contents = stream_get_contents($containerStream);
+            self::assertNotFalse($contents);
+            $this->assertTrue(strpos($contents, 'Starting container') !== false);
         } finally {
             Testcontainers::stop();
             Testcontainers::setLogger(null);

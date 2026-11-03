@@ -18,6 +18,7 @@ final class ReuseModeSettingTest extends TestCase
     public function testHasReuseModeSetting()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(ReuseModeSetting::class, $uses);
     }

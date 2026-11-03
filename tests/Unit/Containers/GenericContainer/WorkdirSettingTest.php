@@ -18,6 +18,7 @@ final class WorkdirSettingTest extends TestCase
     public function testHasWorkdirSettingTrait()
     {
         $uses = class_uses(GenericContainer::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(WorkdirSetting::class, $uses);
     }

@@ -16,6 +16,7 @@ final class InspectCommandTest extends TestCase
     public function testHasInspectCommandTrait()
     {
         $uses = class_uses(DockerClient::class);
+        self::assertNotFalse($uses);
 
         $this->assertContains(InspectCommand::class, $uses);
     }
