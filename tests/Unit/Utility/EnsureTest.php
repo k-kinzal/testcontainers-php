@@ -108,6 +108,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerStringInvalidValues
      * @param array{}|bool|int|null|stdClass $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringRejectsInvalidValues($value)
     {
@@ -208,6 +209,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableStringInvalidValues
      * @param array{}|bool|int $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStringRejectsInvalidValues($value)
     {
@@ -257,6 +259,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableNonEmptyStringInvalidValues
      * @param bool|int|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableNonEmptyStringRejectsInvalidValues($value)
     {
@@ -305,6 +308,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerBoolInvalidValues
      * @param array{}|int|null|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureBoolRejectsInvalidValues($value)
     {
@@ -356,6 +360,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableBoolInvalidValues
      * @param array{}|int|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableBoolRejectsInvalidValues($value)
     {
@@ -405,6 +410,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerIntInvalidValues
      * @param bool|float|null|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureIntRejectsInvalidValues($value)
     {
@@ -512,6 +518,7 @@ final class EnsureTest extends TestCase
      * @param int      $minimum
      * @param int      $maximum
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableIntRangeRejectsInvalidValues($value, $minimum, $maximum)
     {
@@ -561,6 +568,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerIntOrDigitStringInvalidValues
      * @param bool|float|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureIntOrDigitStringRejectsInvalidValues($value)
     {
@@ -822,6 +830,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableNonNegativeNumberInvalidValues
      * @param float|int|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableNonNegativeNumberRejectsInvalidValues($value)
     {
@@ -871,6 +880,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerArrayInvalidValues
      * @param null|stdClass|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureArrayRejectsInvalidValues($value)
     {
@@ -920,6 +930,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableArrayInvalidValues
      * @param bool|stdClass|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableArrayRejectsInvalidValues($value)
     {
@@ -943,8 +954,9 @@ final class EnsureTest extends TestCase
     /**
      * @dataProvider providerNonEmptyArrayValidValues
      * @param array{'key': null}|array{int} $value
-     * @param array{'key': null}|array{int} $expected
+     * @param non-empty-array<array-key, null|int> $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNonEmptyArrayReturnsExpectedValue($value, $expected)
     {
@@ -1066,6 +1078,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerStringArrayInvalidValues
      * @param array{int}|array{string, bool}|bool $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringArrayRejectsInvalidValues($value)
     {
@@ -1115,6 +1128,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableStringArrayInvalidValues
      * @param array{string, bool}|bool $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStringArrayRejectsInvalidValues($value)
     {
@@ -1163,6 +1177,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableStringOrStringArrayInvalidValues
      * @param array{string, bool}|bool|int $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStringOrStringArrayRejectsInvalidValues($value)
     {
@@ -1212,6 +1227,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerStringOrArrayInvalidValues
      * @param bool|null|stdClass $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringOrArrayRejectsInvalidValues($value)
     {
@@ -1311,6 +1327,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerStringMapInvalidValues
      * @param array{'key': bool}|array{string}|bool $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringMapRejectsInvalidValues($value)
     {
@@ -1360,6 +1377,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableStringMapInvalidValues
      * @param array{'key': bool}|bool $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStringMapRejectsInvalidValues($value)
     {
@@ -1409,6 +1427,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableBoolOrStringInvalidValues
      * @param array{}|int|stdClass $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableBoolOrStringRejectsInvalidValues($value)
     {
@@ -1458,6 +1477,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerObjectInvalidValues
      * @param array{}|null|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureObjectRejectsInvalidValues($value)
     {
@@ -1609,6 +1629,7 @@ final class EnsureTest extends TestCase
      * @param array{}|bool $value
      * @param string       $class
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1713,6 +1734,7 @@ final class EnsureTest extends TestCase
      * @param bool|null $value
      * @param string    $class
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringOrArrayOrInstanceOfRejectsInvalidValues($value, $class)
     {
@@ -1759,6 +1781,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullInvalidValues
      * @param array{}|bool|int|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullRejectsInvalidValues($value)
     {
@@ -1905,6 +1928,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableStreamInvalidValues
      * @param bool|stdClass|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableStreamRejectsInvalidValues($value)
     {
@@ -1954,6 +1978,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerStreamInvalidValues
      * @param bool|null|stdClass|string $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStreamRejectsInvalidValues($value)
     {
@@ -2010,6 +2035,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableScalarOrStreamOrTraversableInvalidValues
      * @param array{}|stdClass $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableScalarOrStreamOrTraversableRejectsInvalidValues($value)
     {
@@ -2162,6 +2188,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerScalarOrStringableInvalidValues
      * @param array{}|null|stdClass $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureScalarOrStringableRejectsInvalidValues($value)
     {
@@ -2214,6 +2241,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerNullableScalarOrStringableOrArrayInvalidValues
      * @param array{'bad': stdClass}|array{array{int}}|stdClass $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureNullableScalarOrStringableOrArrayRejectsInvalidValues($value)
     {
@@ -2249,6 +2277,7 @@ final class EnsureTest extends TestCase
      * @dataProvider providerStringMapInvalidValues
      * @param array{'key': bool}|array{string}|bool $value
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringMapUsesProvidedMessage($value)
     {
