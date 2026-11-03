@@ -182,7 +182,10 @@ final class ConsoleLoggerTest extends TestCase
      */
     private function createStream()
     {
-        return fopen('php://memory', 'r+');
+        $stream = fopen('php://memory', 'r+');
+        self::assertNotFalse($stream);
+
+        return $stream;
     }
 
     /**
@@ -194,6 +197,9 @@ final class ConsoleLoggerTest extends TestCase
     {
         rewind($stream);
 
-        return stream_get_contents($stream);
+        $contents = stream_get_contents($stream);
+        self::assertNotFalse($contents);
+
+        return $contents;
     }
 }

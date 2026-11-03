@@ -106,7 +106,7 @@ final class DockerEventsOutputTest extends TestCase
      */
     private static function event($action, $timeNano)
     {
-        return json_encode([
+        $json = json_encode([
             'Type' => 'container',
             'Action' => $action,
             'Actor' => ['ID' => 'abc', 'Attributes' => null],
@@ -114,6 +114,9 @@ final class DockerEventsOutputTest extends TestCase
             'time' => (int) ($timeNano / 1000000000),
             'timeNano' => $timeNano,
         ]);
+        self::assertNotFalse($json);
+
+        return $json;
     }
 
     /**
