@@ -79,7 +79,6 @@ final class LogsCommandTest extends TestCase
 
         $this->assertInstanceOf(DockerFollowLogsOutput::class, $logsOutput);
 
-        /** @var DockerFollowLogsOutput $logsOutput */
         $iter = $logsOutput->getIterator();
         $lines = [];
         for ($i = 0; $i < 3; ++$i) {
