@@ -411,6 +411,7 @@ final class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
+        $this->assertInstanceOf(GenericContainerInstance::class, $instance);
 
         $this->assertSame('running', $instance->getState()->status);
     }
@@ -455,6 +456,7 @@ final class GenericContainerInstanceTest extends TestCase
             ->withStopTimeout(0)
         ;
         $instance = $container->start();
+        $this->assertInstanceOf(GenericContainerInstance::class, $instance);
 
         $instance->getState();
         $instance->getState();
