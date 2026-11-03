@@ -41,7 +41,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $container->withExposedPort(3306);
         $instance = $container->start();
 
-        $strategy = (new PDOConnectWaitStrategy())->withDsn(new MySQLDSN('test'));
+        $strategy = (new PDOConnectWaitStrategy())->withDsn((new MySQLDSN())->withDbname('test'));
         $strategy->withTimeoutSeconds(1);
         $strategy->waitUntilReady($instance);
     }
@@ -58,7 +58,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $container->withExposedPort(3306);
         $instance = $container->start();
 
-        $strategy = (new PDOConnectWaitStrategy())->withDsn(new MySQLDSN('test'));
+        $strategy = (new PDOConnectWaitStrategy())->withDsn((new MySQLDSN())->withDbname('test'));
         $strategy->waitUntilReady($instance);
     }
 
