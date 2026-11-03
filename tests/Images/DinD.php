@@ -44,7 +44,7 @@ final class DinD extends GenericContainer
      */
     protected static $PRIVILEGED = true;
 
-    protected function waitStrategy($instance)
+    protected function waitStrategy($_instance)
     {
         return (new HttpWaitStrategy())
             ->withSchema('http')
