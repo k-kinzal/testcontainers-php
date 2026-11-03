@@ -25,7 +25,7 @@ use Tests\Images\DinD;
  *
  * @coversNothing
  */
-class GenericContainerInstanceTest extends TestCase
+final class GenericContainerInstanceTest extends TestCase
 {
     /**
      * @return void
@@ -546,6 +546,6 @@ class GenericContainerInstanceTest extends TestCase
     }
 }
 
-class CustomData
+final class CustomData
 {
 }

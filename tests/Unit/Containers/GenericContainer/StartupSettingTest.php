@@ -16,7 +16,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class StartupSettingTest extends TestCase
+final class StartupSettingTest extends TestCase
 {
     /**
      * @return void
@@ -151,22 +151,22 @@ class StartupSettingTest extends TestCase
     }
 }
 
-class StartupSettingWithStaticStartupTimeoutContainer extends GenericContainer
+final class StartupSettingWithStaticStartupTimeoutContainer extends GenericContainer
 {
     protected static $STARTUP_TIMEOUT = 1;
 }
 
-class StartupSettingWithStaticStartupCheckStrategyContainer extends GenericContainer
+final class StartupSettingWithStaticStartupCheckStrategyContainer extends GenericContainer
 {
     protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
 
-class StartupSettingWithInvalidStartupTimeoutContainer extends GenericContainer
+final class StartupSettingWithInvalidStartupTimeoutContainer extends GenericContainer
 {
     protected static $STARTUP_TIMEOUT = -1;
 }
 
-class StartupSettingWithInvalidStartupConflictRetryAttemptsContainer extends GenericContainer
+final class StartupSettingWithInvalidStartupConflictRetryAttemptsContainer extends GenericContainer
 {
     protected static $STARTUP_CONFLICT_RETRY_ATTEMPTS = 0;
 }

@@ -15,7 +15,7 @@ use Tests\Images\DinD;
  *
  * @coversNothing
  */
-class ContainerReaperTest extends TestCase
+final class ContainerReaperTest extends TestCase
 {
     /**
      * @dataProvider providerRetainedContainerLabels

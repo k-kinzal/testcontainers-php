@@ -12,7 +12,7 @@ use Testcontainers\Docker\Output\DockerVersionOutput;
  *
  * @coversNothing
  */
-class DockerVersionOutputTest extends TestCase
+final class DockerVersionOutputTest extends TestCase
 {
     /**
      * @dataProvider providerClientVersions

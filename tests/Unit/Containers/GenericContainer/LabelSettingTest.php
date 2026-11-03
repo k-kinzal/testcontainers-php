@@ -15,7 +15,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class LabelSettingTest extends TestCase
+final class LabelSettingTest extends TestCase
 {
     /**
      * @return void
@@ -132,7 +132,7 @@ class LabelSettingTest extends TestCase
     }
 }
 
-class LabelSettingWithStaticLabelsContainer extends GenericContainer
+final class LabelSettingWithStaticLabelsContainer extends GenericContainer
 {
     protected static $LABELS = [
         'KEY1' => 'VALUE1',
@@ -140,7 +140,7 @@ class LabelSettingWithStaticLabelsContainer extends GenericContainer
     ];
 }
 
-class LabelSettingWithInvalidLabelsContainer extends GenericContainer
+final class LabelSettingWithInvalidLabelsContainer extends GenericContainer
 {
     protected static $LABELS = [1 => 'value'];
 }

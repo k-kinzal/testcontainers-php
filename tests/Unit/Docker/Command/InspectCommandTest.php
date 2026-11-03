@@ -13,7 +13,7 @@ use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
  *
  * @coversNothing
  */
-class InspectCommandTest extends TestCase
+final class InspectCommandTest extends TestCase
 {
     /**
      * @return void

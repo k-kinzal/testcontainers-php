@@ -16,7 +16,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class EnvSettingTest extends TestCase
+final class EnvSettingTest extends TestCase
 {
     /**
      * @return void
@@ -137,7 +137,7 @@ class EnvSettingTest extends TestCase
     }
 }
 
-class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
+final class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
 {
     protected static $ENVIRONMENTS = [
         'ENV1' => 'value1',
@@ -147,7 +147,7 @@ class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
     protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
 
-class EnvSettingWithInvalidEnvContainer extends GenericContainer
+final class EnvSettingWithInvalidEnvContainer extends GenericContainer
 {
     protected static $ENV = ['KEY' => false];
 }

@@ -9,7 +9,7 @@ use Testcontainers\Containers\WaitStrategy\PDO\MySQLDSN;
  *
  * @coversNothing
  */
-class MySQLDSNTest extends DSNTestCase
+final class MySQLDSNTest extends DSNTestCase
 {
     public function resolveDSN()
     {

@@ -9,7 +9,7 @@ use Testcontainers\Containers\PortStrategy\RandomPortStrategy;
  *
  * @coversNothing
  */
-class RandomPortStrategyTest extends PortStrategyTestCase
+final class RandomPortStrategyTest extends PortStrategyTestCase
 {
     public function resolvePortStrategy()
     {

@@ -15,7 +15,7 @@ use Tests\Images\DinD;
  *
  * @coversNothing
  */
-class PsCommandTest extends TestCase
+final class PsCommandTest extends TestCase
 {
     /**
      * @return void

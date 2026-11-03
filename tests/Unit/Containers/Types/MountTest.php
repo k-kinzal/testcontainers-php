@@ -13,7 +13,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class MountTest extends TestCase
+final class MountTest extends TestCase
 {
     /**
      * @return void

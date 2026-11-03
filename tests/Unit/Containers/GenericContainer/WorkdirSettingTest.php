@@ -15,7 +15,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class WorkdirSettingTest extends TestCase
+final class WorkdirSettingTest extends TestCase
 {
     /**
      * @return void
@@ -93,12 +93,12 @@ class WorkdirSettingTest extends TestCase
     }
 }
 
-class WorkdirSettingWithStaticWorkdirContainer extends GenericContainer
+final class WorkdirSettingWithStaticWorkdirContainer extends GenericContainer
 {
     protected static $WORKDIR = '/tmp';
 }
 
-class WorkdirSettingWithInvalidWorkdirContainer extends GenericContainer
+final class WorkdirSettingWithInvalidWorkdirContainer extends GenericContainer
 {
     protected static $WORKDIR = false;
 }

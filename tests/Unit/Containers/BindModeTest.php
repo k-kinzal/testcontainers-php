@@ -13,7 +13,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  *
  * @coversNothing
  */
-class BindModeTest extends TestCase
+final class BindModeTest extends TestCase
 {
     /**
      * @return void

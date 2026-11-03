@@ -14,7 +14,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  *
  * @coversNothing
  */
-class EventTypeTest extends TestCase
+final class EventTypeTest extends TestCase
 {
     /**
      * @return void

@@ -16,7 +16,7 @@ use Testcontainers\Testcontainers;
  *
  * @coversNothing
  */
-class MachineExecutorTest extends TestCase
+final class MachineExecutorTest extends TestCase
 {
     /**
      * @return void

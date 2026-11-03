@@ -15,7 +15,7 @@ use UnexpectedValueException;
  * @internal
  * @coversNothing
  */
-class EnsureTest extends TestCase
+final class EnsureTest extends TestCase
 {
     use Ensure;
 

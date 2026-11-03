@@ -15,7 +15,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class NetworkModeSettingTest extends TestCase
+final class NetworkModeSettingTest extends TestCase
 {
     /**
      * @return void
@@ -67,14 +67,14 @@ class NetworkModeSettingTest extends TestCase
     }
 }
 
-class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
+final class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
     protected static $NETWORK_MODE = 'none';
 }
 
-class NetworkModeSettingWithInvalidNetworkModeContainer extends GenericContainer
+final class NetworkModeSettingWithInvalidNetworkModeContainer extends GenericContainer
 {
     protected static $NETWORK_MODE = [];
 }

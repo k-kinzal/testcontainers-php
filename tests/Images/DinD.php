@@ -8,7 +8,7 @@ use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
 /**
  * Docker in Docker container.
  */
-class DinD extends GenericContainer
+final class DinD extends GenericContainer
 {
     /**
      * The Docker image to be used for the DinD container.

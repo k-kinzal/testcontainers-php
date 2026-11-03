@@ -19,7 +19,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class VolumesFromSettingTest extends TestCase
+final class VolumesFromSettingTest extends TestCase
 {
     /**
      * @return void
@@ -112,14 +112,14 @@ class VolumesFromSettingTest extends TestCase
     }
 }
 
-class VolumesFromSettingWithStaticVolumesFromContainer extends GenericContainer
+final class VolumesFromSettingWithStaticVolumesFromContainer extends GenericContainer
 {
     protected static $VOLUMES_FROM = [
         ['name' => 'volumes-from-container', 'mode' => 'rw'],
     ];
 }
 
-class VolumesFromSettingWithInvalidVolumesFromContainer extends GenericContainer
+final class VolumesFromSettingWithInvalidVolumesFromContainer extends GenericContainer
 {
     protected static $VOLUMES_FROM = false;
 }

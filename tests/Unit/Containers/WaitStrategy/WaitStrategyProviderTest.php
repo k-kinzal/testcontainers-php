@@ -15,7 +15,7 @@ use Testcontainers\Logger\WithLogger;
  *
  * @coversNothing
  */
-class WaitStrategyProviderTest extends TestCase
+final class WaitStrategyProviderTest extends TestCase
 {
     /**
      * @return void
@@ -64,7 +64,7 @@ class WaitStrategyProviderTest extends TestCase
     }
 }
 
-class TestWaitStrategy implements WaitStrategy
+final class TestWaitStrategy implements WaitStrategy
 {
     use WithLogger;
 

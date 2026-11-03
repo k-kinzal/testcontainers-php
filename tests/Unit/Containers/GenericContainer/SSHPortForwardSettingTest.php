@@ -11,7 +11,7 @@ use UnexpectedValueException;
  * @internal
  * @coversNothing
  */
-class SSHPortForwardSettingTest extends TestCase
+final class SSHPortForwardSettingTest extends TestCase
 {
     /**
      * @dataProvider providerWithSSHPortForwardInvalidInputs
@@ -53,7 +53,7 @@ class SSHPortForwardSettingTest extends TestCase
     }
 }
 
-class SSHPortForwardSettingWithInvalidSshPortForwardContainer extends GenericContainer
+final class SSHPortForwardSettingWithInvalidSshPortForwardContainer extends GenericContainer
 {
     protected static $SSH_PORT_FORWARD = [];
 }

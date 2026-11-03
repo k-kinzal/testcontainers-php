@@ -14,7 +14,7 @@ use Testcontainers\Containers\StartupCheckStrategy\StartupCheckStrategyProvider;
  *
  * @coversNothing
  */
-class StartupCheckStrategyProviderTest extends TestCase
+final class StartupCheckStrategyProviderTest extends TestCase
 {
     /**
      * @return void

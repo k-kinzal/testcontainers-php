@@ -11,7 +11,7 @@ use UnexpectedValueException;
  * @internal
  * @coversNothing
  */
-class WithLoggerTest extends TestCase
+final class WithLoggerTest extends TestCase
 {
     /**
      * @dataProvider providerWithLoggerInvalidInputs

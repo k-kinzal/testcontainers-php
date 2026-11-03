@@ -17,7 +17,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class GeneralSettingTest extends TestCase
+final class GeneralSettingTest extends TestCase
 {
     /**
      * @return void
@@ -116,7 +116,7 @@ class GeneralSettingTest extends TestCase
     }
 }
 
-class GeneralSettingWithStaticCommandsContainer extends GenericContainer
+final class GeneralSettingWithStaticCommandsContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
@@ -125,12 +125,12 @@ class GeneralSettingWithStaticCommandsContainer extends GenericContainer
     protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
 
-class GeneralSettingWithInvalidNameContainer extends GenericContainer
+final class GeneralSettingWithInvalidNameContainer extends GenericContainer
 {
     protected static $NAME = [];
 }
 
-class GeneralSettingWithInvalidCommandsContainer extends GenericContainer
+final class GeneralSettingWithInvalidCommandsContainer extends GenericContainer
 {
     protected static $COMMANDS = ['echo', false];
 }

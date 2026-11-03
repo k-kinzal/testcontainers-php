@@ -14,7 +14,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class StopSignalSettingTest extends TestCase
+final class StopSignalSettingTest extends TestCase
 {
     /**
      * @return void
@@ -73,12 +73,12 @@ class StopSignalSettingTest extends TestCase
     }
 }
 
-class StopSignalSettingWithStaticContainer extends GenericContainer
+final class StopSignalSettingWithStaticContainer extends GenericContainer
 {
     protected static $STOP_SIGNAL = 'KILL';
 }
 
-class StopSignalSettingWithInvalidStopSignalContainer extends GenericContainer
+final class StopSignalSettingWithInvalidStopSignalContainer extends GenericContainer
 {
     protected static $STOP_SIGNAL = [];
 }

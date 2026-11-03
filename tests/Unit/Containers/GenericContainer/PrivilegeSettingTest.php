@@ -14,7 +14,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class PrivilegeSettingTest extends TestCase
+final class PrivilegeSettingTest extends TestCase
 {
     /**
      * @return void
@@ -85,12 +85,12 @@ class PrivilegeSettingTest extends TestCase
     }
 }
 
-class PrivilegeSettingWithStaticPrivilegedContainer extends GenericContainer
+final class PrivilegeSettingWithStaticPrivilegedContainer extends GenericContainer
 {
     protected static $PRIVILEGED = true;
 }
 
-class PrivilegeSettingWithInvalidPrivilegedContainer extends GenericContainer
+final class PrivilegeSettingWithInvalidPrivilegedContainer extends GenericContainer
 {
     protected static $PRIVILEGED = 'false';
 }

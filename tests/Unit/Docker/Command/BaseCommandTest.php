@@ -12,7 +12,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class BaseCommandTest extends TestCase
+final class BaseCommandTest extends TestCase
 {
     /**
      * @dataProvider providerWithGlobalOptionsInvalidHosts

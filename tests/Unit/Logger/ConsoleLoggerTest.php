@@ -14,7 +14,7 @@ use Testcontainers\Logger\ConsoleLogger;
  *
  * @coversNothing
  */
-class ConsoleLoggerTest extends TestCase
+final class ConsoleLoggerTest extends TestCase
 {
     /**
      * @return void

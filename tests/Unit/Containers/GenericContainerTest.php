@@ -18,7 +18,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class GenericContainerTest extends TestCase
+final class GenericContainerTest extends TestCase
 {
     /**
      * @return void
@@ -122,7 +122,7 @@ class GenericContainerTest extends TestCase
     }
 }
 
-class FailingWaitStrategy implements \Testcontainers\Containers\WaitStrategy\WaitStrategy
+final class FailingWaitStrategy implements \Testcontainers\Containers\WaitStrategy\WaitStrategy
 {
     use \Testcontainers\Logger\WithLogger;
 

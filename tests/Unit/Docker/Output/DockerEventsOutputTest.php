@@ -14,7 +14,7 @@ use Testcontainers\Docker\Output\DockerEventsOutput;
  *
  * @coversNothing
  */
-class DockerEventsOutputTest extends TestCase
+final class DockerEventsOutputTest extends TestCase
 {
     /**
      * @return void

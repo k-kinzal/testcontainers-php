@@ -13,7 +13,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  *
  * @coversNothing
  */
-class ConflictBehaviorTest extends TestCase
+final class ConflictBehaviorTest extends TestCase
 {
     /**
      * @return void

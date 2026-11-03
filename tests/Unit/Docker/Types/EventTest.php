@@ -13,7 +13,7 @@ use Testcontainers\Docker\Types\Event;
  *
  * @coversNothing
  */
-class EventTest extends TestCase
+final class EventTest extends TestCase
 {
     /**
      * @return void

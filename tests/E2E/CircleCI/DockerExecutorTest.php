@@ -16,7 +16,7 @@ use Testcontainers\Testcontainers;
  *
  * @coversNothing
  */
-class DockerExecutorTest extends TestCase
+final class DockerExecutorTest extends TestCase
 {
     /**
      * @return void

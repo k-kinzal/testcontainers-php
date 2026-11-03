@@ -15,7 +15,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class VolumeFromTest extends TestCase
+final class VolumeFromTest extends TestCase
 {
     /**
      * @return void

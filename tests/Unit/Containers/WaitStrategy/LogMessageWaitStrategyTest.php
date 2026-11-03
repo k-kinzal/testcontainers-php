@@ -13,7 +13,7 @@ use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
  *
  * @coversNothing
  */
-class LogMessageWaitStrategyTest extends WaitStrategyTestCase
+final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()
     {

@@ -10,7 +10,7 @@ use Testcontainers\Docker\DockerClient;
  *
  * @coversNothing
  */
-class DockerClientTest extends TestCase
+final class DockerClientTest extends TestCase
 {
     /**
      * @return void

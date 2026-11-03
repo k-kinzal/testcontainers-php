@@ -16,7 +16,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class UserSettingTest extends TestCase
+final class UserSettingTest extends TestCase
 {
     /**
      * @return void
@@ -73,12 +73,12 @@ class UserSettingTest extends TestCase
     }
 }
 
-class UserSettingWithStaticUserContainer extends GenericContainer
+final class UserSettingWithStaticUserContainer extends GenericContainer
 {
     protected static $USER = 'nobody';
 }
 
-class UserSettingWithInvalidUserContainer extends GenericContainer
+final class UserSettingWithInvalidUserContainer extends GenericContainer
 {
     protected static $USER = [];
 }

@@ -16,7 +16,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class PortSettingTest extends TestCase
+final class PortSettingTest extends TestCase
 {
     /**
      * @return void
@@ -255,32 +255,32 @@ class PortSettingTest extends TestCase
     }
 }
 
-class PortSettingWithExposedPortsContainer extends GenericContainer
+final class PortSettingWithExposedPortsContainer extends GenericContainer
 {
     protected static $EXPOSED_PORTS = [80, 443];
 }
 
-class PortSettingWithExposeContainer extends GenericContainer
+final class PortSettingWithExposeContainer extends GenericContainer
 {
     protected static $EXPOSE = [80, 443];
 }
 
-class PortSettingWithPortsContainer extends GenericContainer
+final class PortSettingWithPortsContainer extends GenericContainer
 {
     protected static $PORTS = [80, 443];
 }
 
-class PortSettingWithInvalidExposedPortsContainer extends GenericContainer
+final class PortSettingWithInvalidExposedPortsContainer extends GenericContainer
 {
     protected static $EXPOSED_PORTS = [80, 'garbage'];
 }
 
-class PortSettingWithInvalidPortsContainer extends GenericContainer
+final class PortSettingWithInvalidPortsContainer extends GenericContainer
 {
     protected static $PORTS = false;
 }
 
-class PortSettingWithInvalidPortStrategyContainer extends GenericContainer
+final class PortSettingWithInvalidPortStrategyContainer extends GenericContainer
 {
     protected static $PORT_STRATEGY = [];
 }

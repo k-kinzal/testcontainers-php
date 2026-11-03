@@ -9,7 +9,7 @@ use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
  *
  * @coversNothing
  */
-class OneShotStartupCheckStrategyTest extends StartupCheckStrategyTestCase
+final class OneShotStartupCheckStrategyTest extends StartupCheckStrategyTestCase
 {
     public function resolveStartupCheckStrategy()
     {

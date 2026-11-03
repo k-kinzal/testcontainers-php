@@ -14,7 +14,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class StopTimeoutSettingTest extends TestCase
+final class StopTimeoutSettingTest extends TestCase
 {
     /**
      * @return void
@@ -96,12 +96,12 @@ class StopTimeoutSettingTest extends TestCase
     }
 }
 
-class StopTimeoutSettingWithStaticContainer extends GenericContainer
+final class StopTimeoutSettingWithStaticContainer extends GenericContainer
 {
     protected static $STOP_TIMEOUT = 5;
 }
 
-class StopTimeoutSettingWithInvalidStopTimeoutContainer extends GenericContainer
+final class StopTimeoutSettingWithInvalidStopTimeoutContainer extends GenericContainer
 {
     protected static $STOP_TIMEOUT = -2;
 }

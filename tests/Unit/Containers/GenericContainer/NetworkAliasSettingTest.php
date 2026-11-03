@@ -18,7 +18,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class NetworkAliasSettingTest extends TestCase
+final class NetworkAliasSettingTest extends TestCase
 {
     /**
      * @return void
@@ -147,14 +147,14 @@ class NetworkAliasSettingTest extends TestCase
     }
 }
 
-class NetworkAliasSettingWithStaticNetworkAliasContainer extends GenericContainer
+final class NetworkAliasSettingWithStaticNetworkAliasContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
     protected static $NETWORK_ALIASES = ['my-service'];
 }
 
-class NetworkAliasSettingWithInvalidNetworkAliasesContainer extends GenericContainer
+final class NetworkAliasSettingWithInvalidNetworkAliasesContainer extends GenericContainer
 {
     protected static $NETWORK_ALIASES = [false];
 }

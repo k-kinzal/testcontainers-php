@@ -12,7 +12,7 @@ use Testcontainers\Docker\Output\DockerVersionOutput;
  *
  * @coversNothing
  */
-class VersionCommandTest extends TestCase
+final class VersionCommandTest extends TestCase
 {
     /**
      * @return void

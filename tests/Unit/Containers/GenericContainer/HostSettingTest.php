@@ -15,7 +15,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class HostSettingTest extends TestCase
+final class HostSettingTest extends TestCase
 {
     /**
      * @return void
@@ -140,21 +140,21 @@ class HostSettingTest extends TestCase
     }
 }
 
-class HostSettingWithExtraHostsContainer extends GenericContainer
+final class HostSettingWithExtraHostsContainer extends GenericContainer
 {
     public static $EXTRA_HOSTS = [
         'example.com:127.0.0.1',
     ];
 }
 
-class HostSettingWithHostsContainer extends GenericContainer
+final class HostSettingWithHostsContainer extends GenericContainer
 {
     public static $HOSTS = [
         ['hostname' => 'example.org', 'ipAddress' => '127.0.0.1'],
     ];
 }
 
-class HostSettingWithInvalidExtraHostsContainer extends GenericContainer
+final class HostSettingWithInvalidExtraHostsContainer extends GenericContainer
 {
     protected static $EXTRA_HOSTS = false;
 }

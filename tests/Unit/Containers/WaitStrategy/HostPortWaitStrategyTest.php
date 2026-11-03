@@ -12,7 +12,7 @@ use Testcontainers\Containers\WaitStrategy\WaitingTimeoutException;
  *
  * @coversNothing
  */
-class HostPortWaitStrategyTest extends WaitStrategyTestCase
+final class HostPortWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()
     {

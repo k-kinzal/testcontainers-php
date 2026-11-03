@@ -13,7 +13,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  *
  * @coversNothing
  */
-class EventActionTest extends TestCase
+final class EventActionTest extends TestCase
 {
     /**
      * @return void

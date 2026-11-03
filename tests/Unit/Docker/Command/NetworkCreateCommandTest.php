@@ -14,7 +14,7 @@ use Tests\Images\DinD;
  *
  * @coversNothing
  */
-class NetworkCreateCommandTest extends TestCase
+final class NetworkCreateCommandTest extends TestCase
 {
     /**
      * @return void

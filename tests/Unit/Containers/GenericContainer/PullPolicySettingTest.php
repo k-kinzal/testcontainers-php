@@ -15,7 +15,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class PullPolicySettingTest extends TestCase
+final class PullPolicySettingTest extends TestCase
 {
     /**
      * @return void
@@ -69,12 +69,12 @@ class PullPolicySettingTest extends TestCase
     }
 }
 
-class PullPolicySettingWithStaticPullPolicyContainer extends GenericContainer
+final class PullPolicySettingWithStaticPullPolicyContainer extends GenericContainer
 {
     protected static $PULL_POLICY = 'always';
 }
 
-class PullPolicySettingWithInvalidPullPolicyContainer extends GenericContainer
+final class PullPolicySettingWithInvalidPullPolicyContainer extends GenericContainer
 {
     protected static $PULL_POLICY = [];
 }

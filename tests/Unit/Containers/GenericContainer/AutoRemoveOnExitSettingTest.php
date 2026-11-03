@@ -10,7 +10,7 @@ use UnexpectedValueException;
  * @internal
  * @coversNothing
  */
-class AutoRemoveOnExitSettingTest extends TestCase
+final class AutoRemoveOnExitSettingTest extends TestCase
 {
     /**
      * @dataProvider providerWithAutoRemoveOnExitInvalidInputs
@@ -47,7 +47,7 @@ class AutoRemoveOnExitSettingTest extends TestCase
     }
 }
 
-class AutoRemoveOnExitSettingWithInvalidAutoRemoveOnExitContainer extends GenericContainer
+final class AutoRemoveOnExitSettingWithInvalidAutoRemoveOnExitContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = 1;
 }

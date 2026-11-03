@@ -17,7 +17,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
+final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()
     {

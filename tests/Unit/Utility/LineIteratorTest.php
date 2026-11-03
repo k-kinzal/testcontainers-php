@@ -11,7 +11,7 @@ use Testcontainers\Utility\LineIterator;
  *
  * @coversNothing
  */
-class LineIteratorTest extends TestCase
+final class LineIteratorTest extends TestCase
 {
     /**
      * @return void

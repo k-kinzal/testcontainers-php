@@ -10,7 +10,7 @@ use Testcontainers\Containers\Types\NetworkMode;
  *
  * @coversNothing
  */
-class NetworkModeTest extends TestCase
+final class NetworkModeTest extends TestCase
 {
     /**
      * @return void

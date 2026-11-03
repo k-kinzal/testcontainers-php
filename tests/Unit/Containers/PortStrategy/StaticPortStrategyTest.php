@@ -10,7 +10,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class StaticPortStrategyTest extends PortStrategyTestCase
+final class StaticPortStrategyTest extends PortStrategyTestCase
 {
     public function resolvePortStrategy()
     {

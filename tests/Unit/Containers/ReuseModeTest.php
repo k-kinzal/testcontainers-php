@@ -13,7 +13,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  *
  * @coversNothing
  */
-class ReuseModeTest extends TestCase
+final class ReuseModeTest extends TestCase
 {
     /**
      * @return void

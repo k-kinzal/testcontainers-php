@@ -14,7 +14,7 @@ use Tests\Images\AlpineContainer;
  *
  * @coversNothing
  */
-class TestcontainersTest extends TestCase
+final class TestcontainersTest extends TestCase
 {
     /**
      * @return void
@@ -231,7 +231,7 @@ class TestcontainersTest extends TestCase
     }
 }
 
-class AlpineContainerWithAddMode extends GenericContainer
+final class AlpineContainerWithAddMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
 
@@ -240,7 +240,7 @@ class AlpineContainerWithAddMode extends GenericContainer
     protected static $REUSE_MODE = 'add';
 }
 
-class AlpineContainerWithReuseMode extends GenericContainer
+final class AlpineContainerWithReuseMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
 
@@ -249,7 +249,7 @@ class AlpineContainerWithReuseMode extends GenericContainer
     protected static $REUSE_MODE = 'reuse';
 }
 
-class AlpineContainerWithRestartMode extends GenericContainer
+final class AlpineContainerWithRestartMode extends GenericContainer
 {
     protected static $IMAGE = 'alpine:latest';
 

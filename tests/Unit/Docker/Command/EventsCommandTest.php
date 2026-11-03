@@ -17,7 +17,7 @@ use Testcontainers\Docker\Types\Event;
  *
  * @coversNothing
  */
-class EventsCommandTest extends TestCase
+final class EventsCommandTest extends TestCase
 {
     /**
      * @return void

@@ -16,7 +16,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class EntrypointSettingTest extends TestCase
+final class EntrypointSettingTest extends TestCase
 {
     /**
      * @return void
@@ -73,12 +73,12 @@ class EntrypointSettingTest extends TestCase
     }
 }
 
-class EntrypointSettingWithStaticEntrypointContainer extends GenericContainer
+final class EntrypointSettingWithStaticEntrypointContainer extends GenericContainer
 {
     protected static $ENTRYPOINT = '/bin/sh';
 }
 
-class EntrypointSettingWithInvalidEntrypointContainer extends GenericContainer
+final class EntrypointSettingWithInvalidEntrypointContainer extends GenericContainer
 {
     protected static $ENTRYPOINT = [];
 }

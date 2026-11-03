@@ -9,7 +9,7 @@ use Testcontainers\Containers\StartupCheckStrategy\IsRunningStartupCheckStrategy
  *
  * @coversNothing
  */
-class IsRunningStartupCheckStrategyTest extends StartupCheckStrategyTestCase
+final class IsRunningStartupCheckStrategyTest extends StartupCheckStrategyTestCase
 {
     public function resolveStartupCheckStrategy()
     {

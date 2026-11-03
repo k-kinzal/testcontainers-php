@@ -12,7 +12,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  *
  * @coversNothing
  */
-class ContainerIdTest extends TestCase
+final class ContainerIdTest extends TestCase
 {
     /**
      * @dataProvider providerValues

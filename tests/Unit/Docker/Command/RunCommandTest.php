@@ -16,7 +16,7 @@ use Tests\Images\DinD;
  *
  * @coversNothing
  */
-class RunCommandTest extends TestCase
+final class RunCommandTest extends TestCase
 {
     /**
      * @return void

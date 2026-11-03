@@ -13,7 +13,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class HttpWaitStrategyTest extends WaitStrategyTestCase
+final class HttpWaitStrategyTest extends WaitStrategyTestCase
 {
     public function resolveWaitStrategy()
     {

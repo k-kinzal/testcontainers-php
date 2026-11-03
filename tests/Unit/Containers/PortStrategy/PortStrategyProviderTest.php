@@ -17,7 +17,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class PortStrategyProviderTest extends TestCase
+final class PortStrategyProviderTest extends TestCase
 {
     /**
      * @return void
@@ -76,7 +76,7 @@ class PortStrategyProviderTest extends TestCase
     }
 }
 
-class TestPortStrategy implements PortStrategy
+final class TestPortStrategy implements PortStrategy
 {
     public function getPort()
     {

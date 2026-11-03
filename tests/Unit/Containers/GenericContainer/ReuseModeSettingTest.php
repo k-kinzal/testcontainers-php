@@ -15,7 +15,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class ReuseModeSettingTest extends TestCase
+final class ReuseModeSettingTest extends TestCase
 {
     /**
      * @return void
@@ -101,17 +101,17 @@ class ReuseModeSettingTest extends TestCase
     }
 }
 
-class ReuseModeSettingWithStaticReuseModeContainer extends GenericContainer
+final class ReuseModeSettingWithStaticReuseModeContainer extends GenericContainer
 {
     protected static $REUSE_MODE = 'reuse';
 }
 
-class ReuseModeSettingWithStaticRestartModeContainer extends GenericContainer
+final class ReuseModeSettingWithStaticRestartModeContainer extends GenericContainer
 {
     protected static $REUSE_MODE = 'restart';
 }
 
-class ReuseModeSettingWithInvalidReuseModeContainer extends GenericContainer
+final class ReuseModeSettingWithInvalidReuseModeContainer extends GenericContainer
 {
     protected static $REUSE_MODE = false;
 }

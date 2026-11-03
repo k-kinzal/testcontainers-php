@@ -14,7 +14,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class InspectIntervalSettingTest extends TestCase
+final class InspectIntervalSettingTest extends TestCase
 {
     /**
      * @return void
@@ -96,12 +96,12 @@ class InspectIntervalSettingTest extends TestCase
     }
 }
 
-class InspectIntervalSettingWithStaticContainer extends GenericContainer
+final class InspectIntervalSettingWithStaticContainer extends GenericContainer
 {
     protected static $INSPECT_INTERVAL = 5;
 }
 
-class InspectIntervalSettingWithInvalidInspectIntervalContainer extends GenericContainer
+final class InspectIntervalSettingWithInvalidInspectIntervalContainer extends GenericContainer
 {
     protected static $INSPECT_INTERVAL = INF;
 }

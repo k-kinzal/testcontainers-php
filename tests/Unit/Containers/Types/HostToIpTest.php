@@ -14,7 +14,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class HostToIpTest extends TestCase
+final class HostToIpTest extends TestCase
 {
     /**
      * @return void

@@ -13,7 +13,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class LoggerFactoryTest extends TestCase
+final class LoggerFactoryTest extends TestCase
 {
     /**
      * @return void

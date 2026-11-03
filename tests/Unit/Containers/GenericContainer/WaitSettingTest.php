@@ -16,7 +16,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class WaitSettingTest extends TestCase
+final class WaitSettingTest extends TestCase
 {
     /**
      * @return void
@@ -77,7 +77,7 @@ class WaitSettingTest extends TestCase
     }
 }
 
-class WaitSettingWithStaticWaitStrategyContainer extends GenericContainer
+final class WaitSettingWithStaticWaitStrategyContainer extends GenericContainer
 {
     protected static $IMAGE = 'nginx:latest';
 

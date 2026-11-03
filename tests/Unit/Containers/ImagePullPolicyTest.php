@@ -13,7 +13,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
  *
  * @coversNothing
  */
-class ImagePullPolicyTest extends TestCase
+final class ImagePullPolicyTest extends TestCase
 {
     /**
      * @return void

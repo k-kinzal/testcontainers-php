@@ -18,7 +18,7 @@ use UnexpectedValueException;
  *
  * @coversNothing
  */
-class MountSettingTest extends TestCase
+final class MountSettingTest extends TestCase
 {
     /**
      * @return void
@@ -239,7 +239,7 @@ class MountSettingTest extends TestCase
     }
 }
 
-class MountSettingWithMountsContainer extends GenericContainer
+final class MountSettingWithMountsContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
@@ -248,7 +248,7 @@ class MountSettingWithMountsContainer extends GenericContainer
     ];
 }
 
-class MountSettingWithVolumesContainer extends GenericContainer
+final class MountSettingWithVolumesContainer extends GenericContainer
 {
     protected static $AUTO_REMOVE_ON_EXIT = false;
 
@@ -257,7 +257,7 @@ class MountSettingWithVolumesContainer extends GenericContainer
     ];
 }
 
-class MountSettingWithInvalidMountsContainer extends GenericContainer
+final class MountSettingWithInvalidMountsContainer extends GenericContainer
 {
     protected static $MOUNTS = false;
 }
