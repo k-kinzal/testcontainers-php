@@ -115,7 +115,7 @@ final class NetworkAliasSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithNetworkAliasesInvalidInputs
+     * @dataProvider providerWithNetworkAliasesRejectsInvalidInputs
      * @param array{string, array{}} $aliases
      * @return void
      */
@@ -130,7 +130,7 @@ final class NetworkAliasSettingTest extends TestCase
     /**
      * @return array<string, array{array{string, array{}}}>
      */
-    public static function providerWithNetworkAliasesInvalidInputs()
+    public static function providerWithNetworkAliasesRejectsInvalidInputs()
     {
         return [
             'case 1' => [['ok', []]],

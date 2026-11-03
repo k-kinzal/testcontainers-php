@@ -201,7 +201,7 @@ final class MountSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithMountsInvalidInputs
+     * @dataProvider providerWithMountsRejectsInvalidInputs
      * @param bool $mounts
      * @return void
      */
@@ -216,7 +216,7 @@ final class MountSettingTest extends TestCase
     /**
      * @return array<string, array{bool}>
      */
-    public static function providerWithMountsInvalidInputs()
+    public static function providerWithMountsRejectsInvalidInputs()
     {
         return [
             'case 1' => [false],

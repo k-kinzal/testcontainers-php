@@ -10,7 +10,7 @@ use UnexpectedValueException;
 final class BaseCommandTest extends TestCase
 {
     /**
-     * @dataProvider providerWithGlobalOptionsInvalidHosts
+     * @dataProvider providerWithGlobalOptionsRejectsInvalidHost
      * @param bool|int|array{}|array{bool}|stdClass $host
      * @return void
      */
@@ -25,7 +25,7 @@ final class BaseCommandTest extends TestCase
     /**
      * @return array<string, array{bool|int|array{}|array{bool}|stdClass}>
      */
-    public static function providerWithGlobalOptionsInvalidHosts()
+    public static function providerWithGlobalOptionsRejectsInvalidHost()
     {
         return [
             'boolean' => [false],
@@ -37,7 +37,7 @@ final class BaseCommandTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithGlobalOptionsHosts
+     * @dataProvider providerWithGlobalOptionsPreservesFirstHost
      * @param string|array<array-key, string> $host
      * @param string $expected
      * @return void
@@ -52,7 +52,7 @@ final class BaseCommandTest extends TestCase
     /**
      * @return array<string, array{string|array<array-key, string>, string}>
      */
-    public static function providerWithGlobalOptionsHosts()
+    public static function providerWithGlobalOptionsPreservesFirstHost()
     {
         return [
             'string' => ['tcp://first:2375', 'tcp://first:2375'],

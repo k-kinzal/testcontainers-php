@@ -47,7 +47,7 @@ final class PrivilegeSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithPrivilegedModeInvalidInputs
+     * @dataProvider providerWithPrivilegedModeRejectsInvalidInputs
      * @param string $mode
      * @return void
      */
@@ -62,7 +62,7 @@ final class PrivilegeSettingTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerWithPrivilegedModeInvalidInputs()
+    public static function providerWithPrivilegedModeRejectsInvalidInputs()
     {
         return [
             'case 1' => ['false'],

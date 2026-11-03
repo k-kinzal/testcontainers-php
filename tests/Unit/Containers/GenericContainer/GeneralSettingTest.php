@@ -67,7 +67,7 @@ final class GeneralSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithCommandsInvalidInputs
+     * @dataProvider providerWithCommandsRejectsInvalidInputs
      * @param array{string, stdClass} $commandParts
      * @return void
      */
@@ -82,7 +82,7 @@ final class GeneralSettingTest extends TestCase
     /**
      * @return array<string, array{array{string, stdClass}}>
      */
-    public static function providerWithCommandsInvalidInputs()
+    public static function providerWithCommandsRejectsInvalidInputs()
     {
         return [
             'case 1' => [['echo', new stdClass()]],

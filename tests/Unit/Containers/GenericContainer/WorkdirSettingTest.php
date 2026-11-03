@@ -55,7 +55,7 @@ final class WorkdirSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithWorkingDirectoryInvalidInputs
+     * @dataProvider providerWithWorkingDirectoryRejectsInvalidInputs
      * @param array{} $workDir
      * @return void
      */
@@ -70,7 +70,7 @@ final class WorkdirSettingTest extends TestCase
     /**
      * @return array<string, array{array{}}>
      */
-    public static function providerWithWorkingDirectoryInvalidInputs()
+    public static function providerWithWorkingDirectoryRejectsInvalidInputs()
     {
         return [
             'case 1' => [[]],

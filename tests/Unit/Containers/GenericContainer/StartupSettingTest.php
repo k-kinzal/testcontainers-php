@@ -79,7 +79,7 @@ final class StartupSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithStartupTimeoutInvalidInputs
+     * @dataProvider providerWithStartupTimeoutRejectsInvalidInputs
      * @param int $timeout
      * @return void
      */
@@ -94,7 +94,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return array<string, array{int}>
      */
-    public static function providerWithStartupTimeoutInvalidInputs()
+    public static function providerWithStartupTimeoutRejectsInvalidInputs()
     {
         return [
             'case 1' => [-1],
@@ -102,7 +102,7 @@ final class StartupSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithStartupConflictRetriesInvalidInputs
+     * @dataProvider providerWithStartupConflictRetriesRejectsInvalidInputs
      * @param int $retryAttempts
      * @return void
      */
@@ -117,7 +117,7 @@ final class StartupSettingTest extends TestCase
     /**
      * @return array<string, array{int}>
      */
-    public static function providerWithStartupConflictRetriesInvalidInputs()
+    public static function providerWithStartupConflictRetriesRejectsInvalidInputs()
     {
         return [
             'case 1' => [0],

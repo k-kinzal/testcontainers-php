@@ -9,7 +9,7 @@ use UnexpectedValueException;
 final class AutoRemoveOnExitSettingTest extends TestCase
 {
     /**
-     * @dataProvider providerWithAutoRemoveOnExitInvalidInputs
+     * @dataProvider providerWithAutoRemoveOnExitRejectsInvalidInputs
      * @param int $autoRemoveOnExit
      * @return void
      */
@@ -24,7 +24,7 @@ final class AutoRemoveOnExitSettingTest extends TestCase
     /**
      * @return array<string, array{int}>
      */
-    public static function providerWithAutoRemoveOnExitInvalidInputs()
+    public static function providerWithAutoRemoveOnExitRejectsInvalidInputs()
     {
         return [
             'case 1' => [1],

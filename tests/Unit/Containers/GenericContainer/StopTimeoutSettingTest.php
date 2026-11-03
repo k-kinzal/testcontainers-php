@@ -58,7 +58,7 @@ final class StopTimeoutSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithStopTimeoutInvalidInputs
+     * @dataProvider providerWithStopTimeoutRejectsInvalidInputs
      * @param int $seconds
      * @return void
      */
@@ -73,7 +73,7 @@ final class StopTimeoutSettingTest extends TestCase
     /**
      * @return array<string, array{int}>
      */
-    public static function providerWithStopTimeoutInvalidInputs()
+    public static function providerWithStopTimeoutRejectsInvalidInputs()
     {
         return [
             'case 1' => [-2],

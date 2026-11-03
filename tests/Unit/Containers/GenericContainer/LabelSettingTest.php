@@ -70,7 +70,7 @@ final class LabelSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithLabelInvalidInputs
+     * @dataProvider providerWithLabelRejectsInvalidInputs
      * @param array{} $key
      * @param string  $value
      * @return void
@@ -86,7 +86,7 @@ final class LabelSettingTest extends TestCase
     /**
      * @return array<string, array{array{}, string}>
      */
-    public static function providerWithLabelInvalidInputs()
+    public static function providerWithLabelRejectsInvalidInputs()
     {
         return [
             'case 1' => [[], 'value'],
@@ -94,7 +94,7 @@ final class LabelSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithLabelsInvalidInputs
+     * @dataProvider providerWithLabelsRejectsInvalidInputs
      * @param string $labels
      * @return void
      */
@@ -109,7 +109,7 @@ final class LabelSettingTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerWithLabelsInvalidInputs()
+    public static function providerWithLabelsRejectsInvalidInputs()
     {
         return [
             'case 1' => ['not an array'],

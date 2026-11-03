@@ -13,7 +13,7 @@ use Tests\Images\DinD;
 final class ContainerReaperTest extends TestCase
 {
     /**
-     * @dataProvider providerRetainedContainerLabels
+     * @dataProvider providerExecuteKeepsContainersWithoutOrphanedOwnership
      * @param array<string, string> $labels
      * @return void
      */
@@ -48,7 +48,7 @@ final class ContainerReaperTest extends TestCase
     /**
      * @return array<string, array{array<string, string>}>
      */
-    public static function providerRetainedContainerLabels()
+    public static function providerExecuteKeepsContainersWithoutOrphanedOwnership()
     {
         return [
             'different host' => [[

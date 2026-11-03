@@ -58,7 +58,7 @@ final class InspectIntervalSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithInspectIntervalInvalidInputs
+     * @dataProvider providerWithInspectIntervalRejectsInvalidInputs
      * @param float $seconds
      * @return void
      */
@@ -73,7 +73,7 @@ final class InspectIntervalSettingTest extends TestCase
     /**
      * @return array<string, array{float}>
      */
-    public static function providerWithInspectIntervalInvalidInputs()
+    public static function providerWithInspectIntervalRejectsInvalidInputs()
     {
         return [
             'case 1' => [NAN],

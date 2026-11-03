@@ -10,7 +10,7 @@ use Testcontainers\Exceptions\InvalidFormatException;
 final class ContainerIdTest extends TestCase
 {
     /**
-     * @dataProvider providerValues
+     * @dataProvider providerIsValidReturnsWhetherValueIsValid
      * @param array{}|bool|int|null|stdClass|string $value
      * @param bool                                  $expected
      * @return void
@@ -23,7 +23,7 @@ final class ContainerIdTest extends TestCase
     /**
      * @return array<string, array{array{}|bool|int|null|stdClass|string, bool}>
      */
-    public static function providerValues()
+    public static function providerIsValidReturnsWhetherValueIsValid()
     {
         return [
             'short ID' => ['012345abcdef', true],
@@ -41,7 +41,7 @@ final class ContainerIdTest extends TestCase
     }
 
     /**
-     * @dataProvider providerValidIdentifiers
+     * @dataProvider providerConstructPreservesValidIdentifier
      * @param string $value
      * @return void
      */
@@ -53,7 +53,7 @@ final class ContainerIdTest extends TestCase
     }
 
     /**
-     * @dataProvider providerValidIdentifiers
+     * @dataProvider providerFromStringPreservesValidIdentifier
      * @param string $value
      * @return void
      */
@@ -65,7 +65,7 @@ final class ContainerIdTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerValidIdentifiers()
+    public static function providerConstructPreservesValidIdentifier()
     {
         return [
             'short ID' => ['012345abcdef'],
@@ -74,7 +74,18 @@ final class ContainerIdTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidIdentifiers
+     * @return array<string, array{string}>
+     */
+    public static function providerFromStringPreservesValidIdentifier()
+    {
+        return [
+            'short ID' => ['012345abcdef'],
+            'full ID' => [str_repeat('0123456789abcdef', 4)],
+        ];
+    }
+
+    /**
+     * @dataProvider providerConstructRejectsInvalidIdentifier
      * @param string $value
      * @return void
      */
@@ -86,7 +97,7 @@ final class ContainerIdTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidIdentifiers
+     * @dataProvider providerFromStringRejectsInvalidIdentifier
      * @param string $value
      * @return void
      */
@@ -100,7 +111,20 @@ final class ContainerIdTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerInvalidIdentifiers()
+    public static function providerConstructRejectsInvalidIdentifier()
+    {
+        return [
+            'empty string' => [''],
+            'invalid length' => ['012345abcde'],
+            'invalid character' => ['012345abcdeg'],
+            'uppercase characters' => ['012345ABCDEF'],
+        ];
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function providerFromStringRejectsInvalidIdentifier()
     {
         return [
             'empty string' => [''],

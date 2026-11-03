@@ -75,7 +75,7 @@ final class EnvSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithEnvInvalidInputs
+     * @dataProvider providerWithEnvRejectsInvalidInputs
      * @param string $key
      * @param bool   $value
      * @return void
@@ -91,7 +91,7 @@ final class EnvSettingTest extends TestCase
     /**
      * @return array<string, array{string, bool}>
      */
-    public static function providerWithEnvInvalidInputs()
+    public static function providerWithEnvRejectsInvalidInputs()
     {
         return [
             'case 1' => ['KEY', false],
@@ -99,7 +99,7 @@ final class EnvSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithEnvsInvalidInputs
+     * @dataProvider providerWithEnvsRejectsInvalidInputs
      * @param array{'KEY': stdClass} $env
      * @return void
      */
@@ -114,7 +114,7 @@ final class EnvSettingTest extends TestCase
     /**
      * @return array<string, array{array{'KEY': stdClass}}>
      */
-    public static function providerWithEnvsInvalidInputs()
+    public static function providerWithEnvsRejectsInvalidInputs()
     {
         return [
             'case 1' => [['KEY' => new stdClass()]],

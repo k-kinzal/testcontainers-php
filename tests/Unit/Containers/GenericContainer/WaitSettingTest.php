@@ -50,7 +50,7 @@ final class WaitSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithWaitStrategyInvalidInputs
+     * @dataProvider providerWithWaitStrategyRejectsInvalidInputs
      * @param stdClass $waitStrategy
      * @return void
      */
@@ -65,7 +65,7 @@ final class WaitSettingTest extends TestCase
     /**
      * @return array<string, array{stdClass}>
      */
-    public static function providerWithWaitStrategyInvalidInputs()
+    public static function providerWithWaitStrategyRejectsInvalidInputs()
     {
         return [
             'case 1' => [new stdClass()],

@@ -142,7 +142,7 @@ final class PortSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithPortInvalidInputs
+     * @dataProvider providerWithPortRejectsInvalidInputs
      * @param bool|float|int|string $port
      * @return void
      */
@@ -157,7 +157,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return array<string, array{bool|float|int|string}>
      */
-    public static function providerWithPortInvalidInputs()
+    public static function providerWithPortRejectsInvalidInputs()
     {
         return [
             'case 1' => ['80abc'],
@@ -172,7 +172,7 @@ final class PortSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithPortsInvalidInputs
+     * @dataProvider providerWithPortsRejectsInvalidInputs
      * @param array{int, int} $ports
      * @return void
      */
@@ -187,7 +187,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return array<string, array{array{int, int}}>
      */
-    public static function providerWithPortsInvalidInputs()
+    public static function providerWithPortsRejectsInvalidInputs()
     {
         return [
             'case 1' => [[80, 65536]],
@@ -195,7 +195,7 @@ final class PortSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithPortStrategyInvalidInputs
+     * @dataProvider providerWithPortStrategyRejectsInvalidInputs
      * @param stdClass $strategy
      * @return void
      */
@@ -210,7 +210,7 @@ final class PortSettingTest extends TestCase
     /**
      * @return array<string, array{stdClass}>
      */
-    public static function providerWithPortStrategyInvalidInputs()
+    public static function providerWithPortStrategyRejectsInvalidInputs()
     {
         return [
             'case 1' => [new stdClass()],

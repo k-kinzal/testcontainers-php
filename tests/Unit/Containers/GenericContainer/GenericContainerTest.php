@@ -74,7 +74,7 @@ final class GenericContainerTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithDockerClientInvalidInputs
+     * @dataProvider providerWithDockerClientRejectsInvalidInputs
      * @param stdClass $client
      * @return void
      */
@@ -89,7 +89,7 @@ final class GenericContainerTest extends TestCase
     /**
      * @return array<string, array{stdClass}>
      */
-    public static function providerWithDockerClientInvalidInputs()
+    public static function providerWithDockerClientRejectsInvalidInputs()
     {
         return [
             'case 1' => [new stdClass()],

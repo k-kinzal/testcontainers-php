@@ -10,7 +10,7 @@ use UnexpectedValueException;
 final class WithLoggerTest extends TestCase
 {
     /**
-     * @dataProvider providerWithLoggerInvalidInputs
+     * @dataProvider providerWithLoggerRejectsInvalidInputs
      * @param stdClass $logger
      * @return void
      */
@@ -25,7 +25,7 @@ final class WithLoggerTest extends TestCase
     /**
      * @return array<string, array{stdClass}>
      */
-    public static function providerWithLoggerInvalidInputs()
+    public static function providerWithLoggerRejectsInvalidInputs()
     {
         return [
             'case 1' => [new stdClass()],

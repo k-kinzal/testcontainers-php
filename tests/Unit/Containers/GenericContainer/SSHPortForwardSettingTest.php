@@ -10,7 +10,7 @@ use UnexpectedValueException;
 final class SSHPortForwardSettingTest extends TestCase
 {
     /**
-     * @dataProvider providerWithSSHPortForwardInvalidInputs
+     * @dataProvider providerWithSSHPortForwardRejectsInvalidInputs
      * @param string $sshHost
      * @param string $sshPort
      * @return void
@@ -26,7 +26,7 @@ final class SSHPortForwardSettingTest extends TestCase
     /**
      * @return array<string, array{string, string}>
      */
-    public static function providerWithSSHPortForwardInvalidInputs()
+    public static function providerWithSSHPortForwardRejectsInvalidInputs()
     {
         return [
             'case 1' => ['host', 'bad'],

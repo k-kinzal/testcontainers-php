@@ -10,7 +10,7 @@ use Testcontainers\Docker\Output\DockerVersionOutput;
 final class DockerVersionOutputTest extends TestCase
 {
     /**
-     * @dataProvider providerClientVersions
+     * @dataProvider providerGetClientVersionReturnsParsedVersion
      * @param string      $json
      * @param null|string $expected
      * @return void
@@ -27,7 +27,7 @@ final class DockerVersionOutputTest extends TestCase
     /**
      * @return array<string, array{string, null|string}>
      */
-    public static function providerClientVersions()
+    public static function providerGetClientVersionReturnsParsedVersion()
     {
         return [
             'both versions' => ['{"Client":{"Version":"28.0.1"},"Server":{"Version":"28.0.2"}}', '28.0.1'],
@@ -46,7 +46,7 @@ final class DockerVersionOutputTest extends TestCase
     }
 
     /**
-     * @dataProvider providerServerVersions
+     * @dataProvider providerGetServerVersionReturnsParsedVersion
      * @param string      $json
      * @param null|string $expected
      * @return void
@@ -63,7 +63,7 @@ final class DockerVersionOutputTest extends TestCase
     /**
      * @return array<string, array{string, null|string}>
      */
-    public static function providerServerVersions()
+    public static function providerGetServerVersionReturnsParsedVersion()
     {
         return [
             'both versions' => ['{"Client":{"Version":"28.0.1"},"Server":{"Version":"28.0.2"}}', '28.0.2'],
@@ -82,7 +82,7 @@ final class DockerVersionOutputTest extends TestCase
     }
 
     /**
-     * @dataProvider providerInvalidVersions
+     * @dataProvider providerConstructRejectsInvalidVersionType
      * @param string $json
      * @return void
      */
@@ -98,7 +98,7 @@ final class DockerVersionOutputTest extends TestCase
     /**
      * @return array<string, array{string}>
      */
-    public static function providerInvalidVersions()
+    public static function providerConstructRejectsInvalidVersionType()
     {
         return [
             'integer client version' => ['{"Client":{"Version":28}}'],

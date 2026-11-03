@@ -102,7 +102,7 @@ final class HostSettingTest extends TestCase
     }
 
     /**
-     * @dataProvider providerWithExtraHostsInvalidInputs
+     * @dataProvider providerWithExtraHostsRejectsInvalidInputs
      * @param bool $extraHosts
      * @return void
      */
@@ -117,7 +117,7 @@ final class HostSettingTest extends TestCase
     /**
      * @return array<string, array{bool}>
      */
-    public static function providerWithExtraHostsInvalidInputs()
+    public static function providerWithExtraHostsRejectsInvalidInputs()
     {
         return [
             'case 1' => [false],
