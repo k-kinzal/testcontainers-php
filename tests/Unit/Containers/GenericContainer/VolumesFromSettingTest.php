@@ -57,8 +57,7 @@ final class VolumesFromSettingTest extends TestCase
             ->withFileSystemBind($path, $path, BindMode::READ_WRITE())
         ;
 
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $instance1 = $container->start();
+        $container->start();
 
         $container = (new VolumesFromSettingWithStaticVolumesFromContainer('alpine:latest'))
             ->withDockerClient($client)
