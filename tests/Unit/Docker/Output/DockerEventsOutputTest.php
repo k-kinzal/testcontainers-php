@@ -76,8 +76,7 @@ final class DockerEventsOutputTest extends TestCase
 
         $this->expectException(InvalidValueException::class);
 
-        foreach ($output->getIterator() as $event) {
-        }
+        iterator_to_array($output->getIterator(), false);
     }
 
     /**

@@ -76,8 +76,7 @@ final class EventsCommandTest extends TestCase
         ]);
 
         try {
-            foreach ($eventsOutput->getIterator() as $event) {
-            }
+            iterator_to_array($eventsOutput->getIterator(), false);
             $this->fail('Expected ProcessTimedOutException');
         } catch (ProcessTimedOutException $e) {
             $this->assertSame(1.0, $e->getExceededTimeout());
