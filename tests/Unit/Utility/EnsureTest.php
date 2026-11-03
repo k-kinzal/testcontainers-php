@@ -84,6 +84,7 @@ final class EnsureTest extends TestCase
      * @param string $value
      * @param string $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStringReturnsExpectedValue($value, $expected)
     {
@@ -285,6 +286,7 @@ final class EnsureTest extends TestCase
      * @param bool $value
      * @param bool $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureBoolReturnsExpectedValue($value, $expected)
     {
@@ -386,6 +388,7 @@ final class EnsureTest extends TestCase
      * @param int $value
      * @param int $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureIntReturnsExpectedValue($value, $expected)
     {
@@ -439,6 +442,7 @@ final class EnsureTest extends TestCase
      * @param int|null $maximum
      * @param int      $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureIntRangeReturnsExpectedValue($value, $minimum, $maximum, $expected)
     {
@@ -857,6 +861,7 @@ final class EnsureTest extends TestCase
      * @param array{'key': int}|array{} $value
      * @param array{'key': int}|array{} $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureArrayReturnsExpectedValue($value, $expected)
     {
@@ -1453,6 +1458,7 @@ final class EnsureTest extends TestCase
      * @param stdClass $value
      * @param stdClass $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureObjectReturnsExpectedValue($value, $expected)
     {
@@ -1857,6 +1863,7 @@ final class EnsureTest extends TestCase
      * @param string $pattern
      * @param string $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureMatchesReturnsExpectedValue($value, $pattern, $expected)
     {
@@ -1880,6 +1887,7 @@ final class EnsureTest extends TestCase
      * @param string $value
      * @param string $pattern
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureMatchesRejectsInvalidValues($value, $pattern)
     {
@@ -1954,6 +1962,7 @@ final class EnsureTest extends TestCase
      * @param resource $value
      * @param resource $expected
      * @return void
+     * @psalm-param mixed $value
      */
     public function testEnsureStreamReturnsExpectedValue($value, $expected)
     {
