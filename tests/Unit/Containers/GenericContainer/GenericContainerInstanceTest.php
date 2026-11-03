@@ -2,7 +2,7 @@
 
 /** @noinspection PhpUnhandledExceptionInspection */
 
-namespace Tests\Unit\Containers;
+namespace Tests\Unit\Containers\GenericContainer;
 
 use PHPUnit\Framework\TestCase;
 use Closure;

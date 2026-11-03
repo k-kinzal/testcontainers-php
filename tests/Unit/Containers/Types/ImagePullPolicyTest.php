@@ -2,7 +2,7 @@
 
 /** @noinspection PhpUnhandledExceptionInspection */
 
-namespace Tests\Unit\Containers;
+namespace Tests\Unit\Containers\Types;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\Types\ImagePullPolicy;

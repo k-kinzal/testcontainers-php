@@ -8,6 +8,35 @@ use Psalm\Checker\MethodChecker;
 
 final class UnitTestRules
 {
+    public static function check($source, array $statements, $codebase = null)
+    {
+        $path = $source->getFilePath();
+        $root = dirname(__DIR__);
+        if (strpos($path, $root.'/tests/') !== 0) {
+            return;
+        }
+        $nodes = self::nodes($statements);
+        $isUnit = strpos($path, $root.'/tests/Unit/') === 0;
+        $test = null;
+        foreach ($nodes as $node) {
+            if ($node instanceof Node\Stmt\Namespace_) {
+                $namespace = (string) $node->name;
+                $isUnit = $isUnit || $namespace === 'Tests\\Unit' || strpos($namespace, 'Tests\\Unit\\') === 0;
+            }
+            if ($node instanceof Node\Stmt\Class_ && (string) $node->name === basename($path, '.php')) {
+                $test = $node;
+            }
+        }
+        if (!$isUnit) {
+            return;
+        }
+        foreach ([
+            UnitTestRules\UnitTestSourceRule::class,
+        ] as $rule) {
+            $rule::check($source, $nodes, $test, $codebase);
+        }
+    }
+
     /** @return Node[] */
     public static function nodes(array $nodes)
     {

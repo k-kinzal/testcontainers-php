@@ -23,6 +23,8 @@ final class AllRule56 extends FileChecker
         parent::analyze($update_docblocks, $preserve_checkers);
         if (strpos($this->getFilePath(), dirname(__DIR__).'/tests/') === 0) {
             PHPUnitReferenceRegistrar::registerLegacy($this);
+            $statements = $this->resolvedStatements();
+            UnitTestRules::check($this, $statements);
         }
     }
 
