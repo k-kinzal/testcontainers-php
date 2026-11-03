@@ -30,6 +30,7 @@ final class ContainerReaperTest extends TestCase
             'detach' => true,
             'label' => $labels + ['org.testcontainers' => 'true'],
         ]);
+        $this->assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
@@ -85,6 +86,7 @@ final class ContainerReaperTest extends TestCase
                 'org.testcontainers.pid' => '2147483647',
             ],
         ]);
+        $this->assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
@@ -119,6 +121,7 @@ final class ContainerReaperTest extends TestCase
                 'org.testcontainers.pid' => (string) $process->getPid(),
             ],
         ]);
+        $this->assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
         $id = $output->getContainerId();
 
         try {
