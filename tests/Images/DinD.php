@@ -2,46 +2,34 @@
 
 namespace Tests\Images;
 
+use Testcontainers\Containers\ContainerInstance;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
+use Testcontainers\Containers\Types\Mount;
 use Testcontainers\Containers\WaitStrategy\HttpWaitStrategy;
+use Testcontainers\Docker\DockerClient;
+use Testcontainers\Hook\AfterStartHook;
 
-/**
- * Docker in Docker container.
- */
 final class DinD extends GenericContainer
 {
-    /**
-     * The Docker image to be used for the DinD container.
-     */
+    use AfterStartHook;
+
+    protected static $REUSE_MODE = 'reuse';
+
+    protected static $AUTO_REMOVE_ON_EXIT = true;
+
     protected static $IMAGE = 'docker:27.4.1-dind';
 
-    /**
-     * The commands to be executed in the DinD container.
-     *
-     * Note: The `--tls=false` option is included to prevent slow performance.
-     */
     protected static $COMMANDS = [
         'dockerd-entrypoint.sh',
         '--tls=false',
     ];
 
-    /**
-     * The environment variables to be set in the DinD container.
-     *
-     * Note: TLS is disabled for performance and ease of use.
-     */
     protected static $ENVIRONMENTS = [
         'DOCKER_TLS_CERTDIR' => '',
     ];
 
-    /**
-     * The ports to be exposed by the DinD container.
-     */
     protected static $PORTS = [2375];
 
-    /**
-     * Whether the DinD container should run in privileged mode.
-     */
     protected static $PRIVILEGED = true;
 
     protected function waitStrategy($_instance)
@@ -50,5 +38,28 @@ final class DinD extends GenericContainer
             ->withSchema('http')
             ->withPath('/_ping')
         ;
+    }
+
+    protected function mounts()
+    {
+        $tempDir = (string) realpath(sys_get_temp_dir());
+
+        return array_merge(parent::mounts(), [Mount::fromString($tempDir.':'.$tempDir.':rw')]);
+    }
+
+    /**
+     * @param ContainerInstance $instance
+     * @return void
+     * @psalm-suppress PossiblyUnusedMethod Called by Testcontainers::run().
+     */
+    public function afterStart($instance)
+    {
+        $port = $instance->getMappedPort(2375);
+        $client = (new DockerClient())->withGlobalOptions([
+            'host' => 'tcp://'.$instance->getHost().':'.(string) $port,
+            'config' => __ROOT__.'/config.json',
+        ]);
+
+        $instance->setData($client);
     }
 }

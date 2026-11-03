@@ -13,7 +13,6 @@ use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Containers\Types\ImagePullPolicy;
 use Testcontainers\Docker\DockerClient;
-use Testcontainers\Docker\DockerClientFactory;
 use Testcontainers\Docker\Exception\DockerException;
 use Testcontainers\Docker\Output\DockerRunWithDetachOutput;
 use Testcontainers\Docker\Types\ContainerId;
@@ -84,14 +83,7 @@ final class GenericContainerInstanceTest extends TestCase
     public function testGetHostFromDockerHost()
     {
         $dind = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $dind->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-        $client = DockerClientFactory::create([
-            'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
-                'config' => __ROOT__.'/config.json',
-            ],
-        ]);
+        $client = $dind->getData(DockerClient::class);
 
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),
@@ -107,14 +99,7 @@ final class GenericContainerInstanceTest extends TestCase
     public function testGetHostFromPortForward()
     {
         $dind = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $dind->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-        $client = DockerClientFactory::create([
-            'globalOptions' => [
-                'host' => 'tcp://'.$dind->getHost().':'.(string) $mappedPort2375,
-                'config' => __ROOT__.'/config.json',
-            ],
-        ]);
+        $client = $dind->getData(DockerClient::class);
 
         $instance = new GenericContainerInstance([
             'containerId' => new ContainerId('8188d93d8a27'),

@@ -27,14 +27,7 @@ final class NetworkCreateCommandTest extends TestCase
     public function testNetworkCreate()
     {
         $instance = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $instance->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-
-        $client = new DockerClient();
-        $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
-            'config' => __ROOT__.'/config.json',
-        ]);
+        $client = $instance->getData(DockerClient::class);
         $output = $client->networkCreate('test-network');
 
         self::assertInstanceOf(DockerNetworkCreateOutput::class, $output);

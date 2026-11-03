@@ -120,24 +120,22 @@ final class RunCommandTest extends TestCase
      */
     public function testRunWithPortConflict()
     {
-        $this->expectException(PortConflictException::class);
-
         $instance = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $instance->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
+        $client = $instance->getData(DockerClient::class);
+        $output = $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
+            'detach' => true,
+            'publish' => ['38793:80'],
+        ]);
+        self::assertInstanceOf(DockerRunWithDetachOutput::class, $output);
 
-        $client = new DockerClient();
-        $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
-            'config' => __ROOT__.'/config.json',
-        ]);
-        $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
-            'detach' => true,
-            'publish' => ['38793:80'],
-        ]);
-        $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
-            'detach' => true,
-            'publish' => ['38793:80'],
-        ]);
+        try {
+            $this->expectException(PortConflictException::class);
+            $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
+                'detach' => true,
+                'publish' => ['38793:80'],
+            ]);
+        } finally {
+            $client->rm($output->getContainerId(), ['force' => true]);
+        }
     }
 }

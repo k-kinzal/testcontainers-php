@@ -29,14 +29,7 @@ final class RmCommandTest extends TestCase
     public function testRm()
     {
         $instance = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $instance->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-
-        $client = new DockerClient();
-        $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
-            'config' => __ROOT__.'/config.json',
-        ]);
+        $client = $instance->getData(DockerClient::class);
 
         /** @var DockerRunWithDetachOutput $runOutput */
         $runOutput = $client->run('alpine:latest', 'echo', ['hello'], [
