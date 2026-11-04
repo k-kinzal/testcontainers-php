@@ -33,6 +33,7 @@ final class LogsCommandTest extends TestCase
 
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('jpetazzo/clock:latest', null, [], [
+            'rm' => true,
             'detach' => true,
         ]);
 
@@ -54,6 +55,7 @@ final class LogsCommandTest extends TestCase
 
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('jpetazzo/clock:latest', null, [], [
+            'rm' => true,
             'detach' => true,
         ]);
 

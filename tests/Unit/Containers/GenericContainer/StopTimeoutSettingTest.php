@@ -27,6 +27,7 @@ final class StopTimeoutSettingTest extends TestCase
     public function testStopTimeoutFromStaticStopTimeout()
     {
         $container = new StopTimeoutSettingWithStaticContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame(5, $instance->getStopTimeout());
@@ -40,6 +41,7 @@ final class StopTimeoutSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withStopTimeout(0)
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame(0, $instance->getStopTimeout());
@@ -51,6 +53,7 @@ final class StopTimeoutSettingTest extends TestCase
     public function testStopTimeoutIsNullByDefault()
     {
         $container = new GenericContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertNull($instance->getStopTimeout());

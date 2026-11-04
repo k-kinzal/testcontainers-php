@@ -7,7 +7,6 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\EntrypointSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
-use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
@@ -29,9 +28,9 @@ final class EntrypointSettingTest extends TestCase
     public function testEntrypointFromStaticEntrypoint()
     {
         $container = (new EntrypointSettingWithStaticEntrypointContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
-            ->withCommands(['-c', 'echo hello'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['-c', 'echo hello; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();
@@ -45,10 +44,10 @@ final class EntrypointSettingTest extends TestCase
     public function testWithEntrypoint()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
+            ->withAutoRemoveOnExit(true)
             ->withEntrypoint('/bin/sh')
-            ->withCommands(['-c', 'echo hello'])
+            ->withStopTimeout(0)
+            ->withCommands(['-c', 'echo hello; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();

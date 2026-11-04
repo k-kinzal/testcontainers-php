@@ -22,6 +22,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $container = new GenericContainer('alpine:latest');
         $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 10']);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = (new PDOConnectWaitStrategy())->withDsn(new SQLiteDSN());
@@ -41,6 +42,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 10']);
         $container->withExposedPort(3306);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = (new PDOConnectWaitStrategy())->withDsn((new MySQLDSN())->withDbname('test'));
@@ -59,6 +61,7 @@ final class PDOConnectWaitStrategyTest extends WaitStrategyTestCase
         $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
         $container->withExposedPort(3306);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = (new PDOConnectWaitStrategy())->withDsn((new MySQLDSN())->withDbname('test'));

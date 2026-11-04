@@ -27,6 +27,7 @@ final class StopSignalSettingTest extends TestCase
     public function testStopSignalFromStaticStopSignal()
     {
         $container = new StopSignalSettingWithStaticContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame('KILL', $instance->getStopSignal());
@@ -40,6 +41,7 @@ final class StopSignalSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withStopSignal('KILL')
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame('KILL', $instance->getStopSignal());
@@ -51,6 +53,7 @@ final class StopSignalSettingTest extends TestCase
     public function testStopSignalIsNullByDefault()
     {
         $container = new GenericContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertNull($instance->getStopSignal());

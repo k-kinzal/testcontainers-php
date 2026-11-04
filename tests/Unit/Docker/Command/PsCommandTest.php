@@ -32,6 +32,7 @@ final class PsCommandTest extends TestCase
 
         /** @var DockerRunWithDetachOutput $runOutput */
         $runOutput = $client->run('alpine:latest', 'tail', ['-f', '/dev/null'], [
+            'rm' => true,
             'detach' => true,
             'label' => ['test.ps=true'],
         ]);

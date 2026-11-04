@@ -4,6 +4,7 @@ namespace Tests\Unit\Lifecycle;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
+use Testcontainers\Containers\GenericContainer\GenericContainerInstance;
 use Testcontainers\Docker\DockerClient;
 use Testcontainers\Lifecycle\ContainerReaper;
 use Testcontainers\Testcontainers;
@@ -21,6 +22,7 @@ final class ContainerReaperTest extends TestCase
         $dind = Testcontainers::run(DinD::class);
         $client = $dind->getData(DockerClient::class);
         $output = $client->run('alpine:latest', 'sleep', ['300'], [
+            'rm' => true,
             'detach' => true,
             'label' => $labels + ['org.testcontainers' => 'true'],
         ]);
@@ -63,6 +65,7 @@ final class ContainerReaperTest extends TestCase
         $dind = Testcontainers::run(DinD::class);
         $client = $dind->getData(DockerClient::class);
         $output = $client->run('alpine:latest', 'sleep', ['300'], [
+            'rm' => true,
             'detach' => true,
             'label' => [
                 'org.testcontainers' => 'true',
@@ -71,11 +74,12 @@ final class ContainerReaperTest extends TestCase
             ],
         ]);
         self::assertInstanceOf(\Testcontainers\Docker\Output\DockerRunWithDetachOutput::class, $output);
-        $id = $output->getContainerId();
+        $instance = new GenericContainerInstance(['containerId' => $output->getContainerId()]);
+        $instance->setDockerClient($client);
 
         (new ContainerReaper($client))->execute();
 
-        self::assertSame('exited', $client->inspect($id)->state->status);
+        self::assertTrue($instance->isStopped());
     }
 
     /**
@@ -88,6 +92,7 @@ final class ContainerReaperTest extends TestCase
         $process = new Process(['sleep', '300']);
         $process->start();
         $output = $client->run('alpine:latest', 'sleep', ['300'], [
+            'rm' => true,
             'detach' => true,
             'label' => [
                 'org.testcontainers' => 'true',

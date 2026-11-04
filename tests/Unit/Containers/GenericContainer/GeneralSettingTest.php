@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 use Testcontainers\Containers\GenericContainer\GeneralSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
-use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
@@ -41,13 +40,14 @@ final class GeneralSettingTest extends TestCase
     public function testWithCommand()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
-            ->withCommand('pwd')
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommand('top')
+            ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('PID\s+PPID\s+USER'))
         ;
         $instance = $container->start();
 
-        self::assertSame("/\n", $instance->getOutput());
+        self::assertSame(1, preg_match('/PID\s+PPID\s+USER/', $instance->getOutput()));
     }
 
     /**
@@ -56,8 +56,9 @@ final class GeneralSettingTest extends TestCase
     public function testWithCommands()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withCommands(['echo', 'Hello, World!'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'echo "Hello, World!"; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();
@@ -113,11 +114,13 @@ final class GeneralSettingTest extends TestCase
 
 final class GeneralSettingWithStaticCommandsContainer extends GenericContainer
 {
-    protected static $AUTO_REMOVE_ON_EXIT = false;
+    protected static $AUTO_REMOVE_ON_EXIT = true;
 
-    protected static $COMMANDS = ['echo', 'Hello, World!'];
+    protected static $COMMANDS = ['sh', '-c', 'echo "Hello, World!"; sleep 300'];
 
-    protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
+    protected static $STOP_TIMEOUT = 0;
+
+    protected static $WAIT_STRATEGY = 'log';
 }
 
 final class GeneralSettingWithInvalidNameContainer extends GenericContainer

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\NetworkModeSetting;
 use Testcontainers\Containers\Types\NetworkMode;
+use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
 final class NetworkModeSettingTest extends TestCase
@@ -28,7 +29,10 @@ final class NetworkModeSettingTest extends TestCase
     public function testNetworkModeFromStaticNetworkMode()
     {
         $container = (new NetworkModeSettingWithStaticNetworkModeContainer('alpine:latest'))
-            ->withCommands(['sh', '-c', 'ls /sys/class/net'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ls /sys/class/net; sleep 300'])
+            ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('^lo$'))
         ;
         $instance = $container->start();
 
@@ -41,9 +45,11 @@ final class NetworkModeSettingTest extends TestCase
     public function testWithNetworkMode()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
             ->withNetworkMode(NetworkMode::NONE())
-            ->withCommands(['sh', '-c', 'ls /sys/class/net'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ls /sys/class/net; sleep 300'])
+            ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('^lo$'))
         ;
         $instance = $container->start();
 
@@ -64,8 +70,6 @@ final class NetworkModeSettingTest extends TestCase
 
 final class NetworkModeSettingWithStaticNetworkModeContainer extends GenericContainer
 {
-    protected static $AUTO_REMOVE_ON_EXIT = false;
-
     protected static $NETWORK_MODE = 'none';
 }
 

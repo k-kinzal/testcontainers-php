@@ -38,7 +38,9 @@ final class NetworkAliasSettingTest extends TestCase
         $container = (new NetworkAliasSettingWithStaticNetworkAliasContainer('alpine:latest'))
             ->withDockerClient($client)
             ->withNetworkMode($network)
-            ->withCommands(['sh', '-c', 'ping -c 1 my-service'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 my-service; sleep 300'])
         ;
         $instance = $container->start();
 
@@ -57,10 +59,11 @@ final class NetworkAliasSettingTest extends TestCase
 
         $container = (new GenericContainer('alpine:latest'))
             ->withDockerClient($client)
-            ->withAutoRemoveOnExit(false)
             ->withNetworkMode($network)
             ->withNetworkAlias('my-alias')
-            ->withCommands(['sh', '-c', 'ping -c 1 my-alias'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 my-alias; sleep 300'])
         ;
         $instance = $container->start();
 
@@ -79,10 +82,11 @@ final class NetworkAliasSettingTest extends TestCase
 
         $container = (new GenericContainer('alpine:latest'))
             ->withDockerClient($client)
-            ->withAutoRemoveOnExit(false)
             ->withNetworkMode($network)
             ->withNetworkAliases(['my-alias'])
-            ->withCommands(['sh', '-c', 'ping -c 1 my-alias'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 my-alias; sleep 300'])
         ;
         $instance = $container->start();
 
@@ -126,8 +130,6 @@ final class NetworkAliasSettingTest extends TestCase
 
 final class NetworkAliasSettingWithStaticNetworkAliasContainer extends GenericContainer
 {
-    protected static $AUTO_REMOVE_ON_EXIT = false;
-
     protected static $NETWORK_ALIASES = ['my-service'];
 }
 

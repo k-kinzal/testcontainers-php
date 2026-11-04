@@ -28,6 +28,7 @@ final class LabelSettingTest extends TestCase
     public function testLabelsFromStaticLabels()
     {
         $container = new LabelSettingWithStaticLabelsContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame('VALUE1', $instance->getLabel('KEY1'));
@@ -45,6 +46,7 @@ final class LabelSettingTest extends TestCase
             ->withCommands(['echo', 'labels'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame('VALUE1', $instance->getLabel('KEY1'));
@@ -61,6 +63,7 @@ final class LabelSettingTest extends TestCase
             ->withCommands(['echo', 'labels'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame('VALUE1', $instance->getLabel('KEY1'));

@@ -33,6 +33,7 @@ final class StopCommandTest extends TestCase
 
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('alpine:latest', 'tail', ['-f', '/dev/null'], [
+            'rm' => true,
             'detach' => true,
         ]);
         $containerId = $output->getContainerId();

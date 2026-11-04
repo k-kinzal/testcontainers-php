@@ -18,6 +18,7 @@ final class HttpWaitStrategyTest extends WaitStrategyTestCase
         $container = new GenericContainer('nginx:alpine');
         $container->withStopTimeout(0);
         $container->withExposedPort(80);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = new HttpWaitStrategy();
@@ -37,6 +38,7 @@ final class HttpWaitStrategyTest extends WaitStrategyTestCase
         $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 10']);
         $container->withExposedPort(80);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = new HttpWaitStrategy();
@@ -55,6 +57,7 @@ final class HttpWaitStrategyTest extends WaitStrategyTestCase
         $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
         $container->withExposedPort(80);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = new HttpWaitStrategy();

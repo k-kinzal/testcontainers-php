@@ -7,7 +7,6 @@ namespace Tests\Unit\Containers\GenericContainer;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\UserSetting;
-use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
 use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
@@ -29,9 +28,9 @@ final class UserSettingTest extends TestCase
     public function testUserFromStaticUser()
     {
         $container = (new UserSettingWithStaticUserContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
-            ->withCommands(['whoami'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'whoami; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();
@@ -45,10 +44,10 @@ final class UserSettingTest extends TestCase
     public function testWithUser()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withUser('nobody')
-            ->withCommands(['whoami'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'whoami; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();
