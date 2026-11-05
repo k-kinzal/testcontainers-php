@@ -37,7 +37,7 @@ final class StopCommandTest extends TestCase
             'detach' => true,
         ]);
         $containerId = $output->getContainerId();
-        $output = $client->stop($containerId);
+        $output = $client->stop($containerId, ['timeout' => 0]);
 
         self::assertInstanceOf(DockerStopOutput::class, $output);
         self::assertSame(0, $output->getExitCode());

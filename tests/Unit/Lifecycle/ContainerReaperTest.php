@@ -108,7 +108,7 @@ final class ContainerReaperTest extends TestCase
 
             self::assertSame('running', $client->inspect($id)->state->status);
         } finally {
-            $process->stop();
+            $process->stop(0);
         }
     }
 

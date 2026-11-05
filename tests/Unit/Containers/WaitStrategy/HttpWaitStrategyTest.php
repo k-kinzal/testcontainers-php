@@ -55,10 +55,11 @@ final class HttpWaitStrategyTest extends WaitStrategyTestCase
 
         $container = new GenericContainer('alpine:latest');
         $container->withStopTimeout(0);
-        $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
+        $container->withCommands(['tail', '-f', '/dev/null']);
         $container->withExposedPort(80);
         $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
+        $instance->stop();
 
         $strategy = new HttpWaitStrategy();
         $strategy->waitUntilReady($instance);

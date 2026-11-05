@@ -55,9 +55,10 @@ final class HostPortWaitStrategyTest extends WaitStrategyTestCase
 
         $container = new GenericContainer('alpine:latest');
         $container->withStopTimeout(0);
-        $container->withCommands(['sh', '-c', 'sleep 1; exit 0']);
+        $container->withCommands(['tail', '-f', '/dev/null']);
         $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
+        $instance->stop();
 
         // Use withPorts to check a port that nothing is listening on
         $strategy = new HostPortWaitStrategy();

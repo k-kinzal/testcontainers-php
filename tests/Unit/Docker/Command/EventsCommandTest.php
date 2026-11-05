@@ -4,6 +4,8 @@
 
 namespace Tests\Unit\Docker\Command;
 
+use CallbackFilterIterator;
+use LimitIterator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Testcontainers\Docker\Command\EventsCommand;
@@ -41,12 +43,15 @@ final class EventsCommandTest extends TestCase
         $eventsOutput = $client->events([
             'filter' => ['container='.$containerId->toString()],
             'since' => '0',
-            'until' => (string) (time() + 3),
         ]);
 
         self::assertInstanceOf(DockerEventsOutput::class, $eventsOutput);
 
-        $events = array_values(array_filter(iterator_to_array($eventsOutput->getIterator(), false)));
+        $iterator = new CallbackFilterIterator($eventsOutput->getIterator(), function ($event) {
+            return $event !== null;
+        });
+        /** @var list<Event> $events */
+        $events = iterator_to_array(new LimitIterator($iterator, 0, 3), false);
         $containerIds = array_unique(array_map(function (Event $event) {
             return $event->actor->id;
         }, $events));

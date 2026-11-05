@@ -3,6 +3,7 @@
 namespace Tests\Unit\Utility;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Process;
 use Testcontainers\Utility\LineIterator;
 
@@ -13,13 +14,16 @@ final class LineIteratorTest extends TestCase
      */
     public function testGetIterator()
     {
-        $process = new Process([PHP_BINARY, '-r', 'echo "a\nb"; flush(); usleep(100000); echo "c\nd";']);
+        $input = new InputStream();
+        $process = new Process([PHP_BINARY, '-r', 'echo "a\nb"; flush(); fgets(STDIN); echo "c\nd";']);
+        $process->setInput($input);
         $process->start();
         $lines = new LineIterator($process);
 
         $iterator = $lines->getIterator();
         self::assertSame(Process::OUT, $iterator->key());
         self::assertSame('a', $iterator->current());
+        $input->close();
         $iterator->next();
         self::assertSame(Process::OUT, $iterator->key());
         self::assertSame('bc', $iterator->current());
@@ -36,13 +40,16 @@ final class LineIteratorTest extends TestCase
      */
     public function testGetIteratorSeparatesOutputAndErrorOutput()
     {
-        $process = new Process([PHP_BINARY, '-r', 'fwrite(STDOUT, "a"); fwrite(STDERR, "b\n"); fflush(STDOUT); usleep(100000); fwrite(STDOUT, "c\n");']);
+        $input = new InputStream();
+        $process = new Process([PHP_BINARY, '-r', 'fwrite(STDOUT, "a"); fwrite(STDERR, "b\n"); fflush(STDOUT); fgets(STDIN); fwrite(STDOUT, "c\n");']);
+        $process->setInput($input);
         $process->start();
         $lines = new LineIterator($process);
 
         $iterator = $lines->getIterator();
         self::assertSame(Process::ERR, $iterator->key());
         self::assertSame('b', $iterator->current());
+        $input->close();
         $iterator->next();
         self::assertSame(Process::OUT, $iterator->key());
         self::assertSame('ac', $iterator->current());

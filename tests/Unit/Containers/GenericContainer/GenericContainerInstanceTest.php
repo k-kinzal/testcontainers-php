@@ -351,6 +351,7 @@ final class GenericContainerInstanceTest extends TestCase
             /** @psalm-scope-this GenericContainerInstance */
             $this->events = $events;
             $this->eventObserved = true;
+            $this->inspectedAt = microtime(true) - (float) $this->getInspectInterval();
         }, $instance, GenericContainerInstance::class);
         self::assertNotNull($useEvents);
         $useEvents();
@@ -358,8 +359,6 @@ final class GenericContainerInstanceTest extends TestCase
         $contents = stream_get_contents($stream);
         self::assertNotFalse($contents);
         $inspected = substr_count($contents, 'docker inspect ');
-
-        usleep(500000);
 
         self::assertTrue($instance->isRunning());
         rewind($stream);
