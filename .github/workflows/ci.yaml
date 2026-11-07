@@ -38,22 +38,18 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Cache Docker images
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - name: Restore cached Docker images
+        id: docker-images-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: /tmp/docker-images
-          key: docker-images-${{ runner.os }}-${{ hashFiles('.github/workflows/ci.yaml') }}
+          path: /tmp/docker-images.tar
+          key: docker-images-v2-${{ runner.os }}-${{ runner.arch }}
           restore-keys: |
-            docker-images-${{ runner.os }}-
+            docker-images-v2-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Load cached Docker images
-        run: |
-          if [ -d /tmp/docker-images ]; then
-            for image in /tmp/docker-images/*.tar; do
-              [ -f "$image" ] || continue
-              docker load -i "$image" || true
-            done
-          fi
+        if: steps.docker-images-cache.outputs.cache-matched-key != ''
+        run: docker load --input /tmp/docker-images.tar
 
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
         with:
@@ -66,14 +62,39 @@ jobs:
 
       - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # v4.0.0
 
+      - name: Record Docker images before tests
+        id: docker-images-before
+        run: |
+          {
+            echo 'images<<EOF'
+            docker images --filter dangling=false --no-trunc --format '{"image":"{{.Repository}}:{{.Tag}}","id":"{{.ID}}"}'
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Run tests
         run: composer test
 
-      - name: Save Docker images to cache
-        if: always()
+      - name: Record Docker images after tests
+        id: docker-images-after
         run: |
-          mkdir -p /tmp/docker-images
-          docker images --format '{{.Repository}}:{{.Tag}}' | grep -v '<none>' | while IFS= read -r image; do
-            safe_name=$(echo "$image" | tr ':/' '_')
-            docker save "$image" -o "/tmp/docker-images/${safe_name}.tar" 2>/dev/null || true
-          done
+          {
+            echo 'images<<EOF'
+            docker images --filter dangling=false --no-trunc --format '{"image":"{{.Repository}}:{{.Tag}}","id":"{{.ID}}"}'
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Export Docker images
+        id: docker-images-export
+        if: >-
+          steps.docker-images-after.outputs.images != '' &&
+          (steps.docker-images-cache.outputs.cache-matched-key == '' ||
+           steps.docker-images-before.outputs.images != steps.docker-images-after.outputs.images)
+        run: |
+          docker save --output /tmp/docker-images.tar $(docker images --filter dangling=false --format '{{.Repository}}:{{.Tag}}')
+
+      - name: Save Docker images to cache
+        if: steps.docker-images-export.outcome == 'success'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: /tmp/docker-images.tar
+          key: docker-images-v2-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
