@@ -22,6 +22,7 @@ final class GenericContainerTest extends TestCase
     public function testStart()
     {
         $container = new GenericContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertInstanceOf(ContainerInstance::class, $instance);
@@ -39,8 +40,10 @@ final class GenericContainerTest extends TestCase
             ->withExposedPort(80)
             ->withPortStrategy(new StaticPortStrategy(50000))
             ->withCommands(['tail', '-f', '/dev/null'])
+            ->withStopTimeout(0)
         ;
 
+        $container1->withAutoRemoveOnExit(true);
         $instance1 = $container1->start();
 
         self::assertInstanceOf(ContainerInstance::class, $instance1);
@@ -51,6 +54,7 @@ final class GenericContainerTest extends TestCase
             ->withPortStrategy(new StaticPortStrategy(50000))
         ;
 
+        $container2->withAutoRemoveOnExit(true);
         $container2->start();
     }
 
@@ -61,6 +65,7 @@ final class GenericContainerTest extends TestCase
     {
         $container = (new GenericContainer('alpine:latest'))
             ->withCommands(['tail', '-f', '/dev/null'])
+            ->withStopTimeout(0)
             ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('never emitted')->withTimeoutSeconds(1))
             ->withAutoRemoveOnExit(true)
         ;

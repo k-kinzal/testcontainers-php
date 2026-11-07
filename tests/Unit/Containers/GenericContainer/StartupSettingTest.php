@@ -33,6 +33,7 @@ final class StartupSettingTest extends TestCase
         $container = (new StartupSettingWithStaticStartupTimeoutContainer('alpine:latest'))
             ->withCommands(['sh', '-c', 'exit 1'])
         ;
+        $container->withAutoRemoveOnExit(true);
         $container->start();
     }
 
@@ -46,6 +47,7 @@ final class StartupSettingTest extends TestCase
         $container = (new StartupSettingWithStaticStartupCheckStrategyContainer('alpine:latest'))
             ->withCommands(['sh', '-c', 'exit 1'])
         ;
+        $container->withAutoRemoveOnExit(true);
         $container->start();
     }
 
@@ -60,6 +62,7 @@ final class StartupSettingTest extends TestCase
             ->withStartupTimeout(1)
             ->withCommands(['sh', '-c', 'exit 1'])
         ;
+        $container->withAutoRemoveOnExit(true);
         $container->start();
     }
 
@@ -74,6 +77,7 @@ final class StartupSettingTest extends TestCase
             ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withCommands(['sh', '-c', 'exit 1'])
         ;
+        $container->withAutoRemoveOnExit(true);
         $container->start();
     }
 

@@ -29,6 +29,7 @@ final class PortSettingTest extends TestCase
     public function testExposedPortsFromStaticExposedPorts()
     {
         $container = (new PortSettingWithExposedPortsContainer('alpine:latest'));
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80, 443], $instance->getExposedPorts());
@@ -40,6 +41,7 @@ final class PortSettingTest extends TestCase
     public function testExposedPortsFromStaticExpose()
     {
         $container = (new PortSettingWithExposeContainer('alpine:latest'));
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80, 443], $instance->getExposedPorts());
@@ -51,6 +53,7 @@ final class PortSettingTest extends TestCase
     public function testExposedPortsFromStaticPorts()
     {
         $container = (new PortSettingWithPortsContainer('alpine:latest'));
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80, 443], $instance->getExposedPorts());
@@ -65,6 +68,7 @@ final class PortSettingTest extends TestCase
             ->withExposedPort(80)
             ->withPortStrategy(new RandomPortStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80], $instance->getExposedPorts());
@@ -79,6 +83,7 @@ final class PortSettingTest extends TestCase
             ->withExpose(80)
             ->withPortStrategy(new RandomPortStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80], $instance->getExposedPorts());
@@ -93,6 +98,7 @@ final class PortSettingTest extends TestCase
             ->withPort(80)
             ->withPortStrategy(new RandomPortStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80], $instance->getExposedPorts());
@@ -107,6 +113,7 @@ final class PortSettingTest extends TestCase
             ->withExposedPorts([80])
             ->withPortStrategy(new RandomPortStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80], $instance->getExposedPorts());
@@ -121,6 +128,7 @@ final class PortSettingTest extends TestCase
             ->withExposes([80])
             ->withPortStrategy(new RandomPortStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80], $instance->getExposedPorts());
@@ -135,6 +143,7 @@ final class PortSettingTest extends TestCase
             ->withPorts([80])
             ->withPortStrategy(new RandomPortStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame([80], $instance->getExposedPorts());

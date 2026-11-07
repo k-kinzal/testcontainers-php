@@ -27,6 +27,7 @@ final class PrivilegeSettingTest extends TestCase
     public function testPrivilegedFromStaticPrivileged()
     {
         $container = new PrivilegeSettingWithStaticPrivilegedContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame(true, $instance->getPrivilegedMode());
@@ -40,6 +41,7 @@ final class PrivilegeSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withPrivilegedMode(true)
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame(true, $instance->getPrivilegedMode());

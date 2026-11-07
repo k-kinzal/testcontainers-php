@@ -29,6 +29,7 @@ final class InspectCommandTest extends TestCase
 
         /** @var DockerRunWithDetachOutput $output */
         $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'rm' => true,
             'detach' => true,
         ]);
         $containerId = $output->getContainerId();

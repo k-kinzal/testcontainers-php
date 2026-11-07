@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
 use Testcontainers\Containers\GenericContainer\NetworkAliasSetting;
 use Testcontainers\Containers\Types\NetworkMode;
-use Testcontainers\Docker\DockerClientFactory;
+use Testcontainers\Docker\DockerClient;
 use Testcontainers\Testcontainers;
 use Tests\Images\DinD;
 use UnexpectedValueException;
@@ -31,22 +31,16 @@ final class NetworkAliasSettingTest extends TestCase
     public function testNetworkAliasesFromStaticNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $instance->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-
-        $client = DockerClientFactory::create([
-            'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
-                'config' => __ROOT__.'/config.json',
-            ],
-        ]);
+        $client = $instance->getData(DockerClient::class);
         $network = NetworkMode::fromString(md5(uniqid()));
         $client->networkCreate($network);
 
         $container = (new NetworkAliasSettingWithStaticNetworkAliasContainer('alpine:latest'))
             ->withDockerClient($client)
             ->withNetworkMode($network)
-            ->withCommands(['sh', '-c', 'ping -c 1 my-service'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 my-service; sleep 300'])
         ;
         $instance = $container->start();
 
@@ -59,24 +53,17 @@ final class NetworkAliasSettingTest extends TestCase
     public function testWithNetworkAlias()
     {
         $instance = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $instance->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-
-        $client = DockerClientFactory::create([
-            'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
-                'config' => __ROOT__.'/config.json',
-            ],
-        ]);
+        $client = $instance->getData(DockerClient::class);
         $network = NetworkMode::fromString(md5(uniqid()));
         $client->networkCreate($network);
 
         $container = (new GenericContainer('alpine:latest'))
             ->withDockerClient($client)
-            ->withAutoRemoveOnExit(false)
             ->withNetworkMode($network)
             ->withNetworkAlias('my-alias')
-            ->withCommands(['sh', '-c', 'ping -c 1 my-alias'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 my-alias; sleep 300'])
         ;
         $instance = $container->start();
 
@@ -89,24 +76,17 @@ final class NetworkAliasSettingTest extends TestCase
     public function testWithNetworkAliases()
     {
         $instance = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $instance->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-
-        $client = DockerClientFactory::create([
-            'globalOptions' => [
-                'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
-                'config' => __ROOT__.'/config.json',
-            ],
-        ]);
+        $client = $instance->getData(DockerClient::class);
         $network = NetworkMode::fromString(md5(uniqid()));
         $client->networkCreate($network);
 
         $container = (new GenericContainer('alpine:latest'))
             ->withDockerClient($client)
-            ->withAutoRemoveOnExit(false)
             ->withNetworkMode($network)
             ->withNetworkAliases(['my-alias'])
-            ->withCommands(['sh', '-c', 'ping -c 1 my-alias'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 my-alias; sleep 300'])
         ;
         $instance = $container->start();
 
@@ -150,8 +130,6 @@ final class NetworkAliasSettingTest extends TestCase
 
 final class NetworkAliasSettingWithStaticNetworkAliasContainer extends GenericContainer
 {
-    protected static $AUTO_REMOVE_ON_EXIT = false;
-
     protected static $NETWORK_ALIASES = ['my-service'];
 }
 

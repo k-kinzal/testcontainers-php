@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 use Testcontainers\Containers\GenericContainer\EnvSetting;
 use Testcontainers\Containers\GenericContainer\GenericContainer;
-use Testcontainers\Containers\StartupCheckStrategy\OneShotStartupCheckStrategy;
+use Testcontainers\Containers\WaitStrategy\LogMessageWaitStrategy;
 use UnexpectedValueException;
 
 final class EnvSettingTest extends TestCase
@@ -29,8 +29,10 @@ final class EnvSettingTest extends TestCase
     public function testEnvFromStaticEnvironments()
     {
         $container = (new EnvSettingWithStaticEnvironmentsContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withCommands(['printenv', 'ENV1', 'ENV2'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'printenv ENV1 ENV2; sleep 300'])
+            ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('^value2$'))
         ;
         $instance = $container->start();
 
@@ -43,11 +45,12 @@ final class EnvSettingTest extends TestCase
     public function testWithEnv()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withEnv('ENV1', 'value1')
             ->withEnv('ENV2', 'value2')
-            ->withCommands(['printenv', 'ENV1', 'ENV2'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'printenv ENV1 ENV2; sleep 300'])
+            ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('^value2$'))
         ;
         $instance = $container->start();
 
@@ -60,13 +63,14 @@ final class EnvSettingTest extends TestCase
     public function testWithEnvs()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withStartupCheckStrategy(new OneShotStartupCheckStrategy())
             ->withEnvs([
                 'ENV1' => 'value1',
                 'ENV2' => 'value2',
             ])
-            ->withCommands(['printenv', 'ENV1', 'ENV2'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'printenv ENV1 ENV2; sleep 300'])
+            ->withWaitStrategy((new LogMessageWaitStrategy())->withPattern('^value2$'))
         ;
         $instance = $container->start();
 
@@ -138,8 +142,6 @@ final class EnvSettingWithStaticEnvironmentsContainer extends GenericContainer
         'ENV1' => 'value1',
         'ENV2' => 'value2',
     ];
-
-    protected static $STARTUP_CHECK_STRATEGY = 'one_shot';
 }
 
 final class EnvSettingWithInvalidEnvContainer extends GenericContainer

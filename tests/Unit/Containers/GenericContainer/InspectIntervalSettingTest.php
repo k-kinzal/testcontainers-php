@@ -27,6 +27,7 @@ final class InspectIntervalSettingTest extends TestCase
     public function testInspectIntervalFromStaticInspectInterval()
     {
         $container = new InspectIntervalSettingWithStaticContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame(5, $instance->getInspectInterval());
@@ -40,6 +41,7 @@ final class InspectIntervalSettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withInspectInterval(0.5)
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame(0.5, $instance->getInspectInterval());
@@ -51,6 +53,7 @@ final class InspectIntervalSettingTest extends TestCase
     public function testInspectIntervalByDefault()
     {
         $container = new GenericContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         self::assertSame(10, $instance->getInspectInterval());

@@ -28,17 +28,11 @@ final class PsCommandTest extends TestCase
     public function testPs()
     {
         $instance = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $instance->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-
-        $client = new DockerClient();
-        $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
-            'config' => __ROOT__.'/config.json',
-        ]);
+        $client = $instance->getData(DockerClient::class);
 
         /** @var DockerRunWithDetachOutput $runOutput */
         $runOutput = $client->run('alpine:latest', 'tail', ['-f', '/dev/null'], [
+            'rm' => true,
             'detach' => true,
             'label' => ['test.ps=true'],
         ]);
@@ -52,8 +46,6 @@ final class PsCommandTest extends TestCase
         $containers = $output->getContainers();
         self::assertCount(1, $containers);
         self::assertSame((string) $runOutput->getContainerId(), (string) $containers[0]->id);
-
-        $client->stop($runOutput->getContainerId());
     }
 
     /**

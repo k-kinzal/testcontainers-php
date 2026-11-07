@@ -16,7 +16,9 @@ final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
     public function testWaitUntilReady()
     {
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'while true; do echo "Ready"; sleep 1; done']);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = new LogMessageWaitStrategy();
@@ -32,7 +34,9 @@ final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
     public function testWaitUntilReadyWithMultipleLinesAtOnce()
     {
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'printf "Starting\\nReady\\n"; sleep 10']);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = new LogMessageWaitStrategy();
@@ -51,7 +55,9 @@ final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $this->expectException(WaitingTimeoutException::class);
 
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'while true; do echo "Not Ready"; sleep 1; done']);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = new LogMessageWaitStrategy();
@@ -69,7 +75,9 @@ final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $this->expectExceptionMessage('Container stopped while waiting for log message');
 
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'echo "Wrong message"; exit 0']);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = new LogMessageWaitStrategy();
@@ -87,7 +95,9 @@ final class LogMessageWaitStrategyTest extends WaitStrategyTestCase
         $this->expectExceptionMessage('Container log matched failure pattern');
 
         $container = new GenericContainer('alpine:latest');
+        $container->withStopTimeout(0);
         $container->withCommands(['sh', '-c', 'echo "[ERROR] something failed"; sleep 10']);
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $strategy = new LogMessageWaitStrategy();

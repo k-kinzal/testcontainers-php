@@ -29,6 +29,7 @@ final class WaitSettingTest extends TestCase
     public function testWaitStrategyFromStaticWaitStrategy()
     {
         $container = new WaitSettingWithStaticWaitStrategyContainer();
+        $container->withAutoRemoveOnExit(true);
         $container->start();
 
         self::assertTrue(true);
@@ -43,6 +44,7 @@ final class WaitSettingTest extends TestCase
             ->withExposedPort(80)
             ->withWaitStrategy(new HostPortWaitStrategy())
         ;
+        $container->withAutoRemoveOnExit(true);
         $container->start();
 
         self::assertTrue(true);

@@ -29,7 +29,7 @@ final class RunCommandTest extends TestCase
     public function testRun()
     {
         $client = new DockerClient();
-        $output = $client->run('alpine:latest', 'echo', ['Hello, World!']);
+        $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], ['rm' => true]);
 
         self::assertInstanceOf(DockerRunOutput::class, $output);
         self::assertSame(0, $output->getExitCode());
@@ -43,6 +43,7 @@ final class RunCommandTest extends TestCase
     {
         $client = new DockerClient();
         $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'rm' => true,
             'detach' => true,
         ]);
 
@@ -59,6 +60,7 @@ final class RunCommandTest extends TestCase
     {
         $client = new DockerClient();
         $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'rm' => true,
             'quiet' => true,
         ]);
 
@@ -74,6 +76,7 @@ final class RunCommandTest extends TestCase
     {
         $client = new DockerClient();
         $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'rm' => true,
             'detach' => false,
         ]);
 
@@ -89,6 +92,7 @@ final class RunCommandTest extends TestCase
     {
         $client = new DockerClient();
         $output = $client->run('alpine:latest', 'echo', ['Hello, World!'], [
+            'rm' => true,
             'label' => ['test.label1=value1', 'test.label2=value2'],
         ]);
 
@@ -104,6 +108,7 @@ final class RunCommandTest extends TestCase
     {
         $client = new DockerClient();
         $output = $client->run('alpine:latest', 'printenv', ['BAR'], [
+            'rm' => true,
             'env' => [
                 'FOO' => 'foo',
                 'BAR' => 'bar',
@@ -120,22 +125,18 @@ final class RunCommandTest extends TestCase
      */
     public function testRunWithPortConflict()
     {
-        $this->expectException(PortConflictException::class);
-
         $instance = Testcontainers::run(DinD::class);
-        $mappedPort2375 = $instance->getMappedPort(2375);
-        self::assertNotNull($mappedPort2375);
-
-        $client = new DockerClient();
-        $client->withGlobalOptions([
-            'host' => 'tcp://'.$instance->getHost().':'.(string) $mappedPort2375,
-            'config' => __ROOT__.'/config.json',
-        ]);
-        $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
+        $client = $instance->getData(DockerClient::class);
+        $output = $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
+            'rm' => true,
             'detach' => true,
             'publish' => ['38793:80'],
         ]);
+        self::assertInstanceOf(DockerRunWithDetachOutput::class, $output);
+
+        $this->expectException(PortConflictException::class);
         $client->run('alpine:latest', null, ['tail', '-f', '/dev/null'], [
+            'rm' => true,
             'detach' => true,
             'publish' => ['38793:80'],
         ]);

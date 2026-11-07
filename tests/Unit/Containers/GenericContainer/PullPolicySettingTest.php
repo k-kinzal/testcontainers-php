@@ -28,6 +28,7 @@ final class PullPolicySettingTest extends TestCase
     public function testPullPolicyFromStaticPullPolicy()
     {
         $container = new PullPolicySettingWithStaticPullPolicyContainer('alpine:latest');
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $pullPolicy = $instance->getImagePullPolicy();
@@ -44,6 +45,7 @@ final class PullPolicySettingTest extends TestCase
         $container = (new GenericContainer('alpine:latest'))
             ->withImagePullPolicy(ImagePullPolicy::MISSING())
         ;
+        $container->withAutoRemoveOnExit(true);
         $instance = $container->start();
 
         $pullPolicy = $instance->getImagePullPolicy();

@@ -28,8 +28,9 @@ final class HostSettingTest extends TestCase
     public function testExtraHostsFromStaticExtraHosts()
     {
         $container = (new HostSettingWithExtraHostsContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withCommands(['sh', '-c', 'ping -c 1 example.com'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 example.com; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();
@@ -43,8 +44,9 @@ final class HostSettingTest extends TestCase
     public function testExtraHostsFromStaticHosts()
     {
         $container = (new HostSettingWithHostsContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
-            ->withCommands(['sh', '-c', 'ping -c 1 example.org'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 example.org; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();
@@ -58,9 +60,10 @@ final class HostSettingTest extends TestCase
     public function testWithExtraHost()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
             ->withExtraHost('example.com', '127.0.0.1')
-            ->withCommands(['sh', '-c', 'ping -c 1 example.com'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 example.com; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();
@@ -87,12 +90,13 @@ final class HostSettingTest extends TestCase
     public function testWithExtraHosts()
     {
         $container = (new GenericContainer('alpine:latest'))
-            ->withAutoRemoveOnExit(false)
             ->withExtraHosts([
                 ['hostname' => 'example.com', 'ipAddress' => '127.0.0.1'],
                 ['hostname' => 'example.org', 'ipAddress' => '127.0.0.1'],
             ])
-            ->withCommands(['sh', '-c', 'ping -c 1 example.org'])
+            ->withAutoRemoveOnExit(true)
+            ->withStopTimeout(0)
+            ->withCommands(['sh', '-c', 'ping -c 1 example.org; sleep 300'])
             ->withWaitStrategy(new LogMessageWaitStrategy())
         ;
         $instance = $container->start();

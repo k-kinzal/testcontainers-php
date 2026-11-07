@@ -13,6 +13,11 @@ use Testcontainers\Logger\WithLogger;
  *
  * Useful for one-shot containers that run a command and exit (e.g. echo, printenv).
  *
+ * TODO: Fix the race with AutoRemove=true (--rm). Docker can remove a successfully
+ * exited container before inspect reads its exit code, causing a false startup failure.
+ * Workaround: use withAutoRemoveOnExit(false) and explicitly remove the container
+ * in a finally block after the startup check and any output reads.
+ *
  * @api
  */
 final class OneShotStartupCheckStrategy implements StartupCheckStrategy

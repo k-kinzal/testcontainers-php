@@ -28,10 +28,14 @@ abstract class StartupCheckStrategyTestCase extends TestCase
         $output = $client->run('alpine:latest', null, [], [
             'detach' => true,
         ]);
-        $instance = new GenericContainerInstance([
-            'containerId' => $output->getContainerId(),
-        ]);
+        try {
+            $instance = new GenericContainerInstance([
+                'containerId' => $output->getContainerId(),
+            ]);
 
-        self::assertTrue($strategy->waitUntilStartupSuccessful($instance));
+            self::assertTrue($strategy->waitUntilStartupSuccessful($instance));
+        } finally {
+            $client->rm($output->getContainerId(), ['force' => true]);
+        }
     }
 }
